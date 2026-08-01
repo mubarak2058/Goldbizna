@@ -86,15 +86,31 @@ background:#086108;
 width:
 <script>
 
-const products = [
-    {name:"Sugar 2kg", price:350},
-    {name:"Rice 2kg", price:280},
-    {name:"Cooking Oil 1L", price:420},
-    {name:"Bread", price:70},
-    {name:"Milk 500ml", price:65},
-    {name:"Soap", price:120},
-    {name:"Soda", price:60},
-    {name:"Flour 2kg", price:210}
+const products = <div class="product">
+    <h3>Sugar</h3>
+    <p>KSh 200</p>
+    <button onclick="addToCart('Sugar',200)">Add to Cart</button>
+</div>
+
+<div class="product">
+    <h3>Rice</h3>
+    <p>KSh 350</p>
+    <button onclick="addToCart('Rice',350)">Add to Cart</button>
+</div>
+
+<div class="product">
+    <h3>Cooking Oil</h3>
+    <p>KSh 450</p>
+    <button onclick="addToCart('Cooking Oil',450)">Add to Cart</button>
+</div>
+
+<h2>Shopping Cart</h2>
+
+<ul id="cart"></ul>
+
+<h2>Total: KSh <span id="total">0</span></h2>
+
+<button onclick="checkout()">Checkout</button>
 ];
 
 let cart = [];

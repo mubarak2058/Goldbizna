@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goldbizna Reports</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f4f4f4;
+}
+
+header{
+    background:#0b7a0b;
+    color:white;
+    text-align:center;
+    padding:15px;
+    font-size:24px;
+    font-weight:bold;
+}
+
+.container{
+    width:95%;
+    max-width:1000px;
+    margin:auto;
+    padding:20px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    margin:15px 0;
+    border-radius:8px;
+    box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+
+.card h2{
+    color:#0b7a0b;
+    margin:0 0 10px;
+}
+
+button{
+    background:#0b7a0b;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:5px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+button:hover{
+    background:#086108;
+}
+</style>
+</head>
+
+<body>
+
+<header>Goldbizna Reports</header>
+
+<div class="container">
+
+<div class="card">
+<h2>Total Sales</h2>
+<p id="sales">KSh 0.00</p>
+</div>
+
+<div class="card">
+<h2>Total Inventory Value</h2>
+<p id="inventory">KSh 0.00</p>
+</div>
+
+<div class="card">
+<h2>Total Customers</h2>
+<p id="customers">0</p>
+</div>
+
+<div class="card">
+<h2>Daily Sales</h2>
+<p>Daily sales report will appear here.</p>
+</div>
+
+<div class="card">
+<h2>Monthly Sales</h2>
+<p>Monthly sales report will appear here.</p>
+</div>
+
+<button onclick="window.print()">Print Report</button>
+
+</div>
+
+<script>
+document.getElementById("sales").innerHTML="KSh 0.00";
+document.getElementById("inventory").innerHTML="KSh 0.00";
+document.getElementById("customers").innerHTML="0";
+</script>
+
+</body>
+</html>

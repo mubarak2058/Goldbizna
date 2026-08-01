@@ -84,3 +84,104 @@ background:#086108;
 
 .cart table{
 width:
+<script>
+
+const products = [
+    {name:"Sugar 2kg", price:350},
+    {name:"Rice 2kg", price:280},
+    {name:"Cooking Oil 1L", price:420},
+    {name:"Bread", price:70},
+    {name:"Milk 500ml", price:65},
+    {name:"Soap", price:120},
+    {name:"Soda", price:60},
+    {name:"Flour 2kg", price:210}
+];
+
+let cart = [];
+
+function loadProducts(){
+    const list = document.getElementById("products");
+
+    products.forEach((product,index)=>{
+        list.innerHTML += `
+        <div class="product">
+            <h3>${product.name}</h3>
+            <p>KSh ${product.price}</p>
+            <button onclick="addToCart(${index})">
+                Add to Cart
+            </button>
+        </div>
+        `;
+    });
+}
+
+function addToCart(index){
+
+    const item = cart.find(i=>i.name===products[index].name);
+
+    if(item){
+        item.qty++;
+    }else{
+        cart.push({
+            name:products[index].name,
+            price:products[index].price,
+            qty:1
+        });
+    }
+
+    updateCart();
+}
+
+function updateCart(){
+
+    const body=document.getElementById("cartBody");
+
+    body.innerHTML="";
+
+    let total=0;
+
+    cart.forEach(item=>{
+
+        const line=item.price*item.qty;
+
+        total+=line;
+
+        body.innerHTML+=`
+        <tr>
+            <td>${item.name}</td>
+            <td>${item.qty}</td>
+            <td>KSh ${line}</td>
+        </tr>
+        `;
+    });
+
+    document.getElementById("grandTotal").textContent=total;
+}
+
+function checkout(){
+
+    if(cart.length===0){
+        alert("Cart is empty.");
+        return;
+    }
+
+    alert("Sale completed successfully!");
+
+    cart=[];
+
+    updateCart();
+}
+
+function mpesa(){
+
+    const total=document.getElementById("grandTotal").textContent;
+
+    alert("M-Pesa integration coming next.\nAmount: KSh "+total);
+}
+
+loadProducts();
+
+</script>
+
+</body>
+</html>

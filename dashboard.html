@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Goldbizna Dashboard</title>
+<style>
+body{font-family:Arial;margin:0;background:#f4f4f4}
+header{background:#0b7a0b;color:#fff;padding:16px;text-align:center}
+.wrap{max-width:1100px;margin:20px auto;padding:10px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px}
+.card{background:#fff;padding:15px;border-radius:8px;box-shadow:0 1px 3px #ccc}
+.big{font-size:28px;font-weight:bold;color:#0b7a0b}
+a.btn{display:inline-block;margin:6px;padding:10px 14px;background:#0b7a0b;color:#fff;text-decoration:none;border-radius:5px}
+</style></head>
+<body>
+<header><h2>Goldbizna Dashboard</h2></header>
+<div class="wrap">
+<div class="cards">
+<div class="card"><div>Total Products</div><div id="prod" class="big">0</div></div>
+<div class="card"><div>Total Sales</div><div id="sales" class="big">0</div></div>
+<div class="card"><div>Revenue (KES)</div><div id="rev" class="big">0</div></div>
+<div class="card"><div>Low Stock</div><div id="low" class="big">0</div></div>
+</div>
+<h3>Quick Access</h3>
+<a class="btn" href="pos.html">POS</a>
+<a class="btn" href="inventory.html">Inventory</a>
+<a class="btn" href="sales.html">Sales</a>
+<script>
+const inv=JSON.parse(localStorage.getItem("goldbizna_inventory")||"[]");
+const sales=JSON.parse(localStorage.getItem("goldbizna_sales")||"[]");
+prod.textContent=inv.length;
+salesEl=document.getElementById("sales");
+salesEl.textContent=sales.length;
+rev.textContent=sales.reduce((a,b)=>a+(+b.total||0),0);
+low.textContent=inv.filter(x=>(+x.q||0)<=5).length;
+</script>
+</div></body></html>

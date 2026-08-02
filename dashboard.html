@@ -183,7 +183,52 @@ Goldbizna Dashboard
 </div>
 
 <script>
+let inventory = JSON.parse(localStorage.getItem("goldbizna_inventory") || "[]");
+let customerList = JSON.parse(localStorage.getItem("goldbizna_customers") || "[]");
+let salesList = JSON.parse(localStorage.getItem("goldbizna_sales") || "[]");
 
-/* PART 2 GOES HERE */
+// Totals
+products.textContent = inventory.length;
+customers.textContent = customerList.length;
 
-</script>
+// Sales total
+let totalSales = 0;
+salesList.forEach(s => {
+    totalSales += Number(s.total || 0);
+});
+sales.textContent = "KSh " + totalSales.toFixed(2);
+
+// Stock value
+let stockValue = 0;
+inventory.forEach(i => {
+    stockValue += Number(i.s || 0) * Number(i.q || 0);
+});
+stock.textContent = "KSh " + stockValue.toFixed(2);
+
+// Low stock table
+lowStockTable.innerHTML = "";
+
+inventory.forEach(i => {
+    if (Number(i.q) <= 5) {
+        lowStockTable.innerHTML += `
+        <tr>
+            <td>${i.n}</td>
+            <td>${i.c}</td>
+            <td class="low">${i.q}</td>
+        </tr>
+        `;
+    }
+});
+
+// Recent sales
+recentSales.innerHTML = "";
+
+salesList.slice().reverse().slice(0, 10).forEach(s => {
+    recentSales.innerHTML += `
+    <tr>
+        <td>${s.date}</td>
+        <td>${s.items}</td>
+        <td>KSh ${Number(s.total).toFixed(2)}</td>
+    </tr>
+    `;
+});

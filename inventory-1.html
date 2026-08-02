@@ -78,7 +78,7 @@ tb.innerHTML += `
 <td>${x.c}</td>
 <td>${x.b}</td>
 <td>${x.s}</td>
-<td>${x.q}</td>
+<td>${x.q} ${Number(x.q)<=5 ? "⚠️ Low Stock" : ""}</td>
 <td>
 <button onclick="editItem(${i})">Edit</button>
 <button onclick="del(${i})">Delete</button>

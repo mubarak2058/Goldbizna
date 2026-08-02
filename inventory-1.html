@@ -96,7 +96,38 @@ tb.innerHTML += `
  tb.innerHTML+=`<tr><td>${x.n}</td><td>${x.c}</td><td>${x.b}</td><td>${x.s}</td><td>${x.q}</td><td><button onclick="del(${i})">Delete</button></td></tr>`;
  });
 }
-render();
+function render(){
+
+let keyword = search.value.toLowerCase();
+
+tb.innerHTML = "";
+
+items.forEach((x,i)=>{
+
+if(
+x.n.toLowerCase().includes(keyword) ||
+x.c.toLowerCase().includes(keyword)
+){
+
+tb.innerHTML += `
+<tr>
+<td>${x.n}</td>
+<td>${x.c}</td>
+<td>${x.b}</td>
+<td>${x.s}</td>
+<td>${x.q}</td>
+<td>
+<button onclick="editItem(${i})">Edit</button>
+<button onclick="del(${i})">Delete</button>
+</td>
+</tr>
+`;
+
+}
+
+});
+
+}
 <script type="module">
 
 // ← Paste the Firebase import code here

@@ -1,8 +1,147 @@
-<!DOCTYPE html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Sales History</title>
-<style>body{font-family:Arial;background:#f4f4f4;margin:0}header{background:#0b7a0b;color:#fff;padding:15px;text-align:center}.c{max-width:1000px;margin:20px auto;background:#fff;padding:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ccc;padding:8px}th{background:#0b7a0b;color:#fff}input{padding:8px;width:100%;margin-bottom:10px}</style>
-</head><body><header>Goldbizna Sales History</header><div class='c'><input id='s' placeholder='Search...' oninput='render()'><table><thead><tr><th>Date</th><th>Items</th><th>Total</th></tr></thead><tbody id='tb'></tbody></table></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goldbizna Sales History</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f4f4f4;
+}
+
+header{
+    background:#0b7a0b;
+    color:white;
+    padding:15px;
+    text-align:center;
+    font-size:24px;
+    font-weight:bold;
+}
+
+.container{
+    max-width:1000px;
+    margin:20px auto;
+    background:white;
+    padding:20px;
+    border-radius:8px;
+}
+
+input{
+    width:100%;
+    padding:10px;
+    margin-bottom:15px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    box-sizing:border-box;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    border:1px solid #ccc;
+    padding:10px;
+    text-align:left;
+}
+
+th{
+    background:#0b7a0b;
+    color:white;
+}
+
+tfoot td{
+    font-weight:bold;
+    background:#f2f2f2;
+}
+</style>
+
+</head>
+
+<body>
+
+<header>Goldbizna Sales History</header>
+
+<div class="container">
+
+<input
+id="search"
+placeholder="Search sales..."
+onkeyup="render()">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Date</th>
+<th>Items</th>
+<th>Total</th>
+</tr>
+
+</thead>
+
+<tbody id="tb"></tbody>
+
+<tfoot>
+
+<tr>
+
+<td colspan="2">TOTAL SALES</td>
+
+<td id="grandTotal">KSh 0.00</td>
+
+</tr>
+
+</tfoot>
+
+</table>
+
+</div>
+
 <script>
-let sales=JSON.parse(localStorage.getItem('goldbizna_sales')||'[]');
-function render(){let q=s.value.toLowerCase();tb.innerHTML='';sales.filter(x=>JSON.stringify(x).toLowerCase().includes(q)).forEach(x=>tb.innerHTML+=`<tr><td>${x.date}</td><td>${x.items}</td><td>${x.total}</td></tr>`)}
+
+let sales = JSON.parse(localStorage.getItem("goldbizna_sales") || "[]");
+
+sales.sort((a,b)=>new Date(b.date)-new Date(a.date));
+
+function render(){
+
+let keyword = search.value.toLowerCase();
+
+tb.innerHTML="";
+
+let total=0;
+
+sales.forEach(sale=>{
+
+if(JSON.stringify(sale).toLowerCase().includes(keyword)){
+
+total += Number(sale.total);
+
+tb.innerHTML += `
+<tr>
+<td>${sale.date}</td>
+<td>${sale.items}</td>
+<td>KSh ${Number(sale.total).toFixed(2)}</td>
+</tr>
+`;
+
+}
+
+});
+
+grandTotal.innerHTML="KSh "+total.toFixed(2);
+
+}
+
 render();
-</script></body></html>
+
+</script>
+
+</body>
+</html>

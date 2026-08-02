@@ -7,80 +7,66 @@
 
 <style>
 body{
-font-family:Arial,sans-serif;
-margin:0;
-background:#f4f4f4;
+    font-family:Arial,sans-serif;
+    margin:0;
+    background:#f4f4f4;
 }
-
 header{
-background:#0b7a0b;
-color:white;
-padding:15px;
-text-align:center;
-font-size:24px;
-font-weight:bold;
+    background:#0b7a0b;
+    color:white;
+    padding:15px;
+    text-align:center;
+    font-size:24px;
 }
-
 .container{
-max-width:1000px;
-margin:20px auto;
-background:white;
-padding:20px;
-border-radius:10px;
+    max-width:900px;
+    margin:20px auto;
+    background:white;
+    padding:20px;
+    border-radius:8px;
 }
-
 input{
-width:100%;
-padding:10px;
-margin:8px 0;
-border:1px solid #ccc;
-border-radius:5px;
+    padding:10px;
+    margin:5px;
+    width:30%;
 }
-
 button{
-background:#0b7a0b;
-color:white;
-padding:10px 15px;
-border:none;
-border-radius:5px;
-cursor:pointer;
+    padding:10px 15px;
+    background:#0b7a0b;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
 }
-
 table{
-width:100%;
-border-collapse:collapse;
-margin-top:20px;
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
 }
-
 th,td{
-border:1px solid #ddd;
-padding:10px;
-text-align:left;
+    border:1px solid #ccc;
+    padding:8px;
 }
-
 th{
-background:#0b7a0b;
-color:white;
+    background:#0b7a0b;
+    color:white;
 }
 </style>
 </head>
 
 <body>
 
-<header>Goldbizna Customer Management</header>
+<header>Goldbizna Customers</header>
 
 <div class="container">
 
-<input type="text" id="name" placeholder="Customer Name">
+<input id="customerName" placeholder="Customer Name">
+<input id="customerPhone" placeholder="Phone Number">
+<input id="customerEmail" placeholder="Email">
 
-<input type="text" id="phone" placeholder="Phone Number">
-
-<input type="text" id="email" placeholder="Email">
-
-<button onclick="addCustomer()">Save Customer</button>
+<button onclick="addCustomer()">Add Customer</button>
 
 <table>
-
 <thead>
 <tr>
 <th>Name</th>
@@ -98,9 +84,47 @@ color:white;
 
 <script>
 
-let customers=JSON.parse(localStorage.getItem("goldbizna_customers")||"[]");
+let customers = JSON.parse(localStorage.getItem("goldbizna_customers") || "[]");
 
-function display(){
+function saveCustomers(){
+localStorage.setItem("goldbizna_customers", JSON.stringify(customers));
+renderCustomers();
+}
+
+function addCustomer(){
+
+if(customerName.value.trim()==""){
+alert("Enter customer name");
+return;
+}
+
+customers.push({
+name:customerName.value,
+phone:customerPhone.value,
+email:customerEmail.value
+});
+
+customerName.value="";
+customerPhone.value="";
+customerEmail.value="";
+
+saveCustomers();
+
+}
+
+function deleteCustomer(index){
+
+if(confirm("Delete this customer?")){
+
+customers.splice(index,1);
+
+saveCustomers();
+
+}
+
+}
+
+function renderCustomers(){
 
 customerTable.innerHTML="";
 
@@ -111,7 +135,9 @@ customerTable.innerHTML+=`
 <td>${c.name}</td>
 <td>${c.phone}</td>
 <td>${c.email}</td>
-<td><button onclick="removeCustomer(${index})">Delete</button></td>
+<td>
+<button onclick="deleteCustomer(${index})">Delete</button>
+</td>
 </tr>
 `;
 
@@ -119,39 +145,7 @@ customerTable.innerHTML+=`
 
 }
 
-function addCustomer(){
-
-customers.push({
-
-name:name.value,
-
-phone:phone.value,
-
-email:email.value
-
-});
-
-localStorage.setItem("goldbizna_customers",JSON.stringify(customers));
-
-name.value="";
-phone.value="";
-email.value="";
-
-display();
-
-}
-
-function removeCustomer(index){
-
-customers.splice(index,1);
-
-localStorage.setItem("goldbizna_customers",JSON.stringify(customers));
-
-display();
-
-}
-
-display();
+renderCustomers();
 
 </script>
 

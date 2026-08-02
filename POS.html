@@ -166,7 +166,31 @@ Complete Sale
 
 </div>
 
-<script>
+<script function printReceipt() {
+
+let receipt = "GOLDBIZNA\n";
+receipt += "SALES RECEIPT\n";
+receipt += "-------------------------\n";
+
+let total = 0;
+
+cart.forEach(item => {
+    let subtotal = item.price * item.qty;
+    total += subtotal;
+
+    receipt += item.name + " x" + item.qty + " = KES " + subtotal + "\n";
+});
+
+receipt += "-------------------------\n";
+receipt += "TOTAL: KES " + total + "\n";
+receipt += "Thank you for shopping!";
+
+let w = window.open("", "", "width=350,height=600");
+w.document.write("<pre>" + receipt + "</pre>");
+w.print();
+w.close();
+
+}
 let cart = [];
 
 function addItem(name, price) {

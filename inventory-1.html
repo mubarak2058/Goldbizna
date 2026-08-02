@@ -97,5 +97,12 @@ tb.innerHTML += `
  });
 }
 render();
-</script>
+<script type="module">
+
+// ← Paste the Firebase import code here
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+...
+
+let items = JSON.parse(localStorage.getItem("goldbizna_inventory") || "[]");
 </body></html>

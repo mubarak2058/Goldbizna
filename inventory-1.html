@@ -38,7 +38,21 @@ function addItem(){
  name.value=cat.value=buy.value=sell.value=qty.value="";
  save();
 }
-function del(i){items.splice(i,1);save();}
+function editItem(i){
+
+let item = items[i];
+
+name.value = item.n;
+cat.value = item.c;
+buy.value = item.b;
+sell.value = item.s;
+qty.value = item.q;
+
+items.splice(i,1);
+
+save();
+
+}
 function render(){
  tb.innerHTML="";
  items.forEach((x,i)=>{

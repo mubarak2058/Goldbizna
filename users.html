@@ -3,97 +3,144 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goldbizna - Users</title>
+<title>Goldbizna Users</title>
 
 <style>
 body{
-    margin:0;
     font-family:Arial,sans-serif;
-    background:#f5f5f5;
+    margin:0;
+    background:#f4f4f4;
 }
 header{
     background:#0b7a0b;
-    color:#fff;
-    text-align:center;
+    color:white;
     padding:15px;
+    text-align:center;
     font-size:24px;
+    font-weight:bold;
 }
 .container{
-    width:90%;
-    max-width:800px;
+    max-width:900px;
     margin:20px auto;
-    background:#fff;
+    background:white;
     padding:20px;
     border-radius:10px;
-    box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+input,select{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border:1px solid #ccc;
+    border-radius:5px;
+}
+button{
+    background:#0b7a0b;
+    color:white;
+    border:none;
+    padding:10px 15px;
+    border-radius:5px;
+    cursor:pointer;
 }
 table{
     width:100%;
     border-collapse:collapse;
+    margin-top:20px;
 }
 th,td{
     border:1px solid #ddd;
-    padding:12px;
-    text-align:left;
+    padding:10px;
 }
 th{
     background:#0b7a0b;
     color:white;
-}
-button{
-    margin-top:20px;
-    padding:10px 20px;
-    background:#0b7a0b;
-    color:white;
-    border:none;
-    border-radius:5px;
-    cursor:pointer;
-}
-a{
-    display:block;
-    margin-top:20px;
-    color:#0b7a0b;
-    text-decoration:none;
 }
 </style>
 </head>
 
 <body>
 
-<header>Goldbizna Users</header>
+<header>Goldbizna User Management</header>
 
 <div class="container">
 
-<h2>System Users</h2>
+<input type="text" id="username" placeholder="Username">
+
+<input type="password" id="password" placeholder="Password">
+
+<select id="role">
+<option>Admin</option>
+<option>Cashier</option>
+</select>
+
+<button onclick="addUser()">Add User</button>
 
 <table>
+<thead>
 <tr>
-<th>Name</th>
+<th>Username</th>
 <th>Role</th>
-<th>Status</th>
+<th>Action</th>
 </tr>
+</thead>
 
-<tr>
-<td>Administrator</td>
-<td>Admin</td>
-<td>Active</td>
-</tr>
-
-<tr>
-<td>Cashier</td>
-<td>Staff</td>
-<td>Active</td>
-</tr>
+<tbody id="userTable"></tbody>
 
 </table>
 
-<button onclick="alert('User management feature coming soon!')">
-Add User
-</button>
-
-<a href="dashboard.html">← Back to Dashboard</a>
-
 </div>
+
+<script>
+
+let users = JSON.parse(localStorage.getItem("goldbizna_users") || "[]");
+
+function displayUsers(){
+
+userTable.innerHTML="";
+
+users.forEach((u,index)=>{
+
+userTable.innerHTML += `
+<tr>
+<td>${u.username}</td>
+<td>${u.role}</td>
+<td><button onclick="deleteUser(${index})">Delete</button></td>
+</tr>
+`;
+
+});
+
+}
+
+function addUser(){
+
+users.push({
+username:username.value,
+password:password.value,
+role:role.value
+});
+
+localStorage.setItem("goldbizna_users",JSON.stringify(users));
+
+username.value="";
+password.value="";
+
+displayUsers();
+
+}
+
+function deleteUser(index){
+
+users.splice(index,1);
+
+localStorage.setItem("goldbizna_users",JSON.stringify(users));
+
+displayUsers();
+
+}
+
+displayUsers();
+
+</script>
 
 </body>
 </html>

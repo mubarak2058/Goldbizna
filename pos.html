@@ -9,7 +9,7 @@ let inv=JSON.parse(localStorage.getItem('goldbizna_inventory')||'[]'),items=[],s
 function load(){sel.innerHTML='';inv.forEach((x,i)=>sel.innerHTML+=`<option value="${i}">${x.n} (${x.q})</option>`)}load();
 function add(){let i=+sel.value,qq=+q.value;if(qq>+inv[i].q)return alert('Insufficient stock');items.push({i,qq});draw();}
 function draw(){let t=0;cart.innerHTML='';items.forEach(x=>{let a=inv[x.i],s=x.qq*(+a.s||0);t+=s;cart.innerHTML+=`<tr><td>${a.n}</td><td>${x.qq}</td><td>${s}</td></tr>`});total.textContent='Total: '+t;}
-function checkout()function checkout(){
+function checkout()
     let sales = JSON.parse(localStorage.getItem("goldbizna_sales") || "[]");
 
     let total = 0;

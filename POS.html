@@ -160,6 +160,76 @@ Complete Sale
 </div>
 
 <script>
+let cart = [];
+
+function addItem(name, price) {
+    const existing = cart.find(item => item.name === name);
+
+    if (existing) {
+        existing.qty++;
+    } else {
+        cart.push({
+            name: name,
+            price: price,
+            qty: 1
+        });
+    }
+
+    renderCart();
+}
+
+function renderCart() {
+    let html = "";
+    let total = 0;
+
+    cart.forEach((item, index) => {
+        const subtotal = item.price * item.qty;
+        total += subtotal;
+
+        html += `
+        <tr>
+            <td>${item.name}</td>
+            <td>
+                <button onclick="changeQty(${index},-1)">-</button>
+                ${item.qty}
+                <button onclick="changeQty(${index},1)">+</button>
+            </td>
+            <td>KES ${subtotal}</td>
+            <td><button onclick="removeItem(${index})">X</button></td>
+        </tr>`;
+    });
+
+    document.getElementById("cart").innerHTML = html;
+    document.getElementById("total").innerText = total;
+}
+
+function changeQty(index, amount) {
+    cart[index].qty += amount;
+
+    if (cart[index].qty <= 0) {
+        cart.splice(index, 1);
+    }
+
+    renderCart();
+}
+
+function removeItem(index) {
+    cart.splice(index, 1);
+    renderCart();
+}
+
+function checkout() {
+    if (cart.length === 0) {
+        alert("Cart is empty!");
+        return;
+    }
+
+    alert("Sale completed successfully!");
+
+    cart = [];
+    renderCart();
+}
+</script>
 
 let total=0;
 

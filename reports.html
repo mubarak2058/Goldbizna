@@ -7,8 +7,8 @@
 
 <style>
 body{
-    margin:0;
     font-family:Arial,sans-serif;
+    margin:0;
     background:#f4f4f4;
 }
 
@@ -22,80 +22,91 @@ header{
 }
 
 .container{
-    width:95%;
     max-width:1000px;
-    margin:auto;
+    margin:20px auto;
+    background:white;
     padding:20px;
+    border-radius:10px;
 }
 
 .card{
-    background:white;
-    padding:20px;
+    background:#f9f9f9;
+    border-left:6px solid #0b7a0b;
+    padding:15px;
     margin:15px 0;
-    border-radius:8px;
-    box-shadow:0 2px 5px rgba(0,0,0,0.1);
+    border-radius:5px;
 }
 
-.card h2{
+h2{
     color:#0b7a0b;
-    margin:0 0 10px;
 }
 
 button{
     background:#0b7a0b;
     color:white;
     border:none;
-    padding:12px 20px;
+    padding:10px 15px;
     border-radius:5px;
     cursor:pointer;
-    font-size:16px;
-}
-
-button:hover{
-    background:#086108;
 }
 </style>
+
 </head>
 
 <body>
 
-<header>Goldbizna Reports</header>
+<header>
+Goldbizna Business Reports
+</header>
 
 <div class="container">
 
 <div class="card">
+<h2>Total Products</h2>
+<h1 id="products">0</h1>
+</div>
+
+<div class="card">
 <h2>Total Sales</h2>
-<p id="sales">KSh 0.00</p>
+<h1 id="sales">0</h1>
 </div>
 
 <div class="card">
-<h2>Total Inventory Value</h2>
-<p id="inventory">KSh 0.00</p>
+<h2>Total Revenue (KES)</h2>
+<h1 id="revenue">0</h1>
 </div>
 
-<div class="card">
-<h2>Total Customers</h2>
-<p id="customers">0</p>
-</div>
-
-<div class="card">
-<h2>Daily Sales</h2>
-<p>Daily sales report will appear here.</p>
-</div>
-
-<div class="card">
-<h2>Monthly Sales</h2>
-<p>Monthly sales report will appear here.</p>
-</div>
-
-<button onclick="window.print()">Print Report</button>
+<button onclick="window.print()">
+Print Report
+</button>
 
 </div>
 
 <script>
-document.getElementById("sales").innerHTML="KSh 0.00";
-document.getElementById("inventory").innerHTML="KSh 0.00";
-document.getElementById("customers").innerHTML="0";
+
+let inventory =
+JSON.parse(localStorage.getItem("goldbizna_inventory") || "[]");
+
+let salesData =
+JSON.parse(localStorage.getItem("goldbizna_sales") || "[]");
+
+document.getElementById("products").innerHTML =
+inventory.length;
+
+document.getElementById("sales").innerHTML =
+salesData.length;
+
+let total = 0;
+
+salesData.forEach(function(s){
+
+total += Number(s.total || 0);
+
+});
+
+document.getElementById("revenue").innerHTML =
+total.toLocaleString();
+
 </script>
 
 </body>

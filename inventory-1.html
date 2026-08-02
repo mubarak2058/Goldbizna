@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goldbizna Inventory</title>
+<style>
+body{font-family:Arial;margin:0;background:#f4f4f4}
+header{background:#0b7a0b;color:#fff;padding:16px;text-align:center;font-size:24px}
+.container{max-width:1000px;margin:20px auto;background:#fff;padding:20px;border-radius:8px}
+input{padding:10px;margin:5px;width:calc(16% - 12px)}
+button{padding:10px 14px;background:#0b7a0b;color:#fff;border:0;border-radius:4px;cursor:pointer}
+table{width:100%;border-collapse:collapse;margin-top:20px}
+th,td{border:1px solid #ccc;padding:8px;text-align:left}
+th{background:#0b7a0b;color:#fff}
+</style>
+</head>
+<body>
+<header>Goldbizna Inventory</header>
+<div class="container">
+<input id="name" placeholder="Product">
+<input id="cat" placeholder="Category">
+<input id="buy" type="number" placeholder="Buy">
+<input id="sell" type="number" placeholder="Sell">
+<input id="qty" type="number" placeholder="Qty">
+<button onclick="addItem()">Add</button>
+<table>
+<thead><tr><th>Product</th><th>Category</th><th>Buy</th><th>Sell</th><th>Qty</th><th>Action</th></tr></thead>
+<tbody id="tb"></tbody>
+</table>
+</div>
+<script>
+let items=JSON.parse(localStorage.getItem("goldbizna_inventory")||"[]");
+function save(){localStorage.setItem("goldbizna_inventory",JSON.stringify(items));render();}
+function addItem(){
+ const n=name.value.trim(); if(!n)return alert("Enter product");
+ items.push({n,c:cat.value,b:buy.value,s:sell.value,q:qty.value});
+ name.value=cat.value=buy.value=sell.value=qty.value="";
+ save();
+}
+function del(i){items.splice(i,1);save();}
+function render(){
+ tb.innerHTML="";
+ items.forEach((x,i)=>{
+ tb.innerHTML+=`<tr><td>${x.n}</td><td>${x.c}</td><td>${x.b}</td><td>${x.s}</td><td>${x.q}</td><td><button onclick="del(${i})">Delete</button></td></tr>`;
+ });
+}
+render();
+</script>
+</body></html>

@@ -56,7 +56,8 @@ function del(i){
     if(confirm("Delete this product?")){
         items.splice(i,1);
         save();
-    }
+    }<td>
+<button onclick="editItem(${i})">Edit</button>
 }
 function render(){
  tb.innerHTML="";

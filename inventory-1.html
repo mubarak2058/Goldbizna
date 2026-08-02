@@ -32,7 +32,34 @@ th{background:#0b7a0b;color:#fff}
 <script>
 let items=JSON.parse(localStorage.getItem("goldbizna_inventory")||"[]");
 function save(){localStorage.setItem("goldbizna_inventory",JSON.stringify(items));render();}
-function addItem(){
+async function addItem(){
+
+const n = name.value.trim();
+
+if(!n){
+    alert("Enter product");
+    return;
+}
+
+await addDoc(collection(db,"inventory"),{
+    name:n,
+    category:cat.value,
+    buy:Number(buy.value),
+    sell:Number(sell.value),
+    qty:Number(qty.value),
+    createdAt:new Date()
+});
+
+name.value="";
+cat.value="";
+buy.value="";
+sell.value="";
+qty.value="";
+
+alert("Product saved successfully!");
+loadInventory();
+
+}
  const n=name.value.trim(); if(!n)return alert("Enter product");
  items.push({n,c:cat.value,b:buy.value,s:sell.value,q:qty.value});
  name.value=cat.value=buy.value=sell.value=qty.value="";

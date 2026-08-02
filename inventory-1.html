@@ -52,6 +52,11 @@ items.splice(i,1);
 
 save();
 
+function del(i){
+    if(confirm("Delete this product?")){
+        items.splice(i,1);
+        save();
+    }
 }
 function render(){
  tb.innerHTML="";

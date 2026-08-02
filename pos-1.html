@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Goldbizna POS Pro</title>
+<style>
+body{font-family:Arial;margin:0;background:#f2f2f2}header{background:#0b7a0b;color:#fff;padding:15px;text-align:center}
+.main{max-width:1000px;margin:20px auto;background:#fff;padding:20px}
+input,select,button{padding:8px;margin:5px}table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #ccc;padding:8px}th{background:#0b7a0b;color:#fff}
+</style></head><body>
+<header>Goldbizna POS Professional</header>
+<div class="main">
+<input id="customer" placeholder="Customer Name">
+<select id="product"></select><input id="qty" type="number" value="1" min="1">
+<select id="pay"><option>Cash</option><option>M-Pesa</option></select>
+<button onclick="addCart()">Add</button>
+<table><thead><tr><th>Item</th><th>Qty</th><th>Amount</th></tr></thead><tbody id="cart"></tbody></table>
+<h3 id="tot">Total: KES 0</h3>
+<button onclick="checkout()">Complete & Print Receipt</button>
+</div>
+<script>
+let inv=JSON.parse(localStorage.getItem("goldbizna_inventory")||"[]"),cartItems=[];
+function load(){product.innerHTML="";inv.forEach((p,i)=>product.innerHTML+=`<option value="${i}">${p.n} (${p.q})</option>`)}load();
+function addCart(){let i=+product.value,q=+qty.value;if(q>+inv[i].q)return alert("Not enough stock");cartItems.push({i,q});draw();}
+function draw(){let t=0;cart.innerHTML="";cartItems.forEach(c=>{let p=inv[c.i],a=c.q*(+p.s||0);t+=a;cart.innerHTML+=`<tr><td>${p.n}</td><td>${c.q}</td><td>${a}</td></tr>`});tot.textContent="Total: KES "+t;}
+function checkout(){let sales=JSON.parse(localStorage.getItem("goldbizna_sales")||"[]");let total=0,items=[];
+cartItems.forEach(c=>{let p=inv[c.i];p.q-=c.q;let a=c.q*(+p.s||0);total+=a;items.push(p.n+" x"+c.q);});
+localStorage.setItem("goldbizna_inventory",JSON.stringify(inv));
+sales.push({date:new Date().toLocaleString(),customer:customer.value||"Walk-in",payment:pay.value,items:items.join(", "),total});
+localStorage.setItem("goldbizna_sales",JSON.stringify(sales));
+alert("Receipt\nCustomer: "+(customer.value||"Walk-in")+"\nItems: "+items.join(", ")+"\nTotal: KES "+total+"\nPayment: "+pay.value);
+window.print();
+cartItems=[];customer.value="";load();draw();}
+</script></body></html>

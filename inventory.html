@@ -183,3 +183,63 @@ JSON.stringify(items)
 render();
 
   }
+function addItem(){
+
+const name=document.getElementById("name");
+const cat=document.getElementById("cat");
+const buy=document.getElementById("buy");
+const sell=document.getElementById("sell");
+const qty=document.getElementById("qty");
+
+if(name.value.trim()==""){
+alert("Please enter a product name.");
+return;
+}
+
+items.push({
+n:name.value.trim(),
+c:cat.value.trim(),
+b:Number(buy.value)||0,
+s:Number(sell.value)||0,
+q:Number(qty.value)||0
+});
+
+name.value="";
+cat.value="";
+buy.value="";
+sell.value="";
+qty.value="";
+
+save();
+
+alert("Product saved successfully!");
+
+}
+
+function editItem(index){
+
+let item=items[index];
+
+document.getElementById("name").value=item.n;
+document.getElementById("cat").value=item.c;
+document.getElementById("buy").value=item.b;
+document.getElementById("sell").value=item.s;
+document.getElementById("qty").value=item.q;
+
+items.splice(index,1);
+
+save();
+
+}
+
+function del(index){
+
+if(confirm("Delete this product?")){
+
+items.splice(index,1);
+
+save();
+
+}
+
+  }

@@ -395,3 +395,87 @@ change.style.color="green";
 }
 
 }
+// Complete Sale
+function completeSale(){
+
+if(cart.length===0){
+alert("Cart is empty.");
+return;
+}
+
+let total=Number(grandTotal.textContent);
+
+let sale={
+
+date:new Date().toLocaleString(),
+
+customer:customer.value.trim()==="" ? "Walk-in Customer" : customer.value,
+
+payment:document.getElementById("payment").value,
+
+items:[],
+
+total:total
+
+};
+
+// Reduce stock
+cart.forEach(cartItem=>{
+
+let productItem=inventory.find(p=>p.n===cartItem.name);
+
+if(productItem){
+
+productItem.q=Number(productItem.q)-cartItem.qty;
+
+}
+
+sale.items.push({
+
+name:cartItem.name,
+
+qty:cartItem.qty,
+
+price:cartItem.price,
+
+total:cartItem.total
+
+});
+
+});
+
+// Save inventory
+localStorage.setItem(
+"goldbizna_inventory",
+JSON.stringify(inventory)
+);
+
+// Save sales
+sales.push(sale);
+
+localStorage.setItem(
+"goldbizna_sales",
+JSON.stringify(sales)
+);
+
+// Save last receipt
+localStorage.setItem(
+"goldbizna_last_receipt",
+JSON.stringify(sale)
+);
+
+// Clear cart
+cart=[];
+
+customer.value="";
+cash.value="";
+product.selectedIndex=0;
+qty.value=1;
+
+renderCart();
+
+loadProducts();
+
+alert("Sale completed successfully.");
+
+  }

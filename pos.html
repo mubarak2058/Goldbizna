@@ -1,36 +1,157 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Goldbizna POS Professional</title>
+
 <style>
-body{font-family:Arial;margin:0;background:#f4f6f9}header{background:#0b7a0b;color:#fff;padding:16px;text-align:center;font-size:24px}
-.main{max-width:1000px;margin:20px auto;background:#fff;padding:20px;border-radius:8px}
-input,select,button{padding:10px;margin:5px}table{width:100%;border-collapse:collapse;margin-top:15px}
-th,td{border:1px solid #ccc;padding:8px}th{background:#0b7a0b;color:#fff}
-</style></head><body>
-<header>Goldbizna POS Professional</header>
-<div class="main">
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#eef2f5;
+}
+
+header{
+background:#0b7a0b;
+color:#fff;
+padding:18px;
+text-align:center;
+font-size:28px;
+font-weight:bold;
+}
+
+.container{
+width:95%;
+max-width:1400px;
+margin:20px auto;
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:20px;
+}
+
+.panel{
+background:#fff;
+border-radius:10px;
+padding:20px;
+box-shadow:0 2px 10px rgba(0,0,0,.15);
+}
+
+h2{
+color:#0b7a0b;
+margin-bottom:15px;
+}
+
+.row{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:15px;
+}
+
+input,select{
+flex:1;
+padding:12px;
+border:1px solid #ccc;
+border-radius:5px;
+font-size:15px;
+}
+
+button{
+padding:12px 18px;
+background:#0b7a0b;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+font-size:15px;
+}
+
+button:hover{
+background:#086108;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+}
+
+th{
+background:#0b7a0b;
+color:white;
+padding:10px;
+}
+
+td{
+padding:10px;
+border:1px solid #ddd;
+}
+
+.summary{
+margin-top:20px;
+font-size:18px;
+font-weight:bold;
+}
+
+.total{
+font-size:30px;
+color:#0b7a0b;
+margin:15px 0;
+}
+
+.checkout button{
+width:100%;
+margin-top:10px;
+}
+
+@media(max-width:900px){
+
+.container{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+Goldbizna POS Professional
+
+</header>
+
+<div class="container">
+
+<div class="panel">
+
+<h2>New Sale</h2>
+
+<div class="row">
+
 <input id="customer" placeholder="Customer Name">
-<select id="product"></select>
+
+<select id="product">
+
+<option value="">Select Product</option>
+
+</select>
+
 <input id="qty" type="number" value="1" min="1">
-<select id="pay"><option>Cash</option><option>M-Pesa</option></select>
-<button onclick="addCart()">Add</button>
-<table><thead><tr><th>Item</th><th>Qty</th><th>Amount</th><th></th></tr></thead><tbody id="cart"></tbody></table>
-<h2 id="tot">Total: KES 0</h2>
-<button onclick="checkout()">Complete & Print Receipt</button>
-</div>
-<script>
-let inv=JSON.parse(localStorage.getItem("goldbizna_inventory")||"[]"),cartItems=[];
-const product=document.getElementById("product"),qty=document.getElementById("qty"),cart=document.getElementById("cart"),tot=document.getElementById("tot"),customer=document.getElementById("customer"),pay=document.getElementById("pay");
-function load(){product.innerHTML="";inv.forEach((p,i)=>product.innerHTML+=`<option value="${i}">${p.n} (${p.q})</option>`);}
-load();
-function addCart(){if(!inv.length)return alert("No inventory.");let i=+product.value,q=+qty.value;if(q<=0)return alert("Invalid quantity");if(q>+inv[i].q)return alert("Not enough stock");cartItems.push({i,q});draw();}
-function removeItem(i){cartItems.splice(i,1);draw();}
-function draw(){let t=0;cart.innerHTML="";cartItems.forEach((c,idx)=>{let p=inv[c.i],a=c.q*(+p.s||0);t+=a;cart.innerHTML+=`<tr><td>${p.n}</td><td>${c.q}</td><td>${a}</td><td><button onclick="removeItem(${idx})">X</button></td></tr>`});tot.textContent="Total: KES "+t;}
-function checkout(){if(!cartItems.length)return alert("Cart is empty");let sales=JSON.parse(localStorage.getItem("goldbizna_sales")||"[]"),total=0,items=[];
-cartItems.forEach(c=>{let p=inv[c.i];p.q-=c.q;let a=c.q*(+p.s||0);total+=a;items.push(p.n+" x"+c.q);});
-localStorage.setItem("goldbizna_inventory",JSON.stringify(inv));
-sales.push({date:new Date().toLocaleString(),customer:customer.value||"Walk-in",payment:pay.value,items,total});
-localStorage.setItem("goldbizna_sales",JSON.stringify(sales));
-alert("Receipt\nCustomer: "+(customer.value||"Walk-in")+"\nItems: "+items.join(", ")+"\nTotal: KES "+total+"\nPayment: "+pay.value);
-window.print();cartItems=[];customer.value="";qty.value=1;load();draw();}
-</script></body></html>
+
+<button onclick="addCart()">
+
+Add
+
+</

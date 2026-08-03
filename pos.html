@@ -126,3 +126,111 @@ grid-template-columns:1fr;
 <header>
 Goldbizna POS Professional
 </header>
+<div class="container">
+
+<div class="panel">
+
+<h2>New Sale</h2>
+
+<div class="row">
+
+<input
+id="customer"
+type="text"
+placeholder="Customer Name">
+
+<select id="product">
+
+<option value="">Select Product</option>
+
+</select>
+
+<input
+id="qty"
+type="number"
+value="1"
+min="1">
+
+<button onclick="addCart()">
+Add Item
+</button>
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Product</th>
+<th>Qty</th>
+<th>Price</th>
+<th>Total</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="cartTable">
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="panel">
+
+<h2>Checkout</h2>
+
+<div class="summary">
+Items:
+<span id="itemsCount">0</span>
+</div>
+
+<div class="total">
+KSh <span id="grandTotal">0.00</span>
+</div>
+
+<label>Payment Method</label>
+
+<select id="payment">
+
+<option value="Cash">Cash</option>
+
+<option value="M-Pesa">M-Pesa</option>
+
+</select>
+
+<br><br>
+
+<input
+id="cash"
+type="number"
+placeholder="Cash Received"
+oninput="calculateChange()">
+
+<div class="summary">
+Change:
+KSh <span id="change">0.00</span>
+</div>
+
+<div class="checkout">
+
+<button onclick="completeSale()">
+Complete Sale
+</button>
+
+<button onclick="printReceipt()">
+Print Receipt
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>

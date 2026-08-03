@@ -48,6 +48,11 @@ localStorage.setItem("goldbizna_inventory",JSON.stringify(inv));
 sales.push({date:new Date().toLocaleString(),customer:customer.value||"Walk-in",payment:pay.value,items:items.join(", "),total});
 localStorage.setItem("goldbizna_sales",JSON.stringify(sales));
 alert("Receipt\nCustomer: "+(customer.value||"Walk-in")+"\nItems: "+items.join(", ")+"\nTotal: KES "+total+"\nPayment: "+pay.value);
-window.print();
+window.print();inv = JSON.parse(localStorage.getItem("goldbizna_inventory") || "[]");
+qty.value = 1;
+customer.value = "";
+cartItems = [];
+load();
+draw();
 cartItems=[];customer.value="";load();draw();}
 </script></body></html>

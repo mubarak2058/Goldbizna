@@ -328,3 +328,70 @@ product.selectedIndex=0;
 qty.value=1;
 
   }
+// Render Cart
+function renderCart(){
+
+cartTable.innerHTML="";
+
+let total=0;
+let items=0;
+
+cart.forEach((item,index)=>{
+
+total+=item.total;
+items+=item.qty;
+
+cartTable.innerHTML+=`
+<tr>
+<td>${item.name}</td>
+<td>${item.qty}</td>
+<td>KSh ${item.price.toFixed(2)}</td>
+<td>KSh ${item.total.toFixed(2)}</td>
+<td>
+<button onclick="removeItem(${index})">
+Remove
+</button>
+</td>
+</tr>
+`;
+
+});
+
+itemsCount.textContent=items;
+grandTotal.textContent=total.toFixed(2);
+
+calculateChange();
+
+}
+
+// Remove Item
+function removeItem(index){
+
+cart.splice(index,1);
+
+renderCart();
+
+}
+
+// Calculate Change
+function calculateChange(){
+
+let total=Number(grandTotal.textContent);
+
+let paid=Number(cash.value||0);
+
+let balance=paid-total;
+
+change.textContent=balance.toFixed(2);
+
+if(balance<0){
+
+change.style.color="red";
+
+}else{
+
+change.style.color="green";
+
+}
+
+}

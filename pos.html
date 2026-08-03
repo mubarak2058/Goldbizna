@@ -3,11 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Goldbizna POS Professional</title>
 
 <style>
-
 *{
 margin:0;
 padding:0;
@@ -56,7 +54,8 @@ flex-wrap:wrap;
 margin-bottom:15px;
 }
 
-input,select{
+input,
+select{
 flex:1;
 padding:12px;
 border:1px solid #ccc;
@@ -67,7 +66,7 @@ font-size:15px;
 button{
 padding:12px 18px;
 background:#0b7a0b;
-color:white;
+color:#fff;
 border:none;
 border-radius:5px;
 cursor:pointer;
@@ -84,15 +83,16 @@ border-collapse:collapse;
 margin-top:10px;
 }
 
-th{
-background:#0b7a0b;
-color:white;
+th,
+td{
+border:1px solid #ddd;
 padding:10px;
+text-align:left;
 }
 
-td{
-padding:10px;
-border:1px solid #ddd;
+th{
+background:#0b7a0b;
+color:#fff;
 }
 
 .summary{
@@ -113,13 +113,10 @@ margin-top:10px;
 }
 
 @media(max-width:900px){
-
 .container{
 grid-template-columns:1fr;
 }
-
 }
-
 </style>
 
 </head>
@@ -127,238 +124,5 @@ grid-template-columns:1fr;
 <body>
 
 <header>
-
 Goldbizna POS Professional
-
 </header>
-
-<div class="container">
-
-<div class="panel">
-
-<h2>New Sale</h2>
-
-<div class="row">
-
-<input id="customer" placeholder="Customer Name">
-
-<select id="product">
-
-<option value="">Select Product</option>
-
-</select>
-
-<input id="qty" type="number" value="1" min="1">
-
-<button onclick="addCart()">
-
-Add
-
-</
-<script>
-
-let inventory = JSON.parse(localStorage.getItem("goldbizna_inventory") || "[]");
-
-let cart = [];
-
-const product = document.getElementById("product");
-const cartTable = document.getElementById("cartTable");
-
-inventory.forEach(item=>{
-
-let option=document.createElement("option");
-
-option.value=item.n;
-
-option.text=item.n+" - KSh "+item.s;
-
-product.appendChild(option);
-
-});
-
-function addCart(){
-
-if(product.value==""){
-alert("Select a product");
-return;
-}
-
-let item=inventory.find(x=>x.n===product.value);
-
-let quantity=Number(document.getElementById("qty").value);
-
-if(quantity<=0){
-alert("Invalid quantity");
-return;
-}
-
-if(quantity>Number(item.q)){
-alert("Not enough stock");
-return;
-}
-
-cart.push({
-
-name:item.n,
-
-price:Number(item.s),
-
-qty:quantity,
-
-total:Number(item.s)*quantity
-
-});
-
-renderCart();
-
-}
-
-function renderCart(){
-
-cartTable.innerHTML="";
-
-let grand=0;
-
-let count=0;
-
-cart.forEach((item,index)=>{
-
-grand+=item.total;
-
-count+=item.qty;
-
-cartTable.innerHTML+=`
-
-<tr>
-
-<td>${item.name}</td>
-
-<td>${item.qty}</td>
-
-<td>KSh ${item.price}</td>
-
-<td>KSh ${item.total}</td>
-
-<td>
-
-<button onclick="removeItem(${index})">
-
-X
-
-</button>
-
-</td>
-
-</tr>
-
-`;
-
-});
-
-document.getElementById("itemsCount").innerHTML=count;
-
-document.getElementById("grandTotal").innerHTML=grand.toFixed(2);
-
-calculateChange();
-
-}
-
-function removeItem(i){
-
-cart.splice(i,1);
-
-renderCart();
-
-}
-
-function calculateChange(){
-
-let total=Number(document.getElementById("grandTotal").innerHTML);
-
-let cash=Number(document.getElementById("cash").value||0);
-
-document.getElementById("change").innerHTML=(cash-total).toFixed(2);
-
-}
-function completeSale(){
-
-if(cart.length===0){
-alert("Cart is empty.");
-return;
-}
-
-let grand = Number(document.getElementById("grandTotal").innerHTML);
-
-let customerName = document.getElementById("customer").value || "Walk-in Customer";
-
-// Reduce stock
-cart.forEach(cartItem=>{
-
-let stockItem = inventory.find(i=>i.n===cartItem.name);
-
-if(stockItem){
-stockItem.q = Number(stockItem.q) - cartItem.qty;
-}
-
-});
-
-localStorage.setItem("goldbizna_inventory",JSON.stringify(inventory));
-
-// Save sale
-let sales = JSON.parse(localStorage.getItem("goldbizna_sales") || "[]");
-
-sales.push({
-
-date:new Date().toLocaleString(),
-
-customer:customerName,
-
-items:cart.map(i=>i.name+" x"+i.qty).join(", "),
-
-total:grand,
-
-payment:document.getElementById("payment").value
-
-});
-
-localStorage.setItem("goldbizna_sales",JSON.stringify(sales));
-
-// Clear cart
-cart=[];
-
-document.getElementById("customer").value="";
-document.getElementById("cash").value="";
-
-renderCart();
-
-alert("Sale completed successfully!");
-
-}
-
-function printReceipt(){
-
-let receipt="GOLDBIZNA POS\n";
-receipt+="====================\n";
-
-cart.forEach(i=>{
-
-receipt+=`${i.name} x${i.qty} - KSh ${i.total}\n`;
-
-});
-
-receipt+="--------------------\n";
-receipt+="TOTAL: KSh "+document.getElementById("grandTotal").innerHTML+"\n";
-receipt+="Payment: "+document.getElementById("payment").value+"\n";
-receipt+="Thank you!\n";
-
-let w=window.open("","","width=300,height=600");
-w.document.write("<pre>"+receipt+"</pre>");
-w.print();
-w.close();
-
-}
-
-</script>
-
-</body>
-</html>

@@ -1,76 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goldbizna Inventory</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+body{
+background:#f4f4f4;
+}
+header{
+background:#0b7a0b;
+color:#fff;
+padding:18px;
+text-align:center;
+font-size:28px;
+font-weight:bold;
+}
+.container{
+width:95%;
+max-width:1200px;
+margin:20px auto;
+background:#fff;
+padding:20px;
+border-radius:10px;
+box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
+.row{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+margin-bottom:15px;
+}
+input{
+flex:1;
+min-width:150px;
+padding:10px;
+border:1px solid #ccc;
+border-radius:5px;
+}
+button{
+padding:10px 18px;
+border:none;
+border-radius:5px;
+background:#0b7a0b;
+color:#fff;
+cursor:pointer;
+}
+button:hover{
+background:#086108;
+}
+#search{
+width:100%;
+margin-bottom:15px;
+}
+table{
+width:100%;
+border-collapse:collapse;
+}
+th,td{
+border:1px solid #ddd;
+padding:10px;
+text-align:left;
+}
+th{
+background:#0b7a0b;
+color:#fff;
+}
+.low{
+color:red;
+font-weight:bold;
+}
+.summary{
+margin-top:20px;
+font-size:18px;
+font-weight:bold;
+color:#0b7a0b;
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+Goldbizna Inventory
+</header>
+
+<div class="container">
+
+<div class="row">
+<input id="name" placeholder="Product Name">
+<input id="cat" placeholder="Category">
+<input id="buy" type="number" placeholder="Buying Price">
+<input id="sell" type="number" placeholder="Selling Price">
+<input id="qty" type="number" placeholder="Quantity">
+<button onclick="addItem()">Save Product</button>
+</div>
+
+<input id="search" placeholder="Search product..." onkeyup="render()">
+
+<table>
+
+<thead>
+<tr>
+<th>Product</th>
+<th>Category</th>
+<th>Buy</th>
+<th>Sell</th>
+<th>Qty</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="tb"></tbody>
+
+</table>
+
+<div class="summary">
+Stock Value:
+<span id="stockValue">KSh 0</span>
+</div>
+
+<script>
+
 let items = JSON.parse(localStorage.getItem("goldbizna_inventory") || "[]");
 
-function save() {
-    localStorage.setItem("goldbizna_inventory", JSON.stringify(items));
-    render();
-}
-
-function addItem() {
-    const n = name.value.trim();
-
-    if (!n) {
-        alert("Enter product");
-        return;
-    }
-
-    items.push({
-        n: n,
-        c: cat.value,
-        b: buy.value,
-        s: sell.value,
-        q: qty.value
-    });
-
-    name.value = "";
-    cat.value = "";
-    buy.value = "";
-    sell.value = "";
-    qty.value = "";
-
-    save();
-}
-
-function editItem(i) {
-    const item = items[i];
-
-    name.value = item.n;
-    cat.value = item.c;
-    buy.value = item.b;
-    sell.value = item.s;
-    qty.value = item.q;
-
-    items.splice(i, 1);
-
-    save();
-}
-
-function del(i) {
-    if (confirm("Delete this product?")) {
-        items.splice(i, 1);
-        save();
-    }
-}
-
-function render() {
-
-    tb.innerHTML = "";
-
-    items.forEach((x, i) => {
-
-        tb.innerHTML += `
-        <tr>
-            <td>${x.n}</td>
-            <td>${x.c}</td>
-            <td>${x.b}</td>
-            <td>${x.s}</td>
-            <td>${x.q}</td>
-            <td>
-                <button onclick="editItem(${i})">Edit</button>
-                <button onclick="del(${i})">Delete</button>
-            </td>
-        </tr>
-        `;
-    });
-}
-
+function save(){
+localStorage.setItem("goldbizna_inventory",JSON.stringify(items));
 render();
+}
+
+function addItem(){
+
+const n=name.value.trim();
+
+if(n===""){
+alert("Enter product name");
+return;
+}
+
+items.push({
+n:n,
+c:cat.value,
+b:Number(buy.value),
+s:Number(sell.value),
+q:Number(qty.value)
+});
+
+name.value="";
+cat.value="";
+buy.value="";
+sell.value="";
+qty.value="";
+
+save();
+}

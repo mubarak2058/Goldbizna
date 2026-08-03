@@ -280,3 +280,85 @@ let cash=Number(document.getElementById("cash").value||0);
 document.getElementById("change").innerHTML=(cash-total).toFixed(2);
 
 }
+function completeSale(){
+
+if(cart.length===0){
+alert("Cart is empty.");
+return;
+}
+
+let grand = Number(document.getElementById("grandTotal").innerHTML);
+
+let customerName = document.getElementById("customer").value || "Walk-in Customer";
+
+// Reduce stock
+cart.forEach(cartItem=>{
+
+let stockItem = inventory.find(i=>i.n===cartItem.name);
+
+if(stockItem){
+stockItem.q = Number(stockItem.q) - cartItem.qty;
+}
+
+});
+
+localStorage.setItem("goldbizna_inventory",JSON.stringify(inventory));
+
+// Save sale
+let sales = JSON.parse(localStorage.getItem("goldbizna_sales") || "[]");
+
+sales.push({
+
+date:new Date().toLocaleString(),
+
+customer:customerName,
+
+items:cart.map(i=>i.name+" x"+i.qty).join(", "),
+
+total:grand,
+
+payment:document.getElementById("payment").value
+
+});
+
+localStorage.setItem("goldbizna_sales",JSON.stringify(sales));
+
+// Clear cart
+cart=[];
+
+document.getElementById("customer").value="";
+document.getElementById("cash").value="";
+
+renderCart();
+
+alert("Sale completed successfully!");
+
+}
+
+function printReceipt(){
+
+let receipt="GOLDBIZNA POS\n";
+receipt+="====================\n";
+
+cart.forEach(i=>{
+
+receipt+=`${i.name} x${i.qty} - KSh ${i.total}\n`;
+
+});
+
+receipt+="--------------------\n";
+receipt+="TOTAL: KSh "+document.getElementById("grandTotal").innerHTML+"\n";
+receipt+="Payment: "+document.getElementById("payment").value+"\n";
+receipt+="Thank you!\n";
+
+let w=window.open("","","width=300,height=600");
+w.document.write("<pre>"+receipt+"</pre>");
+w.print();
+w.close();
+
+}
+
+</script>
+
+</body>
+</html>

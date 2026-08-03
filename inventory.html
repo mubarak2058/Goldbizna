@@ -243,3 +243,69 @@ save();
 }
 
   }
+function render(){
+
+const keyword=document.getElementById("search").value.toLowerCase();
+
+const tb=document.getElementById("tb");
+
+const stockValue=document.getElementById("stockValue");
+
+tb.innerHTML="";
+
+let total=0;
+
+items.forEach((item,index)=>{
+
+if(
+item.n.toLowerCase().includes(keyword) ||
+item.c.toLowerCase().includes(keyword)
+){
+
+total+=Number(item.s)*Number(item.q);
+
+tb.innerHTML+=`
+<tr>
+
+<td>${item.n}</td>
+
+<td>${item.c}</td>
+
+<td>KSh ${Number(item.b).toFixed(2)}</td>
+
+<td>KSh ${Number(item.s).toFixed(2)}</td>
+
+<td class="${Number(item.q)<=5 ? "low" : ""}">
+${item.q}
+${Number(item.q)<=5 ? " ⚠️ Low Stock" : ""}
+</td>
+
+<td>
+
+<button onclick="editItem(${index})">
+Edit
+</button>
+
+<button onclick="del(${index})">
+Delete
+</button>
+
+</td>
+
+</tr>
+`;
+
+}
+
+});
+
+stockValue.textContent="KSh "+total.toLocaleString();
+
+}
+
+render();
+
+</script>
+
+</body>
+</html>

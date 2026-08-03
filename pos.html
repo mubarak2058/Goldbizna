@@ -54,5 +54,17 @@ customer.value = "";
 cartItems = [];
 load();
 draw();
-cartItems=[];customer.value="";load();draw();}
+alert("Receipt\nCustomer: "+(customer.value||"Walk-in")+
+"\nItems: "+items.join(", ")+
+"\nTotal: KES "+total+
+"\nPayment: "+pay.value);
+
+window.print();
+
+inv = JSON.parse(localStorage.getItem("goldbizna_inventory") || "[]");
+qty.value = 1;
+customer.value = "";
+cartItems = [];
+load();
+draw();
 </script></body></html>

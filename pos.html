@@ -234,3 +234,97 @@ Print Receipt
 </div>
 
 <script>
+// ===== Goldbizna POS =====
+
+let inventory = JSON.parse(localStorage.getItem("goldbizna_inventory") || "[]");
+let sales = JSON.parse(localStorage.getItem("goldbizna_sales") || "[]");
+let cart = [];
+
+// HTML Elements
+const product = document.getElementById("product");
+const qty = document.getElementById("qty");
+const customer = document.getElementById("customer");
+const cartTable = document.getElementById("cartTable");
+const grandTotal = document.getElementById("grandTotal");
+const itemsCount = document.getElementById("itemsCount");
+const cash = document.getElementById("cash");
+const change = document.getElementById("change");
+
+// Load products into dropdown
+function loadProducts(){
+
+product.innerHTML = "<option value=''>Select Product</option>";
+
+inventory.forEach(item=>{
+
+if(Number(item.q)>0){
+
+let option=document.createElement("option");
+
+option.value=item.n;
+
+option.textContent=
+item.n+
+" | KSh "+
+item.s+
+" | Stock: "+
+item.q;
+
+product.appendChild(option);
+
+}
+
+});
+
+}
+
+// Add product to cart
+function addCart(){
+
+if(product.value===""){
+
+alert("Please select a product.");
+
+return;
+
+}
+
+let item=inventory.find(x=>x.n===product.value);
+
+let quantity=Number(qty.value);
+
+if(quantity<=0){
+
+alert("Enter a valid quantity.");
+
+return;
+
+}
+
+if(quantity>Number(item.q)){
+
+alert("Not enough stock.");
+
+return;
+
+}
+
+cart.push({
+
+name:item.n,
+
+price:Number(item.s),
+
+qty:quantity,
+
+total:Number(item.s)*quantity
+
+});
+
+renderCart();
+
+product.selectedIndex=0;
+
+qty.value=1;
+
+  }

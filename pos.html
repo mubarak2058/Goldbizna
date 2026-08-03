@@ -155,3 +155,128 @@ Goldbizna POS Professional
 Add
 
 </
+<script>
+
+let inventory = JSON.parse(localStorage.getItem("goldbizna_inventory") || "[]");
+
+let cart = [];
+
+const product = document.getElementById("product");
+const cartTable = document.getElementById("cartTable");
+
+inventory.forEach(item=>{
+
+let option=document.createElement("option");
+
+option.value=item.n;
+
+option.text=item.n+" - KSh "+item.s;
+
+product.appendChild(option);
+
+});
+
+function addCart(){
+
+if(product.value==""){
+alert("Select a product");
+return;
+}
+
+let item=inventory.find(x=>x.n===product.value);
+
+let quantity=Number(document.getElementById("qty").value);
+
+if(quantity<=0){
+alert("Invalid quantity");
+return;
+}
+
+if(quantity>Number(item.q)){
+alert("Not enough stock");
+return;
+}
+
+cart.push({
+
+name:item.n,
+
+price:Number(item.s),
+
+qty:quantity,
+
+total:Number(item.s)*quantity
+
+});
+
+renderCart();
+
+}
+
+function renderCart(){
+
+cartTable.innerHTML="";
+
+let grand=0;
+
+let count=0;
+
+cart.forEach((item,index)=>{
+
+grand+=item.total;
+
+count+=item.qty;
+
+cartTable.innerHTML+=`
+
+<tr>
+
+<td>${item.name}</td>
+
+<td>${item.qty}</td>
+
+<td>KSh ${item.price}</td>
+
+<td>KSh ${item.total}</td>
+
+<td>
+
+<button onclick="removeItem(${index})">
+
+X
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+document.getElementById("itemsCount").innerHTML=count;
+
+document.getElementById("grandTotal").innerHTML=grand.toFixed(2);
+
+calculateChange();
+
+}
+
+function removeItem(i){
+
+cart.splice(i,1);
+
+renderCart();
+
+}
+
+function calculateChange(){
+
+let total=Number(document.getElementById("grandTotal").innerHTML);
+
+let cash=Number(document.getElementById("cash").value||0);
+
+document.getElementById("change").innerHTML=(cash-total).toFixed(2);
+
+}

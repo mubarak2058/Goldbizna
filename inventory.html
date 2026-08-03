@@ -98,3 +98,88 @@ font-size:20px;
 font-weight:bold;
 color:#0b7a0b;
 }
+</style>
+</head>
+
+<body>
+
+<header>
+Goldbizna Inventory
+</header>
+
+<div class="container">
+
+<h2>Inventory Management</h2>
+
+<div class="row">
+
+<input id="name" type="text" placeholder="Product Name">
+
+<input id="cat" type="text" placeholder="Category">
+
+<input id="buy" type="number" placeholder="Buying Price">
+
+<input id="sell" type="number" placeholder="Selling Price">
+
+<input id="qty" type="number" placeholder="Quantity">
+
+<button onclick="addItem()">
+Save Product
+</button>
+
+</div>
+
+<input
+id="search"
+type="text"
+placeholder="Search products..."
+onkeyup="render()">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Product</th>
+<th>Category</th>
+<th>Buy</th>
+<th>Sell</th>
+<th>Quantity</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="tb">
+
+</tbody>
+
+</table>
+
+<div class="summary">
+
+Stock Value:
+<span id="stockValue">KSh 0</span>
+
+</div>
+
+</div>
+
+<script>
+
+let items = JSON.parse(
+localStorage.getItem("goldbizna_inventory") || "[]"
+);
+
+function save(){
+
+localStorage.setItem(
+"goldbizna_inventory",
+JSON.stringify(items)
+);
+
+render();
+
+  }

@@ -139,6 +139,39 @@ render();
 
 function addItem(){
 
+const nameInput = document.getElementById("name");
+const catInput = document.getElementById("cat");
+const buyInput = document.getElementById("buy");
+const sellInput = document.getElementById("sell");
+const qtyInput = document.getElementById("qty");
+
+const n = nameInput.value.trim();
+
+if(n===""){
+alert("Enter product name");
+return;
+}
+
+items.push({
+n:n,
+c:catInput.value,
+b:Number(buyInput.value),
+s:Number(sellInput.value),
+q:Number(qtyInput.value)
+});
+
+nameInput.value="";
+catInput.value="";
+buyInput.value="";
+sellInput.value="";
+qtyInput.value="";
+
+save();
+
+alert("Product saved successfully");
+
+}
+
 const n=name.value.trim();
 
 if(n===""){

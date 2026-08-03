@@ -172,28 +172,7 @@ alert("Product saved successfully");
 
 }
 
-const n=name.value.trim();
-
-if(n===""){
-alert("Enter product name");
-return;
-}
-
-items.push({
-n:n,
-c:cat.value,
-b:Number(buy.value),
-s:Number(sell.value),
-q:Number(qty.value)
-});
-
-name.value="";
-cat.value="";
-buy.value="";
-sell.value="";
-qty.value="";
-
-save();
+con
 }
 function editItem(i){
 name.value=items[i].n;

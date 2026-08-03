@@ -12,9 +12,11 @@ padding:0;
 box-sizing:border-box;
 font-family:Arial,sans-serif;
 }
+
 body{
-background:#f4f4f4;
+background:#eef2f5;
 }
+
 header{
 background:#0b7a0b;
 color:#fff;
@@ -23,6 +25,7 @@ text-align:center;
 font-size:28px;
 font-weight:bold;
 }
+
 .container{
 width:95%;
 max-width:1200px;
@@ -30,214 +33,68 @@ margin:20px auto;
 background:#fff;
 padding:20px;
 border-radius:10px;
-box-shadow:0 2px 8px rgba(0,0,0,.2);
+box-shadow:0 2px 10px rgba(0,0,0,.15);
 }
-.row{
-display:flex;
-flex-wrap:wrap;
-gap:10px;
+
+h2{
+color:#0b7a0b;
 margin-bottom:15px;
 }
+
+.row{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:15px;
+}
+
 input{
 flex:1;
-min-width:150px;
-padding:10px;
+padding:12px;
 border:1px solid #ccc;
 border-radius:5px;
+font-size:15px;
 }
+
 button{
-padding:10px 18px;
+padding:12px 18px;
+background:#0b7a0b;
+color:white;
 border:none;
 border-radius:5px;
-background:#0b7a0b;
-color:#fff;
 cursor:pointer;
+font-size:15px;
 }
+
 button:hover{
 background:#086108;
 }
-#search{
-width:100%;
-margin-bottom:15px;
-}
+
 table{
 width:100%;
 border-collapse:collapse;
+margin-top:20px;
 }
-th,td{
-border:1px solid #ddd;
-padding:10px;
-text-align:left;
-}
+
 th{
 background:#0b7a0b;
 color:#fff;
+padding:10px;
 }
+
+td{
+padding:10px;
+border:1px solid #ddd;
+}
+
 .low{
 color:red;
 font-weight:bold;
 }
+
 .summary{
 margin-top:20px;
-font-size:18px;
+font-size:20px;
 font-weight:bold;
 color:#0b7a0b;
 }
-</style>
-
-</head>
-
-<body>
-
-<header>
-Goldbizna Inventory
-</header>
-
-<div class="container">
-
-<div class="row">
-<input id="name" placeholder="Product Name">
-<input id="cat" placeholder="Category">
-<input id="buy" type="number" placeholder="Buying Price">
-<input id="sell" type="number" placeholder="Selling Price">
-<input id="qty" type="number" placeholder="Quantity">
-<button onclick="addItem()">Save Product</button>
-</div>
-
-<input id="search" placeholder="Search product..." onkeyup="render()">
-
-<table>
-
-<thead>
-<tr>
-<th>Product</th>
-<th>Category</th>
-<th>Buy</th>
-<th>Sell</th>
-<th>Qty</th>
-<th>Action</th>
-</tr>
-</thead>
-
-<tbody id="tb"></tbody>
-
-</table>
-
-<div class="summary">
-Stock Value:
-<span id="stockValue">KSh 0</span>
-</div>
-
-<script>
-
-let items = JSON.parse(localStorage.getItem("goldbizna_inventory") || "[]");
-
-function save(){
-localStorage.setItem("goldbizna_inventory",JSON.stringify(items));
-render();
-}
-
-function addItem(){
-
-const nameInput = document.getElementById("name");
-const catInput = document.getElementById("cat");
-const buyInput = document.getElementById("buy");
-const sellInput = document.getElementById("sell");
-const qtyInput = document.getElementById("qty");
-
-const n = nameInput.value.trim();
-
-if(n===""){
-alert("Enter product name");
-return;
-}
-
-items.push({
-n:n,
-c:catInput.value,
-b:Number(buyInput.value),
-s:Number(sellInput.value),
-q:Number(qtyInput.value)
-});
-
-nameInput.value="";
-catInput.value="";
-buyInput.value="";
-sellInput.value="";
-qtyInput.value="";
-
-save();
-
-alert("Product saved successfully");
-
-}
-
-con
-}
-function editItem(i){
-name.value=items[i].n;
-cat.value=items[i].c;
-buy.value=items[i].b;
-sell.value=items[i].s;
-qty.value=items[i].q;
-
-items.splice(i,1);
-save();
-}
-
-function del(i){
-if(confirm("Delete this product?")){
-items.splice(i,1);
-save();
-}
-}
-
-function render(){
-
-let keyword=search.value.toLowerCase();
-
-tb.innerHTML="";
-
-let total=0;
-
-items.forEach((x,i)=>{
-
-if(
-x.n.toLowerCase().includes(keyword) ||
-x.c.toLowerCase().includes(keyword)
-){
-
-total+=Number(x.s)*Number(x.q);
-
-tb.innerHTML+=`
-<tr>
-<td>${x.n}</td>
-<td>${x.c}</td>
-<td>${x.b}</td>
-<td>${x.s}</td>
-<td class="${Number(x.q)<=5?'low':''}">
-${x.q}
-${Number(x.q)<=5?' ⚠️ Low Stock':''}
-</td>
-<td>
-<button onclick="editItem(${i})">Edit</button>
-<button onclick="del(${i})">Delete</button>
-</td>
-</tr>
-`;
-}
-
-});
-
-stockValue.textContent="KSh "+total.toLocaleString();
-
-}
-
-render();
-
-</script>
-
-</div>
-
-</body>
-</html>

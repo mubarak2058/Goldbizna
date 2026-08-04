@@ -241,3 +241,11 @@ if(localStorage.getItem("loggedIn")!=="true"){
     window.location.href="login.html";
 }
 </script>
+<button onclick="logout()">Logout</button>
+
+<script>
+function logout(){
+    localStorage.removeItem("loggedIn");
+    window.location.href="login.html";
+}
+</script>

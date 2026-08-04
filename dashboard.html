@@ -240,4 +240,11 @@ if(localStorage.getItem("loggedIn")!=="true"){
 }
 </script>
 </html>
+<button onclick="logout()">Logout</button>
 
+<script>
+function logout(){
+    localStorage.removeItem("loggedIn");
+    window.location.href="login.html";
+}
+</script>

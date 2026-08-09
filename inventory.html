@@ -1,311 +1,885 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goldbizna Inventory</title>
-
-<style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Goldbizna Inventory</title><style>
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
 }
 
 body{
-background:#eef2f5;
+    background:#f4f4f4;
+    color:#333;
 }
 
+/* HEADER */
 header{
-background:#0b7a0b;
-color:#fff;
-padding:18px;
-text-align:center;
-font-size:28px;
-font-weight:bold;
+    background:#0b7a0b;
+    color:white;
+    padding:16px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
 }
 
+.logo{
+    font-size:25px;
+    font-weight:bold;
+}
+
+.header-buttons{
+    display:flex;
+    gap:8px;
+}
+
+.header-buttons button{
+    border:none;
+    padding:10px 15px;
+    border-radius:5px;
+    color:white;
+    cursor:pointer;
+}
+
+.dashboard-btn{
+    background:#075c07;
+}
+
+.logout-btn{
+    background:#c62828;
+}
+
+/* CONTAINER */
 .container{
-width:95%;
-max-width:1200px;
-margin:20px auto;
-background:#fff;
-padding:20px;
-border-radius:10px;
-box-shadow:0 2px 10px rgba(0,0,0,.15);
+    width:95%;
+    max-width:1250px;
+    margin:20px auto;
 }
 
-h2{
-color:#0b7a0b;
-margin-bottom:15px;
+/* TITLE */
+.title{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+    margin-bottom:20px;
 }
 
-.row{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-bottom:15px;
+.title h1{
+    color:#0b7a0b;
+    margin-bottom:5px;
+}
+
+/* FORM */
+.form-box{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+    margin-bottom:20px;
+}
+
+.form-box h2{
+    color:#0b7a0b;
+    margin-bottom:15px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
 }
 
 input{
-flex:1;
-padding:12px;
-border:1px solid #ccc;
-border-radius:5px;
-font-size:15px;
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    font-size:15px;
+}
+
+.full{
+    grid-column:1 / -1;
+}
+
+.buttons{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
 }
 
 button{
-padding:12px 18px;
-background:#0b7a0b;
-color:white;
-border:none;
-border-radius:5px;
-cursor:pointer;
-font-size:15px;
+    border:none;
+    padding:12px 18px;
+    border-radius:5px;
+    cursor:pointer;
+    font-size:15px;
 }
 
-button:hover{
-background:#086108;
+.save-btn{
+    background:#0b7a0b;
+    color:white;
+}
+
+.cancel-btn{
+    background:#777;
+    color:white;
+    display:none;
+}
+
+/* SUMMARY */
+.summary{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.summary-card{
+    background:white;
+    padding:20px;
+    text-align:center;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+
+.summary-card h3{
+    color:#0b7a0b;
+    margin-bottom:8px;
+}
+
+.summary-card p{
+    font-size:24px;
+    font-weight:bold;
+}
+
+/* SEARCH */
+.search-box{
+    background:white;
+    padding:15px;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+    margin-bottom:20px;
+}
+
+/* TABLE */
+.table-box{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+    overflow-x:auto;
 }
 
 table{
-width:100%;
-border-collapse:collapse;
-margin-top:20px;
+    width:100%;
+    border-collapse:collapse;
+    min-width:850px;
 }
 
 th{
-background:#0b7a0b;
-color:#fff;
-padding:10px;
+    background:#0b7a0b;
+    color:white;
+    padding:11px;
 }
 
 td{
-padding:10px;
-border:1px solid #ddd;
+    padding:10px;
+    border:1px solid #ddd;
+    text-align:center;
 }
 
 .low{
-color:red;
-font-weight:bold;
+    color:red;
+    font-weight:bold;
 }
 
-.summary{
-margin-top:20px;
-font-size:20px;
-font-weight:bold;
-color:#0b7a0b;
+.good{
+    color:#0b7a0b;
+    font-weight:bold;
 }
-</style>
-</head>
 
-<body>
+.edit-btn{
+    background:#1976d2;
+    color:white;
+    padding:7px 10px;
+}
 
-<header>
-Goldbizna Inventory
-</header>
+.delete-btn{
+    background:#c62828;
+    color:white;
+    padding:7px 10px;
+    margin-left:5px;
+}
 
-<div class="container">
+/* MESSAGE */
+#message{
+    margin-top:12px;
+    font-weight:bold;
+}
 
-<h2>Inventory Management</h2>
+/* MOBILE */
+@media(max-width:700px){
 
-<div class="row">
+    .form-grid{
+        grid-template-columns:1fr;
+    }
 
-<input id="name" type="text" placeholder="Product Name">
+    .full{
+        grid-column:auto;
+    }
 
-<input id="cat" type="text" placeholder="Category">
+    .summary{
+        grid-template-columns:1fr;
+    }
 
-<input id="buy" type="number" placeholder="Buying Price">
+    header{
+        gap:12px;
+    }
 
-<input id="sell" type="number" placeholder="Selling Price">
+    .logo{
+        font-size:21px;
+    }
+}
+</style></head><body><!-- LOGIN PROTECTION --><script>
+if(localStorage.getItem("loggedIn") !== "true"){
+    window.location.href="login.html";
+}
+</script><header><div class="logo">
+    Goldbizna Inventory
+</div>
 
-<input id="qty" type="number" placeholder="Quantity">
+<div class="header-buttons">
 
-<button onclick="addItem()">
-Save Product
-</button>
+    <button
+        class="dashboard-btn"
+        onclick="window.location.href='dashboard.html'">
+        Dashboard
+    </button>
+
+    <button
+        class="logout-btn"
+        onclick="logout()">
+        Logout
+    </button>
 
 </div>
 
-<input
-id="search"
-type="text"
-placeholder="Search products..."
-onkeyup="render()">
+</header><div class="container"><div class="title">
 
-<table>
+    <h1>Inventory Management</h1>
 
-<thead>
+    <p>
+        Add products, monitor stock and manage prices.
+    </p>
 
-<tr>
+</div>
 
-<th>Product</th>
-<th>Category</th>
-<th>Buy</th>
-<th>Sell</th>
-<th>Quantity</th>
-<th>Action</th>
 
-</tr>
+<!-- PRODUCT FORM -->
+<div class="form-box">
 
-</thead>
+    <h2 id="formTitle">Add New Product</h2>
 
-<tbody id="tb">
+    <div class="form-grid">
 
-</tbody>
+        <input
+            type="text"
+            id="productName"
+            placeholder="Product Name"
+        >
 
-</table>
+        <input
+            type="text"
+            id="category"
+            placeholder="Category"
+        >
 
+        <input
+            type="number"
+            id="buyingPrice"
+            placeholder="Buying Price"
+            min="0"
+            step="0.01"
+        >
+
+        <input
+            type="number"
+            id="sellingPrice"
+            placeholder="Selling Price"
+            min="0"
+            step="0.01"
+        >
+
+        <input
+            type="number"
+            id="quantity"
+            placeholder="Stock Quantity"
+            min="0"
+        >
+
+        <input
+            type="number"
+            id="lowStock"
+            placeholder="Low Stock Alert Level"
+            min="0"
+            value="5"
+        >
+
+    </div>
+
+    <div class="buttons">
+
+        <button
+            class="save-btn"
+            onclick="saveProduct()"
+            id="saveButton">
+            Add Product
+        </button>
+
+        <button
+            class="cancel-btn"
+            onclick="cancelEdit()"
+            id="cancelButton">
+            Cancel
+        </button>
+
+    </div>
+
+    <p id="message"></p>
+
+</div>
+
+
+<!-- SUMMARY -->
 <div class="summary">
 
-Stock Value:
-<span id="stockValue">KSh 0</span>
+    <div class="summary-card">
+
+        <h3>Total Products</h3>
+
+        <p id="totalProducts">0</p>
+
+    </div>
+
+    <div class="summary-card">
+
+        <h3>Total Stock</h3>
+
+        <p id="totalStock">0</p>
+
+    </div>
+
+    <div class="summary-card">
+
+        <h3>Stock Value</h3>
+
+        <p id="stockValue">KSh 0</p>
+
+    </div>
 
 </div>
 
+
+<!-- SEARCH -->
+<div class="search-box">
+
+    <input
+        type="text"
+        id="search"
+        placeholder="Search product or category..."
+        oninput="displayProducts()"
+    >
+
 </div>
 
-<script>
 
-let items = JSON.parse(
-localStorage.getItem("goldbizna_inventory") || "[]"
+<!-- TABLE -->
+<div class="table-box">
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>#</th>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Buying Price</th>
+                <th>Selling Price</th>
+                <th>Stock</th>
+                <th>Stock Value</th>
+                <th>Status</th>
+                <th>Actions</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="inventoryBody">
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</div><script>
+
+let inventory = JSON.parse(
+    localStorage.getItem("goldbizna_inventory") || "[]"
 );
 
-function save(){
+let editingIndex = -1;
 
-localStorage.setItem(
-"goldbizna_inventory",
-JSON.stringify(items)
-);
 
-render();
+/* SAVE PRODUCT */
+function saveProduct(){
 
-  }
-function addItem(){
+    const name =
+        document.getElementById("productName").value.trim();
 
-const name=document.getElementById("name");
-const cat=document.getElementById("cat");
-const buy=document.getElementById("buy");
-const sell=document.getElementById("sell");
-const qty=document.getElementById("qty");
+    const category =
+        document.getElementById("category").value.trim();
 
-if(name.value.trim()==""){
-alert("Please enter a product name.");
-return;
-}
+    const buyingPrice =
+        Number(document.getElementById("buyingPrice").value);
 
-items.push({
-n:name.value.trim(),
-c:cat.value.trim(),
-b:Number(buy.value)||0,
-s:Number(sell.value)||0,
-q:Number(qty.value)||0
-});
+    const sellingPrice =
+        Number(document.getElementById("sellingPrice").value);
 
-name.value="";
-cat.value="";
-buy.value="";
-sell.value="";
-qty.value="";
+    const quantity =
+        Number(document.getElementById("quantity").value);
 
-save();
+    const lowStock =
+        Number(document.getElementById("lowStock").value);
 
-alert("Product saved successfully!");
 
-}
+    if(name === ""){
 
-function editItem(index){
+        alert("Please enter the product name.");
 
-let item=items[index];
+        return;
 
-document.getElementById("name").value=item.n;
-document.getElementById("cat").value=item.c;
-document.getElementById("buy").value=item.b;
-document.getElementById("sell").value=item.s;
-document.getElementById("qty").value=item.q;
+    }
 
-items.splice(index,1);
 
-save();
+    if(category === ""){
 
-}
+        alert("Please enter the category.");
 
-function del(index){
+        return;
 
-if(confirm("Delete this product?")){
+    }
 
-items.splice(index,1);
 
-save();
+    if(buyingPrice < 0 || sellingPrice < 0){
 
-}
+        alert("Prices cannot be negative.");
 
-  }
-function render(){
+        return;
 
-const keyword=document.getElementById("search").value.toLowerCase();
+    }
 
-const tb=document.getElementById("tb");
 
-const stockValue=document.getElementById("stockValue");
+    if(quantity < 0){
 
-tb.innerHTML="";
+        alert("Stock quantity cannot be negative.");
 
-let total=0;
+        return;
 
-items.forEach((item,index)=>{
+    }
 
-if(
-item.n.toLowerCase().includes(keyword) ||
-item.c.toLowerCase().includes(keyword)
-){
 
-total+=Number(item.s)*Number(item.q);
+    if(lowStock < 0){
 
-tb.innerHTML+=`
-<tr>
+        alert("Low stock level cannot be negative.");
 
-<td>${item.n}</td>
+        return;
 
-<td>${item.c}</td>
+    }
 
-<td>KSh ${Number(item.b).toFixed(2)}</td>
 
-<td>KSh ${Number(item.s).toFixed(2)}</td>
+    const product = {
 
-<td class="${Number(item.q)<=5 ? "low" : ""}">
-${item.q}
-${Number(item.q)<=5 ? " ⚠️ Low Stock" : ""}
-</td>
+        name:name,
 
-<td>
+        category:category,
 
-<button onclick="editItem(${index})">
-Edit
-</button>
+        buyingPrice:buyingPrice,
 
-<button onclick="del(${index})">
-Delete
-</button>
+        sellingPrice:sellingPrice,
 
-</td>
+        quantity:quantity,
 
-</tr>
-`;
+        lowStock:lowStock,
+
+        updatedAt:new Date().toLocaleString()
+
+    };
+
+
+    if(editingIndex === -1){
+
+        inventory.push(product);
+
+        showMessage(
+            "Product added successfully.",
+            "green"
+        );
+
+    }else{
+
+        inventory[editingIndex]=product;
+
+        showMessage(
+            "Product updated successfully.",
+            "green"
+        );
+
+        editingIndex=-1;
+
+    }
+
+
+    saveInventory();
+
+    clearForm();
+
+    displayProducts();
 
 }
 
-});
 
-stockValue.textContent="KSh "+total.toLocaleString();
+/* SAVE TO LOCAL STORAGE */
+function saveInventory(){
+
+    localStorage.setItem(
+        "goldbizna_inventory",
+        JSON.stringify(inventory)
+    );
 
 }
 
-render();
 
-</script>
+/* DISPLAY PRODUCTS */
+function displayProducts(){
 
-</body>
+    const body =
+        document.getElementById("inventoryBody");
+
+    const search =
+        document.getElementById("search").value
+        .toLowerCase()
+        .trim();
+
+
+    body.innerHTML="";
+
+
+    let totalStock=0;
+
+    let stockValue=0;
+
+
+    const filtered =
+        inventory.filter(function(product){
+
+            return (
+
+                product.name
+                    .toLowerCase()
+                    .includes(search)
+
+                ||
+
+                product.category
+                    .toLowerCase()
+                    .includes(search)
+
+            );
+
+        });
+
+
+    filtered.forEach(function(product,index){
+
+        totalStock += Number(product.quantity);
+
+        stockValue +=
+            Number(product.buyingPrice) *
+            Number(product.quantity);
+
+
+        const realIndex =
+            inventory.indexOf(product);
+
+
+        const row =
+            document.createElement("tr");
+
+
+        let status="In Stock";
+
+        let statusClass="good";
+
+
+        if(Number(product.quantity) <=
+           Number(product.lowStock)){
+
+            status="Low Stock";
+
+            statusClass="low";
+
+        }
+
+
+        row.innerHTML=`
+
+            <td>${index + 1}</td>
+
+            <td>${escapeHTML(product.name)}</td>
+
+            <td>${escapeHTML(product.category)}</td>
+
+            <td>
+                KSh ${Number(product.buyingPrice)
+                .toLocaleString()}
+            </td>
+
+            <td>
+                KSh ${Number(product.sellingPrice)
+                .toLocaleString()}
+            </td>
+
+            <td>${Number(product.quantity)}</td>
+
+            <td>
+                KSh ${(Number(product.buyingPrice) *
+                Number(product.quantity))
+                .toLocaleString()}
+            </td>
+
+            <td class="${statusClass}">
+                ${status}
+            </td>
+
+            <td>
+
+                <button
+                    class="edit-btn"
+                    onclick="editProduct(${realIndex})">
+                    Edit
+                </button>
+
+                <button
+                    class="delete-btn"
+                    onclick="deleteProduct(${realIndex})">
+                    Delete
+                </button>
+
+            </td>
+
+        `;
+
+
+        body.appendChild(row);
+
+    });
+
+
+    document.getElementById("totalProducts").innerText =
+        inventory.length;
+
+
+    document.getElementById("totalStock").innerText =
+        totalStock;
+
+
+    document.getElementById("stockValue").innerText =
+        "KSh " + stockValue.toLocaleString();
+
+}
+
+
+/* EDIT PRODUCT */
+function editProduct(index){
+
+    const product =
+        inventory[index];
+
+
+    document.getElementById("productName").value =
+        product.name;
+
+    document.getElementById("category").value =
+        product.category;
+
+    document.getElementById("buyingPrice").value =
+        product.buyingPrice;
+
+    document.getElementById("sellingPrice").value =
+        product.sellingPrice;
+
+    document.getElementById("quantity").value =
+        product.quantity;
+
+    document.getElementById("lowStock").value =
+        product.lowStock;
+
+
+    editingIndex=index;
+
+
+    document.getElementById("formTitle").innerText =
+        "Edit Product";
+
+
+    document.getElementById("saveButton").innerText =
+        "Update Product";
+
+
+    document.getElementById("cancelButton").style.display =
+        "block";
+
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+/* CANCEL EDIT */
+function cancelEdit(){
+
+    editingIndex=-1;
+
+    clearForm();
+
+    document.getElementById("formTitle").innerText =
+        "Add New Product";
+
+    document.getElementById("saveButton").innerText =
+        "Add Product";
+
+    document.getElementById("cancelButton").style.display =
+        "none";
+
+}
+
+
+/* DELETE PRODUCT */
+function deleteProduct(index){
+
+    const product =
+        inventory[index];
+
+
+    if(!confirm(
+        "Delete " + product.name + " from inventory?"
+    )){
+
+        return;
+
+    }
+
+
+    inventory.splice(index,1);
+
+    saveInventory();
+
+    displayProducts();
+
+
+    showMessage(
+        "Product deleted.",
+        "red"
+    );
+
+}
+
+
+/* CLEAR FORM */
+function clearForm(){
+
+    document.getElementById("productName").value="";
+    document.getElementById("category").value="";
+    document.getElementById("buyingPrice").value="";
+    document.getElementById("sellingPrice").value="";
+    document.getElementById("quantity").value="";
+    document.getElementById("lowStock").value="5";
+
+
+    document.getElementById("formTitle").innerText =
+        "Add New Product";
+
+
+    document.getElementById("saveButton").innerText =
+        "Add Product";
+
+
+    document.getElementById("cancelButton").style.display =
+        "none";
+
+}
+
+
+/* MESSAGE */
+function showMessage(text,color){
+
+    const message =
+        document.getElementById("message");
+
+
+    message.innerText=text;
+
+    message.style.color=color;
+
+
+    setTimeout(function(){
+
+        message.innerText="";
+
+    },3000);
+
+}
+
+
+/* LOGOUT */
+function logout(){
+
+    localStorage.removeItem("loggedIn");
+
+    window.location.href="login.html";
+
+}
+
+
+/* HTML ESCAPE */
+function escapeHTML(text){
+
+    return String(text)
+
+        .replace(/&/g,"&amp;")
+
+        .replace(/</g,"&lt;")
+
+        .replace(/>/g,"&gt;")
+
+        .replace(/"/g,"&quot;")
+
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* START */
+displayProducts();
+
+</script></body>
 </html>

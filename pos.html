@@ -1,18 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<!DOCTYPE html><html lang="en">
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>Goldbizna POS Pro</title>
-
-<style>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goldbizna POS Pro</title><style>
 *{
     box-sizing:border-box;
     margin:0;
@@ -40,6 +30,7 @@ header{
     display:flex;
     justify-content:space-between;
     align-items:center;
+    gap:10px;
 }
 
 .brand{
@@ -78,6 +69,7 @@ header{
     text-decoration:none;
     padding:12px 14px;
     display:block;
+    font-size:14px;
 }
 
 .menu a:hover{
@@ -184,6 +176,21 @@ header{
     color:#777;
     padding:25px;
     grid-column:1/-1;
+}
+
+.loading{
+    text-align:center;
+    padding:25px;
+    color:#087a0b;
+    font-weight:bold;
+}
+
+.error{
+    text-align:center;
+    padding:20px;
+    color:#b00020;
+    background:#fff5f5;
+    border-radius:8px;
 }
 
 table{
@@ -322,6 +329,8 @@ input{
     background:white;
     width:100%;
     max-width:430px;
+    max-height:90vh;
+    overflow:auto;
     padding:20px;
     border-radius:10px;
 }
@@ -361,11 +370,9 @@ input{
 }
 
 @media(max-width:850px){
-
     .grid{
         grid-template-columns:1fr;
     }
-
 }
 
 @media(max-width:600px){
@@ -382,312 +389,132 @@ input{
         grid-template-columns:repeat(2,1fr);
     }
 
+    .card{
+        padding:13px;
+    }
 }
-
-</style>
-
-</head>
-
-<body>
-
-
-<!-- LOGIN -->
-
-<script>
+</style></head><body><script>
+/* ================================
+   LOGIN PROTECTION
+================================ */
 
 if(localStorage.getItem("loggedIn") !== "true"){
-
-    window.location.href="login.html";
-
+    window.location.href = "login.html";
 }
-
-</script>
-
-
-<header>
-
-<div class="header-inner">
-
-<div>
-
+</script><header><div class="header-inner"><div>
 <div class="brand">
 GOLDBIZNA POS PRO
-</div>
-
-<div class="subtitle">
+</div><div class="subtitle">
 Professional Business Management
 </div>
-
-</div>
-
-<button
-class="logout"
-onclick="logout()">
-
+</div><button class="logout" onclick="logout()">
 Logout
-
-</button>
-
-</div>
-
-</header>
-
-
-<div class="menu">
-
-<div class="menu-inner">
-
-<a href="dashboard.html">Dashboard</a>
-
+</button></div></header><div class="menu"><div class="menu-inner"><a href="dashboard.html">Dashboard</a>
 <a href="pos.html">POS</a>
-
 <a href="inventory.html">Inventory</a>
-
 <a href="customers.html">Customers</a>
-
 <a href="sales.html">Sales</a>
-
 <a href="reports.html">Reports</a>
-
 <a href="savings.html">Savings</a>
-
 <a href="users.html">Users</a>
-
 <a href="settings.html">Settings</a>
 
-</div>
-
-</div>
-
-
-<div class="container">
-
-<div class="grid">
-
-
-<!-- LEFT -->
-
-<div>
-
-<div class="card">
-
-<div class="title">
+</div></div><div class="container"><div class="grid"><!-- =========================
+     LEFT SIDE
+========================= --><div><div class="card"><div class="title">
 🔎 Search Products
-</div>
-
-<input
+</div><input
 id="search"
 class="search"
-type="text"
+type="search"
 placeholder="Search product or category..."
 autocomplete="off">
 
-<div id="products">
-
-<div class="empty">
+<div id="products"><div class="loading">
 Loading products...
-</div>
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<div class="title">
+</div></div></div><div class="card"><div class="title">
 🛒 Shopping Cart
-</div>
-
-<div class="cart-wrapper">
-
-<table>
-
-<thead>
-
-<tr>
-
+</div><div class="cart-wrapper"><table><thead><tr>
 <th>Product</th>
-
 <th>Qty</th>
-
 <th>Price</th>
-
 <th>Total</th>
-
 <th></th>
-
-</tr>
-
-</thead>
-
-<tbody id="cart">
-
-<tr>
-
-<td
-colspan="5"
-class="empty">
-
+</tr></thead><tbody id="cart"><tr>
+<td colspan="5" class="empty">
 Cart is empty
-
 </td>
-
-</tr>
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- RIGHT -->
-
-<div>
-
-
-<div class="card">
-
-<div class="title">
+</tr></tbody></table></div></div></div><!-- =========================
+     RIGHT SIDE
+========================= --><div><div class="card"><div class="title">
 👤 Customer
-</div>
-
-<input
+</div><input
 id="customer"
 type="text"
-placeholder="Customer name / phone">
+placeholder="Customer name / phone"
+autocomplete="off">
 
-</div>
-
-
-<div class="card">
-
-<div class="title">
+</div><div class="card"><div class="title">
 💰 Order Summary
-</div>
-
-<div class="summary">
-
-<div class="row">
-
-<span>
-Subtotal
-</span>
-
-<strong id="subtotal">
+</div><div class="summary"><div class="row">
+<span>Subtotal</span><strong id="subtotal">
 KSh 0
 </strong>
-
-</div>
-
-
-<div class="row">
-
-<span>
+</div><div class="row"><span>
 Discount
-</span>
-
-<strong id="discountDisplay">
+</span><strong id="discountDisplay">
 KSh 0
-</strong>
-
-</div>
-
-
-<div class="row total">
-
-<span>
+</strong></div><div class="row total"><span>
 Total
-</span>
-
-<strong id="total">
+</span><strong id="total">
 KSh 0
-</strong>
-
-</div>
-
-</div>
-
-
-<label
+</strong></div></div><label
 style="display:block;margin-top:15px;margin-bottom:6px">
 
 Discount (KSh)
 
-</label>
-
-<input
+</label><input
 id="discount"
 type="number"
 min="0"
 value="0">
 
-</div>
-
-
-<div class="card">
-
-<div class="title">
+</div><div class="card"><div class="title">
 💳 Payment Method
-</div>
-
-
-<div class="payment-buttons">
-
-<button
+</div><div class="payment-buttons"><button
 id="cashBtn"
 class="payment active"
 onclick="selectPayment('Cash')">
 
 Cash
 
-</button>
-
-<button
+</button><button
 id="mpesaBtn"
 class="payment"
 onclick="selectPayment('M-Pesa')">
 
 M-Pesa
 
-</button>
-
-<button
+</button><button
 id="cardBtn"
 class="payment"
 onclick="selectPayment('Card')">
 
 Card
 
-</button>
-
-<button
+</button><button
 id="creditBtn"
 class="payment"
 onclick="selectPayment('Credit')">
 
 Credit
 
-</button>
-
-</div>
-
-
-<div id="cashBox">
-
-<label
+</button></div><div id="cashBox"><label
 style="display:block;margin:10px 0 6px">
 
 Amount Received
 
-</label>
-
-<input
+</label><input
 id="cashReceived"
 type="number"
 min="0"
@@ -695,123 +522,72 @@ placeholder="Enter amount received">
 
 <div
 id="change"
-class="change">
+class="change">Change: KSh 0
 
-Change: KSh 0
-
-</div>
-
-</div>
-
-
-<button
+</div></div><button
 class="main-button"
 onclick="completeSale()">
 
 COMPLETE SALE
 
-</button>
-
-
-<button
+</button><button
 class="clear"
 onclick="clearCart()">
 
 CLEAR CART
 
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- RECEIPT -->
-
-<div
+</button></div></div></div></div><!-- =========================
+     RECEIPT
+========================= --><div
 id="receiptModal"
-class="modal">
-
-<div class="modal-box">
-
-<h2 style="color:#087a0b;">
+class="modal"><div class="modal-box"><h2 style="color:#087a0b;">
 Sale Completed 🧾
-</h2>
-
-<div
+</h2><div
 id="receipt"
 class="receipt">
-</div>
-
-<div class="modal-buttons">
-
-<button
+</div><div class="modal-buttons"><button
 class="print"
 onclick="printReceipt()">
 
 Print Receipt
 
-</button>
-
-<button
+</button><button
 class="close"
 onclick="closeReceipt()">
 
 Close
 
-</button>
+</button></div></div></div><script>
 
-</div>
-
-</div>
-
-</div>
-
-
-<script>
-
-
-/* ==================================================
+/* =====================================
    GOLDBIZNA POS
-   USES THE EXACT INVENTORY STORAGE
-   ================================================== */
+   ===================================== */
+
+const INVENTORY_KEY = "goldbizna_inventory";
+const SALES_KEY = "goldbizna_sales";
+
+let inventory = [];
+let cart = [];
+let paymentMethod = "Cash";
+let lastReceipt = "";
 
 
-var INVENTORY_KEY = "goldbizna_inventory";
-
-var SALES_KEY = "goldbizna_sales";
-
-var inventory = [];
-
-var cart = [];
-
-var paymentMethod = "Cash";
-
-var lastReceipt = "";
-
-
-/* ==================================================
+/* =====================================
    LOGOUT
-   ================================================== */
+===================================== */
 
 function logout(){
 
     localStorage.removeItem("loggedIn");
-
     sessionStorage.removeItem("gb_login");
 
-    window.location.href="login.html";
-
+    window.location.href = "login.html";
 }
 
 
-/* ==================================================
-   FORMAT MONEY
-   ================================================== */
+/* =====================================
+   MONEY
+===================================== */
 
 function money(value){
 
@@ -822,316 +598,412 @@ function money(value){
             maximumFractionDigits:2
         }
     );
-
 }
 
 
-/* ==================================================
-   ESCAPE HTML
-   ================================================== */
+/* =====================================
+   HTML SECURITY
+===================================== */
 
 function escapeHTML(value){
 
-    return String(value == null ? "" : value)
-
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
 }
 
 
-/* ==================================================
-   LOAD PRODUCTS
-   ================================================== */
+/* =====================================
+   NORMALIZE INVENTORY
+===================================== */
+
+function normalizeProduct(product,index){
+
+    return {
+
+        id:
+            product.id ??
+            ("product-" + index),
+
+        name:
+            String(product.name ?? "").trim(),
+
+        category:
+            String(
+                product.category ??
+                product.cat ??
+                ""
+            ).trim(),
+
+        buyingPrice:
+            Number(
+                product.buyingPrice ??
+                product.buy ??
+                0
+            ),
+
+        sellingPrice:
+            Number(
+                product.sellingPrice ??
+                product.sell ??
+                product.price ??
+                0
+            ),
+
+        quantity:
+            Number(
+                product.quantity ??
+                product.qty ??
+                product.stock ??
+                0
+            ),
+
+        lowStock:
+            Number(
+                product.lowStock ??
+                5
+            )
+
+    };
+}
+
+
+/* =====================================
+   LOAD INVENTORY
+===================================== */
 
 function loadProducts(){
 
-    console.log("Goldbizna POS: Loading inventory...");
-
-
-    var box =
+    const box =
         document.getElementById("products");
 
+    box.innerHTML =
+        '<div class="loading">Loading products...</div>';
 
     try{
 
-        var saved =
+        const saved =
             localStorage.getItem(INVENTORY_KEY);
 
-
         console.log(
-            "Goldbizna POS inventory:",
+            "Goldbizna inventory storage:",
             saved
         );
 
 
-        if(!saved){
+        if(saved === null){
 
             inventory = [];
 
-            box.innerHTML =
-
-                '<div class="empty">' +
-
-                'No products found.<br><br>' +
-
-                'Go to Inventory and add products first.' +
-
-                '</div>';
+            showNoProducts();
 
             return;
-
         }
 
 
-        var data =
-            JSON.parse(saved);
+        if(saved.trim() === ""){
+
+            inventory = [];
+
+            showNoProducts();
+
+            return;
+        }
+
+
+        let data;
+
+        try{
+
+            data = JSON.parse(saved);
+
+        }catch(error){
+
+            console.error(
+                "JSON error:",
+                error
+            );
+
+            box.innerHTML = `
+                <div class="error">
+                    Inventory data could not be read.
+                    <br><br>
+                    Please open Inventory and check your products.
+                </div>
+            `;
+
+            inventory = [];
+
+            return;
+        }
 
 
         if(!Array.isArray(data)){
 
+            box.innerHTML = `
+                <div class="error">
+                    Your inventory data is not in the correct format.
+                    <br><br>
+                    Please open Inventory and save a product again.
+                </div>
+            `;
+
             inventory = [];
 
-            box.innerHTML =
-
-                '<div class="empty">' +
-
-                'Inventory data is invalid.' +
-
-                '</div>';
-
             return;
-
         }
 
 
-        inventory = data;
+        inventory =
+            data
+            .map(normalizeProduct)
+            .filter(function(product){
+
+                return product.name !== "";
+
+            });
 
 
         console.log(
-            "Goldbizna POS products loaded:",
-            inventory.length
+            "Goldbizna POS loaded products:",
+            inventory
         );
 
 
         displayProducts();
 
-
     }catch(error){
 
         console.error(
-            "Goldbizna POS ERROR:",
+            "POS loading error:",
             error
         );
 
+        inventory = [];
 
-        box.innerHTML =
-
-            '<div class="empty">' +
-
-            'Unable to load products.' +
-
-            '<br><br>' +
-
-            'Error: ' +
-
-            escapeHTML(error.message) +
-
-            '</div>';
-
+        box.innerHTML = `
+            <div class="error">
+                Unable to load products.
+                <br><br>
+                ${escapeHTML(error.message)}
+            </div>
+        `;
     }
-
 }
 
 
-/* ==================================================
+/* =====================================
+   NO PRODUCTS
+===================================== */
+
+function showNoProducts(){
+
+    document.getElementById("products").innerHTML = `
+
+        <div class="empty">
+
+            No products found.
+
+            <br><br>
+
+            Go to <strong>Inventory</strong>
+            and add products first.
+
+        </div>
+
+    `;
+}
+
+
+/* =====================================
    DISPLAY PRODUCTS
-   ================================================== */
+===================================== */
 
 function displayProducts(){
 
-    var box =
+    const box =
         document.getElementById("products");
 
+    const searchInput =
+        document.getElementById("search");
 
-    var search =
-        document.getElementById("search")
-        .value
+    if(!box || !searchInput){
+        return;
+    }
+
+
+    const search =
+        searchInput.value
         .toLowerCase()
         .trim();
 
 
-    var results =
+    if(inventory.length === 0){
+
+        showNoProducts();
+
+        return;
+    }
+
+
+    const results =
         inventory.filter(function(product){
 
-            var name =
-                String(
-                    product.name || ""
-                ).toLowerCase();
+            const name =
+                product.name
+                .toLowerCase();
 
-
-            var category =
-                String(
-                    product.category || ""
-                ).toLowerCase();
-
+            const category =
+                product.category
+                .toLowerCase();
 
             return(
-                name.indexOf(search) !== -1 ||
-                category.indexOf(search) !== -1
+                name.includes(search) ||
+                category.includes(search)
             );
 
         });
 
 
-    if(inventory.length === 0){
-
-        box.innerHTML =
-
-            '<div class="empty">' +
-
-            'No products found.<br><br>' +
-
-            'Add products in Inventory first.' +
-
-            '</div>';
-
-        return;
-
-    }
-
-
     if(results.length === 0){
 
-        box.innerHTML =
+        box.innerHTML = `
 
-            '<div class="empty">' +
+            <div class="empty">
 
-            '🔍 No product found for "' +
+                🔍 No product found for
 
-            escapeHTML(search) +
+                "<strong>
+                ${escapeHTML(search)}
+                </strong>"
 
-            '"' +
+                <br><br>
 
-            '</div>';
+                Try another product name or category.
+
+            </div>
+
+        `;
 
         return;
-
     }
 
 
-    var html =
+    let html =
         '<div class="products">';
 
 
     results.forEach(function(product){
 
-        var stock =
+        const stock =
             Number(product.quantity || 0);
 
+        const lowStock =
+            Number(product.lowStock || 5);
 
-        var low =
-            stock > 0 &&
-            stock <= Number(product.lowStock || 5);
-
-
-        var id =
-            String(product.id);
+        let stockClass = "good";
+        let stockText =
+            "Stock: " + stock;
 
 
-        html +=
+        if(stock <= 0){
 
-            '<div class="product" ' +
+            stockClass = "out";
+            stockText = "OUT OF STOCK";
 
-            'data-id="' +
-            escapeHTML(id) +
-            '" ' +
+        }else if(stock <= lowStock){
 
-            'onclick="addProduct(this.dataset.id)">' +
+            stockClass = "low";
 
-            '<div class="product-name">' +
+        }
 
-            escapeHTML(product.name) +
 
-            '</div>' +
+        html += `
 
-            '<div class="product-category">' +
+            <div
+                class="product"
+                data-id="${escapeHTML(product.id)}"
+                onclick="addProduct(this.dataset.id)"
+            >
 
-            escapeHTML(
-                product.category || "No category"
-            ) +
+                <div class="product-name">
 
-            '</div>' +
+                    ${escapeHTML(product.name)}
 
-            '<div class="product-price">' +
+                </div>
 
-            'KSh ' +
 
-            money(product.sellingPrice) +
+                <div class="product-category">
 
-            '</div>' +
+                    ${escapeHTML(
+                        product.category ||
+                        "No category"
+                    )}
 
-            '<div class="product-stock ' +
+                </div>
 
-            (
-                stock <= 0
-                ? "out"
-                : low
-                ? "low"
-                : "good"
-            ) +
 
-            '">' +
+                <div class="product-price">
 
-            (
-                stock <= 0
-                ? "OUT OF STOCK"
-                : "Stock: " + stock
-            ) +
+                    KSh ${money(
+                        product.sellingPrice
+                    )}
 
-            '</div>' +
+                </div>
 
-            '</div>';
+
+                <div class="product-stock ${stockClass}">
+
+                    ${stockText}
+
+                </div>
+
+            </div>
+
+        `;
 
     });
 
 
-    html += '</div>';
-
+    html += "</div>";
 
     box.innerHTML = html;
-
 }
 
 
-/* ==================================================
+/* =====================================
    SEARCH
-   ================================================== */
+===================================== */
 
-document.getElementById("search")
-.addEventListener(
-    "input",
+document.addEventListener(
+    "DOMContentLoaded",
     function(){
 
-        displayProducts();
+        document
+        .getElementById("search")
+        .addEventListener(
+            "input",
+            displayProducts
+        );
 
     }
 );
 
 
-/* ==================================================
+/* =====================================
    ADD PRODUCT
-   ================================================== */
+===================================== */
 
 function addProduct(id){
 
-    var product =
+    const product =
         inventory.find(function(item){
 
-            return String(item.id) === String(id);
+            return String(item.id) ===
+                   String(id);
 
         });
 
@@ -1141,11 +1013,10 @@ function addProduct(id){
         alert("Product not found.");
 
         return;
-
     }
 
 
-    var stock =
+    const stock =
         Number(product.quantity || 0);
 
 
@@ -1157,14 +1028,14 @@ function addProduct(id){
         );
 
         return;
-
     }
 
 
-    var existing =
+    const existing =
         cart.find(function(item){
 
-            return String(item.id) === String(id);
+            return String(item.id) ===
+                   String(product.id);
 
         });
 
@@ -1180,7 +1051,6 @@ function addProduct(id){
             );
 
             return;
-
         }
 
         existing.qty++;
@@ -1194,7 +1064,9 @@ function addProduct(id){
             name:product.name,
 
             price:
-                Number(product.sellingPrice || 0),
+                Number(
+                    product.sellingPrice
+                ) || 0,
 
             qty:1
 
@@ -1204,329 +1076,133 @@ function addProduct(id){
 
 
     renderCart();
-
 }
 
 
-/* ==================================================
-   RENDER CART
-   ================================================== */
+/* =====================================
+   CART
+===================================== */
 
 function renderCart(){
 
-    var body =
+    const body =
         document.getElementById("cart");
 
 
     if(cart.length === 0){
 
-        body.innerHTML =
+        body.innerHTML = `
 
-            '<tr>' +
+            <tr>
 
-            '<td colspan="5" class="empty">' +
+                <td
+                    colspan="5"
+                    class="empty">
 
-            'Cart is empty' +
+                    Cart is empty
 
-            '</td>' +
+                </td>
 
-            '</tr>';
+            </tr>
+
+        `;
 
         updateSummary();
 
         return;
-
     }
 
 
-    var html = "";
+    let html = "";
 
 
     cart.forEach(function(item,index){
 
-        html +=
+        html += `
 
-            '<tr>' +
+            <tr>
 
-            '<td>' +
+                <td>
+                    ${escapeHTML(item.name)}
+                </td>
 
-            escapeHTML(item.name) +
 
-            '</td>' +
+                <td>
 
-            '<td>' +
+                    <div class="qty">
 
-            '<div class="qty">' +
+                        <button
+                            onclick="changeQuantity(${index},-1)">
+                            −
+                        </button>
 
-            '<button ' +
+                        <strong>
+                            ${item.qty}
+                        </strong>
 
-            'onclick="changeQuantity(' +
-            index +
-            ',-1)">' +
+                        <button
+                            onclick="changeQuantity(${index},1)">
+                            +
+                        </button>
 
-            '−' +
+                    </div>
 
-            '</button>' +
+                </td>
 
-            '<strong>' +
 
-            item.qty +
+                <td>
+                    KSh ${money(item.price)}
+                </td>
 
-            '</strong>' +
 
-            '<button ' +
+                <td>
+                    KSh ${money(
+                        item.price *
+                        item.qty
+                    )}
+                </td>
 
-            'onclick="changeQuantity(' +
-            index +
-            ',1)">' +
 
-            '+' +
+                <td>
 
-            '</button>' +
+                    <button
+                        class="qty delete"
+                        onclick="removeItem(${index})">
 
-            '</div>' +
+                        ×
 
-            '</td>' +
+                    </button>
 
-            '<td>' +
+                </td>
 
-            'KSh ' +
+            </tr>
 
-            money(item.price) +
-
-            '</td>' +
-
-            '<td>' +
-
-            'KSh ' +
-
-            money(
-                item.price * item.qty
-            ) +
-
-            '</td>' +
-
-            '<td>' +
-
-            '<button ' +
-
-            'class="qty delete" ' +
-
-            'onclick="removeItem(' +
-            index +
-            ')">' +
-
-            '×' +
-
-            '</button>' +
-
-            '</td>' +
-
-            '</tr>';
+        `;
 
     });
 
 
     body.innerHTML = html;
 
-
     updateSummary();
-
 }
 
 
-/* ==================================================
+/* =====================================
    CHANGE QUANTITY
-   ================================================== */
+===================================== */
 
 function changeQuantity(index,amount){
 
-    var item = cart[index];
+    const item = cart[index];
 
     if(!item){
         return;
     }
 
 
-    var product =
+    const product =
         inventory.find(function(product){
 
             return String(product.id) ===
-                   String(item.id);
-
-        });
-
-
-    var stock =
-        product
-        ? Number(product.quantity || 0)
-        : 0;
-
-
-    var newQuantity =
-        item.qty + amount;
-
-
-    if(newQuantity <= 0){
-
-        cart.splice(index,1);
-
-    }else if(newQuantity > stock){
-
-        alert(
-            "Only " +
-            stock +
-            " units are available."
-        );
-
-        return;
-
-    }else{
-
-        item.qty = newQuantity;
-
-    }
-
-
-    renderCart();
-
-}
-
-
-/* ==================================================
-   REMOVE ITEM
-   ================================================== */
-
-function removeItem(index){
-
-    cart.splice(index,1);
-
-    renderCart();
-
-}
-
-
-/* ==================================================
-   CLEAR CART
-   ================================================== */
-
-function clearCart(){
-
-    if(cart.length === 0){
-        return;
-    }
-
-
-    if(
-        confirm("Clear the entire cart?")
-    ){
-
-        cart = [];
-
-        renderCart();
-
-    }
-
-}
-
-
-/* ==================================================
-   TOTAL
-   ================================================== */
-
-function subtotal(){
-
-    var total = 0;
-
-
-    cart.forEach(function(item){
-
-        total +=
-            Number(item.price) *
-            Number(item.qty);
-
-    });
-
-
-    return total;
-
-}
-
-
-/* ==================================================
-   SUMMARY
-   ================================================== */
-
-function updateSummary(){
-
-    var sub =
-        subtotal();
-
-
-    var discount =
-        Number(
-            document.getElementById(
-                "discount"
-            ).value
-        ) || 0;
-
-
-    if(discount < 0){
-        discount = 0;
-    }
-
-
-    if(discount > sub){
-        discount = sub;
-    }
-
-
-    var total =
-        sub - discount;
-
-
-    document.getElementById(
-        "subtotal"
-    ).innerText =
-        "KSh " + money(sub);
-
-
-    document.getElementById(
-        "discountDisplay"
-    ).innerText =
-        "KSh " + money(discount);
-
-
-    document.getElementById(
-        "total"
-    ).innerText =
-        "KSh " + money(total);
-
-
-    updateChange();
-
-}
-
-
-/* ==================================================
-   DISCOUNT LISTENER
-   ================================================== */
-
-document.getElementById("discount")
-.addEventListener(
-    "input",
-    updateSummary
-);
-
-
-/* ==================================================
-   PAYMENT
-   ================================================== */
-
-function selectPayment(method){
-
-    paymentMethod = method;
-
-
-    document.getElementById(
-    
+              

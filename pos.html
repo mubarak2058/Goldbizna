@@ -1,557 +1,515 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Goldbizna POS</title><style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Goldbizna POS</title>
+
+<style>
+
 *{
-    margin:0;
-    padding:0;
     box-sizing:border-box;
     font-family:Arial,sans-serif;
 }
 
 body{
-    background:#f4f4f4;
-    color:#333;
+    margin:0;
+    background:#f3f6f4;
+    color:#222;
 }
 
-/* HEADER */
 header{
     background:#0b7a0b;
     color:white;
-    padding:16px 20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
-}
-
-.logo{
-    font-size:25px;
+    padding:18px;
+    text-align:center;
+    font-size:26px;
     font-weight:bold;
 }
 
-.header-buttons{
+nav{
+    background:#075f07;
+    padding:8px;
     display:flex;
-    gap:8px;
+    gap:6px;
+    overflow-x:auto;
 }
 
-.header-buttons button{
-    border:none;
-    padding:10px 15px;
-    border-radius:5px;
+nav a{
     color:white;
-    cursor:pointer;
+    text-decoration:none;
+    padding:9px 12px;
+    border-radius:6px;
+    white-space:nowrap;
 }
 
-.dashboard-btn{
-    background:#075c07;
+nav a:hover{
+    background:#0b7a0b;
 }
 
-.logout-btn{
-    background:#c62828;
-}
-
-/* CONTAINER */
 .container{
     width:95%;
     max-width:1200px;
     margin:20px auto;
 }
 
-/* TITLE */
-.title{
+.card{
     background:white;
     padding:20px;
-    border-radius:10px;
-    box-shadow:0 2px 8px rgba(0,0,0,.1);
+    border-radius:12px;
     margin-bottom:20px;
+    box-shadow:0 2px 10px rgba(0,0,0,.10);
 }
 
-.title h1{
+h1,h2{
     color:#0b7a0b;
-    margin-bottom:5px;
+    margin-top:0;
 }
 
-/* POS GRID */
-.pos-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
+.row{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
 }
 
-/* BOX */
-.box{
-    background:white;
-    padding:20px;
-    border-radius:10px;
-    box-shadow:0 2px 8px rgba(0,0,0,.1);
-}
-
-.box h2{
-    color:#0b7a0b;
-    margin-bottom:15px;
-}
-
-/* INPUTS */
+select,
 input{
-    width:100%;
-    padding:12px;
-    margin-bottom:10px;
+    padding:13px;
     border:1px solid #ccc;
-    border-radius:5px;
+    border-radius:7px;
     font-size:15px;
+    flex:1;
+    min-width:150px;
 }
 
 button{
+    padding:13px 18px;
+    border:0;
+    border-radius:7px;
+    background:#0b7a0b;
+    color:white;
+    font-size:15px;
+    font-weight:bold;
     cursor:pointer;
 }
 
-/* ADD PRODUCT */
-.add-btn{
-    width:100%;
-    padding:12px;
-    background:#0b7a0b;
-    color:white;
-    border:none;
-    border-radius:5px;
-    font-size:16px;
-}
-
-.add-btn:hover{
+button:hover{
     background:#086108;
 }
 
-/* CART */
+.danger{
+    background:#b00020;
+}
+
+.print{
+    background:#1558a6;
+}
+
 table{
     width:100%;
     border-collapse:collapse;
-    margin-top:10px;
+    margin-top:15px;
 }
 
 th{
     background:#0b7a0b;
     color:white;
-    padding:10px;
+    padding:11px;
 }
 
 td{
-    padding:9px;
+    padding:11px;
     border:1px solid #ddd;
-    text-align:center;
 }
 
-.remove-btn{
-    background:#c62828;
-    color:white;
-    border:none;
-    padding:6px 10px;
-    border-radius:4px;
-}
-
-/* TOTAL */
-.total-box{
-    margin-top:20px;
-    padding:15px;
-    background:#f1f8f1;
-    border-radius:7px;
-}
-
-.total-row{
-    display:flex;
-    justify-content:space-between;
-    padding:7px 0;
-    font-size:17px;
-}
-
-.grand-total{
+.total{
+    text-align:right;
+    color:#0b7a0b;
     font-size:24px;
     font-weight:bold;
-    color:#0b7a0b;
-    border-top:1px solid #ccc;
-    margin-top:8px;
-    padding-top:12px;
+    margin:20px 0;
 }
 
-/* PAYMENT */
-.payment{
-    margin-top:20px;
-}
-
-.complete-btn{
-    width:100%;
-    padding:14px;
-    margin-top:10px;
-    background:#0b7a0b;
-    color:white;
-    border:none;
-    border-radius:5px;
-    font-size:17px;
-    font-weight:bold;
-}
-
-.clear-btn{
-    width:100%;
-    padding:12px;
-    margin-top:8px;
-    background:#777;
-    color:white;
-    border:none;
-    border-radius:5px;
-}
-
-#message{
+.empty{
     text-align:center;
-    margin-top:15px;
-    font-weight:bold;
+    color:#777;
+    padding:25px;
 }
 
-/* MOBILE */
-@media(max-width:800px){
+.actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
 
-    .pos-grid{
-        grid-template-columns:1fr;
-    }
+@media(max-width:600px){
 
     header{
-        gap:12px;
-    }
-
-    .logo{
-        font-size:21px;
-    }
-
-    table{
-        font-size:13px;
+        font-size:22px;
     }
 
     th,td{
-        padding:7px 4px;
+        font-size:13px;
     }
+
 }
-</style></head><body><!-- LOGIN PROTECTION --><script>
-if(localStorage.getItem("loggedIn") !== "true"){
-    window.location.href="login.html";
-}
-</script><header><div class="logo">
+
+</style>
+</head>
+
+<body>
+
+<header>
     Goldbizna POS
+</header>
+
+<nav>
+
+<a href="dashboard.html">Dashboard</a>
+<a href="pos.html">POS</a>
+<a href="inventory.html">Inventory</a>
+<a href="customers.html">Customers</a>
+<a href="savings.html">Savings</a>
+<a href="reports.html">Reports</a>
+<a href="users.html">Users</a>
+<a href="settings.html">Settings</a>
+
+<a href="#" onclick="logout();return false;">
+Logout
+</a>
+
+</nav>
+
+
+<div class="container">
+
+
+<!-- PRODUCT SECTION -->
+
+<div class="card">
+
+<h1>Sales POS</h1>
+
+<div class="row">
+
+<select id="product"></select>
+
+<input
+id="qty"
+type="number"
+min="1"
+value="1"
+placeholder="Quantity"
+>
+
+<button onclick="addToCart()">
+Add To Cart
+</button>
+
 </div>
-
-<div class="header-buttons">
-
-    <button class="dashboard-btn"
-    onclick="window.location.href='dashboard.html'">
-        Dashboard
-    </button>
-
-    <button class="logout-btn"
-    onclick="logout()">
-        Logout
-    </button>
-
-</div>
-
-</header><div class="container"><div class="title">
-    <h1>Point of Sale</h1>
-    <p>Create sales and manage customer purchases.</p>
-</div>
-
-<div class="pos-grid">
-
-    <!-- PRODUCT SECTION -->
-    <div class="box">
-
-        <h2>Add Product</h2>
-
-        <input
-            type="text"
-            id="productName"
-            placeholder="Product name"
-        >
-
-        <input
-            type="number"
-            id="price"
-            placeholder="Selling price"
-            min="0"
-            step="0.01"
-        >
-
-        <input
-            type="number"
-            id="quantity"
-            placeholder="Quantity"
-            min="1"
-            value="1"
-        >
-
-        <button
-            class="add-btn"
-            onclick="addToCart()">
-            Add to Cart
-        </button>
-
-    </div>
-
-
-    <!-- PAYMENT SECTION -->
-    <div class="box">
-
-        <h2>Payment</h2>
-
-        <input
-            type="text"
-            id="customerName"
-            placeholder="Customer name (optional)"
-        >
-
-        <input
-            type="text"
-            id="paymentMethod"
-            placeholder="Payment method e.g. Cash / M-Pesa"
-        >
-
-        <input
-            type="number"
-            id="cashReceived"
-            placeholder="Amount received"
-            min="0"
-            step="0.01"
-            oninput="calculateChange()"
-        >
-
-        <div class="total-box">
-
-            <div class="total-row">
-                <span>Subtotal</span>
-                <strong id="subtotal">KSh 0</strong>
-            </div>
-
-            <div class="total-row">
-                <span>Items</span>
-                <strong id="itemCount">0</strong>
-            </div>
-
-            <div class="total-row grand-total">
-                <span>Total</span>
-                <strong id="grandTotal">KSh 0</strong>
-            </div>
-
-            <div class="total-row">
-                <span>Change</span>
-                <strong id="change">KSh 0</strong>
-            </div>
-
-        </div>
-
-        <button
-            class="complete-btn"
-            onclick="completeSale()">
-            Complete Sale
-        </button>
-
-        <button
-            class="clear-btn"
-            onclick="clearCart()">
-            Clear Cart
-        </button>
-
-        <p id="message"></p>
-
-    </div>
 
 </div>
 
 
 <!-- CART -->
-<div class="box" style="margin-top:20px;">
 
-    <h2>Current Cart</h2>
+<div class="card">
 
-    <table>
+<h2>Shopping Cart</h2>
 
-        <thead>
+<div style="overflow-x:auto;">
 
-            <tr>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Qty</th>
-                <th>Total</th>
-                <th>Action</th>
-            </tr>
+<table>
 
-        </thead>
+<thead>
 
-        <tbody id="cartBody">
+<tr>
 
-        </tbody>
+<th>Product</th>
 
-    </table>
+<th>Qty</th>
+
+<th>Price</th>
+
+<th>Total</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="cartList">
+
+</tbody>
+
+</table>
 
 </div>
 
-</div><script>
+
+<div class="total" id="grandTotal">
+
+Total: KSh 0
+
+</div>
+
+
+<div class="actions">
+
+<button onclick="completeSale()">
+Complete Sale
+</button>
+
+<button
+class="print"
+onclick="printReceipt()"
+>
+Print Last Receipt
+</button>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+/* =========================
+   LOGIN PROTECTION
+========================= */
+
+if(sessionStorage.getItem("gb_login") !== "1"){
+    window.location.href="login.html";
+}
+
+
+/* =========================
+   DATA
+========================= */
+
+let inventory =
+JSON.parse(
+    localStorage.getItem("gb_inventory") || "[]"
+);
 
 let cart = [];
 
+let lastReceipt = null;
 
-/* ADD PRODUCT */
+
+/* =========================
+   LOAD PRODUCTS
+========================= */
+
+function loadProducts(){
+
+    const productSelect =
+        document.getElementById("product");
+
+    if(inventory.length === 0){
+
+        productSelect.innerHTML =
+        "<option>No products available</option>";
+
+        return;
+    }
+
+    productSelect.innerHTML =
+        inventory.map(function(item){
+
+            return `
+            <option value="${item.id}">
+                ${escapeHTML(item.name)}
+                - KSh ${Number(item.sell).toLocaleString()}
+                (Stock: ${item.qty})
+            </option>
+            `;
+
+        }).join("");
+
+}
+
+
+/* =========================
+   ADD TO CART
+========================= */
+
 function addToCart(){
 
-    const name =
-        document.getElementById("productName").value.trim();
-
-    const price =
-        Number(document.getElementById("price").value);
+    const productId =
+        document.getElementById("product").value;
 
     const quantity =
-        Number(document.getElementById("quantity").value);
+        Math.max(
+            1,
+            Number(document.getElementById("qty").value) || 1
+        );
 
+    const item =
+        inventory.find(
+            product => product.id == productId
+        );
 
-    if(name === ""){
-        alert("Please enter the product name.");
+    if(!item){
+
+        alert("Please add products to Inventory first.");
+
         return;
     }
 
-    if(price <= 0){
-        alert("Please enter a valid selling price.");
+    if(item.qty <= 0){
+
+        alert("This product is out of stock.");
+
         return;
     }
 
-    if(quantity <= 0){
-        alert("Please enter a valid quantity.");
+    const existing =
+        cart.find(
+            product => product.id === item.id
+        );
+
+    const existingQuantity =
+        existing ? existing.qty : 0;
+
+    if(existingQuantity + quantity > item.qty){
+
+        alert(
+            "Not enough stock available. Available: "
+            + item.qty
+        );
+
         return;
     }
 
+    if(existing){
 
-    cart.push({
+        existing.qty += quantity;
 
-        name:name,
+    }else{
 
-        price:price,
+        cart.push({
 
-        quantity:quantity,
+            id:item.id,
 
-        total:price * quantity
+            name:item.name,
 
-    });
+            price:Number(item.sell) || 0,
 
+            qty:quantity
 
-    document.getElementById("productName").value="";
-    document.getElementById("price").value="";
-    document.getElementById("quantity").value=1;
+        });
 
+    }
 
-    displayCart();
+    document.getElementById("qty").value = 1;
+
+    renderCart();
 
 }
 
 
-/* DISPLAY CART */
-function displayCart(){
+/* =========================
+   REMOVE CART ITEM
+========================= */
 
-    const body =
-        document.getElementById("cartBody");
-
-    body.innerHTML="";
-
-
-    let subtotal=0;
-    let items=0;
-
-
-    cart.forEach(function(item,index){
-
-        subtotal += item.total;
-
-        items += item.quantity;
-
-
-        const row =
-            document.createElement("tr");
-
-
-        row.innerHTML=`
-
-            <td>${escapeHTML(item.name)}</td>
-
-            <td>KSh ${item.price.toLocaleString()}</td>
-
-            <td>${item.quantity}</td>
-
-            <td>KSh ${item.total.toLocaleString()}</td>
-
-            <td>
-                <button
-                    class="remove-btn"
-                    onclick="removeItem(${index})">
-                    Remove
-                </button>
-            </td>
-
-        `;
-
-
-        body.appendChild(row);
-
-    });
-
-
-    document.getElementById("subtotal").innerText =
-        "KSh " + subtotal.toLocaleString();
-
-
-    document.getElementById("grandTotal").innerText =
-        "KSh " + subtotal.toLocaleString();
-
-
-    document.getElementById("itemCount").innerText =
-        items;
-
-
-    calculateChange();
-
-}
-
-
-/* REMOVE ITEM */
-function removeItem(index){
+function removeFromCart(index){
 
     cart.splice(index,1);
 
-    displayCart();
+    renderCart();
 
 }
 
 
-/* CALCULATE CHANGE */
-function calculateChange(){
+/* =========================
+   RENDER CART
+========================= */
 
-    const total =
-        cart.reduce(function(sum,item){
+function renderCart(){
 
-            return sum + item.total;
+    const cartList =
+        document.getElementById("cartList");
 
-        },0);
+    if(cart.length === 0){
+
+        cartList.innerHTML = `
+        <tr>
+            <td colspan="5" class="empty">
+                Cart is empty.
+            </td>
+        </tr>
+        `;
+
+        document.getElementById("grandTotal").textContent =
+            "Total: KSh 0";
+
+        return;
+    }
 
 
-    const received =
-        Number(
-            document.getElementById("cashReceived").value
+    cartList.innerHTML =
+        cart.map(function(item,index){
+
+            const total =
+                item.price * item.qty;
+
+            return `
+            <tr>
+
+                <td>${escapeHTML(item.name)}</td>
+
+                <td>${item.qty}</td>
+
+                <td>
+                    KSh ${item.price.toLocaleString()}
+                </td>
+
+                <td>
+                    KSh ${total.toLocaleString()}
+                </td>
+
+                <td>
+
+                    <button
+                    class="danger"
+                    onclick="removeFromCart(${index})"
+                    >
+                    Remove
+                    </button>
+
+                </td>
+
+            </tr>
+            `;
+
+        }).join("");
+
+
+    const grandTotal =
+        cart.reduce(
+            (sum,item) =>
+            sum + (item.price * item.qty),
+            0
         );
 
 
-    const change =
-        received - total;
-
-
-    document.getElementById("change").innerText =
-        "KSh " +
-        (change > 0 ? change : 0).toLocaleString();
+    document.getElementById("grandTotal").textContent =
+        "Total: KSh " +
+        grandTotal.toLocaleString();
 
 }
 
 
-/* COMPLETE SALE */
+/* =========================
+   COMPLETE SALE
+========================= */
+
 function completeSale(){
 
     if(cart.length === 0){
@@ -559,149 +517,494 @@ function completeSale(){
         alert("Your cart is empty.");
 
         return;
-
     }
 
 
-    const total =
-        cart.reduce(function(sum,item){
-
-            return sum + item.total;
-
-        },0);
-
-
-    const customer =
-        document.getElementById("customerName").value.trim()
-        || "Walk-in Customer";
-
-
-    const payment =
-        document.getElementById("paymentMethod").value.trim()
-        || "Cash";
-
-
-    const received =
-        Number(
-            document.getElementById("cashReceived").value
+    const grandTotal =
+        cart.reduce(
+            (sum,item) =>
+            sum + (item.price * item.qty),
+            0
         );
 
 
-    if(received < total){
-
-        alert(
-            "Amount received is less than the total sale."
-        );
-
-        return;
-
-    }
+    const receiptNumber =
+        "GB-" +
+        Date.now().toString().slice(-8);
 
 
-    const sale = {
+    const now =
+        new Date();
 
-        id:Date.now(),
 
-        date:new Date().toLocaleString(),
+    /* CREATE RECEIPT */
 
-        customer:customer,
+    lastReceipt = {
 
-        paymentMethod:payment,
+        number:receiptNumber,
 
-        items:cart,
+        date:now.toLocaleDateString(),
 
-        total:total,
+        time:now.toLocaleTimeString(),
 
-        amount:received,
+        items:cart.map(item => ({
 
-        change:received-total
+            name:item.name,
+
+            qty:item.qty,
+
+            price:item.price,
+
+            total:item.price * item.qty
+
+        })),
+
+        total:grandTotal
 
     };
 
 
-    let sales =
-        JSON.parse(
-            localStorage.getItem("goldbizna_sales") || "[]"
-        );
+    /* UPDATE INVENTORY */
 
+    inventory =
+        inventory.map(function(product){
 
-    sales.push(sale);
+            const sold =
+                cart.find(
+                    item => item.id === product.id
+                );
+
+            if(sold){
+
+                return {
+
+                    ...product,
+
+                    qty:
+                    Number(product.qty)
+                    -
+                    Number(sold.qty)
+
+                };
+
+            }
+
+            return product;
+
+        });
 
 
     localStorage.setItem(
-        "goldbizna_sales",
+        "gb_inventory",
+        JSON.stringify(inventory)
+    );
+
+
+    /* SAVE SALE */
+
+    const sales =
+        JSON.parse(
+            localStorage.getItem("gb_sales") || "[]"
+        );
+
+
+    sales.push({
+
+        id:Date.now(),
+
+        date:now.toISOString(),
+
+        receiptNumber:receiptNumber,
+
+        items:lastReceipt.items,
+
+        total:grandTotal
+
+    });
+
+
+    localStorage.setItem(
+        "gb_sales",
         JSON.stringify(sales)
     );
 
 
-    document.getElementById("message").style.color =
-        "#0b7a0b";
+    /* CLEAR CART */
 
-    document.getElementById("message").innerText =
-        "Sale completed successfully!";
+    cart = [];
 
 
-    cart=[];
+    renderCart();
 
-    document.getElementById("customerName").value="";
-    document.getElementById("paymentMethod").value="";
-    document.getElementById("cashReceived").value="";
+    loadProducts();
 
 
-    displayCart();
+    /*
+       ASK WHETHER TO PRINT
+    */
+
+    const printNow =
+        confirm(
+            "Sale completed successfully!\n\n" +
+            "Receipt: " + receiptNumber +
+            "\nTotal: KSh " +
+            grandTotal.toLocaleString() +
+            "\n\nPrint receipt now?"
+        );
+
+
+    if(printNow){
+
+        printReceipt();
+
+    }
 
 }
 
 
-/* CLEAR CART */
-function clearCart(){
+/* =========================
+   PRINT RECEIPT
+========================= */
 
-    if(cart.length === 0){
+function printReceipt(){
+
+    if(!lastReceipt){
+
+        alert(
+            "There is no receipt available yet. " +
+            "Complete a sale first."
+        );
+
         return;
     }
 
 
-    if(confirm("Clear all items from the cart?")){
+    const receipt =
+        lastReceipt;
 
-        cart=[];
 
-        displayCart();
+    const itemsHTML =
+        receipt.items.map(function(item){
+
+            return `
+            <tr>
+
+                <td>
+                    ${escapeHTML(item.name)}
+                </td>
+
+                <td>
+                    ${item.qty}
+                </td>
+
+                <td>
+                    KSh ${item.price.toLocaleString()}
+                </td>
+
+                <td>
+                    KSh ${item.total.toLocaleString()}
+                </td>
+
+            </tr>
+            `;
+
+        }).join("");
+
+
+    const receiptHTML = `
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Goldbizna Receipt</title>
+
+<style>
+
+body{
+
+    font-family:Arial,sans-serif;
+
+    width:80mm;
+
+    margin:0 auto;
+
+    padding:10px;
+
+    color:#000;
+
+}
+
+.center{
+
+    text-align:center;
+
+}
+
+.logo{
+
+    font-size:24px;
+
+    font-weight:bold;
+
+}
+
+.small{
+
+    font-size:12px;
+
+}
+
+.line{
+
+    border-top:1px dashed #000;
+
+    margin:10px 0;
+
+}
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    font-size:11px;
+
+}
+
+th,td{
+
+    padding:4px 2px;
+
+    text-align:left;
+
+}
+
+.total{
+
+    font-size:17px;
+
+    font-weight:bold;
+
+    text-align:right;
+
+    margin-top:10px;
+
+}
+
+.footer{
+
+    text-align:center;
+
+    margin-top:20px;
+
+    font-size:12px;
+
+}
+
+@media print{
+
+    body{
+
+        width:80mm;
 
     }
 
 }
 
+</style>
 
-/* LOGOUT */
-function logout(){
+</head>
 
-    localStorage.removeItem("loggedIn");
+<body>
 
-    window.location.href="login.html";
+
+<div class="center">
+
+<div class="logo">
+GOLDBIZNA
+</div>
+
+<div>
+Business Management System
+</div>
+
+</div>
+
+
+<div class="line"></div>
+
+
+<div class="small">
+
+Receipt No:
+${receipt.number}
+
+<br>
+
+Date:
+${receipt.date}
+
+<br>
+
+Time:
+${receipt.time}
+
+</div>
+
+
+<div class="line"></div>
+
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Item</th>
+
+<th>Qty</th>
+
+<th>Price</th>
+
+<th>Total</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+${itemsHTML}
+
+</tbody>
+
+</table>
+
+
+<div class="line"></div>
+
+
+<div class="total">
+
+TOTAL:
+KSh ${receipt.total.toLocaleString()}
+
+</div>
+
+
+<div class="line"></div>
+
+
+<div class="footer">
+
+Thank you for shopping with Goldbizna!
+
+<br><br>
+
+Please come again.
+
+</div>
+
+
+<script>
+
+window.onload=function(){
+
+    setTimeout(function(){
+
+        window.print();
+
+    },300);
+
+};
+
+<\/script>
+
+
+</body>
+
+</html>
+
+`;
+
+
+    const printWindow =
+        window.open(
+            "",
+            "_blank",
+            "width=420,height=700"
+        );
+
+
+    if(!printWindow){
+
+        alert(
+            "Printing was blocked by your browser. " +
+            "Allow pop-ups for this Goldbizna website."
+        );
+
+        return;
+    }
+
+
+    printWindow.document.open();
+
+    printWindow.document.write(
+        receiptHTML
+    );
+
+    printWindow.document.close();
 
 }
 
 
-/* BASIC HTML SECURITY */
-function escapeHTML(text){
+/* =========================
+   LOGOUT
+========================= */
 
-    return String(text)
+function logout(){
 
+    sessionStorage.removeItem("gb_login");
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =========================
+   SECURITY / DISPLAY HELPER
+========================= */
+
+function escapeHTML(value){
+
+    return String(value)
         .replace(/&/g,"&amp;")
-
         .replace(/</g,"&lt;")
-
         .replace(/>/g,"&gt;")
-
         .replace(/"/g,"&quot;")
-
         .replace(/'/g,"&#039;");
 
 }
 
 
-/* INITIAL DISPLAY */
-displayCart();
+/* =========================
+   START
+========================= */
 
-</script></body>
+loadProducts();
+
+renderCart();
+
+</script>
+
+</body>
 </html>

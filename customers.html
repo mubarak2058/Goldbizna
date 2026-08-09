@@ -1,153 +1,766 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goldbizna Customers</title>
-
-<style>
-body{
-    font-family:Arial,sans-serif;
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Goldbizna Customers</title><style>
+*{
     margin:0;
-    background:#f4f4f4;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
 }
+
+body{
+    background:#f4f4f4;
+    color:#333;
+}
+
 header{
     background:#0b7a0b;
     color:white;
-    padding:15px;
-    text-align:center;
-    font-size:24px;
+    padding:16px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
 }
-.container{
-    max-width:900px;
-    margin:20px auto;
-    background:white;
-    padding:20px;
-    border-radius:8px;
+
+.logo{
+    font-size:25px;
+    font-weight:bold;
 }
-input{
-    padding:10px;
-    margin:5px;
-    width:30%;
+
+.header-buttons{
+    display:flex;
+    gap:8px;
 }
-button{
-    padding:10px 15px;
-    background:#0b7a0b;
-    color:white;
+
+.header-buttons button{
     border:none;
+    padding:10px 15px;
+    border-radius:5px;
+    color:white;
+    cursor:pointer;
+}
+
+.dashboard-btn{
+    background:#075c07;
+}
+
+.logout-btn{
+    background:#c62828;
+}
+
+.container{
+    width:95%;
+    max-width:1200px;
+    margin:20px auto;
+}
+
+.title,
+.form-box,
+.search-box,
+.table-box,
+.summary-card{
+    background:white;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+
+.title{
+    padding:20px;
+    margin-bottom:20px;
+}
+
+.title h1{
+    color:#0b7a0b;
+    margin-bottom:5px;
+}
+
+.form-box{
+    padding:20px;
+    margin-bottom:20px;
+}
+
+.form-box h2{
+    color:#0b7a0b;
+    margin-bottom:15px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    font-size:15px;
+}
+
+.full{
+    grid-column:1/-1;
+}
+
+.buttons{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+}
+
+button{
+    border:none;
+    padding:11px 17px;
     border-radius:5px;
     cursor:pointer;
 }
-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:20px;
-}
-th,td{
-    border:1px solid #ccc;
-    padding:8px;
-}
-th{
+
+.save-btn{
     background:#0b7a0b;
     color:white;
 }
-</style>
-</head>
 
-<body>
+.cancel-btn{
+    background:#777;
+    color:white;
+    display:none;
+}
 
-<header>Goldbizna Customers</header>
+#message{
+    margin-top:12px;
+    font-weight:bold;
+}
 
-<div class="container">
+.summary{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+    margin-bottom:20px;
+}
 
-<input id="customerName" placeholder="Customer Name">
-<input id="customerPhone" placeholder="Phone Number">
-<input id="customerEmail" placeholder="Email">
+.summary-card{
+    padding:20px;
+    text-align:center;
+}
 
-<button onclick="addCustomer()">Add Customer</button>
+.summary-card h3{
+    color:#0b7a0b;
+    margin-bottom:8px;
+}
 
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Phone</th>
-<th>Email</th>
-<th>Action</th>
-</tr>
-</thead>
+.summary-card p{
+    font-size:25px;
+    font-weight:bold;
+}
 
-<tbody id="customerTable"></tbody>
+.search-box{
+    padding:15px;
+    margin-bottom:20px;
+}
 
-</table>
+.table-box{
+    padding:20px;
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:850px;
+}
+
+th{
+    background:#0b7a0b;
+    color:white;
+    padding:11px;
+}
+
+td{
+    padding:10px;
+    border:1px solid #ddd;
+    text-align:center;
+}
+
+.edit-btn{
+    background:#1976d2;
+    color:white;
+    padding:7px 10px;
+}
+
+.delete-btn{
+    background:#c62828;
+    color:white;
+    padding:7px 10px;
+    margin-left:5px;
+}
+
+@media(max-width:700px){
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .full{
+        grid-column:auto;
+    }
+
+    .summary{
+        grid-template-columns:1fr;
+    }
+}
+</style></head><body><script>
+if(localStorage.getItem("loggedIn") !== "true"){
+    window.location.href="login.html";
+}
+</script><header><div class="logo">
+    Goldbizna Customers
+</div>
+
+<div class="header-buttons">
+
+    <button
+        class="dashboard-btn"
+        onclick="window.location.href='dashboard.html'">
+        Dashboard
+    </button>
+
+    <button
+        class="logout-btn"
+        onclick="logout()">
+        Logout
+    </button>
 
 </div>
 
-<script>
+</header><div class="container"><div class="title">
 
-let customers = JSON.parse(localStorage.getItem("goldbizna_customers") || "[]");
+    <h1>Customer Management</h1>
 
+    <p>
+        Manage your Goldbizna customer records.
+    </p>
+
+</div>
+
+
+<div class="form-box">
+
+    <h2 id="formTitle">Add New Customer</h2>
+
+    <div class="form-grid">
+
+        <input
+            type="text"
+            id="customerName"
+            placeholder="Customer Name"
+        >
+
+        <input
+            type="text"
+            id="phone"
+            placeholder="Phone Number"
+        >
+
+        <input
+            type="text"
+            id="customerId"
+            placeholder="Customer ID"
+        >
+
+        <input
+            type="text"
+            id="address"
+            placeholder="Address"
+        >
+
+        <input
+            class="full"
+            type="number"
+            id="totalPurchases"
+            placeholder="Total Purchases"
+            min="0"
+            step="0.01"
+            value="0"
+        >
+
+    </div>
+
+    <div class="buttons">
+
+        <button
+            class="save-btn"
+            id="saveButton"
+            onclick="saveCustomer()">
+            Add Customer
+        </button>
+
+        <button
+            class="cancel-btn"
+            id="cancelButton"
+            onclick="cancelEdit()">
+            Cancel
+        </button>
+
+    </div>
+
+    <p id="message"></p>
+
+</div>
+
+
+<div class="summary">
+
+    <div class="summary-card">
+
+        <h3>Total Customers</h3>
+
+        <p id="customerCount">0</p>
+
+    </div>
+
+    <div class="summary-card">
+
+        <h3>Total Purchases</h3>
+
+        <p id="purchaseTotal">KSh 0</p>
+
+    </div>
+
+</div>
+
+
+<div class="search-box">
+
+    <input
+        type="text"
+        id="search"
+        placeholder="Search by name, phone or customer ID..."
+        oninput="displayCustomers()"
+    >
+
+</div>
+
+
+<div class="table-box">
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>#</th>
+                <th>Customer</th>
+                <th>Phone</th>
+                <th>Customer ID</th>
+                <th>Address</th>
+                <th>Total Purchases</th>
+                <th>Actions</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="customerBody"></tbody>
+
+    </table>
+
+</div>
+
+</div><script>
+
+let customers = JSON.parse(
+    localStorage.getItem("goldbizna_customers") || "[]"
+);
+
+let editingIndex = -1;
+
+
+/* SAVE CUSTOMER */
+function saveCustomer(){
+
+    const name =
+        document.getElementById("customerName").value.trim();
+
+    const phone =
+        document.getElementById("phone").value.trim();
+
+    const customerId =
+        document.getElementById("customerId").value.trim();
+
+    const address =
+        document.getElementById("address").value.trim();
+
+    const totalPurchases =
+        Number(
+            document.getElementById("totalPurchases").value
+        );
+
+
+    if(name === ""){
+
+        alert("Please enter the customer name.");
+
+        return;
+
+    }
+
+
+    if(phone === ""){
+
+        alert("Please enter the phone number.");
+
+        return;
+
+    }
+
+
+    if(totalPurchases < 0){
+
+        alert("Total purchases cannot be negative.");
+
+        return;
+
+    }
+
+
+    const customer = {
+
+        id:
+            customerId ||
+            "CUS-" + Date.now(),
+
+        name:name,
+
+        phone:phone,
+
+        address:address,
+
+        totalPurchases:totalPurchases,
+
+        createdAt:
+            new Date().toLocaleString()
+
+    };
+
+
+    if(editingIndex === -1){
+
+        customers.push(customer);
+
+        showMessage(
+            "Customer added successfully.",
+            "green"
+        );
+
+    }else{
+
+        customers[editingIndex]=customer;
+
+        editingIndex=-1;
+
+        showMessage(
+            "Customer updated successfully.",
+            "green"
+        );
+
+    }
+
+
+    saveCustomers();
+
+    clearForm();
+
+    displayCustomers();
+
+}
+
+
+/* SAVE DATA */
 function saveCustomers(){
-localStorage.setItem("goldbizna_customers", JSON.stringify(customers));
-renderCustomers();
-}
 
-function addCustomer(){
-
-if(customerName.value.trim()==""){
-alert("Enter customer name");
-return;
-}
-
-customers.push({
-name:customerName.value,
-phone:customerPhone.value,
-email:customerEmail.value
-});
-
-customerName.value="";
-customerPhone.value="";
-customerEmail.value="";
-
-saveCustomers();
+    localStorage.setItem(
+        "goldbizna_customers",
+        JSON.stringify(customers)
+    );
 
 }
 
+
+/* DISPLAY CUSTOMERS */
+function displayCustomers(){
+
+    const body =
+        document.getElementById("customerBody");
+
+    const search =
+        document.getElementById("search")
+        .value
+        .toLowerCase()
+        .trim();
+
+
+    body.innerHTML="";
+
+
+    let purchaseTotal=0;
+
+
+    const filtered =
+        customers.filter(function(customer){
+
+            return (
+
+                customer.name
+                    .toLowerCase()
+                    .includes(search)
+
+                ||
+
+                customer.phone
+                    .toLowerCase()
+                    .includes(search)
+
+                ||
+
+                customer.id
+                    .toLowerCase()
+                    .includes(search)
+
+            );
+
+        });
+
+
+    filtered.forEach(function(customer,index){
+
+        purchaseTotal +=
+            Number(customer.totalPurchases);
+
+
+        const realIndex =
+            customers.indexOf(customer);
+
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML=`
+
+            <td>${index + 1}</td>
+
+            <td>${escapeHTML(customer.name)}</td>
+
+            <td>${escapeHTML(customer.phone)}</td>
+
+            <td>${escapeHTML(customer.id)}</td>
+
+            <td>${escapeHTML(customer.address || "-")}</td>
+
+            <td>
+                KSh ${Number(customer.totalPurchases)
+                .toLocaleString()}
+            </td>
+
+            <td>
+
+                <button
+                    class="edit-btn"
+                    onclick="editCustomer(${realIndex})">
+                    Edit
+                </button>
+
+                <button
+                    class="delete-btn"
+                    onclick="deleteCustomer(${realIndex})">
+                    Delete
+                </button>
+
+            </td>
+
+        `;
+
+
+        body.appendChild(row);
+
+    });
+
+
+    document.getElementById("customerCount").innerText =
+        customers.length;
+
+
+    document.getElementById("purchaseTotal").innerText =
+        "KSh " + purchaseTotal.toLocaleString();
+
+}
+
+
+/* EDIT */
+function editCustomer(index){
+
+    const customer =
+        customers[index];
+
+
+    document.getElementById("customerName").value =
+        customer.name;
+
+    document.getElementById("phone").value =
+        customer.phone;
+
+    document.getElementById("customerId").value =
+        customer.id;
+
+    document.getElementById("address").value =
+        customer.address || "";
+
+    document.getElementById("totalPurchases").value =
+        customer.totalPurchases;
+
+
+    editingIndex=index;
+
+
+    document.getElementById("formTitle").innerText =
+        "Edit Customer";
+
+
+    document.getElementById("saveButton").innerText =
+        "Update Customer";
+
+
+    document.getElementById("cancelButton").style.display =
+        "block";
+
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+/* CANCEL */
+function cancelEdit(){
+
+    editingIndex=-1;
+
+    clearForm();
+
+}
+
+
+/* DELETE */
 function deleteCustomer(index){
 
-if(confirm("Delete this customer?")){
+    const customer =
+        customers[index];
 
-customers.splice(index,1);
 
-saveCustomers();
+    if(!confirm(
+        "Delete " + customer.name + "?"
+    )){
 
-}
+        return;
 
-}
+    }
 
-function renderCustomers(){
 
-customerTable.innerHTML="";
+    customers.splice(index,1);
 
-customers.forEach((c,index)=>{
+    saveCustomers();
 
-customerTable.innerHTML+=`
-<tr>
-<td>${c.name}</td>
-<td>${c.phone}</td>
-<td>${c.email}</td>
-<td>
-<button onclick="deleteCustomer(${index})">Delete</button>
-</td>
-</tr>
-`;
+    displayCustomers();
 
-});
+
+    showMessage(
+        "Customer deleted.",
+        "red"
+    );
 
 }
 
-renderCustomers();
 
-</script>
+/* CLEAR FORM */
+function clearForm(){
 
-</body>
-</html>
+    document.getElementById("customerName").value="";
+    document.getElementById("phone").value="";
+    document.getElementById("customerId").value="";
+    document.getElementById("address").value="";
+    document.getElementById("totalPurchases").value="0";
+
+
+    document.getElementById("formTitle").innerText =
+        "Add New Customer";
+
+
+    document.getElementById("saveButton").innerText =
+        "Add Customer";
+
+
+    document.getElementById("cancelButton").style.display =
+        "none";
+
+}
+
+
+/* MESSAGE */
+function showMessage(text,color){
+
+    const message =
+        document.getElementById("message");
+
+
+    message.innerText=text;
+
+    message.style.color=color;
+
+
+    setTimeout(function(){
+
+        message.innerText="";
+
+    },3000);
+
+}
+
+
+/* LOGOUT */
+function logout(){
+
+    localStorage.removeItem("loggedIn");
+
+    window.location.href="login.html";
+
+}
+
+
+/* HTML ESCAPE */
+function escapeHTML(text){
+
+    return String(text)
+
+        .replace(/&/g,"&amp;")
+
+        .replace(/</g,"&lt;")
+
+        .replace(/>/g,"&gt;")
+
+        .replace(/"/g,"&quot;")
+
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* START */
+displayCustomers();
+
+</script></body>
+    </html>

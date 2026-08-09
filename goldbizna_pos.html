@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Goldbizna POS Pro</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#f4f7f5;color:#222}
+header{background:#087a0b;color:#fff;padding:14px;position:sticky;top:0;z-index:10}
+.head{max-width:1400px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{font-size:23px;font-weight:bold}.sub{font-size:12px;margin-top:3px}
+.nav{display:flex;gap:7px;flex-wrap:wrap}
+button{border:0;border-radius:7px;padding:10px 13px;cursor:pointer;font-weight:bold}
+.nav button{background:#075c07;color:#fff}.logout{background:#c62828!important}
+.container{max-width:1400px;margin:18px auto;padding:0 12px}
+.layout{display:grid;grid-template-columns:1.5fr 1fr;gap:18px}
+.card{background:#fff;border-radius:12px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.08);margin-bottom:18px}
+.title{font-size:20px;font-weight:bold;color:#087a0b;margin-bottom:14px}
+.search{width:100%;padding:13px;border:1px solid #ccc;border-radius:7px;font-size:15px;margin-bottom:14px}
+.products{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.product{border:1px solid #ddd;border-radius:10px;padding:14px;background:#fff}
+.product h3{font-size:16px;margin-bottom:6px}
+.product small{color:#666;display:block;margin-bottom:8px}
+.price{font-weight:bold;color:#087a0b;font-size:17px}
+.stock{font-size:12px;margin-top:5px}
+.product button{background:#087a0b;color:#fff;width:100%;margin-top:10px}
+.product button:disabled{background:#999;cursor:not-allowed}
+.cart-row{border-bottom:1px solid #ddd;padding:12px 0}
+.cart-top{display:flex;justify-content:space-between;gap:8px}
+.qty{display:flex;align-items:center;gap:7px;margin-top:8px}
+.qty button{padding:6px 10px;background:#087a0b;color:#fff}
+.remove{background:#c62828!important}
+.totals{margin-top:15px;border-top:2px solid #087a0b;padding-top:12px}
+.line{display:flex;justify-content:space-between;margin:8px 0}
+.total{font-size:22px;font-weight:bold;color:#087a0b}
+.paygrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.paygrid input,.paygrid select{width:100%;padding:11px;border:1px solid #ccc;border-radius:7px}
+.checkout{width:100%;background:#087a0b;color:#fff;font-size:17px;margin-top:12px}
+.clearcart{width:100%;background:#555;color:#fff;margin-top:8px}
+.empty{text-align:center;color:#777;padding:30px}
+.message{min-height:22px;margin-top:10px;font-weight:bold}
+.receipt{display:none}
+@media(max-width:950px){.layout{grid-template-columns:1fr}.products{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.head{flex-direction:column;align-items:flex-start}.nav{width:100%}.nav button{flex:1}.products{grid-template-columns:1fr}.paygrid{grid-template-columns:1fr}}
+@media print{
+body *{visibility:hidden!important}
+.receipt,.receipt *{visibility:visible!important}
+.receipt{display:block!important;position:absolute;left:0;top:0;width:80mm;background:#fff;color:#000;padding:8px;font-family:monospace}
+.no-print{display:none!important}
+}
+</style>
+</head>
+<body>
+
+<header class="no-print">
+<div class="head">
+<div><div class="logo">GOLDBIZNA POS PRO</div><div class="sub">Professional Point of Sale</div></div>
+<div class="nav">
+<button onclick="location.href='dashboard.html'">Dashboard</button>
+<button onclick="location.href='inventory.html'">Inventory</button>
+<button onclick="location.href='customers.html'">Customers</button>
+<button onclick="location.href='reports.html'">Reports</button>
+<button class="logout" onclick="logout()">Logout</button>
+</div>
+</div>
+</header>
+
+<div class="container no-print">
+<div class="layout">
+
+<div>
+<div class="card">
+<div class="title">Products</div>
+<input id="search" class="search" placeholder="🔎 Search product or category..." autocomplete="off">
+<div id="products" class="products"></div>
+</div>
+</div>
+
+<div>
+<div class="card">
+<div class="title">Current Sale</div>
+<div id="cart"></div>
+
+<div class="totals">
+<div class="line"><span>Subtotal</span><strong id="subtotal">KSh 0</strong></div>
+<div class="line"><span>Discount</span><input id="discount" type="number" min="0" value="0" style="width:110px;padding:7px;border:1px solid #ccc;border-radius:6px"></div>
+<div class="line total"><span>Total</span><span id="total">KSh 0</span></div>
+
+<div class="paygrid">
+<select id="payment">
+<option value="Cash">Cash</option>
+<option value="M-Pesa">M-Pesa</option>
+<option value="Card">Card</option>
+</select>
+<input id="paid" type="number" min="0" placeholder="Amount Paid">
+</div>
+
+<div class="line"><span>Balance / Change</span><strong id="change">KSh 0</strong></div>
+<button class="checkout" onclick="completeSale()">✓ Complete Sale & Print Receipt</button>
+<button class="clearcart" onclick="clearCart()">Clear Cart</button>
+<div id="message" class="message"></div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="receipt" id="receipt"></div>
+
+<script>
+(function(){
+"use strict";
+
+const INV_KEY="goldbizna_inventory";
+const SALES_KEY="goldbizna_sales";
+let inventory=[];
+let cart=[];
+
+function $(id){return document.getElementById(id)}
+function money(v){return Number(v||0).toLocaleString("en-KE",{minimumFractionDigits:0,maximumFractionDigits:2})}
+function safe(v){return String(v==null?"":v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function msg(t,c){$("message").textContent=t;$("message").style.color=c==="error"?"#c62828":"#087a0b"}
+
+function loadInventory(){
+ try{
+  const data=JSON.parse(localStorage.getItem(INV_KEY)||"[]");
+  inventory=Array.isArray(data)?data:[];
+ }catch(e){inventory=[]}
+ renderProducts();
+}
+
+function renderProducts(){
+ const q=$("search").value.trim().toLowerCase();
+ const box=$("products");
+ const list=inventory.filter(p=>
+  String(p.name||"").toLowerCase().includes(q) ||
+  String(p.category||"").toLowerCase().includes(q)
+ );
+ box.innerHTML="";
+ if(!list.length){
+  box.innerHTML='<div class="empty">No products found.<br>Add products from Inventory first.</div>';
+  return;
+ }
+ list.forEach(p=>{
+  const stock=Number(p.quantity)||0;
+  const d=document.createElement("div");
+  d.className="product";
+  d.innerHTML="<h3>"+safe(p.name)+"</h3><small>"+safe(p.category)+"</small><div class='price'>KSh "+money(p.sellingPrice)+"</div><div class='stock'>Stock: "+stock+"</div><button "+(stock<=0?"disabled":"")+" data-add='"+safe(p.id)+"'>Add to Cart</button>";
+  box.appendChild(d);
+ });
+}
+
+function addToCart(id){
+ const p=inventory.find(x=>String(x.id)===String(id));
+ if(!p)return;
+ const existing=cart.find(x=>String(x.id)===String(id));
+ if(existing){
+  if(existing.qty>=Number(p.quantity))return msg("Not enough stock available.","error");
+  existing.qty++;
+ }else{
+  cart.push({id:p.id,name:p.name,price:Number(p.sellingPrice)||0,qty:1});
+ }
+ renderCart();
+}
+
+function renderCart(){
+ const box=$("cart");
+ box.innerHTML="";
+ if(!cart.length){box.innerHTML='<div class="empty">Cart is empty.</div>';updateTotals();return}
+ cart.forEach(item=>{
+  const row=document.createElement("div");
+  row.className="cart-row";
+  row.innerHTML="<div class='cart-top'><strong>"+safe(item.name)+"</strong><strong>KSh "+money(item.price*item.qty)+"</strong></div><div class='qty'><button data-minus='"+safe(item.id)+"'>−</button><span>"+item.qty+"</span><button data-plus='"+safe(item.id)+"'>+</button><button class='remove' data-remove='"+safe(item.id)+"'>Remove</button></div>";
+  box.appendChild(row);
+ });
+ updateTotals();
+}
+
+function updateTotals(){
+ let sub=cart.reduce((a,x)=>a+x.price*x.qty,0);
+ let disc=Math.max(0,Number($("discount").value)||0);
+ if(disc>sub)disc=sub;
+ let total=sub-disc;
+ let paid=Number($("paid").value)||0;
+ $("subtotal").textContent="KSh "+money(sub);
+ $("total").textContent="KSh "+money(total);
+ $("change").textContent="KSh "+money(paid-total);
+}
+
+function clearCart(){
+ cart=[];
+ $("discount").value=0;
+ $("paid").value="";
+ renderCart();
+ msg("Cart cleared.");
+}
+
+function completeSale(){
+ if(!cart.length)return msg("Cart is empty.","error");
+ let sub=cart.reduce((a,x)=>a+x.price*x.qty,0);
+ let disc=Math.max(0,Number($("discount").value)||0);
+ if(disc>sub)disc=sub;
+ let total=sub-disc;
+ let paid=Number($("paid").value)||0;
+ if(paid<total)return msg("Amount paid is less than the total.","error");
+
+ cart.forEach(item=>{
+  const p=inventory.find(x=>String(x.id)===String(item.id));
+  if(p)p.quantity=Math.max(0,(Number(p.quantity)||0)-item.qty);
+ });
+ localStorage.setItem(INV_KEY,JSON.stringify(inventory));
+
+ let sale={
+  id:"SALE-"+Date.now(),
+  date:new Date().toISOString(),
+  items:cart.map(x=>({...x})),
+  subtotal:sub,
+  discount:disc,
+  total:total,
+  paid:paid,
+  change:paid-total,
+  payment:$("payment").value
+ };
+ let sales=[];
+ try{sales=JSON.parse(localStorage.getItem(SALES_KEY)||"[]");if(!Array.isArray(sales))sales=[]}catch(e){sales=[]}
+ sales.push(sale);
+ localStorage.setItem(SALES_KEY,JSON.stringify(sales));
+
+ makeReceipt(sale);
+ window.print();
+
+ cart=[];
+ $("discount").value=0;
+ $("paid").value="";
+ renderProducts();
+ renderCart();
+ msg("✓ Sale completed successfully.");
+}
+
+function makeReceipt(s){
+ let html="<h2 style='text-align:center'>GOLDBIZNA</h2><p style='text-align:center'>SALES RECEIPT</p><hr><p>Receipt: "+safe(s.id)+"<br>Date: "+new Date(s.date).toLocaleString()+"</p><hr>";
+ s.items.forEach(i=>{html+="<p>"+safe(i.name)+"<br>"+i.qty+" x KSh "+money(i.price)+" = KSh "+money(i.qty*i.price)+"</p>"});
+ html+="<hr><p>Subtotal: KSh "+money(s.subtotal)+"<br>Discount: KSh "+money(s.discount)+"<br><b>Total: KSh "+money(s.total)+"</b><br>Paid: KSh "+money(s.paid)+"<br>Change: KSh "+money(s.change)+"<br>Payment: "+safe(s.payment)+"</p><hr><p style='text-align:center'>Thank you for shopping with Goldbizna</p>";
+ $("receipt").innerHTML=html;
+}
+
+$("search").oninput=renderProducts;
+$("discount").oninput=updateTotals;
+$("paid").oninput=updateTotals;
+
+$("products").onclick=function(e){
+ const b=e.target.closest("[data-add]");
+ if(b)addToCart(b.dataset.add);
+};
+
+$("cart").onclick=function(e){
+ let id;
+ if(e.target.dataset.plus){
+  id=e.target.dataset.plus;
+  let i=cart.find(x=>String(x.id)===String(id));
+  let p=inventory.find(x=>String(x.id)===String(id));
+  if(i&&p&&i.qty<Number(p.quantity))i.qty++;
+  else msg("Not enough stock available.","error");
+  renderCart();
+ }
+ if(e.target.dataset.minus){
+  id=e.target.dataset.minus;
+  let i=cart.find(x=>String(x.id)===String(id));
+  if(i){i.qty--;if(i.qty<=0)cart=cart.filter(x=>String(x.id)!==String(id))}
+  renderCart();
+ }
+ if(e.target.dataset.remove){
+  cart=cart.filter(x=>String(x.id)!==String(e.target.dataset.remove));
+  renderCart();
+ }
+};
+
+window.logout=function(){
+ localStorage.removeItem("loggedIn");
+ sessionStorage.removeItem("gb_login");
+ location.href="login.html";
+};
+
+loadInventory();
+renderCart();
+})();
+</script>
+</body>
+</html>

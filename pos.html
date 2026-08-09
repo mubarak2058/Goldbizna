@@ -134,13 +134,11 @@ header{
     padding:13px;
     cursor:pointer;
     background:white;
-    transition:.15s;
 }
 
 .product:hover{
     border-color:#087a0b;
     box-shadow:0 2px 7px #0002;
-    transform:translateY(-1px);
 }
 
 .product-name{
@@ -164,18 +162,18 @@ header{
     margin-top:7px;
 }
 
-.low{
-    color:red;
-    font-weight:bold;
-}
-
 .good{
     color:#087a0b;
     font-weight:bold;
 }
 
+.low{
+    color:#e65100;
+    font-weight:bold;
+}
+
 .out{
-    color:#b00020;
+    color:#c62828;
     font-weight:bold;
 }
 
@@ -188,8 +186,8 @@ header{
 
 .status{
     text-align:center;
-    color:#777;
     padding:25px;
+    color:#777;
 }
 
 table{
@@ -403,17 +401,12 @@ input:focus{
 <body>
 
 <script>
-/* ===============================
-   LOGIN PROTECTION
-================================ */
-
 if(localStorage.getItem("loggedIn") !== "true"){
-    window.location.href = "login.html";
+    window.location.href="login.html";
 }
 </script>
 
 <header>
-
 <div class="header-inner">
 
 <div>
@@ -421,17 +414,12 @@ if(localStorage.getItem("loggedIn") !== "true"){
 <div class="subtitle">Professional Business Management</div>
 </div>
 
-<button class="logout" onclick="logout()">
-Logout
-</button>
+<button class="logout" onclick="logout()">Logout</button>
 
 </div>
-
 </header>
 
-
 <div class="menu">
-
 <div class="menu-inner">
 
 <a href="dashboard.html">Dashboard</a>
@@ -445,9 +433,7 @@ Logout
 <a href="settings.html">Settings</a>
 
 </div>
-
 </div>
-
 
 <div class="container">
 
@@ -459,9 +445,7 @@ Logout
 
 <div class="card">
 
-<div class="title">
-🔎 Search Products
-</div>
+<div class="title">🔎 Search Products</div>
 
 <input
 id="search"
@@ -471,11 +455,7 @@ placeholder="Search product or category..."
 autocomplete="off">
 
 <div id="products">
-
-<div class="status">
-Loading products...
-</div>
-
+<div class="status">Loading products...</div>
 </div>
 
 </div>
@@ -483,16 +463,13 @@ Loading products...
 
 <div class="card">
 
-<div class="title">
-🛒 Shopping Cart
-</div>
+<div class="title">🛒 Shopping Cart</div>
 
 <div class="cart-wrapper">
 
 <table>
 
 <thead>
-
 <tr>
 <th>Product</th>
 <th>Qty</th>
@@ -500,17 +477,14 @@ Loading products...
 <th>Total</th>
 <th></th>
 </tr>
-
 </thead>
 
 <tbody id="cart">
 
 <tr>
-
 <td colspan="5" class="empty">
 Cart is empty
 </td>
-
 </tr>
 
 </tbody>
@@ -530,9 +504,7 @@ Cart is empty
 
 <div class="card">
 
-<div class="title">
-👤 Customer
-</div>
+<div class="title">👤 Customer</div>
 
 <input
 id="customer"
@@ -545,9 +517,7 @@ autocomplete="off">
 
 <div class="card">
 
-<div class="title">
-💰 Order Summary
-</div>
+<div class="title">💰 Order Summary</div>
 
 <div class="summary">
 
@@ -583,35 +553,29 @@ value="0">
 
 <div class="card">
 
-<div class="title">
-💳 Payment Method
-</div>
+<div class="title">💳 Payment Method</div>
 
 <div class="payment-buttons">
 
-<button
-id="cashBtn"
+<button id="cashBtn"
 class="payment active"
 onclick="selectPayment('Cash')">
 Cash
 </button>
 
-<button
-id="mpesaBtn"
+<button id="mpesaBtn"
 class="payment"
 onclick="selectPayment('M-Pesa')">
 M-Pesa
 </button>
 
-<button
-id="cardBtn"
+<button id="cardBtn"
 class="payment"
 onclick="selectPayment('Card')">
 Card
 </button>
 
-<button
-id="creditBtn"
+<button id="creditBtn"
 class="payment"
 onclick="selectPayment('Credit')">
 Credit
@@ -696,25 +660,22 @@ Close
 <script>
 
 /* =====================================================
-   GOLDBIZNA POS PRO
-   FULL WORKING VERSION
-   CONNECTS TO:
-   goldbizna_inventory
-   goldbizna_sales
-===================================================== */
+   GOLDBIZNA FINAL POS
+   CONNECTED TO INVENTORY
+   ===================================================== */
 
-var INVENTORY_KEY = "goldbizna_inventory";
-var SALES_KEY = "goldbizna_sales";
+const INVENTORY_KEY = "goldbizna_inventory";
+const SALES_KEY = "goldbizna_sales";
 
-var inventory = [];
-var cart = [];
-var paymentMethod = "Cash";
-var lastReceipt = "";
+let inventory = [];
+let cart = [];
+let paymentMethod = "Cash";
+let lastReceipt = "";
 
 
 /* =====================================================
    LOGOUT
-===================================================== */
+   ===================================================== */
 
 function logout(){
 
@@ -722,357 +683,214 @@ function logout(){
     sessionStorage.removeItem("gb_login");
 
     window.location.href = "login.html";
+
 }
 
 
 /* =====================================================
    MONEY
-===================================================== */
+   ===================================================== */
 
 function money(value){
 
-    var number = Number(value);
-
-    if(isNaN(number)){
-        number = 0;
-    }
-
-    return number.toLocaleString(
+    return Number(value || 0).toLocaleString(
         "en-KE",
         {
             minimumFractionDigits:0,
             maximumFractionDigits:2
         }
     );
+
 }
 
 
 /* =====================================================
-   HTML SECURITY
-===================================================== */
+   ESCAPE HTML
+   ===================================================== */
 
 function escapeHTML(value){
 
-    if(value === null || value === undefined){
-        return "";
-    }
-
-    return String(value)
+    return String(value ?? "")
         .replace(/&/g,"&amp;")
         .replace(/</g,"&lt;")
         .replace(/>/g,"&gt;")
         .replace(/"/g,"&quot;")
         .replace(/'/g,"&#039;");
+
 }
 
 
 /* =====================================================
-   NORMALIZE PRODUCT
-===================================================== */
+   LOAD INVENTORY
+   ===================================================== */
 
-function normalizeProduct(product,index){
+function loadInventory(){
 
-    if(!product){
-        return null;
-    }
-
-    var id = product.id;
-
-    if(id === undefined || id === null || id === ""){
-        id = "PRODUCT-" + index;
-    }
-
-    var name =
-        product.name ||
-        product.productName ||
-        "";
-
-    var category =
-        product.category ||
-        product.cat ||
-        "";
-
-    var buyingPrice =
-        product.buyingPrice;
-
-    if(buyingPrice === undefined){
-        buyingPrice = product.buy;
-    }
-
-    if(buyingPrice === undefined){
-        buyingPrice = 0;
-    }
-
-    var sellingPrice =
-        product.sellingPrice;
-
-    if(sellingPrice === undefined){
-        sellingPrice = product.sell;
-    }
-
-    if(sellingPrice === undefined){
-        sellingPrice = product.price;
-    }
-
-    if(sellingPrice === undefined){
-        sellingPrice = 0;
-    }
-
-    var quantity =
-        product.quantity;
-
-    if(quantity === undefined){
-        quantity = product.qty;
-    }
-
-    if(quantity === undefined){
-        quantity = product.stock;
-    }
-
-    if(quantity === undefined){
-        quantity = 0;
-    }
-
-    var lowStock =
-        product.lowStock;
-
-    if(lowStock === undefined){
-        lowStock = 5;
-    }
-
-    return {
-
-        id:String(id),
-
-        name:String(name),
-
-        category:String(category),
-
-        buyingPrice:Number(buyingPrice) || 0,
-
-        sellingPrice:Number(sellingPrice) || 0,
-
-        quantity:Number(quantity) || 0,
-
-        lowStock:Number(lowStock) || 5
-
-    };
-}
-
-
-/* =====================================================
-   LOAD PRODUCTS
-===================================================== */
-
-function loadProducts(){
-
-    var box =
+    const box =
         document.getElementById("products");
-
-    if(!box){
-        return;
-    }
 
     try{
 
-        var saved =
-            localStorage.getItem(INVENTORY_KEY);
-
-        console.log(
-            "GOLDBIZNA POS STORAGE:",
-            saved
-        );
-
-
-        /* NO DATA */
+        const saved =
+            localStorage.getItem(
+                INVENTORY_KEY
+            );
 
         if(!saved){
 
             inventory = [];
 
-            box.innerHTML =
-                '<div class="empty">' +
-                'No products found.' +
-                '<br><br>' +
-                'Go to Inventory and add products first.' +
-                '</div>';
+            box.innerHTML = `
+                <div class="empty">
+                    No products found.<br><br>
+                    Add products from Inventory first.
+                </div>
+            `;
 
             return;
         }
 
-
-        /* READ JSON */
-
-        var data =
+        const data =
             JSON.parse(saved);
-
 
         if(!Array.isArray(data)){
 
             inventory = [];
 
-            box.innerHTML =
-                '<div class="empty">' +
-                'Inventory data is not an array.' +
-                '<br><br>' +
-                'Please open Inventory and check your products.' +
-                '</div>';
+            box.innerHTML = `
+                <div class="empty">
+                    Inventory data is invalid.
+                </div>
+            `;
 
             return;
         }
 
+        inventory = data.map(function(product){
 
-        /* NORMALIZE */
+            return {
 
-        inventory = [];
+                id: product.id,
 
-        for(var i=0;i<data.length;i++){
+                name:
+                    String(product.name || ""),
 
-            var product =
-                normalizeProduct(
-                    data[i],
-                    i
-                );
+                category:
+                    String(product.category || ""),
 
-            if(product){
-                inventory.push(product);
-            }
-        }
+                buyingPrice:
+                    Number(
+                        product.buyingPrice || 0
+                    ),
 
+                sellingPrice:
+                    Number(
+                        product.sellingPrice || 0
+                    ),
 
-        console.log(
-            "GOLDBIZNA PRODUCTS:",
-            inventory
-        );
+                quantity:
+                    Number(
+                        product.quantity || 0
+                    ),
 
+                lowStock:
+                    Number(
+                        product.lowStock ?? 5
+                    )
+
+            };
+
+        });
 
         displayProducts();
 
     }
-
     catch(error){
 
-        console.error(
-            "GOLDBIZNA POS ERROR:",
-            error
-        );
+        console.error(error);
 
         inventory = [];
 
-        box.innerHTML =
-            '<div class="empty">' +
-            'Unable to load products.' +
-            '<br><br>' +
-            'Error: ' +
-            escapeHTML(error.message) +
-            '</div>';
+        box.innerHTML = `
+            <div class="empty">
+                Unable to load products.
+            </div>
+        `;
+
     }
+
 }
 
 
 /* =====================================================
    DISPLAY PRODUCTS
-===================================================== */
+   ===================================================== */
 
 function displayProducts(){
 
-    var box =
+    const box =
         document.getElementById("products");
 
-    var searchInput =
-        document.getElementById("search");
-
-    if(!box || !searchInput){
-        return;
-    }
-
-    var search =
-        searchInput.value
+    const search =
+        document
+        .getElementById("search")
+        .value
         .toLowerCase()
         .trim();
 
-
-    /* NO PRODUCTS */
-
     if(inventory.length === 0){
 
-        box.innerHTML =
-            '<div class="empty">' +
-            'No products found.' +
-            '<br><br>' +
-            'Add products in Inventory first.' +
-            '</div>';
+        box.innerHTML = `
+            <div class="empty">
+                No products found.<br><br>
+                Add products from Inventory first.
+            </div>
+        `;
 
         return;
     }
 
+    const results =
+        inventory.filter(function(product){
 
-    /* FILTER */
+            const name =
+                product.name.toLowerCase();
 
-    var results =
-        inventory.filter(
-            function(product){
+            const category =
+                product.category.toLowerCase();
 
-                var name =
-                    String(
-                        product.name
-                    ).toLowerCase();
+            return(
+                name.includes(search) ||
+                category.includes(search)
+            );
 
-                var category =
-                    String(
-                        product.category
-                    ).toLowerCase();
-
-                return(
-                    name.indexOf(search) !== -1 ||
-                    category.indexOf(search) !== -1
-                );
-
-            }
-        );
-
-
-    /* NO SEARCH RESULT */
+        });
 
     if(results.length === 0){
 
-        box.innerHTML =
-            '<div class="empty">' +
-            '🔍 No product found for ' +
-            '<strong>"' +
-            escapeHTML(search) +
-            '"</strong>' +
-            '<br><br>' +
-            'Try another product name or category.' +
-            '</div>';
+        box.innerHTML = `
+            <div class="empty">
+                🔍 No product found for
+                "<strong>${escapeHTML(search)}</strong>"
+            </div>
+        `;
 
         return;
     }
 
-
-    /* PRODUCTS */
-
-    var html =
+    let html =
         '<div class="products">';
 
+    results.forEach(function(product){
 
-    for(var i=0;i<results.length;i++){
+        const stock =
+            Number(product.quantity || 0);
 
-        var product =
-            results[i];
+        const low =
+            Number(product.lowStock ?? 5);
 
-        var stock =
-            Number(product.quantity) || 0;
-
-        var lowStock =
-            Number(product.lowStock) || 5;
-
-        var stockClass =
-            "good";
-
-        var stockText =
-            "Stock: " + stock;
-
+        let stockClass = "good";
+        let stockText = "Stock: " + stock;
 
         if(stock <= 0){
 
@@ -1080,113 +898,87 @@ function displayProducts(){
             stockText = "OUT OF STOCK";
 
         }
-        else if(stock <= lowStock){
+        else if(stock <= low){
 
             stockClass = "low";
+
         }
 
+        html += `
 
-        html +=
+        <div
+            class="product"
+            data-id="${escapeHTML(product.id)}"
+            onclick="addToCart(this.dataset.id)"
+        >
 
-            '<div class="product" ' +
+            <div class="product-name">
+                ${escapeHTML(product.name)}
+            </div>
 
-            'data-product-id="' +
-            escapeHTML(product.id) +
-            '" ' +
+            <div class="product-category">
+                ${escapeHTML(
+                    product.category || "No category"
+                )}
+            </div>
 
-            'onclick="addProductById(this.getAttribute(\'data-product-id\'))">' +
+            <div class="product-price">
+                KSh ${money(product.sellingPrice)}
+            </div>
 
-            '<div class="product-name">' +
-            escapeHTML(product.name) +
-            '</div>' +
+            <div class="product-stock ${stockClass}">
+                ${stockText}
+            </div>
 
-            '<div class="product-category">' +
-            escapeHTML(
-                product.category ||
-                "No category"
-            ) +
-            '</div>' +
+        </div>
 
-            '<div class="product-price">' +
-            'KSh ' +
-            money(product.sellingPrice) +
-            '</div>' +
+        `;
 
-            '<div class="product-stock ' +
-            stockClass +
-            '">' +
-            stockText +
-            '</div>' +
+    });
 
-            '</div>';
-    }
-
-
-    html += '</div>';
+    html += "</div>";
 
     box.innerHTML = html;
+
 }
 
 
 /* =====================================================
    SEARCH
-===================================================== */
+   ===================================================== */
 
-function setupSearch(){
-
-    var search =
-        document.getElementById("search");
-
-    if(!search){
-        return;
-    }
-
-    search.addEventListener(
-        "input",
-        function(){
-
-            displayProducts();
-
-        }
-    );
-}
+document
+.getElementById("search")
+.addEventListener(
+    "input",
+    displayProducts
+);
 
 
 /* =====================================================
-   ADD PRODUCT
-===================================================== */
+   ADD TO CART
+   ===================================================== */
 
-function addProductById(id){
+function addToCart(id){
 
-    var product = null;
+    const product =
+        inventory.find(function(item){
 
+            return String(item.id) ===
+                   String(id);
 
-    for(var i=0;i<inventory.length;i++){
-
-        if(
-            String(inventory[i].id) ===
-            String(id)
-        ){
-
-            product =
-                inventory[i];
-
-            break;
-        }
-    }
-
+        });
 
     if(!product){
 
         alert("Product not found.");
 
         return;
+
     }
 
-
-    var stock =
-        Number(product.quantity) || 0;
-
+    const stock =
+        Number(product.quantity || 0);
 
     if(stock <= 0){
 
@@ -1196,26 +988,16 @@ function addProductById(id){
         );
 
         return;
+
     }
 
+    const existing =
+        cart.find(function(item){
 
-    var existing = null;
+            return String(item.id) ===
+                   String(product.id);
 
-
-    for(var j=0;j<cart.length;j++){
-
-        if(
-            String(cart[j].id) ===
-            String(product.id)
-        ){
-
-            existing =
-                cart[j];
-
-            break;
-        }
-    }
-
+        });
 
     if(existing){
 
@@ -1228,99 +1010,282 @@ function addProductById(id){
             );
 
             return;
+
         }
 
         existing.qty++;
 
     }
-
     else{
 
         cart.push({
 
-            id:product.id,
+            id: product.id,
 
-            name:product.name,
+            name: product.name,
 
             price:
                 Number(
-                    product.sellingPrice
-                ) || 0,
+                    product.sellingPrice || 0
+                ),
 
             qty:1
 
         });
+
     }
 
-
     renderCart();
+
 }
 
 
 /* =====================================================
    RENDER CART
-===================================================== */
+   ===================================================== */
 
 function renderCart(){
 
-    var body =
+    const body =
         document.getElementById("cart");
-
-    if(!body){
-        return;
-    }
-
 
     if(cart.length === 0){
 
-        body.innerHTML =
-            '<tr>' +
-            '<td colspan="5" class="empty">' +
-            'Cart is empty' +
-            '</td>' +
-            '</tr>';
+        body.innerHTML = `
+            <tr>
+                <td colspan="5" class="empty">
+                    Cart is empty
+                </td>
+            </tr>
+        `;
 
         updateSummary();
 
         return;
     }
 
+    let html = "";
 
-    var html = "";
+    cart.forEach(function(item,index){
+
+        html += `
+
+        <tr>
+
+            <td>
+                ${escapeHTML(item.name)}
+            </td>
+
+            <td>
+
+                <div class="qty">
+
+                    <button
+                        onclick="changeQty(${index},-1)">
+                        −
+                    </button>
+
+                    <strong>
+                        ${item.qty}
+                    </strong>
+
+                    <button
+                        onclick="changeQty(${index},1)">
+                        +
+                    </button>
+
+                </div>
+
+            </td>
+
+            <td>
+                KSh ${money(item.price)}
+            </td>
+
+            <td>
+                KSh ${money(
+                    item.price * item.qty
+                )}
+            </td>
+
+            <td>
+
+                <button
+                    class="qty delete"
+                    onclick="removeFromCart(${index})">
+                    ×
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+    body.innerHTML = html;
+
+    updateSummary();
+
+}
 
 
-    for(var i=0;i<cart.length;i++){
+/* =====================================================
+   CHANGE QUANTITY
+   ===================================================== */
 
-        var item =
-            cart[i];
+function changeQty(index,amount){
 
-        html +=
+    const item = cart[index];
 
-            '<tr>' +
+    if(!item){
+        return;
+    }
 
-            '<td>' +
-            escapeHTML(item.name) +
-            '</td>' +
+    const product =
+        inventory.find(function(product){
 
-            '<td>' +
+            return String(product.id) ===
+                   String(item.id);
 
-            '<div class="qty">' +
+        });
 
-            '<button onclick="changeQuantity(' +
-            i +
-            ',-1)">−</button>' +
+    if(!product){
+        return;
+    }
 
-            '<strong>' +
-            item.qty +
-            '</strong>' +
+    const stock =
+        Number(product.quantity || 0);
 
-            '<button onclick="changeQuantity(' +
-            i +
-            ',1)">+</button>' +
+    const newQty =
+        item.qty + amount;
 
-            '</div>' +
+    if(newQty <= 0){
 
-            '</td>' +
+        cart.splice(index,1);
 
-            '<td>' +
-            '
+    }
+    else if(newQty > stock){
+
+        alert(
+            "Only " +
+            stock +
+            " units available."
+        );
+
+        return;
+
+    }
+    else{
+
+        item.qty = newQty;
+
+    }
+
+    renderCart();
+
+}
+
+
+/* =====================================================
+   REMOVE
+   ===================================================== */
+
+function removeFromCart(index){
+
+    cart.splice(index,1);
+
+    renderCart();
+
+}
+
+
+/* =====================================================
+   CLEAR CART
+   ===================================================== */
+
+function clearCart(){
+
+    if(cart.length === 0){
+        return;
+    }
+
+    if(confirm("Clear the entire cart?")){
+
+        cart = [];
+
+        renderCart();
+
+    }
+
+}
+
+
+/* =====================================================
+   SUBTOTAL
+   ===================================================== */
+
+function getSubtotal(){
+
+    let total = 0;
+
+    cart.forEach(function(item){
+
+        total +=
+            Number(item.price) *
+            Number(item.qty);
+
+    });
+
+    return total;
+
+}
+
+
+/* =====================================================
+   TOTAL
+   ===================================================== */
+
+function getDiscount(){
+
+    const subtotal =
+        getSubtotal();
+
+    let discount =
+        Number(
+            document
+            .getElementById("discount")
+            .value
+        ) || 0;
+
+    if(discount < 0){
+        discount = 0;
+    }
+
+    if(discount > subtotal){
+        discount = subtotal;
+    }
+
+    return discount;
+
+}
+
+
+/* =====================================================
+   UPDATE SUMMARY
+   ===================================================== */
+
+function updateSummary(){
+
+    const subtotal =
+        getSubtotal();
+
+    const discount =
+        getDiscount();
+
+    const total =
+        subtotal - discount;
+
+    document.getElementById(
+        "subtotal"

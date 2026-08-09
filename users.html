@@ -1,146 +1,909 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goldbizna Users</title>
-
-<style>
-body{
-    font-family:Arial,sans-serif;
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Goldbizna Users</title><style>
+*{
     margin:0;
-    background:#f4f4f4;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
 }
+
+body{
+    background:#f4f4f4;
+    color:#333;
+}
+
 header{
     background:#0b7a0b;
     color:white;
-    padding:15px;
-    text-align:center;
-    font-size:24px;
+    padding:16px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.logo{
+    font-size:25px;
     font-weight:bold;
 }
-.container{
-    max-width:900px;
-    margin:20px auto;
-    background:white;
-    padding:20px;
-    border-radius:10px;
+
+.header-buttons{
+    display:flex;
+    gap:8px;
 }
-input,select{
-    width:100%;
-    padding:10px;
-    margin:8px 0;
-    border:1px solid #ccc;
-    border-radius:5px;
-}
-button{
-    background:#0b7a0b;
-    color:white;
+
+.header-buttons button{
     border:none;
     padding:10px 15px;
     border-radius:5px;
+    color:white;
     cursor:pointer;
 }
-table{
+
+.dashboard-btn{
+    background:#075c07;
+}
+
+.logout-btn{
+    background:#c62828;
+}
+
+.container{
+    width:95%;
+    max-width:1100px;
+    margin:20px auto;
+}
+
+.title,
+.form-box,
+.summary-card,
+.table-box{
+    background:white;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+
+.title{
+    padding:20px;
+    margin-bottom:20px;
+}
+
+.title h1{
+    color:#0b7a0b;
+    margin-bottom:5px;
+}
+
+.form-box{
+    padding:20px;
+    margin-bottom:20px;
+}
+
+.form-box h2{
+    color:#0b7a0b;
+    margin-bottom:15px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+}
+
+input,
+select{
     width:100%;
-    border-collapse:collapse;
-    margin-top:20px;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    font-size:15px;
+    background:white;
 }
-th,td{
-    border:1px solid #ddd;
-    padding:10px;
+
+.full{
+    grid-column:1/-1;
 }
-th{
+
+.buttons{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+}
+
+button{
+    border:none;
+    padding:11px 17px;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.save-btn{
     background:#0b7a0b;
     color:white;
 }
-</style>
-</head>
 
-<body>
+.cancel-btn{
+    background:#777;
+    color:white;
+    display:none;
+}
 
-<header>Goldbizna User Management</header>
+#message{
+    margin-top:12px;
+    font-weight:bold;
+}
 
-<div class="container">
+.summary{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+    margin-bottom:20px;
+}
 
-<input type="text" id="username" placeholder="Username">
+.summary-card{
+    padding:20px;
+    text-align:center;
+}
 
-<input type="password" id="password" placeholder="Password">
+.summary-card h3{
+    color:#0b7a0b;
+    margin-bottom:8px;
+}
 
-<select id="role">
-<option>Admin</option>
-<option>Cashier</option>
-</select>
+.summary-card p{
+    font-size:25px;
+    font-weight:bold;
+}
 
-<button onclick="addUser()">Add User</button>
+.table-box{
+    padding:20px;
+    overflow-x:auto;
+}
 
-<table>
-<thead>
-<tr>
-<th>Username</th>
-<th>Role</th>
-<th>Action</th>
-</tr>
-</thead>
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:750px;
+}
 
-<tbody id="userTable"></tbody>
+th{
+    background:#0b7a0b;
+    color:white;
+    padding:11px;
+}
 
-</table>
+td{
+    padding:10px;
+    border:1px solid #ddd;
+    text-align:center;
+}
+
+.edit-btn{
+    background:#1976d2;
+    color:white;
+    padding:7px 10px;
+}
+
+.delete-btn{
+    background:#c62828;
+    color:white;
+    padding:7px 10px;
+    margin-left:5px;
+}
+
+.admin{
+    color:#0b7a0b;
+    font-weight:bold;
+}
+
+.staff{
+    color:#555;
+    font-weight:bold;
+}
+
+@media(max-width:700px){
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .full{
+        grid-column:auto;
+    }
+
+    .summary{
+        grid-template-columns:1fr;
+    }
+
+    header{
+        gap:12px;
+    }
+
+    .logo{
+        font-size:21px;
+    }
+}
+</style></head><body><!-- LOGIN PROTECTION --><script>
+if(localStorage.getItem("loggedIn") !== "true"){
+    window.location.href="login.html";
+}
+</script><header><div class="logo">
+    Goldbizna Users
+</div>
+
+<div class="header-buttons">
+
+    <button
+        class="dashboard-btn"
+        onclick="window.location.href='dashboard.html'">
+        Dashboard
+    </button>
+
+    <button
+        class="logout-btn"
+        onclick="logout()">
+        Logout
+    </button>
 
 </div>
 
-<script>
+</header><div class="container"><div class="title">
 
-let users = JSON.parse(localStorage.getItem("goldbizna_users") || "[]");
+    <h1>User Management</h1>
+
+    <p>
+        Manage Goldbizna system users and roles.
+    </p>
+
+</div>
+
+
+<!-- USER FORM -->
+<div class="form-box">
+
+    <h2 id="formTitle">
+        Add New User
+    </h2>
+
+    <div class="form-grid">
+
+        <input
+            type="text"
+            id="fullName"
+            placeholder="Full Name"
+        >
+
+        <input
+            type="text"
+            id="username"
+            placeholder="Username"
+        >
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Password"
+        >
+
+        <select id="role">
+
+            <option value="Staff">
+                Staff
+            </option>
+
+            <option value="Manager">
+                Manager
+            </option>
+
+            <option value="Admin">
+                Admin
+            </option>
+
+        </select>
+
+        <input
+            class="full"
+            type="text"
+            id="phone"
+            placeholder="Phone Number (optional)"
+        >
+
+    </div>
+
+    <div class="buttons">
+
+        <button
+            class="save-btn"
+            id="saveButton"
+            onclick="saveUser()">
+            Add User
+        </button>
+
+        <button
+            class="cancel-btn"
+            id="cancelButton"
+            onclick="cancelEdit()">
+            Cancel
+        </button>
+
+    </div>
+
+    <p id="message"></p>
+
+</div>
+
+
+<!-- SUMMARY -->
+<div class="summary">
+
+    <div class="summary-card">
+
+        <h3>Total Users</h3>
+
+        <p id="userCount">
+            0
+        </p>
+
+    </div>
+
+    <div class="summary-card">
+
+        <h3>Administrators</h3>
+
+        <p id="adminCount">
+            0
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- USERS TABLE -->
+<div class="table-box">
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>#</th>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Phone</th>
+                <th>Created</th>
+                <th>Actions</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="usersBody"></tbody>
+
+    </table>
+
+</div>
+
+</div><script>
+
+/*
+INITIAL USER
+
+This creates the original Goldbizna admin account
+only if no users have been saved yet.
+*/
+
+let users =
+    JSON.parse(
+        localStorage.getItem("goldbizna_users") || "null"
+    );
+
+
+if(!Array.isArray(users)){
+
+    users = [
+
+        {
+            id:Date.now(),
+
+            fullName:"Goldbizna Administrator",
+
+            username:"admin",
+
+            password:"Goldbizna2026",
+
+            role:"Admin",
+
+            phone:"",
+
+            created:
+                new Date().toLocaleString()
+
+        }
+
+    ];
+
+
+    saveUsers();
+
+}
+
+
+let editingIndex=-1;
+
+
+/* SAVE USERS */
+
+function saveUsers(){
+
+    localStorage.setItem(
+        "goldbizna_users",
+        JSON.stringify(users)
+    );
+
+}
+
+
+/* ADD / UPDATE USER */
+
+function saveUser(){
+
+    const fullName =
+        document.getElementById("fullName")
+        .value
+        .trim();
+
+    const username =
+        document.getElementById("username")
+        .value
+        .trim();
+
+    const password =
+        document.getElementById("password")
+        .value;
+
+    const role =
+        document.getElementById("role")
+        .value;
+
+    const phone =
+        document.getElementById("phone")
+        .value
+        .trim();
+
+
+    if(fullName===""){
+
+        alert("Please enter the full name.");
+
+        return;
+
+    }
+
+
+    if(username===""){
+
+        alert("Please enter a username.");
+
+        return;
+
+    }
+
+
+    /*
+    PASSWORD IS REQUIRED WHEN CREATING
+    A NEW USER.
+    */
+
+    if(editingIndex===-1 && password===""){
+
+        alert("Please enter a password.");
+
+        return;
+
+    }
+
+
+    /*
+    CHECK DUPLICATE USERNAME
+    */
+
+    const duplicate =
+        users.some(function(user,index){
+
+            return (
+                user.username.toLowerCase() ===
+                username.toLowerCase()
+                &&
+                index !== editingIndex
+            );
+
+        });
+
+
+    if(duplicate){
+
+        alert("That username already exists.");
+
+        return;
+
+    }
+
+
+    if(editingIndex===-1){
+
+        const newUser={
+
+            id:Date.now(),
+
+            fullName:fullName,
+
+            username:username,
+
+            password:password,
+
+            role:role,
+
+            phone:phone,
+
+            created:
+                new Date().toLocaleString()
+
+        };
+
+
+        users.push(newUser);
+
+
+        showMessage(
+            "User added successfully.",
+            "green"
+        );
+
+    }else{
+
+        const oldUser =
+            users[editingIndex];
+
+
+        users[editingIndex]={
+
+            id:oldUser.id,
+
+            fullName:fullName,
+
+            username:username,
+
+            /*
+            Keep the old password if no
+            new password was entered.
+            */
+
+            password:
+                password !== ""
+                ? password
+                : oldUser.password,
+
+            role:role,
+
+            phone:phone,
+
+            created:oldUser.created
+
+        };
+
+
+        editingIndex=-1;
+
+
+        showMessage(
+            "User updated successfully.",
+            "green"
+        );
+
+    }
+
+
+    saveUsers();
+
+    clearForm();
+
+    displayUsers();
+
+}
+
+
+/* DISPLAY USERS */
 
 function displayUsers(){
 
-userTable.innerHTML="";
+    const body =
+        document.getElementById("usersBody");
 
-users.forEach((u,index)=>{
 
-userTable.innerHTML += `
-<tr>
-<td>${u.username}</td>
-<td>${u.role}</td>
-<td><button onclick="deleteUser(${index})">Delete</button></td>
-</tr>
-`;
+    body.innerHTML="";
 
-});
+
+    users.forEach(function(user,index){
+
+        const row =
+            document.createElement("tr");
+
+
+        const roleClass =
+            user.role === "Admin"
+            ? "admin"
+            : "staff";
+
+
+        row.innerHTML=`
+
+            <td>${index + 1}</td>
+
+            <td>
+                ${escapeHTML(user.fullName)}
+            </td>
+
+            <td>
+                ${escapeHTML(user.username)}
+            </td>
+
+            <td class="${roleClass}">
+                ${escapeHTML(user.role)}
+            </td>
+
+            <td>
+                ${escapeHTML(user.phone || "-")}
+            </td>
+
+            <td>
+                ${escapeHTML(user.created)}
+            </td>
+
+            <td>
+
+                <button
+                    class="edit-btn"
+                    onclick="editUser(${index})">
+                    Edit
+                </button>
+
+                <button
+                    class="delete-btn"
+                    onclick="deleteUser(${index})">
+                    Delete
+                </button>
+
+            </td>
+
+        `;
+
+
+        body.appendChild(row);
+
+    });
+
+
+    document.getElementById("userCount").innerText =
+        users.length;
+
+
+    const admins =
+        users.filter(function(user){
+
+            return user.role === "Admin";
+
+        });
+
+
+    document.getElementById("adminCount").innerText =
+        admins.length;
 
 }
 
-function addUser(){
 
-users.push({
-username:username.value,
-password:password.value,
-role:role.value
-});
+/* EDIT USER */
 
-localStorage.setItem("goldbizna_users",JSON.stringify(users));
+function editUser(index){
 
-username.value="";
-password.value="";
+    const user =
+        users[index];
 
-displayUsers();
+
+    document.getElementById("fullName").value =
+        user.fullName;
+
+    document.getElementById("username").value =
+        user.username;
+
+    document.getElementById("password").value =
+        "";
+
+    document.getElementById("role").value =
+        user.role;
+
+    document.getElementById("phone").value =
+        user.phone || "";
+
+
+    editingIndex=index;
+
+
+    document.getElementById("formTitle").innerText =
+        "Edit User";
+
+
+    document.getElementById("saveButton").innerText =
+        "Update User";
+
+
+    document.getElementById("cancelButton").style.display =
+        "block";
+
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
 
 }
+
+
+/* CANCEL EDIT */
+
+function cancelEdit(){
+
+    editingIndex=-1;
+
+    clearForm();
+
+}
+
+
+/* DELETE USER */
 
 function deleteUser(index){
 
-users.splice(index,1);
+    const user =
+        users[index];
 
-localStorage.setItem("goldbizna_users",JSON.stringify(users));
 
-displayUsers();
+    /*
+    Don't allow deleting the last admin.
+    */
+
+    const adminCount =
+        users.filter(function(item){
+
+            return item.role==="Admin";
+
+        }).length;
+
+
+    if(
+        user.role==="Admin"
+        &&
+        adminCount<=1
+    ){
+
+        alert(
+            "You cannot delete the last administrator."
+        );
+
+        return;
+
+    }
+
+
+    if(!confirm(
+        "Delete user " +
+        user.username +
+        "?"
+    )){
+
+        return;
+
+    }
+
+
+    users.splice(index,1);
+
+    saveUsers();
+
+    displayUsers();
+
+
+    showMessage(
+        "User deleted.",
+        "red"
+    );
 
 }
 
+
+/* CLEAR FORM */
+
+function clearForm(){
+
+    document.getElementById("fullName").value="";
+    document.getElementById("username").value="";
+    document.getElementById("password").value="";
+    document.getElementById("role").value="Staff";
+    document.getElementById("phone").value="";
+
+
+    document.getElementById("formTitle").innerText =
+        "Add New User";
+
+
+    document.getElementById("saveButton").innerText =
+        "Add User";
+
+
+    document.getElementById("cancelButton").style.display =
+        "none";
+
+}
+
+
+/* MESSAGE */
+
+function showMessage(text,color){
+
+    const message =
+        document.getElementById("message");
+
+
+    message.innerText=text;
+
+    message.style.color=color;
+
+
+    setTimeout(function(){
+
+        message.innerText="";
+
+    },3000);
+
+}
+
+
+/* LOGOUT */
+
+function logout(){
+
+    localStorage.removeItem("loggedIn");
+
+    window.location.href="login.html";
+
+}
+
+
+/* HTML ESCAPE */
+
+function escapeHTML(text){
+
+    return String(text)
+
+        .replace(/&/g,"&amp;")
+
+        .replace(/</g,"&lt;")
+
+        .replace(/>/g,"&gt;")
+
+        .replace(/"/g,"&quot;")
+
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* START */
+
 displayUsers();
 
-</script>
-
-</body>
-</html>
+</script></body>
+    </html>

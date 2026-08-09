@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Goldbizna POS Pro</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f1f5f2;
+    color:#222;
+}
+
+header{
+    background:#087a0b;
+    color:white;
+    padding:15px;
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+.header-inner{
+    max-width:1400px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.brand{
+    font-size:24px;
+    font-weight:bold;
+}
+
+.subtitle{
+    font-size:12px;
+    margin-top:3px;
+}
+
+.logout{
+    background:#c62828;
+    color:white;
+    border:0;
+    padding:10px 15px;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.menu{
+    background:#075f08;
+    overflow-x:auto;
+    white-space:nowrap;
+}
+
+.menu-inner{
+    max-width:1400px;
+    margin:auto;
+    display:flex;
+}
+
+.menu a{
+    color:white;
+    text-decoration:none;
+    padding:12px 14px;
+    display:block;
+    font-size:14px;
+}
+
+.menu a:hover{
+    background:#087a0b;
+}
+
+.container{
+    max-width:1400px;
+    margin:20px auto;
+    padding:0 12px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1.5fr 1fr;
+    gap:18px;
+}
+
+.card{
+    background:white;
+    border-radius:10px;
+    padding:18px;
+    margin-bottom:18px;
+    box-shadow:0 2px 8px #00000015;
+}
+
+.title{
+    color:#087a0b;
+    font-size:19px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+.search{
+    width:100%;
+    padding:14px;
+    border:2px solid #ccc;
+    border-radius:7px;
+    font-size:16px;
+    outline:none;
+    margin-bottom:15px;
+}
+
+.search:focus{
+    border-color:#087a0b;
+}
+
+.products{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+    gap:10px;
+}
+
+.product{
+    border:1px solid #ddd;
+    border-radius:8px;
+    padding:13px;
+    cursor:pointer;
+    background:white;
+    transition:.15s;
+}
+
+.product:hover{
+    border-color:#087a0b;
+    box-shadow:0 2px 7px #0002;
+    transform:translateY(-1px);
+}
+
+.product-name{
+    font-weight:bold;
+    margin-bottom:6px;
+}
+
+.product-category{
+    color:#777;
+    font-size:12px;
+    margin-bottom:8px;
+}
+
+.product-price{
+    color:#087a0b;
+    font-weight:bold;
+}
+
+.product-stock{
+    font-size:12px;
+    margin-top:7px;
+}
+
+.low{
+    color:red;
+    font-weight:bold;
+}
+
+.good{
+    color:#087a0b;
+    font-weight:bold;
+}
+
+.out{
+    color:#b00020;
+    font-weight:bold;
+}
+
+.empty{
+    text-align:center;
+    color:#777;
+    padding:25px;
+    grid-column:1/-1;
+}
+
+.status{
+    text-align:center;
+    color:#777;
+    padding:25px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#087a0b;
+    color:white;
+    padding:9px;
+    text-align:left;
+}
+
+td{
+    padding:9px;
+    border-bottom:1px solid #ddd;
+    font-size:13px;
+}
+
+.cart-wrapper{
+    overflow-x:auto;
+}
+
+.qty{
+    display:flex;
+    align-items:center;
+    gap:5px;
+}
+
+.qty button{
+    padding:5px 9px;
+    background:#087a0b;
+    color:white;
+    border:0;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.delete{
+    background:#c62828 !important;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:7px;
+    font-size:15px;
+    outline:none;
+}
+
+input:focus{
+    border-color:#087a0b;
+}
+
+.summary{
+    margin-top:15px;
+    border-top:2px solid #eee;
+    padding-top:12px;
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    margin:9px 0;
+}
+
+.total{
+    color:#087a0b;
+    font-size:23px;
+    font-weight:bold;
+}
+
+.payment-buttons{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:7px;
+    margin:12px 0;
+}
+
+.payment{
+    padding:11px;
+    border:0;
+    border-radius:6px;
+    background:#eee;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.payment.active{
+    background:#087a0b;
+    color:white;
+}
+
+.main-button{
+    width:100%;
+    padding:15px;
+    border:0;
+    border-radius:7px;
+    background:#087a0b;
+    color:white;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:12px;
+}
+
+.clear{
+    width:100%;
+    padding:12px;
+    border:0;
+    border-radius:7px;
+    background:#555;
+    color:white;
+    cursor:pointer;
+    margin-top:8px;
+}
+
+.change{
+    color:#087a0b;
+    font-weight:bold;
+    margin-top:8px;
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#0008;
+    z-index:100;
+    align-items:center;
+    justify-content:center;
+    padding:15px;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-box{
+    background:white;
+    width:100%;
+    max-width:430px;
+    padding:20px;
+    border-radius:10px;
+    max-height:90vh;
+    overflow:auto;
+}
+
+.receipt{
+    background:#fafafa;
+    border:1px dashed #999;
+    padding:15px;
+    white-space:pre-wrap;
+    font-family:monospace;
+    line-height:1.5;
+    margin-top:10px;
+}
+
+.modal-buttons{
+    display:flex;
+    gap:8px;
+    margin-top:12px;
+}
+
+.modal-buttons button{
+    flex:1;
+    padding:12px;
+    border:0;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.print{
+    background:#087a0b;
+    color:white;
+}
+
+.close{
+    background:#555;
+    color:white;
+}
+
+@media(max-width:850px){
+    .grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:600px){
+    .brand{
+        font-size:19px;
+    }
+
+    .products{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .payment-buttons{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .card{
+        padding:13px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<script>
+/* ===============================
+   LOGIN PROTECTION
+================================ */
+
+if(localStorage.getItem("loggedIn") !== "true"){
+    window.location.href = "login.html";
+}
+</script>
+
+<header>
+
+<div class="header-inner">
+
+<div>
+<div class="brand">GOLDBIZNA POS PRO</div>
+<div class="subtitle">Professional Business Management</div>
+</div>
+
+<button class="logout" onclick="logout()">
+Logout
+</button>
+
+</div>
+
+</header>
+
+
+<div class="menu">
+
+<div class="menu-inner">
+
+<a href="dashboard.html">Dashboard</a>
+<a href="pos.html">POS</a>
+<a href="inventory.html">Inventory</a>
+<a href="customers.html">Customers</a>
+<a href="sales.html">Sales</a>
+<a href="reports.html">Reports</a>
+<a href="savings.html">Savings</a>
+<a href="users.html">Users</a>
+<a href="settings.html">Settings</a>
+
+</div>
+
+</div>
+
+
+<div class="container">
+
+<div class="grid">
+
+<!-- LEFT -->
+
+<div>
+
+<div class="card">
+
+<div class="title">
+🔎 Search Products
+</div>
+
+<input
+id="search"
+class="search"
+type="text"
+placeholder="Search product or category..."
+autocomplete="off">
+
+<div id="products">
+
+<div class="status">
+Loading products...
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="title">
+🛒 Shopping Cart
+</div>
+
+<div class="cart-wrapper">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Product</th>
+<th>Qty</th>
+<th>Price</th>
+<th>Total</th>
+<th></th>
+</tr>
+
+</thead>
+
+<tbody id="cart">
+
+<tr>
+
+<td colspan="5" class="empty">
+Cart is empty
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- RIGHT -->
+
+<div>
+
+<div class="card">
+
+<div class="title">
+👤 Customer
+</div>
+
+<input
+id="customer"
+type="text"
+placeholder="Customer name / phone"
+autocomplete="off">
+
+</div>
+
+
+<div class="card">
+
+<div class="title">
+💰 Order Summary
+</div>
+
+<div class="summary">
+
+<div class="row">
+<span>Subtotal</span>
+<strong id="subtotal">KSh 0</strong>
+</div>
+
+<div class="row">
+<span>Discount</span>
+<strong id="discountDisplay">KSh 0</strong>
+</div>
+
+<div class="row total">
+<span>Total</span>
+<strong id="total">KSh 0</strong>
+</div>
+
+</div>
+
+<label style="display:block;margin-top:15px;margin-bottom:6px">
+Discount (KSh)
+</label>
+
+<input
+id="discount"
+type="number"
+min="0"
+value="0">
+
+</div>
+
+
+<div class="card">
+
+<div class="title">
+💳 Payment Method
+</div>
+
+<div class="payment-buttons">
+
+<button
+id="cashBtn"
+class="payment active"
+onclick="selectPayment('Cash')">
+Cash
+</button>
+
+<button
+id="mpesaBtn"
+class="payment"
+onclick="selectPayment('M-Pesa')">
+M-Pesa
+</button>
+
+<button
+id="cardBtn"
+class="payment"
+onclick="selectPayment('Card')">
+Card
+</button>
+
+<button
+id="creditBtn"
+class="payment"
+onclick="selectPayment('Credit')">
+Credit
+</button>
+
+</div>
+
+
+<div id="cashBox">
+
+<label style="display:block;margin:10px 0 6px">
+Amount Received
+</label>
+
+<input
+id="cashReceived"
+type="number"
+min="0"
+placeholder="Enter amount received">
+
+<div id="change" class="change">
+Change: KSh 0
+</div>
+
+</div>
+
+
+<button
+class="main-button"
+onclick="completeSale()">
+COMPLETE SALE
+</button>
+
+<button
+class="clear"
+onclick="clearCart()">
+CLEAR CART
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- RECEIPT -->
+
+<div id="receiptModal" class="modal">
+
+<div class="modal-box">
+
+<h2 style="color:#087a0b;">
+Sale Completed 🧾
+</h2>
+
+<div id="receipt" class="receipt"></div>
+
+<div class="modal-buttons">
+
+<button
+class="print"
+onclick="printReceipt()">
+Print Receipt
+</button>
+
+<button
+class="close"
+onclick="closeReceipt()">
+Close
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   GOLDBIZNA POS PRO
+   FULL WORKING VERSION
+   CONNECTS TO:
+   goldbizna_inventory
+   goldbizna_sales
+===================================================== */
+
+var INVENTORY_KEY = "goldbizna_inventory";
+var SALES_KEY = "goldbizna_sales";
+
+var inventory = [];
+var cart = [];
+var paymentMethod = "Cash";
+var lastReceipt = "";
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logout(){
+
+    localStorage.removeItem("loggedIn");
+    sessionStorage.removeItem("gb_login");
+
+    window.location.href = "login.html";
+}
+
+
+/* =====================================================
+   MONEY
+===================================================== */
+
+function money(value){
+
+    var number = Number(value);
+
+    if(isNaN(number)){
+        number = 0;
+    }
+
+    return number.toLocaleString(
+        "en-KE",
+        {
+            minimumFractionDigits:0,
+            maximumFractionDigits:2
+        }
+    );
+}
+
+
+/* =====================================================
+   HTML SECURITY
+===================================================== */
+
+function escapeHTML(value){
+
+    if(value === null || value === undefined){
+        return "";
+    }
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+
+/* =====================================================
+   NORMALIZE PRODUCT
+===================================================== */
+
+function normalizeProduct(product,index){
+
+    if(!product){
+        return null;
+    }
+
+    var id = product.id;
+
+    if(id === undefined || id === null || id === ""){
+        id = "PRODUCT-" + index;
+    }
+
+    var name =
+        product.name ||
+        product.productName ||
+        "";
+
+    var category =
+        product.category ||
+        product.cat ||
+        "";
+
+    var buyingPrice =
+        product.buyingPrice;
+
+    if(buyingPrice === undefined){
+        buyingPrice = product.buy;
+    }
+
+    if(buyingPrice === undefined){
+        buyingPrice = 0;
+    }
+
+    var sellingPrice =
+        product.sellingPrice;
+
+    if(sellingPrice === undefined){
+        sellingPrice = product.sell;
+    }
+
+    if(sellingPrice === undefined){
+        sellingPrice = product.price;
+    }
+
+    if(sellingPrice === undefined){
+        sellingPrice = 0;
+    }
+
+    var quantity =
+        product.quantity;
+
+    if(quantity === undefined){
+        quantity = product.qty;
+    }
+
+    if(quantity === undefined){
+        quantity = product.stock;
+    }
+
+    if(quantity === undefined){
+        quantity = 0;
+    }
+
+    var lowStock =
+        product.lowStock;
+
+    if(lowStock === undefined){
+        lowStock = 5;
+    }
+
+    return {
+
+        id:String(id),
+
+        name:String(name),
+
+        category:String(category),
+
+        buyingPrice:Number(buyingPrice) || 0,
+
+        sellingPrice:Number(sellingPrice) || 0,
+
+        quantity:Number(quantity) || 0,
+
+        lowStock:Number(lowStock) || 5
+
+    };
+}
+
+
+/* =====================================================
+   LOAD PRODUCTS
+===================================================== */
+
+function loadProducts(){
+
+    var box =
+        document.getElementById("products");
+
+    if(!box){
+        return;
+    }
+
+    try{
+
+        var saved =
+            localStorage.getItem(INVENTORY_KEY);
+
+        console.log(
+            "GOLDBIZNA POS STORAGE:",
+            saved
+        );
+
+
+        /* NO DATA */
+
+        if(!saved){
+
+            inventory = [];
+
+            box.innerHTML =
+                '<div class="empty">' +
+                'No products found.' +
+                '<br><br>' +
+                'Go to Inventory and add products first.' +
+                '</div>';
+
+            return;
+        }
+
+
+        /* READ JSON */
+
+        var data =
+            JSON.parse(saved);
+
+
+        if(!Array.isArray(data)){
+
+            inventory = [];
+
+            box.innerHTML =
+                '<div class="empty">' +
+                'Inventory data is not an array.' +
+                '<br><br>' +
+                'Please open Inventory and check your products.' +
+                '</div>';
+
+            return;
+        }
+
+
+        /* NORMALIZE */
+
+        inventory = [];
+
+        for(var i=0;i<data.length;i++){
+
+            var product =
+                normalizeProduct(
+                    data[i],
+                    i
+                );
+
+            if(product){
+                inventory.push(product);
+            }
+        }
+
+
+        console.log(
+            "GOLDBIZNA PRODUCTS:",
+            inventory
+        );
+
+
+        displayProducts();
+
+    }
+
+    catch(error){
+
+        console.error(
+            "GOLDBIZNA POS ERROR:",
+            error
+        );
+
+        inventory = [];
+
+        box.innerHTML =
+            '<div class="empty">' +
+            'Unable to load products.' +
+            '<br><br>' +
+            'Error: ' +
+            escapeHTML(error.message) +
+            '</div>';
+    }
+}
+
+
+/* =====================================================
+   DISPLAY PRODUCTS
+===================================================== */
+
+function displayProducts(){
+
+    var box =
+        document.getElementById("products");
+
+    var searchInput =
+        document.getElementById("search");
+
+    if(!box || !searchInput){
+        return;
+    }
+
+    var search =
+        searchInput.value
+        .toLowerCase()
+        .trim();
+
+
+    /* NO PRODUCTS */
+
+    if(inventory.length === 0){
+
+        box.innerHTML =
+            '<div class="empty">' +
+            'No products found.' +
+            '<br><br>' +
+            'Add products in Inventory first.' +
+            '</div>';
+
+        return;
+    }
+
+
+    /* FILTER */
+
+    var results =
+        inventory.filter(
+            function(product){
+
+                var name =
+                    String(
+                        product.name
+                    ).toLowerCase();
+
+                var category =
+                    String(
+                        product.category
+                    ).toLowerCase();
+
+                return(
+                    name.indexOf(search) !== -1 ||
+                    category.indexOf(search) !== -1
+                );
+
+            }
+        );
+
+
+    /* NO SEARCH RESULT */
+
+    if(results.length === 0){
+
+        box.innerHTML =
+            '<div class="empty">' +
+            '🔍 No product found for ' +
+            '<strong>"' +
+            escapeHTML(search) +
+            '"</strong>' +
+            '<br><br>' +
+            'Try another product name or category.' +
+            '</div>';
+
+        return;
+    }
+
+
+    /* PRODUCTS */
+
+    var html =
+        '<div class="products">';
+
+
+    for(var i=0;i<results.length;i++){
+
+        var product =
+            results[i];
+
+        var stock =
+            Number(product.quantity) || 0;
+
+        var lowStock =
+            Number(product.lowStock) || 5;
+
+        var stockClass =
+            "good";
+
+        var stockText =
+            "Stock: " + stock;
+
+
+        if(stock <= 0){
+
+            stockClass = "out";
+            stockText = "OUT OF STOCK";
+
+        }
+        else if(stock <= lowStock){
+
+            stockClass = "low";
+        }
+
+
+        html +=
+
+            '<div class="product" ' +
+
+            'data-product-id="' +
+            escapeHTML(product.id) +
+            '" ' +
+
+            'onclick="addProductById(this.getAttribute(\'data-product-id\'))">' +
+
+            '<div class="product-name">' +
+            escapeHTML(product.name) +
+            '</div>' +
+
+            '<div class="product-category">' +
+            escapeHTML(
+                product.category ||
+                "No category"
+            ) +
+            '</div>' +
+
+            '<div class="product-price">' +
+            'KSh ' +
+            money(product.sellingPrice) +
+            '</div>' +
+
+            '<div class="product-stock ' +
+            stockClass +
+            '">' +
+            stockText +
+            '</div>' +
+
+            '</div>';
+    }
+
+
+    html += '</div>';
+
+    box.innerHTML = html;
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+function setupSearch(){
+
+    var search =
+        document.getElementById("search");
+
+    if(!search){
+        return;
+    }
+
+    search.addEventListener(
+        "input",
+        function(){
+
+            displayProducts();
+
+        }
+    );
+}
+
+
+/* =====================================================
+   ADD PRODUCT
+===================================================== */
+
+function addProductById(id){
+
+    var product = null;
+
+
+    for(var i=0;i<inventory.length;i++){
+
+        if(
+            String(inventory[i].id) ===
+            String(id)
+        ){
+
+            product =
+                inventory[i];
+
+            break;
+        }
+    }
+
+
+    if(!product){
+
+        alert("Product not found.");
+
+        return;
+    }
+
+
+    var stock =
+        Number(product.quantity) || 0;
+
+
+    if(stock <= 0){
+
+        alert(
+            product.name +
+            " is out of stock."
+        );
+
+        return;
+    }
+
+
+    var existing = null;
+
+
+    for(var j=0;j<cart.length;j++){
+
+        if(
+            String(cart[j].id) ===
+            String(product.id)
+        ){
+
+            existing =
+                cart[j];
+
+            break;
+        }
+    }
+
+
+    if(existing){
+
+        if(existing.qty >= stock){
+
+            alert(
+                "Only " +
+                stock +
+                " units available."
+            );
+
+            return;
+        }
+
+        existing.qty++;
+
+    }
+
+    else{
+
+        cart.push({
+
+            id:product.id,
+
+            name:product.name,
+
+            price:
+                Number(
+                    product.sellingPrice
+                ) || 0,
+
+            qty:1
+
+        });
+    }
+
+
+    renderCart();
+}
+
+
+/* =====================================================
+   RENDER CART
+===================================================== */
+
+function renderCart(){
+
+    var body =
+        document.getElementById("cart");
+
+    if(!body){
+        return;
+    }
+
+
+    if(cart.length === 0){
+
+        body.innerHTML =
+            '<tr>' +
+            '<td colspan="5" class="empty">' +
+            'Cart is empty' +
+            '</td>' +
+            '</tr>';
+
+        updateSummary();
+
+        return;
+    }
+
+
+    var html = "";
+
+
+    for(var i=0;i<cart.length;i++){
+
+        var item =
+            cart[i];
+
+        html +=
+
+            '<tr>' +
+
+            '<td>' +
+            escapeHTML(item.name) +
+            '</td>' +
+
+            '<td>' +
+
+            '<div class="qty">' +
+
+            '<button onclick="changeQuantity(' +
+            i +
+            ',-1)">−</button>' +
+
+            '<strong>' +
+            item.qty +
+            '</strong>' +
+
+            '<button onclick="changeQuantity(' +
+            i +
+            ',1)">+</button>' +
+
+            '</div>' +
+
+            '</td>' +
+
+            '<td>' +
+            '

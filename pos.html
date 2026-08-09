@@ -2,133 +2,272 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Goldbizna POS</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Goldbizna POS Pro</title>
 
 <style>
-
-*{
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
-}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
 
 body{
-    margin:0;
-    background:#f3f6f4;
+    background:#f1f5f2;
     color:#222;
 }
 
 header{
-    background:#0b7a0b;
+    background:#087a0b;
     color:white;
-    padding:18px;
-    text-align:center;
-    font-size:26px;
+    padding:15px;
+    position:sticky;
+    top:0;
+    z-index:10;
+    box-shadow:0 2px 8px #0002;
+}
+
+.header-inner{
+    max-width:1400px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.brand{
+    font-size:24px;
     font-weight:bold;
 }
 
-nav{
-    background:#075f07;
-    padding:8px;
-    display:flex;
-    gap:6px;
-    overflow-x:auto;
+.subtitle{
+    font-size:12px;
+    opacity:.9;
 }
 
-nav a{
-    color:white;
-    text-decoration:none;
-    padding:9px 12px;
-    border-radius:6px;
+.menu{
+    background:#075f08;
+    overflow-x:auto;
     white-space:nowrap;
 }
 
-nav a:hover{
-    background:#0b7a0b;
+.menu-inner{
+    max-width:1400px;
+    margin:auto;
+    display:flex;
+}
+
+.menu a{
+    color:white;
+    text-decoration:none;
+    padding:12px 14px;
+    display:block;
+    font-size:14px;
+}
+
+.menu a:hover{
+    background:#087a0b;
 }
 
 .container{
-    width:95%;
-    max-width:1200px;
-    margin:20px auto;
+    max-width:1400px;
+    margin:18px auto;
+    padding:0 12px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1.5fr 1fr;
+    gap:18px;
 }
 
 .card{
     background:white;
-    padding:20px;
     border-radius:12px;
-    margin-bottom:20px;
-    box-shadow:0 2px 10px rgba(0,0,0,.10);
+    padding:18px;
+    box-shadow:0 2px 10px #00000012;
+    margin-bottom:18px;
 }
 
-h1,h2{
-    color:#0b7a0b;
-    margin-top:0;
+.card-title{
+    font-size:19px;
+    color:#087a0b;
+    font-weight:bold;
+    margin-bottom:14px;
 }
 
-.row{
+.search-row{
     display:flex;
-    gap:10px;
-    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:15px;
 }
 
-select,
-input{
-    padding:13px;
-    border:1px solid #ccc;
+input,select{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccd3ce;
     border-radius:7px;
     font-size:15px;
-    flex:1;
-    min-width:150px;
+    background:white;
 }
 
 button{
-    padding:13px 18px;
     border:0;
     border-radius:7px;
-    background:#0b7a0b;
+    padding:12px 16px;
+    background:#087a0b;
     color:white;
-    font-size:15px;
+    font-size:14px;
     font-weight:bold;
     cursor:pointer;
 }
 
 button:hover{
-    background:#086108;
+    opacity:.9;
 }
 
-.danger{
-    background:#b00020;
+.btn-blue{background:#1769aa}
+.btn-red{background:#b00020}
+.btn-orange{background:#d97706}
+.btn-gray{background:#555}
+
+.products{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(145px,1fr));
+    gap:10px;
 }
 
-.print{
-    background:#1558a6;
+.product{
+    border:1px solid #ddd;
+    border-radius:9px;
+    padding:13px;
+    cursor:pointer;
+    background:#fff;
 }
+
+.product:hover{
+    border-color:#087a0b;
+    box-shadow:0 2px 7px #0002;
+}
+
+.product-name{
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.product-price{
+    color:#087a0b;
+    font-weight:bold;
+}
+
+.stock{
+    font-size:12px;
+    color:#666;
+    margin-top:5px;
+}
+
+.low-stock{color:#c00}
 
 table{
     width:100%;
     border-collapse:collapse;
-    margin-top:15px;
 }
 
 th{
-    background:#0b7a0b;
+    background:#087a0b;
     color:white;
-    padding:11px;
+    padding:9px;
+    text-align:left;
+    font-size:13px;
 }
 
 td{
-    padding:11px;
-    border:1px solid #ddd;
+    padding:9px;
+    border-bottom:1px solid #e1e5e2;
+    font-size:13px;
 }
 
-.total{
-    text-align:right;
-    color:#0b7a0b;
-    font-size:24px;
+.cart-table{
+    overflow-x:auto;
+}
+
+.qty-controls{
+    display:flex;
+    align-items:center;
+    gap:5px;
+}
+
+.qty-controls button{
+    padding:5px 9px;
+}
+
+.summary{
+    border-top:2px solid #eee;
+    margin-top:15px;
+    padding-top:12px;
+}
+
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    margin:7px 0;
+}
+
+.grand{
+    font-size:23px;
     font-weight:bold;
-    margin:20px 0;
+    color:#087a0b;
+}
+
+.payment-buttons{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:7px;
+    margin:12px 0;
+}
+
+.payment-btn{
+    background:#eee;
+    color:#222;
+}
+
+.payment-btn.active{
+    background:#087a0b;
+    color:white;
+}
+
+.mpesa-box{
+    background:#f0faf1;
+    border:1px solid #a8d9aa;
+    border-radius:9px;
+    padding:13px;
+    margin:10px 0;
+    display:none;
+}
+
+.mpesa-box.show{
+    display:block;
+}
+
+.mpesa-title{
+    color:#087a0b;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.status{
+    padding:10px;
+    border-radius:7px;
+    margin-top:8px;
+    display:none;
+}
+
+.status.show{display:block}
+.status.pending{background:#fff4d6;color:#8a5a00}
+.status.success{background:#dff5e1;color:#087a0b}
+.status.failed{background:#ffe0e0;color:#a00000}
+
+.checkout{
+    width:100%;
+    font-size:17px;
+    padding:15px;
 }
 
 .empty{
@@ -137,259 +276,547 @@ td{
     padding:25px;
 }
 
-.actions{
+.badge{
+    display:inline-block;
+    padding:4px 7px;
+    border-radius:20px;
+    font-size:11px;
+    background:#e8f4e8;
+    color:#087a0b;
+}
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:#0008;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:15px;
+}
+
+.modal.show{
     display:flex;
-    gap:10px;
-    flex-wrap:wrap;
+}
+
+.modal-box{
+    background:white;
+    width:100%;
+    max-width:440px;
+    max-height:90vh;
+    overflow:auto;
+    border-radius:12px;
+    padding:20px;
+}
+
+.modal-title{
+    font-size:21px;
+    font-weight:bold;
+    color:#087a0b;
+    margin-bottom:15px;
+}
+
+.modal-actions{
+    display:flex;
+    gap:8px;
+    margin-top:15px;
+}
+
+.modal-actions button{
+    flex:1;
+}
+
+.receipt-preview{
+    font-family:monospace;
+    background:#fafafa;
+    padding:15px;
+    border:1px dashed #aaa;
+    margin-top:12px;
+    white-space:pre-wrap;
+}
+
+@media(max-width:850px){
+    .grid{grid-template-columns:1fr}
 }
 
 @media(max-width:600px){
-
-    header{
-        font-size:22px;
-    }
-
-    th,td{
-        font-size:13px;
-    }
-
+    .payment-buttons{grid-template-columns:repeat(2,1fr)}
+    .brand{font-size:20px}
+    .products{grid-template-columns:repeat(2,1fr)}
+    .card{padding:13px}
 }
-
 </style>
 </head>
 
 <body>
 
 <header>
-    Goldbizna POS
+<div class="header-inner">
+    <div>
+        <div class="brand">GOLDBIZNA POS PRO</div>
+        <div class="subtitle">Professional Business Management</div>
+    </div>
+    <button class="btn-red" onclick="logout()">Logout</button>
+</div>
 </header>
 
-<nav>
-
+<div class="menu">
+<div class="menu-inner">
 <a href="dashboard.html">Dashboard</a>
 <a href="pos.html">POS</a>
 <a href="inventory.html">Inventory</a>
 <a href="customers.html">Customers</a>
-<a href="savings.html">Savings</a>
+<a href="sales.html">Sales</a>
 <a href="reports.html">Reports</a>
+<a href="savings.html">Savings</a>
 <a href="users.html">Users</a>
 <a href="settings.html">Settings</a>
-
-<a href="#" onclick="logout();return false;">
-Logout
-</a>
-
-</nav>
-
+</div>
+</div>
 
 <div class="container">
 
+<div class="grid">
 
-<!-- PRODUCT SECTION -->
+<!-- LEFT SIDE -->
+
+<div>
 
 <div class="card">
 
-<h1>Sales POS</h1>
+<div class="card-title">Products</div>
 
-<div class="row">
-
-<select id="product"></select>
-
+<div class="search-row">
 <input
-id="qty"
-type="number"
-min="1"
-value="1"
-placeholder="Quantity"
->
-
-<button onclick="addToCart()">
-Add To Cart
-</button>
-
+    id="search"
+    type="search"
+    placeholder="Search product..."
+    oninput="displayProducts()">
 </div>
 
+<div id="products" class="products"></div>
+
 </div>
-
-
-<!-- CART -->
 
 <div class="card">
 
-<h2>Shopping Cart</h2>
+<div class="card-title">Shopping Cart</div>
 
-<div style="overflow-x:auto;">
+<div class="cart-table">
 
 <table>
 
 <thead>
-
 <tr>
-
 <th>Product</th>
-
 <th>Qty</th>
-
 <th>Price</th>
-
 <th>Total</th>
-
-<th>Action</th>
-
+<th></th>
 </tr>
-
 </thead>
 
-<tbody id="cartList">
-
-</tbody>
+<tbody id="cart"></tbody>
 
 </table>
 
 </div>
 
-
-<div class="total" id="grandTotal">
-
-Total: KSh 0
+</div>
 
 </div>
 
 
-<div class="actions">
+<!-- RIGHT SIDE -->
 
-<button onclick="completeSale()">
-Complete Sale
+<div>
+
+<div class="card">
+
+<div class="card-title">Customer</div>
+
+<input
+    id="customer"
+    type="text"
+    placeholder="Customer name / phone">
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">Order Summary</div>
+
+<div class="summary">
+
+<div class="summary-row">
+<span>Subtotal</span>
+<strong id="subtotal">KSh 0</strong>
+</div>
+
+<div class="summary-row">
+<span>Discount</span>
+<strong id="discountDisplay">KSh 0</strong>
+</div>
+
+<div class="summary-row grand">
+<span>Total</span>
+<strong id="total">KSh 0</strong>
+</div>
+
+</div>
+
+<label style="display:block;margin-top:14px;margin-bottom:6px">
+Discount (KSh)
+</label>
+
+<input
+    id="discount"
+    type="number"
+    min="0"
+    value="0"
+    oninput="updateSummary()">
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">Payment Method</div>
+
+<div class="payment-buttons">
+
+<button
+class="payment-btn active"
+id="cashBtn"
+onclick="selectPayment('Cash')">
+Cash
 </button>
 
 <button
-class="print"
-onclick="printReceipt()"
->
-Print Last Receipt
+class="payment-btn"
+id="mpesaBtn"
+onclick="selectPayment('M-Pesa')">
+M-Pesa
+</button>
+
+<button
+class="payment-btn"
+id="cardBtn"
+onclick="selectPayment('Card')">
+Card
+</button>
+
+<button
+class="payment-btn"
+id="creditBtn"
+onclick="selectPayment('Credit')">
+Credit
+</button>
+
+</div>
+
+
+<div id="mpesaBox" class="mpesa-box">
+
+<div class="mpesa-title">
+📱 M-Pesa STK Push
+</div>
+
+<p style="font-size:13px;margin-bottom:9px">
+Enter the customer's Safaricom number.
+</p>
+
+<input
+    id="mpesaPhone"
+    type="tel"
+    placeholder="07XXXXXXXX or 254XXXXXXXXX">
+
+<button
+style="width:100%;margin-top:9px"
+class="btn-orange"
+onclick="requestMpesa()">
+Request M-Pesa Payment
+</button>
+
+<div id="mpesaStatus" class="status"></div>
+
+</div>
+
+
+<div id="cashBox">
+
+<label style="display:block;margin:10px 0 6px">
+Amount Received
+</label>
+
+<input
+id="cashReceived"
+type="number"
+min="0"
+placeholder="Enter amount received"
+oninput="calculateChange()">
+
+<div
+id="change"
+style="margin-top:8px;font-weight:bold;color:#087a0b">
+Change: KSh 0
+</div>
+
+</div>
+
+
+<button
+class="checkout"
+onclick="completeSale()">
+COMPLETE SALE
+</button>
+
+<button
+style="width:100%;margin-top:8px"
+class="btn-gray"
+onclick="clearCart()">
+Clear Cart
 </button>
 
 </div>
 
 </div>
 
+</div>
+
+</div>
+
+
+<!-- RECEIPT MODAL -->
+
+<div id="receiptModal" class="modal">
+
+<div class="modal-box">
+
+<div class="modal-title">
+Sale Completed 🧾
+</div>
+
+<div id="receiptPreview" class="receipt-preview"></div>
+
+<div class="modal-actions">
+
+<button onclick="printReceipt()">
+Print Receipt
+</button>
+
+<button
+class="btn-gray"
+onclick="closeReceipt()">
+Close
+</button>
+
+</div>
+
+</div>
 
 </div>
 
 
 <script>
 
-/* =========================
-   LOGIN PROTECTION
-========================= */
+/* ==============================
+   LOGIN CHECK
+============================== */
 
-if(sessionStorage.getItem("gb_login") !== "1"){
+if(
+    localStorage.getItem("loggedIn") !== "true" &&
+    sessionStorage.getItem("gb_login") !== "1"
+){
     window.location.href="login.html";
 }
 
 
-/* =========================
-   DATA
-========================= */
+/* ==============================
+   VARIABLES
+============================== */
 
-let inventory =
-JSON.parse(
-    localStorage.getItem("gb_inventory") || "[]"
-);
-
+let inventory = [];
 let cart = [];
-
+let paymentMethod = "Cash";
 let lastReceipt = null;
+let mpesaPending = false;
 
 
-/* =========================
-   LOAD PRODUCTS
-========================= */
+/* ==============================
+   LOAD INVENTORY
+============================== */
 
-function loadProducts(){
+function loadInventory(){
 
-    const productSelect =
-        document.getElementById("product");
+    try{
 
-    if(inventory.length === 0){
+        inventory =
+        JSON.parse(
+            localStorage.getItem("gb_inventory") || "[]"
+        );
 
-        productSelect.innerHTML =
-        "<option>No products available</option>";
+    }catch(e){
 
-        return;
+        inventory = [];
+
     }
 
-    productSelect.innerHTML =
-        inventory.map(function(item){
+    inventory =
+    inventory.map(function(item){
 
-            return `
-            <option value="${item.id}">
-                ${escapeHTML(item.name)}
-                - KSh ${Number(item.sell).toLocaleString()}
-                (Stock: ${item.qty})
-            </option>
-            `;
+        return {
 
-        }).join("");
+            ...item,
+
+            id:item.id ?? Date.now() + Math.random(),
+
+            name:item.name || "Unnamed Product",
+
+            sell:Number(
+                item.sell ??
+                item.sellingPrice ??
+                item.price ??
+                0
+            ),
+
+            buy:Number(
+                item.buy ??
+                item.buyingPrice ??
+                0
+            ),
+
+            qty:Number(
+                item.qty ??
+                item.stock ??
+                0
+            )
+
+        };
+
+    });
+
+    displayProducts();
 
 }
 
 
-/* =========================
-   ADD TO CART
-========================= */
+/* ==============================
+   DISPLAY PRODUCTS
+============================== */
 
-function addToCart(){
+function displayProducts(){
 
-    const productId =
-        document.getElementById("product").value;
+    const box =
+        document.getElementById("products");
 
-    const quantity =
-        Math.max(
-            1,
-            Number(document.getElementById("qty").value) || 1
-        );
+    const search =
+        document
+        .getElementById("search")
+        .value
+        .toLowerCase()
+        .trim();
+
+    const filtered =
+        inventory.filter(function(item){
+
+            return item.name
+            .toLowerCase()
+            .includes(search);
+
+        });
+
+
+    if(filtered.length === 0){
+
+        box.innerHTML =
+        `<div class="empty">
+        No products found.<br><br>
+        Add products from Inventory.
+        </div>`;
+
+        return;
+
+    }
+
+
+    box.innerHTML =
+    filtered.map(function(item){
+
+        const low =
+            item.qty <= 5;
+
+        return `
+
+        <div
+        class="product"
+        onclick="addProduct(${JSON.stringify(item.id)})">
+
+            <div class="product-name">
+                ${escapeHTML(item.name)}
+            </div>
+
+            <div class="product-price">
+                KSh ${money(item.sell)}
+            </div>
+
+            <div class="stock ${low ? "low-stock":""}">
+                Stock: ${item.qty}
+            </div>
+
+        </div>
+
+        `;
+
+    }).join("");
+
+}
+
+
+/* ==============================
+   ADD PRODUCT
+============================== */
+
+function addProduct(id){
 
     const item =
         inventory.find(
-            product => product.id == productId
+            p => String(p.id) === String(id)
         );
 
     if(!item){
 
-        alert("Please add products to Inventory first.");
-
+        alert("Product not found.");
         return;
+
     }
 
     if(item.qty <= 0){
 
         alert("This product is out of stock.");
-
         return;
+
     }
+
 
     const existing =
         cart.find(
-            product => product.id === item.id
+            p => String(p.id) === String(item.id)
         );
 
-    const existingQuantity =
-        existing ? existing.qty : 0;
-
-    if(existingQuantity + quantity > item.qty){
-
-        alert(
-            "Not enough stock available. Available: "
-            + item.qty
-        );
-
-        return;
-    }
 
     if(existing){
 
-        existing.qty += quantity;
+        if(existing.qty >= item.qty){
+
+            alert("No more stock available.");
+            return;
+
+        }
+
+        existing.qty++;
 
     }else{
 
@@ -399,26 +826,144 @@ function addToCart(){
 
             name:item.name,
 
-            price:Number(item.sell) || 0,
+            price:item.sell,
 
-            qty:quantity
+            buy:item.buy,
+
+            qty:1
 
         });
 
     }
-
-    document.getElementById("qty").value = 1;
 
     renderCart();
 
 }
 
 
-/* =========================
-   REMOVE CART ITEM
-========================= */
+/* ==============================
+   CART
+============================== */
 
-function removeFromCart(index){
+function renderCart(){
+
+    const body =
+        document.getElementById("cart");
+
+
+    if(cart.length === 0){
+
+        body.innerHTML =
+        `<tr>
+            <td colspan="5" class="empty">
+                Cart is empty
+            </td>
+        </tr>`;
+
+        updateSummary();
+
+        return;
+
+    }
+
+
+    body.innerHTML =
+    cart.map(function(item,index){
+
+        return `
+
+        <tr>
+
+            <td>${escapeHTML(item.name)}</td>
+
+            <td>
+
+                <div class="qty-controls">
+
+                    <button
+                    onclick="changeQty(${index},-1)">
+                    −
+                    </button>
+
+                    <strong>${item.qty}</strong>
+
+                    <button
+                    onclick="changeQty(${index},1)">
+                    +
+                    </button>
+
+                </div>
+
+            </td>
+
+            <td>
+                KSh ${money(item.price)}
+            </td>
+
+            <td>
+                KSh ${money(item.price * item.qty)}
+            </td>
+
+            <td>
+                <button
+                class="btn-red"
+                onclick="removeItem(${index})">
+                ×
+                </button>
+            </td>
+
+        </tr>
+
+        `;
+
+    }).join("");
+
+    updateSummary();
+
+}
+
+
+/* ==============================
+   QUANTITY
+============================== */
+
+function changeQty(index,amount){
+
+    const item = cart[index];
+
+    const stock =
+        inventory.find(
+            p => String(p.id) === String(item.id)
+        );
+
+    const newQty =
+        item.qty + amount;
+
+
+    if(newQty <= 0){
+
+        cart.splice(index,1);
+
+    }else if(stock && newQty <= stock.qty){
+
+        item.qty = newQty;
+
+    }else{
+
+        alert("Not enough stock.");
+
+    }
+
+    renderCart();
+
+}
+
+
+/* ==============================
+   REMOVE
+============================== */
+
+function removeItem(index){
 
     cart.splice(index,1);
 
@@ -427,584 +972,336 @@ function removeFromCart(index){
 }
 
 
-/* =========================
-   RENDER CART
-========================= */
+/* ==============================
+   CLEAR
+============================== */
 
-function renderCart(){
+function clearCart(){
 
-    const cartList =
-        document.getElementById("cartList");
+    if(cart.length === 0) return;
 
-    if(cart.length === 0){
+    if(confirm("Clear the entire cart?")){
 
-        cartList.innerHTML = `
-        <tr>
-            <td colspan="5" class="empty">
-                Cart is empty.
-            </td>
-        </tr>
-        `;
+        cart = [];
 
-        document.getElementById("grandTotal").textContent =
-            "Total: KSh 0";
+        document.getElementById("discount").value = 0;
 
-        return;
+        renderCart();
+
     }
-
-
-    cartList.innerHTML =
-        cart.map(function(item,index){
-
-            const total =
-                item.price * item.qty;
-
-            return `
-            <tr>
-
-                <td>${escapeHTML(item.name)}</td>
-
-                <td>${item.qty}</td>
-
-                <td>
-                    KSh ${item.price.toLocaleString()}
-                </td>
-
-                <td>
-                    KSh ${total.toLocaleString()}
-                </td>
-
-                <td>
-
-                    <button
-                    class="danger"
-                    onclick="removeFromCart(${index})"
-                    >
-                    Remove
-                    </button>
-
-                </td>
-
-            </tr>
-            `;
-
-        }).join("");
-
-
-    const grandTotal =
-        cart.reduce(
-            (sum,item) =>
-            sum + (item.price * item.qty),
-            0
-        );
-
-
-    document.getElementById("grandTotal").textContent =
-        "Total: KSh " +
-        grandTotal.toLocaleString();
 
 }
 
 
-/* =========================
-   COMPLETE SALE
-========================= */
+/* ==============================
+   SUMMARY
+============================== */
 
-function completeSale(){
+function subtotal(){
 
-    if(cart.length === 0){
+    return cart.reduce(
+        (sum,item) =>
+        sum + item.price * item.qty,
+        0
+    );
 
-        alert("Your cart is empty.");
-
-        return;
-    }
-
-
-    const grandTotal =
-        cart.reduce(
-            (sum,item) =>
-            sum + (item.price * item.qty),
-            0
-        );
+}
 
 
-    const receiptNumber =
-        "GB-" +
-        Date.now().toString().slice(-8);
+function getDiscount(){
+
+    let d =
+        Number(
+            document.getElementById("discount").value
+        ) || 0;
+
+    if(d < 0) d = 0;
+
+    return Math.min(d,subtotal());
+
+}
 
 
-    const now =
-        new Date();
+function grandTotal(){
+
+    return subtotal() - getDiscount();
+
+}
 
 
-    /* CREATE RECEIPT */
+function updateSummary(){
 
-    lastReceipt = {
+    const sub = subtotal();
+    const discount = getDiscount();
+    const total = sub - discount;
 
-        number:receiptNumber,
+    document.getElementById("subtotal").textContent =
+        "KSh " + money(sub);
 
-        date:now.toLocaleDateString(),
+    document.getElementById("discountDisplay").textContent =
+        "KSh " + money(discount);
 
-        time:now.toLocaleTimeString(),
+    document.getElementById("total").textContent =
+        "KSh " + money(total);
 
-        items:cart.map(item => ({
+    calculateChange();
 
-            name:item.name,
+}
 
-            qty:item.qty,
 
-            price:item.price,
+/* ==============================
+   PAYMENT METHOD
+============================== */
 
-            total:item.price * item.qty
+function selectPayment(method){
 
-        })),
+    paymentMethod = method;
 
-        total:grandTotal
+    document.querySelectorAll(".payment-btn")
+    .forEach(
+        b => b.classList.remove("active")
+    );
+
+
+    const ids = {
+
+        "Cash":"cashBtn",
+
+        "M-Pesa":"mpesaBtn",
+
+        "Card":"cardBtn",
+
+        "Credit":"creditBtn"
 
     };
 
 
-    /* UPDATE INVENTORY */
-
-    inventory =
-        inventory.map(function(product){
-
-            const sold =
-                cart.find(
-                    item => item.id === product.id
-                );
-
-            if(sold){
-
-                return {
-
-                    ...product,
-
-                    qty:
-                    Number(product.qty)
-                    -
-                    Number(sold.qty)
-
-                };
-
-            }
-
-            return product;
-
-        });
+    document
+    .getElementById(ids[method])
+    .classList.add("active");
 
 
-    localStorage.setItem(
-        "gb_inventory",
-        JSON.stringify(inventory)
+    document
+    .getElementById("mpesaBox")
+    .classList.toggle(
+        "show",
+        method === "M-Pesa"
     );
 
 
-    /* SAVE SALE */
+    document
+    .getElementById("cashBox")
+    .style.display =
+        method === "Cash"
+        ? "block"
+        : "none";
 
-    const sales =
-        JSON.parse(
-            localStorage.getItem("gb_sales") || "[]"
+}
+
+
+/* ==============================
+   CASH CHANGE
+============================== */
+
+function calculateChange(){
+
+    const received =
+        Number(
+            document.getElementById("cashReceived").value
+        ) || 0;
+
+    const change =
+        Math.max(
+            0,
+            received - grandTotal()
+        );
+
+    document.getElementById("change").textContent =
+        "Change: KSh " + money(change);
+
+}
+
+
+/* ==============================
+   M-PESA REQUEST
+============================== */
+
+async function requestMpesa(){
+
+    if(cart.length === 0){
+
+        alert("Add products to the cart first.");
+        return;
+
+    }
+
+
+    const phone =
+        normalizePhone(
+            document.getElementById("mpesaPhone").value
         );
 
 
-    sales.push({
+    if(!phone){
 
-        id:Date.now(),
+        alert(
+            "Enter a valid Kenyan Safaricom number."
+        );
 
-        date:now.toISOString(),
+        return;
 
-        receiptNumber:receiptNumber,
-
-        items:lastReceipt.items,
-
-        total:grandTotal
-
-    });
+    }
 
 
-    localStorage.setItem(
-        "gb_sales",
-        JSON.stringify(sales)
-    );
-
-
-    /* CLEAR CART */
-
-    cart = [];
-
-
-    renderCart();
-
-    loadProducts();
+    const amount = grandTotal();
 
 
     /*
-       ASK WHETHER TO PRINT
+      IMPORTANT:
+
+      Leave this blank until the secure
+      Goldbizna M-Pesa backend is connected.
+
+      NEVER put Safaricom consumer key,
+      consumer secret, passkey or other
+      private credentials in this HTML file.
     */
 
-    const printNow =
-        confirm(
-            "Sale completed successfully!\n\n" +
-            "Receipt: " + receiptNumber +
-            "\nTotal: KSh " +
-            grandTotal.toLocaleString() +
-            "\n\nPrint receipt now?"
-        );
+    const MPESA_ENDPOINT = "";
 
 
-    if(printNow){
+    if(!MPESA_ENDPOINT){
 
-        printReceipt();
-
-    }
-
-}
-
-
-/* =========================
-   PRINT RECEIPT
-========================= */
-
-function printReceipt(){
-
-    if(!lastReceipt){
-
-        alert(
-            "There is no receipt available yet. " +
-            "Complete a sale first."
+        showMpesaStatus(
+            "pending",
+            "M-Pesa connection is ready for setup, but the secure Daraja backend has not been connected yet. No payment has been requested.",
+            "pending"
         );
 
         return;
-    }
-
-
-    const receipt =
-        lastReceipt;
-
-
-    const itemsHTML =
-        receipt.items.map(function(item){
-
-            return `
-            <tr>
-
-                <td>
-                    ${escapeHTML(item.name)}
-                </td>
-
-                <td>
-                    ${item.qty}
-                </td>
-
-                <td>
-                    KSh ${item.price.toLocaleString()}
-                </td>
-
-                <td>
-                    KSh ${item.total.toLocaleString()}
-                </td>
-
-            </tr>
-            `;
-
-        }).join("");
-
-
-    const receiptHTML = `
-
-<!DOCTYPE html>
-
-<html>
-
-<head>
-
-<meta charset="UTF-8">
-
-<title>Goldbizna Receipt</title>
-
-<style>
-
-body{
-
-    font-family:Arial,sans-serif;
-
-    width:80mm;
-
-    margin:0 auto;
-
-    padding:10px;
-
-    color:#000;
-
-}
-
-.center{
-
-    text-align:center;
-
-}
-
-.logo{
-
-    font-size:24px;
-
-    font-weight:bold;
-
-}
-
-.small{
-
-    font-size:12px;
-
-}
-
-.line{
-
-    border-top:1px dashed #000;
-
-    margin:10px 0;
-
-}
-
-table{
-
-    width:100%;
-
-    border-collapse:collapse;
-
-    font-size:11px;
-
-}
-
-th,td{
-
-    padding:4px 2px;
-
-    text-align:left;
-
-}
-
-.total{
-
-    font-size:17px;
-
-    font-weight:bold;
-
-    text-align:right;
-
-    margin-top:10px;
-
-}
-
-.footer{
-
-    text-align:center;
-
-    margin-top:20px;
-
-    font-size:12px;
-
-}
-
-@media print{
-
-    body{
-
-        width:80mm;
 
     }
 
-}
 
-</style>
+    try{
 
-</head>
+        mpesaPending = true;
 
-<body>
-
-
-<div class="center">
-
-<div class="logo">
-GOLDBIZNA
-</div>
-
-<div>
-Business Management System
-</div>
-
-</div>
-
-
-<div class="line"></div>
-
-
-<div class="small">
-
-Receipt No:
-${receipt.number}
-
-<br>
-
-Date:
-${receipt.date}
-
-<br>
-
-Time:
-${receipt.time}
-
-</div>
-
-
-<div class="line"></div>
-
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>Item</th>
-
-<th>Qty</th>
-
-<th>Price</th>
-
-<th>Total</th>
-
-</tr>
-
-</thead>
-
-
-<tbody>
-
-${itemsHTML}
-
-</tbody>
-
-</table>
-
-
-<div class="line"></div>
-
-
-<div class="total">
-
-TOTAL:
-KSh ${receipt.total.toLocaleString()}
-
-</div>
-
-
-<div class="line"></div>
-
-
-<div class="footer">
-
-Thank you for shopping with Goldbizna!
-
-<br><br>
-
-Please come again.
-
-</div>
-
-
-<script>
-
-window.onload=function(){
-
-    setTimeout(function(){
-
-        window.print();
-
-    },300);
-
-};
-
-<\/script>
-
-
-</body>
-
-</html>
-
-`;
-
-
-    const printWindow =
-        window.open(
-            "",
-            "_blank",
-            "width=420,height=700"
+        showMpesaStatus(
+            "pending",
+            "Sending M-Pesa payment request...",
+            "pending"
         );
 
 
-    if(!printWindow){
+        const response =
+            await fetch(
+                MPESA_ENDPOINT,
+                {
 
-        alert(
-            "Printing was blocked by your browser. " +
-            "Allow pop-ups for this Goldbizna website."
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                        "application/json"
+                    },
+
+                    body:JSON.stringify({
+
+                        phone:phone,
+
+                        amount:amount,
+
+                        accountReference:
+                        "Goldbizna",
+
+                        transactionDescription:
+                        "Goldbizna POS Sale"
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(data.success){
+
+            showMpesaStatus(
+                "success",
+                "STK Push sent. Ask the customer to check their phone and enter their M-Pesa PIN.",
+                "success"
+            );
+
+        }else{
+
+            showMpesaStatus(
+                "failed",
+                data.message ||
+                "M-Pesa request failed.",
+                "failed"
+            );
+
+        }
+
+    }catch(error){
+
+        showMpesaStatus(
+            "failed",
+            "Unable to contact the M-Pesa payment server.",
+            "failed"
         );
 
-        return;
+    }finally{
+
+        mpesaPending = false;
+
+    }
+
+}
+
+
+/* ==============================
+   M-PESA STATUS
+============================== */
+
+function showMpesaStatus(type,message,css){
+
+    const box =
+        document.getElementById("mpesaStatus");
+
+    box.className =
+        "status show " + css;
+
+    box.textContent = message;
+
+}
+
+
+/* ==============================
+   NORMALIZE PHONE
+============================== */
+
+function normalizePhone(value){
+
+    let phone =
+        String(value)
+        .replace(/\s+/g,"")
+        .replace(/-/g,"");
+
+
+    if(/^07\d{8}$/.test(phone)){
+
+        return "254" + phone.substring(1);
+
     }
 
 
-    printWindow.document.open();
+    if(/^01\d{8}$/.test(phone)){
 
-    printWindow.document.write(
-        receiptHTML
-    );
+        return "254" + phone.substring(1);
 
-    printWindow.document.close();
-
-}
-
-
-/* =========================
-   LOGOUT
-========================= */
-
-function logout(){
-
-    sessionStorage.removeItem("gb_login");
-
-    window.location.href =
-        "login.html";
-
-}
-
-
-/* =========================
-   SECURITY / DISPLAY HELPER
-========================= */
-
-function escapeHTML(value){
-
-    return String(value)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
-
-}
-
-
-/* =========================
-   START
-========================= */
-
-loadProducts();
-
-renderCart();
-
-</script>
-
-</body>
-</html>
+    

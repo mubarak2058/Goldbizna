@@ -1,110 +1,1036 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goldbizna Settings</title>
-
-<style>
-body{
-    font-family:Arial,sans-serif;
-    background:#f4f4f4;
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Goldbizna Settings</title><style>
+*{
     margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f4f4f4;
+    color:#333;
 }
 
 header{
     background:#0b7a0b;
     color:white;
-    text-align:center;
-    padding:15px;
-    font-size:24px;
+    padding:16px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.logo{
+    font-size:25px;
     font-weight:bold;
 }
 
-.container{
-    max-width:700px;
-    margin:20px auto;
-    background:white;
-    padding:20px;
-    border-radius:10px;
+.header-buttons{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
 }
 
-label{
-    display:block;
-    margin-top:15px;
-    font-weight:bold;
-}
-
-input{
-    width:100%;
-    padding:10px;
-    margin-top:5px;
-    border:1px solid #ccc;
-    border-radius:5px;
-}
-
-button{
-    margin-top:20px;
-    padding:12px;
-    width:100%;
-    background:#0b7a0b;
-    color:white;
+.header-buttons button{
     border:none;
+    padding:10px 15px;
     border-radius:5px;
+    color:white;
     cursor:pointer;
 }
 
-button:hover{
+.dashboard-btn{
+    background:#075c07;
+}
+
+.logout-btn{
+    background:#c62828;
+}
+
+.container{
+    width:95%;
+    max-width:1100px;
+    margin:20px auto;
+}
+
+.title,
+.settings-box,
+.danger-box{
+    background:white;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+
+.title{
+    padding:20px;
+    margin-bottom:20px;
+}
+
+.title h1{
+    color:#0b7a0b;
+    margin-bottom:5px;
+}
+
+.settings-box{
+    padding:20px;
+    margin-bottom:20px;
+}
+
+.settings-box h2{
+    color:#0b7a0b;
+    margin-bottom:18px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+}
+
+.field label{
+    font-weight:bold;
+    margin-bottom:6px;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    font-size:15px;
+}
+
+textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+.full{
+    grid-column:1/-1;
+}
+
+.save-btn{
+    margin-top:18px;
+    background:#0b7a0b;
+    color:white;
+    border:none;
+    padding:13px 20px;
+    border-radius:5px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.save-btn:hover{
     background:#086108;
 }
-</style>
-</head>
 
-<body>
+#message{
+    margin-top:12px;
+    font-weight:bold;
+}
 
-<header>Goldbizna Settings</header>
+.data-buttons{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
 
-<div class="container">
+.data-buttons button{
+    padding:12px 16px;
+    border:none;
+    border-radius:5px;
+    color:white;
+    cursor:pointer;
+}
 
-<label>Business Name</label>
-<input id="businessName" placeholder="Goldbizna">
+.backup-btn{
+    background:#1565c0;
+}
 
-<label>Business Phone</label>
-<input id="businessPhone" placeholder="+254...">
+.restore-btn{
+    background:#6a1b9a;
+}
 
-<label>Business Email</label>
-<input id="businessEmail" placeholder="info@goldbizna.com">
+.reset-btn{
+    background:#c62828;
+}
 
-<label>Receipt Footer</label>
-<input id="receiptFooter" placeholder="Thank you for shopping with us">
+.danger-box{
+    padding:20px;
+    border-left:5px solid #c62828;
+}
 
-<button onclick="saveSettings()">Save Settings</button>
+.danger-box h2{
+    color:#c62828;
+    margin-bottom:10px;
+}
+
+.danger-box p{
+    margin-bottom:15px;
+    color:#666;
+}
+
+@media(max-width:700px){
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .full{
+        grid-column:auto;
+    }
+
+    header{
+        gap:12px;
+    }
+
+    .logo{
+        font-size:21px;
+    }
+}
+</style></head><body><!-- LOGIN PROTECTION --><script>
+if(localStorage.getItem("loggedIn") !== "true"){
+    window.location.href="login.html";
+}
+</script><header><div class="logo">
+    Goldbizna Settings
+</div>
+
+<div class="header-buttons">
+
+    <button
+        class="dashboard-btn"
+        onclick="window.location.href='dashboard.html'">
+        Dashboard
+    </button>
+
+    <button
+        class="logout-btn"
+        onclick="logout()">
+        Logout
+    </button>
 
 </div>
 
-<script>
+</header><div class="container"><div class="title">
+
+    <h1>System Settings</h1>
+
+    <p>
+        Customize your Goldbizna business system.
+    </p>
+
+</div>
+
+
+<!-- BUSINESS INFORMATION -->
+<div class="settings-box">
+
+    <h2>Business Information</h2>
+
+    <div class="form-grid">
+
+        <div class="field">
+
+            <label>
+                Business Name
+            </label>
+
+            <input
+                type="text"
+                id="businessName"
+                placeholder="Goldbizna"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Phone Number
+            </label>
+
+            <input
+                type="text"
+                id="businessPhone"
+                placeholder="Business phone"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Email
+            </label>
+
+            <input
+                type="email"
+                id="businessEmail"
+                placeholder="Business email"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Currency
+            </label>
+
+            <select id="currency">
+
+                <option value="KSh">
+                    KSh - Kenyan Shilling
+                </option>
+
+                <option value="$">
+                    $ - US Dollar
+                </option>
+
+                <option value="£">
+                    £ - British Pound
+                </option>
+
+                <option value="€">
+                    € - Euro
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="field full">
+
+            <label>
+                Business Address
+            </label>
+
+            <textarea
+                id="businessAddress"
+                placeholder="Business address">
+            </textarea>
+
+        </div>
+
+    </div>
+
+    <button
+        class="save-btn"
+        onclick="saveSettings()">
+        Save Business Settings
+    </button>
+
+</div>
+
+
+<!-- INVENTORY SETTINGS -->
+<div class="settings-box">
+
+    <h2>Inventory Settings</h2>
+
+    <div class="form-grid">
+
+        <div class="field">
+
+            <label>
+                Default Low Stock Alert
+            </label>
+
+            <input
+                type="number"
+                id="defaultLowStock"
+                min="0"
+                value="5"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Allow Negative Stock
+            </label>
+
+            <select id="negativeStock">
+
+                <option value="no">
+                    No
+                </option>
+
+                <option value="yes">
+                    Yes
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+    <button
+        class="save-btn"
+        onclick="saveSettings()">
+        Save Inventory Settings
+    </button>
+
+</div>
+
+
+<!-- RECEIPT SETTINGS -->
+<div class="settings-box">
+
+    <h2>Receipt Settings</h2>
+
+    <div class="form-grid">
+
+        <div class="field">
+
+            <label>
+                Receipt Footer
+            </label>
+
+            <input
+                type="text"
+                id="receiptFooter"
+                placeholder="Thank you for your business!"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Show Business Phone
+            </label>
+
+            <select id="showPhone">
+
+                <option value="yes">
+                    Yes
+                </option>
+
+                <option value="no">
+                    No
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+    <button
+        class="save-btn"
+        onclick="saveSettings()">
+        Save Receipt Settings
+    </button>
+
+</div>
+
+
+<!-- APPEARANCE -->
+<div class="settings-box">
+
+    <h2>Appearance</h2>
+
+    <div class="form-grid">
+
+        <div class="field">
+
+            <label>
+                Theme
+            </label>
+
+            <select
+                id="theme"
+                onchange="applyTheme()">
+
+                <option value="light">
+                    Light
+                </option>
+
+                <option value="dark">
+                    Dark
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+    <button
+        class="save-btn"
+        onclick="saveSettings()">
+        Save Appearance
+    </button>
+
+</div>
+
+
+<!-- DATA MANAGEMENT -->
+<div class="settings-box">
+
+    <h2>Data Management</h2>
+
+    <p style="margin-bottom:15px;">
+        Create a backup of your Goldbizna browser data or restore a previous backup.
+    </p>
+
+    <div class="data-buttons">
+
+        <button
+            class="backup-btn"
+            onclick="backupData()">
+            Download Backup
+        </button>
+
+        <button
+            class="restore-btn"
+            onclick="document.getElementById('restoreFile').click()">
+            Restore Backup
+        </button>
+
+        <input
+            type="file"
+            id="restoreFile"
+            accept=".json"
+            style="display:none"
+            onchange="restoreData(event)"
+        >
+
+    </div>
+
+</div>
+
+
+<!-- DANGER ZONE -->
+<div class="danger-box">
+
+    <h2>Danger Zone</h2>
+
+    <p>
+        Resetting the system will remove Goldbizna data stored in this browser.
+        Make a backup first if you need the information later.
+    </p>
+
+    <button
+        class="reset-btn"
+        onclick="resetData()">
+        Reset All Business Data
+    </button>
+
+</div>
+
+
+<p id="message"></p>
+
+</div><script>
+
+/* DEFAULT SETTINGS */
+
+let settings = JSON.parse(
+    localStorage.getItem("goldbizna_settings") || "null"
+);
+
+
+if(!settings){
+
+    settings = {
+
+        businessName:"Goldbizna",
+
+        businessPhone:"",
+
+        businessEmail:"",
+
+        currency:"KSh",
+
+        businessAddress:"",
+
+        defaultLowStock:5,
+
+        negativeStock:"no",
+
+        receiptFooter:
+            "Thank you for your business!",
+
+        showPhone:"yes",
+
+        theme:"light"
+
+    };
+
+
+    saveSettingsData();
+
+}
+
+
+/* LOAD SETTINGS */
+
+function loadSettings(){
+
+    document.getElementById("businessName").value =
+        settings.businessName || "Goldbizna";
+
+    document.getElementById("businessPhone").value =
+        settings.businessPhone || "";
+
+    document.getElementById("businessEmail").value =
+        settings.businessEmail || "";
+
+    document.getElementById("currency").value =
+        settings.currency || "KSh";
+
+    document.getElementById("businessAddress").value =
+        settings.businessAddress || "";
+
+    document.getElementById("defaultLowStock").value =
+        settings.defaultLowStock ?? 5;
+
+    document.getElementById("negativeStock").value =
+        settings.negativeStock || "no";
+
+    document.getElementById("receiptFooter").value =
+        settings.receiptFooter ||
+        "Thank you for your business!";
+
+    document.getElementById("showPhone").value =
+        settings.showPhone || "yes";
+
+    document.getElementById("theme").value =
+        settings.theme || "light";
+
+
+    applyTheme();
+
+}
+
+
+/* SAVE SETTINGS */
+
 function saveSettings(){
-const settings={
-businessName:businessName.value,
-businessPhone:businessPhone.value,
-businessEmail:businessEmail.value,
-receiptFooter:receiptFooter.value
-};
 
-localStorage.setItem("goldbizna_settings",JSON.stringify(settings));
+    settings = {
 
-alert("Settings saved successfully!");
+        businessName:
+            document.getElementById("businessName").value.trim(),
+
+        businessPhone:
+            document.getElementById("businessPhone").value.trim(),
+
+        businessEmail:
+            document.getElementById("businessEmail").value.trim(),
+
+        currency:
+            document.getElementById("currency").value,
+
+        businessAddress:
+            document.getElementById("businessAddress").value.trim(),
+
+        defaultLowStock:
+            Number(
+                document.getElementById("defaultLowStock").value
+            ),
+
+        negativeStock:
+            document.getElementById("negativeStock").value,
+
+        receiptFooter:
+            document.getElementById("receiptFooter").value.trim(),
+
+        showPhone:
+            document.getElementById("showPhone").value,
+
+        theme:
+            document.getElementById("theme").value
+
+    };
+
+
+    saveSettingsData();
+
+    applyTheme();
+
+    showMessage(
+        "Settings saved successfully.",
+        "green"
+    );
+
 }
 
-const saved=JSON.parse(localStorage.getItem("goldbizna_settings"));
 
-if(saved){
-businessName.value=saved.businessName||"";
-businessPhone.value=saved.businessPhone||"";
-businessEmail.value=saved.businessEmail||"";
-receiptFooter.value=saved.receiptFooter||"";
+/* SAVE SETTINGS DATA */
+
+function saveSettingsData(){
+
+    localStorage.setItem(
+        "goldbizna_settings",
+        JSON.stringify(settings)
+    );
+
 }
-</script>
 
-</body>
-</html>
+
+/* THEME */
+
+function applyTheme(){
+
+    const theme =
+        document.getElementById("theme").value;
+
+
+    if(theme === "dark"){
+
+        document.body.style.background="#202124";
+        document.body.style.color="#eee";
+
+        document.querySelectorAll(
+            ".title,.settings-box,.danger-box"
+        ).forEach(function(box){
+
+            box.style.background="#2d2f31";
+            box.style.color="#eee";
+
+        });
+
+    }else{
+
+        document.body.style.background="#f4f4f4";
+        document.body.style.color="#333";
+
+        document.querySelectorAll(
+            ".title,.settings-box,.danger-box"
+        ).forEach(function(box){
+
+            box.style.background="#fff";
+            box.style.color="#333";
+
+        });
+
+    }
+
+}
+
+
+/* BACKUP */
+
+function backupData(){
+
+    const data = {
+
+        version:"Goldbizna Backup 1.0",
+
+        date:
+            new Date().toLocaleString(),
+
+        settings:
+            JSON.parse(
+                localStorage.getItem(
+                    "goldbizna_settings"
+                ) || "{}"
+            ),
+
+        inventory:
+            JSON.parse(
+                localStorage.getItem(
+                    "goldbizna_inventory"
+                ) || "[]"
+            ),
+
+        sales:
+            JSON.parse(
+                localStorage.getItem(
+                    "goldbizna_sales"
+                ) || "[]"
+            ),
+
+        customers:
+            JSON.parse(
+                localStorage.getItem(
+                    "goldbizna_customers"
+                ) || "[]"
+            ),
+
+        savings:
+            JSON.parse(
+                localStorage.getItem(
+                    "goldbizna_savings"
+                ) || "[]"
+            ),
+
+        users:
+            JSON.parse(
+                localStorage.getItem(
+                    "goldbizna_users"
+                ) || "[]"
+            )
+
+    };
+
+
+    const blob =
+        new Blob(
+            [JSON.stringify(data,null,2)],
+            {type:"application/json"}
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const link =
+        document.createElement("a");
+
+
+    link.href=url;
+
+    link.download =
+        "goldbizna_backup.json";
+
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+
+
+    showMessage(
+        "Backup downloaded successfully.",
+        "green"
+    );
+
+}
+
+
+/* RESTORE */
+
+function restoreData(event){
+
+    const file =
+        event.target.files[0];
+
+
+    if(!file){
+
+        return;
+
+    }
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload=function(){
+
+        try{
+
+            const data =
+                JSON.parse(reader.result);
+
+
+            if(data.settings){
+
+                localStorage.setItem(
+                    "goldbizna_settings",
+                    JSON.stringify(data.settings)
+                );
+
+            }
+
+
+            if(Array.isArray(data.inventory)){
+
+                localStorage.setItem(
+                    "goldbizna_inventory",
+                    JSON.stringify(data.inventory)
+                );
+
+            }
+
+
+            if(Array.isArray(data.sales)){
+
+                localStorage.setItem(
+                    "goldbizna_sales",
+                    JSON.stringify(data.sales)
+                );
+
+            }
+
+
+            if(Array.isArray(data.customers)){
+
+                localStorage.setItem(
+                    "goldbizna_customers",
+                    JSON.stringify(data.customers)
+                );
+
+            }
+
+
+            if(Array.isArray(data.savings)){
+
+                localStorage.setItem(
+                    "goldbizna_savings",
+                    JSON.stringify(data.savings)
+                );
+
+            }
+
+
+            if(Array.isArray(data.users)){
+
+                localStorage.setItem(
+                    "goldbizna_users",
+                    JSON.stringify(data.users)
+                );
+
+            }
+
+
+            alert(
+                "Backup restored successfully. The page will now reload."
+            );
+
+
+            location.reload();
+
+
+        }catch(error){
+
+            alert(
+                "Invalid Goldbizna backup file."
+            );
+
+        }
+
+    };
+
+
+    reader.readAsText(file);
+
+}
+
+
+/* RESET */
+
+function resetData(){
+
+    const confirmed =
+        confirm(
+            "WARNING: This will delete your Goldbizna business data from this browser. Continue?"
+        );
+
+
+    if(!confirmed){
+
+        return;
+
+    }
+
+
+    const doubleConfirm =
+        confirm(
+            "Are you absolutely sure? Make a backup first if you need your data."
+        );
+
+
+    if(!doubleConfirm){
+
+        return;
+
+    }
+
+
+    localStorage.removeItem(
+        "goldbizna_inventory"
+    );
+
+    localStorage.removeItem(
+        "goldbizna_sales"
+    );
+
+    localStorage.removeItem(
+        "goldbizna_customers"
+    );
+
+    localStorage.removeItem(
+        "goldbizna_savings"
+    );
+
+    localStorage.removeItem(
+        "goldbizna_settings"
+    );
+
+
+    alert(
+        "Business data has been reset."
+    );
+
+
+    location.reload();
+
+}
+
+
+/* MESSAGE */
+
+function showMessage(text,color){
+
+    const message =
+        document.getElementById("message");
+
+
+    message.innerText=text;
+
+    message.style.color=color;
+
+    message.style.textAlign="center";
+
+    message.style.margin="15px";
+
+}
+
+
+/* LOGOUT */
+
+function logout(){
+
+    localStorage.removeItem("loggedIn");
+
+    window.location.href="login.html";
+
+}
+
+
+/* START */
+
+loadSettings();
+
+</script></body>
+    </html>

@@ -6,7 +6,12 @@
 <title>Goldbizna POS Pro</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
+}
 
 body{
     background:#f1f5f2;
@@ -123,10 +128,30 @@ button:hover{
     opacity:.9;
 }
 
-.btn-blue{background:#1769aa}
-.btn-red{background:#b00020}
-.btn-orange{background:#d97706}
-.btn-gray{background:#555}
+button:disabled{
+    opacity:.55;
+    cursor:not-allowed;
+}
+
+.btn-blue{
+    background:#1769aa;
+}
+
+.btn-red{
+    background:#b00020;
+}
+
+.btn-orange{
+    background:#d97706;
+}
+
+.btn-gray{
+    background:#555;
+}
+
+.btn-mpesa{
+    background:#087a0b;
+}
 
 .products{
     display:grid;
@@ -163,7 +188,9 @@ button:hover{
     margin-top:5px;
 }
 
-.low-stock{color:#c00}
+.low-stock{
+    color:#c00;
+}
 
 table{
     width:100%;
@@ -257,12 +284,28 @@ td{
     border-radius:7px;
     margin-top:8px;
     display:none;
+    font-size:13px;
+    line-height:1.4;
 }
 
-.status.show{display:block}
-.status.pending{background:#fff4d6;color:#8a5a00}
-.status.success{background:#dff5e1;color:#087a0b}
-.status.failed{background:#ffe0e0;color:#a00000}
+.status.show{
+    display:block;
+}
+
+.status.pending{
+    background:#fff4d6;
+    color:#8a5a00;
+}
+
+.status.success{
+    background:#dff5e1;
+    color:#087a0b;
+}
+
+.status.failed{
+    background:#ffe0e0;
+    color:#a00000;
+}
 
 .checkout{
     width:100%;
@@ -334,17 +377,42 @@ td{
     border:1px dashed #aaa;
     margin-top:12px;
     white-space:pre-wrap;
+    line-height:1.5;
+}
+
+.info-box{
+    background:#eef7ff;
+    border:1px solid #b7d9f5;
+    color:#174a70;
+    padding:10px;
+    border-radius:7px;
+    font-size:12px;
+    line-height:1.5;
+    margin-top:10px;
 }
 
 @media(max-width:850px){
-    .grid{grid-template-columns:1fr}
+    .grid{
+        grid-template-columns:1fr;
+    }
 }
 
 @media(max-width:600px){
-    .payment-buttons{grid-template-columns:repeat(2,1fr)}
-    .brand{font-size:20px}
-    .products{grid-template-columns:repeat(2,1fr)}
-    .card{padding:13px}
+    .payment-buttons{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .brand{
+        font-size:20px;
+    }
+
+    .products{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .card{
+        padding:13px;
+    }
 }
 </style>
 </head>
@@ -352,17 +420,29 @@ td{
 <body>
 
 <header>
+
 <div class="header-inner">
-    <div>
-        <div class="brand">GOLDBIZNA POS PRO</div>
-        <div class="subtitle">Professional Business Management</div>
-    </div>
-    <button class="btn-red" onclick="logout()">Logout</button>
+
+<div>
+<div class="brand">GOLDBIZNA POS PRO</div>
+<div class="subtitle">
+Professional Business Management
 </div>
+</div>
+
+<button class="btn-red" onclick="logout()">
+Logout
+</button>
+
+</div>
+
 </header>
 
+
 <div class="menu">
+
 <div class="menu-inner">
+
 <a href="dashboard.html">Dashboard</a>
 <a href="pos.html">POS</a>
 <a href="inventory.html">Inventory</a>
@@ -372,42 +452,53 @@ td{
 <a href="savings.html">Savings</a>
 <a href="users.html">Users</a>
 <a href="settings.html">Settings</a>
+
 </div>
+
 </div>
+
 
 <div class="container">
 
 <div class="grid">
 
-<!-- LEFT SIDE -->
+<!-- LEFT -->
 
 <div>
 
 <div class="card">
 
-<div class="card-title">Products</div>
+<div class="card-title">
+Products
+</div>
 
 <div class="search-row">
+
 <input
-    id="search"
-    type="search"
-    placeholder="Search product..."
-    oninput="displayProducts()">
+id="search"
+type="search"
+placeholder="Search product..."
+oninput="displayProducts()">
+
 </div>
 
 <div id="products" class="products"></div>
 
 </div>
 
+
 <div class="card">
 
-<div class="card-title">Shopping Cart</div>
+<div class="card-title">
+Shopping Cart
+</div>
 
 <div class="cart-table">
 
 <table>
 
 <thead>
+
 <tr>
 <th>Product</th>
 <th>Qty</th>
@@ -415,6 +506,7 @@ td{
 <th>Total</th>
 <th></th>
 </tr>
+
 </thead>
 
 <tbody id="cart"></tbody>
@@ -428,25 +520,29 @@ td{
 </div>
 
 
-<!-- RIGHT SIDE -->
+<!-- RIGHT -->
 
 <div>
 
 <div class="card">
 
-<div class="card-title">Customer</div>
+<div class="card-title">
+Customer
+</div>
 
 <input
-    id="customer"
-    type="text"
-    placeholder="Customer name / phone">
+id="customer"
+type="text"
+placeholder="Customer name / phone">
 
 </div>
 
 
 <div class="card">
 
-<div class="card-title">Order Summary</div>
+<div class="card-title">
+Order Summary
+</div>
 
 <div class="summary">
 
@@ -467,23 +563,27 @@ td{
 
 </div>
 
+
 <label style="display:block;margin-top:14px;margin-bottom:6px">
 Discount (KSh)
 </label>
 
 <input
-    id="discount"
-    type="number"
-    min="0"
-    value="0"
-    oninput="updateSummary()">
+id="discount"
+type="number"
+min="0"
+value="0"
+oninput="updateSummary()">
 
 </div>
 
 
 <div class="card">
 
-<div class="card-title">Payment Method</div>
+<div class="card-title">
+Payment Method
+</div>
+
 
 <div class="payment-buttons">
 
@@ -518,6 +618,8 @@ Credit
 </div>
 
 
+<!-- MPESA -->
+
 <div id="mpesaBox" class="mpesa-box">
 
 <div class="mpesa-title">
@@ -529,21 +631,32 @@ Enter the customer's Safaricom number.
 </p>
 
 <input
-    id="mpesaPhone"
-    type="tel"
-    placeholder="07XXXXXXXX or 254XXXXXXXXX">
+id="mpesaPhone"
+type="tel"
+inputmode="numeric"
+placeholder="07XXXXXXXX or 254XXXXXXXXX">
 
 <button
+id="mpesaRequestBtn"
 style="width:100%;margin-top:9px"
-class="btn-orange"
+class="btn-mpesa"
 onclick="requestMpesa()">
-Request M-Pesa Payment
+
+📲 SEND M-PESA PROMPT
+
 </button>
 
 <div id="mpesaStatus" class="status"></div>
 
+<div class="info-box">
+The customer must have their phone available.
+The STK prompt will request their M-Pesa PIN.
 </div>
 
+</div>
+
+
+<!-- CASH -->
 
 <div id="cashBox">
 
@@ -561,7 +674,9 @@ oninput="calculateChange()">
 <div
 id="change"
 style="margin-top:8px;font-weight:bold;color:#087a0b">
+
 Change: KSh 0
+
 </div>
 
 </div>
@@ -570,14 +685,19 @@ Change: KSh 0
 <button
 class="checkout"
 onclick="completeSale()">
+
 COMPLETE SALE
+
 </button>
+
 
 <button
 style="width:100%;margin-top:8px"
 class="btn-gray"
 onclick="clearCart()">
+
 Clear Cart
+
 </button>
 
 </div>
@@ -610,7 +730,9 @@ Print Receipt
 <button
 class="btn-gray"
 onclick="closeReceipt()">
+
 Close
+
 </button>
 
 </div>
@@ -622,32 +744,51 @@ Close
 
 <script>
 
-/* ==============================
-   LOGIN CHECK
-============================== */
+/* ==================================================
+   GOLD BIZNA POS PRO
+================================================== */
+
+
+/* ==================================================
+   LOGIN PROTECTION
+================================================== */
 
 if(
     localStorage.getItem("loggedIn") !== "true" &&
     sessionStorage.getItem("gb_login") !== "1"
 ){
-    window.location.href="login.html";
+
+    window.location.href = "login.html";
+
 }
 
 
-/* ==============================
+/* ==================================================
+   MPESA WORKER
+================================================== */
+
+const MPESA_ENDPOINT =
+"https://goldbiznapos.mubarakjumamasoud.workers.dev/stkpush";
+
+
+/* ==================================================
    VARIABLES
-============================== */
+================================================== */
 
 let inventory = [];
+
 let cart = [];
+
 let paymentMethod = "Cash";
+
 let lastReceipt = null;
+
 let mpesaPending = false;
 
 
-/* ==============================
+/* ==================================================
    LOAD INVENTORY
-============================== */
+================================================== */
 
 function loadInventory(){
 
@@ -658,11 +799,12 @@ function loadInventory(){
             localStorage.getItem("gb_inventory") || "[]"
         );
 
-    }catch(e){
+    }catch(error){
 
         inventory = [];
 
     }
+
 
     inventory =
     inventory.map(function(item){
@@ -671,24 +813,31 @@ function loadInventory(){
 
             ...item,
 
-            id:item.id ?? Date.now() + Math.random(),
+            id:
+            item.id ??
+            Date.now() + Math.random(),
 
-            name:item.name || "Unnamed Product",
+            name:
+            item.name ||
+            "Unnamed Product",
 
-            sell:Number(
+            sell:
+            Number(
                 item.sell ??
                 item.sellingPrice ??
                 item.price ??
                 0
             ),
 
-            buy:Number(
+            buy:
+            Number(
                 item.buy ??
                 item.buyingPrice ??
                 0
             ),
 
-            qty:Number(
+            qty:
+            Number(
                 item.qty ??
                 item.stock ??
                 0
@@ -698,19 +847,23 @@ function loadInventory(){
 
     });
 
+
     displayProducts();
+
+    renderCart();
 
 }
 
 
-/* ==============================
+/* ==================================================
    DISPLAY PRODUCTS
-============================== */
+================================================== */
 
 function displayProducts(){
 
     const box =
         document.getElementById("products");
+
 
     const search =
         document
@@ -719,10 +872,11 @@ function displayProducts(){
         .toLowerCase()
         .trim();
 
+
     const filtered =
         inventory.filter(function(item){
 
-            return item.name
+            return String(item.name)
             .toLowerCase()
             .includes(search);
 
@@ -732,10 +886,17 @@ function displayProducts(){
     if(filtered.length === 0){
 
         box.innerHTML =
-        `<div class="empty">
-        No products found.<br><br>
+        `
+        <div class="empty">
+
+        No products found.
+
+        <br><br>
+
         Add products from Inventory.
-        </div>`;
+
+        </div>
+        `;
 
         return;
 
@@ -746,24 +907,38 @@ function displayProducts(){
     filtered.map(function(item){
 
         const low =
-            item.qty <= 5;
+            Number(item.qty) <= 5;
+
+
+        const id =
+            String(item.id)
+            .replace(/\\/g,"\\\\")
+            .replace(/'/g,"\\'");
+
 
         return `
 
         <div
         class="product"
-        onclick="addProduct(${JSON.stringify(item.id)})">
+        onclick="addProduct('${id}')">
 
             <div class="product-name">
+
                 ${escapeHTML(item.name)}
+
             </div>
 
             <div class="product-price">
+
                 KSh ${money(item.sell)}
+
             </div>
 
-            <div class="stock ${low ? "low-stock":""}">
+            <div
+            class="stock ${low ? "low-stock" : ""}">
+
                 Stock: ${item.qty}
+
             </div>
 
         </div>
@@ -775,27 +950,32 @@ function displayProducts(){
 }
 
 
-/* ==============================
+/* ==================================================
    ADD PRODUCT
-============================== */
+================================================== */
 
 function addProduct(id){
 
     const item =
         inventory.find(
-            p => String(p.id) === String(id)
+            p =>
+            String(p.id) === String(id)
         );
+
 
     if(!item){
 
         alert("Product not found.");
+
         return;
 
     }
 
-    if(item.qty <= 0){
+
+    if(Number(item.qty) <= 0){
 
         alert("This product is out of stock.");
+
         return;
 
     }
@@ -803,18 +983,24 @@ function addProduct(id){
 
     const existing =
         cart.find(
-            p => String(p.id) === String(item.id)
+            p =>
+            String(p.id) === String(item.id)
         );
 
 
     if(existing){
 
-        if(existing.qty >= item.qty){
+        if(
+            Number(existing.qty) >=
+            Number(item.qty)
+        ){
 
             alert("No more stock available.");
+
             return;
 
         }
+
 
         existing.qty++;
 
@@ -826,9 +1012,9 @@ function addProduct(id){
 
             name:item.name,
 
-            price:item.sell,
+            price:Number(item.sell) || 0,
 
-            buy:item.buy,
+            buy:Number(item.buy) || 0,
 
             qty:1
 
@@ -836,14 +1022,15 @@ function addProduct(id){
 
     }
 
+
     renderCart();
 
 }
 
 
-/* ==============================
-   CART
-============================== */
+/* ==================================================
+   RENDER CART
+================================================== */
 
 function renderCart(){
 
@@ -854,11 +1041,19 @@ function renderCart(){
     if(cart.length === 0){
 
         body.innerHTML =
-        `<tr>
-            <td colspan="5" class="empty">
-                Cart is empty
-            </td>
-        </tr>`;
+        `
+        <tr>
+
+        <td
+        colspan="5"
+        class="empty">
+
+        Cart is empty
+
+        </td>
+
+        </tr>
+        `;
 
         updateSummary();
 
@@ -874,43 +1069,51 @@ function renderCart(){
 
         <tr>
 
-            <td>${escapeHTML(item.name)}</td>
+        <td>
+        ${escapeHTML(item.name)}
+        </td>
 
-            <td>
+        <td>
 
-                <div class="qty-controls">
+        <div class="qty-controls">
 
-                    <button
-                    onclick="changeQty(${index},-1)">
-                    −
-                    </button>
+        <button
+        onclick="changeQty(${index},-1)">
+        −
+        </button>
 
-                    <strong>${item.qty}</strong>
+        <strong>
+        ${item.qty}
+        </strong>
 
-                    <button
-                    onclick="changeQty(${index},1)">
-                    +
-                    </button>
+        <button
+        onclick="changeQty(${index},1)">
+        +
+        </button>
 
-                </div>
+        </div>
 
-            </td>
+        </td>
 
-            <td>
-                KSh ${money(item.price)}
-            </td>
+        <td>
+        KSh ${money(item.price)}
+        </td>
 
-            <td>
-                KSh ${money(item.price * item.qty)}
-            </td>
+        <td>
+        KSh ${money(item.price * item.qty)}
+        </td>
 
-            <td>
-                <button
-                class="btn-red"
-                onclick="removeItem(${index})">
-                ×
-                </button>
-            </td>
+        <td>
+
+        <button
+        class="btn-red"
+        onclick="removeItem(${index})">
+
+        ×
+
+        </button>
+
+        </td>
 
         </tr>
 
@@ -918,50 +1121,71 @@ function renderCart(){
 
     }).join("");
 
+
     updateSummary();
 
 }
 
 
-/* ==============================
-   QUANTITY
-============================== */
+/* ==================================================
+   CHANGE QUANTITY
+================================================== */
 
 function changeQty(index,amount){
 
-    const item = cart[index];
+    const item =
+        cart[index];
+
+
+    if(!item){
+
+        return;
+
+    }
+
 
     const stock =
         inventory.find(
-            p => String(p.id) === String(item.id)
+            p =>
+            String(p.id) ===
+            String(item.id)
         );
 
+
     const newQty =
-        item.qty + amount;
+        Number(item.qty) +
+        Number(amount);
 
 
     if(newQty <= 0){
 
         cart.splice(index,1);
 
-    }else if(stock && newQty <= stock.qty){
+    }else if(
+        stock &&
+        newQty <= Number(stock.qty)
+    ){
 
-        item.qty = newQty;
+        item.qty =
+            newQty;
 
     }else{
 
-        alert("Not enough stock.");
+        alert(
+            "Not enough stock available."
+        );
 
     }
+
 
     renderCart();
 
 }
 
 
-/* ==============================
-   REMOVE
-============================== */
+/* ==================================================
+   REMOVE ITEM
+================================================== */
 
 function removeItem(index){
 
@@ -972,19 +1196,34 @@ function removeItem(index){
 }
 
 
-/* ==============================
-   CLEAR
-============================== */
+/* ==================================================
+   CLEAR CART
+================================================== */
 
 function clearCart(){
 
-    if(cart.length === 0) return;
+    if(cart.length === 0){
 
-    if(confirm("Clear the entire cart?")){
+        return;
+
+    }
+
+
+    if(
+        confirm(
+            "Clear the entire cart?"
+        )
+    ){
 
         cart = [];
 
-        document.getElementById("discount").value = 0;
+        document
+        .getElementById("discount")
+        .value = 0;
+
+        document
+        .getElementById("cashReceived")
+        .value = "";
 
         renderCart();
 
@@ -993,73 +1232,131 @@ function clearCart(){
 }
 
 
-/* ==============================
-   SUMMARY
-============================== */
+/* ==================================================
+   SUBTOTAL
+================================================== */
 
 function subtotal(){
 
     return cart.reduce(
-        (sum,item) =>
-        sum + item.price * item.qty,
+        function(sum,item){
+
+            return sum +
+            (
+                Number(item.price) *
+                Number(item.qty)
+            );
+
+        },
         0
     );
 
 }
 
 
+/* ==================================================
+   DISCOUNT
+================================================== */
+
 function getDiscount(){
 
-    let d =
+    let discount =
         Number(
-            document.getElementById("discount").value
+            document
+            .getElementById("discount")
+            .value
         ) || 0;
 
-    if(d < 0) d = 0;
 
-    return Math.min(d,subtotal());
+    if(discount < 0){
+
+        discount = 0;
+
+    }
+
+
+    return Math.min(
+        discount,
+        subtotal()
+    );
 
 }
 
+
+/* ==================================================
+   GRAND TOTAL
+================================================== */
 
 function grandTotal(){
 
-    return subtotal() - getDiscount();
+    return (
+        subtotal() -
+        getDiscount()
+    );
 
 }
 
 
+/* ==================================================
+   UPDATE SUMMARY
+================================================== */
+
 function updateSummary(){
 
-    const sub = subtotal();
-    const discount = getDiscount();
-    const total = sub - discount;
+    const sub =
+        subtotal();
 
-    document.getElementById("subtotal").textContent =
+
+    const discount =
+        getDiscount();
+
+
+    const total =
+        sub - discount;
+
+
+    document
+    .getElementById("subtotal")
+    .textContent =
         "KSh " + money(sub);
 
-    document.getElementById("discountDisplay").textContent =
+
+    document
+    .getElementById("discountDisplay")
+    .textContent =
         "KSh " + money(discount);
 
-    document.getElementById("total").textContent =
+
+    document
+    .getElementById("total")
+    .textContent =
         "KSh " + money(total);
+
 
     calculateChange();
 
 }
 
 
-/* ==============================
-   PAYMENT METHOD
-============================== */
+/* ==================================================
+   SELECT PAYMENT
+================================================== */
 
 function selectPayment(method){
 
-    paymentMethod = method;
+    paymentMethod =
+        method;
 
-    document.querySelectorAll(".payment-btn")
+
+    document
+    .querySelectorAll(".payment-btn")
     .forEach(
-        b => b.classList.remove("active")
+        function(button){
+
+            button.classList
+            .remove("active");
+
+        }
     );
 
 
@@ -1078,12 +1375,14 @@ function selectPayment(method){
 
     document
     .getElementById(ids[method])
-    .classList.add("active");
+    .classList
+    .add("active");
 
 
     document
     .getElementById("mpesaBox")
-    .classList.toggle(
+    .classList
+    .toggle(
         "show",
         method === "M-Pesa"
     );
@@ -1099,53 +1398,47 @@ function selectPayment(method){
 }
 
 
-/* ==============================
+/* ==================================================
    CASH CHANGE
-============================== */
+================================================== */
 
 function calculateChange(){
 
     const received =
         Number(
-            document.getElementById("cashReceived").value
+            document
+            .getElementById("cashReceived")
+            .value
         ) || 0;
+
 
     const change =
         Math.max(
             0,
-            received - grandTotal()
+            received -
+            grandTotal()
         );
 
-    document.getElementById("change").textContent =
-        "Change: KSh " + money(change);
+
+    document
+    .getElementById("change")
+    .textContent =
+        "Change: KSh " +
+        money(change);
 
 }
 
 
-/* ==============================
-   M-PESA REQUEST
-============================== */
+/* ==================================================
+   MPESA REQUEST
+================================================== */
 
 async function requestMpesa(){
 
     if(cart.length === 0){
 
-        alert("Add products to the cart first.");
-        return;
-
-    }
-
-
-    const phone =
-        normalizePhone(
-            document.getElementById("mpesaPhone").value
-        );
-
-
-    if(!phone){
-
         alert(
-            "Enter a valid Kenyan Safaricom number."
+            "Add products to the cart first."
         );
 
         return;
@@ -1153,155 +1446,4 @@ async function requestMpesa(){
     }
 
 
-    const amount = grandTotal();
-
-
-    /*
-      IMPORTANT:
-
-      Leave this blank until the secure
-      Goldbizna M-Pesa backend is connected.
-
-      NEVER put Safaricom consumer key,
-      consumer secret, passkey or other
-      private credentials in this HTML file.
-    */
-
-    const MPESA_ENDPOINT = "";
-
-
-    if(!MPESA_ENDPOINT){
-
-        showMpesaStatus(
-            "pending",
-            "M-Pesa connection is ready for setup, but the secure Daraja backend has not been connected yet. No payment has been requested.",
-            "pending"
-        );
-
-        return;
-
-    }
-
-
-    try{
-
-        mpesaPending = true;
-
-        showMpesaStatus(
-            "pending",
-            "Sending M-Pesa payment request...",
-            "pending"
-        );
-
-
-        const response =
-            await fetch(
-                MPESA_ENDPOINT,
-                {
-
-                    method:"POST",
-
-                    headers:{
-                        "Content-Type":
-                        "application/json"
-                    },
-
-                    body:JSON.stringify({
-
-                        phone:phone,
-
-                        amount:amount,
-
-                        accountReference:
-                        "Goldbizna",
-
-                        transactionDescription:
-                        "Goldbizna POS Sale"
-
-                    })
-
-                }
-            );
-
-
-        const data =
-            await response.json();
-
-
-        if(data.success){
-
-            showMpesaStatus(
-                "success",
-                "STK Push sent. Ask the customer to check their phone and enter their M-Pesa PIN.",
-                "success"
-            );
-
-        }else{
-
-            showMpesaStatus(
-                "failed",
-                data.message ||
-                "M-Pesa request failed.",
-                "failed"
-            );
-
-        }
-
-    }catch(error){
-
-        showMpesaStatus(
-            "failed",
-            "Unable to contact the M-Pesa payment server.",
-            "failed"
-        );
-
-    }finally{
-
-        mpesaPending = false;
-
-    }
-
-}
-
-
-/* ==============================
-   M-PESA STATUS
-============================== */
-
-function showMpesaStatus(type,message,css){
-
-    const box =
-        document.getElementById("mpesaStatus");
-
-    box.className =
-        "status show " + css;
-
-    box.textContent = message;
-
-}
-
-
-/* ==============================
-   NORMALIZE PHONE
-============================== */
-
-function normalizePhone(value){
-
-    let phone =
-        String(value)
-        .replace(/\s+/g,"")
-        .replace(/-/g,"");
-
-
-    if(/^07\d{8}$/.test(phone)){
-
-        return "254" + phone.substring(1);
-
-    }
-
-
-    if(/^01\d{8}$/.test(phone)){
-
-        return "254" + phone.substring(1);
-
-    
+    const amou    

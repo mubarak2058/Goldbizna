@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goldbizna POS</title>
+<script>
+if (localStorage.getItem("goldbizna_logged_in") !== "true") {
+    window.location.replace("login.html");
+}
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#f4f4f4}
+header{background:#0b7a0b;color:white;padding:15px;text-align:center;font-size:28px;font-weight:bold}
+.logout{display:block;width:max-content;margin:15px auto 0;background:#b00020;color:white;padding:10px 22px;border-radius:6px;text-decoration:none;font-size:15px}
+.container{max-width:1200px;margin:30px auto;padding:20px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.card{background:white;padding:25px;border-radius:10px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.1);transition:.3s}
+.card:hover{transform:translateY(-5px)}
+.card h2{color:#0b7a0b;margin-bottom:10px}
+.card a{display:inline-block;margin-top:15px;background:#0b7a0b;color:white;padding:10px 20px;text-decoration:none;border-radius:5px}
+.card a:hover{background:#095f09}
+</style>
+</head>
+<body>
+<header>
+Goldbizna Business Management System
+<a href="#" class="logout" onclick="logout()">Logout</a>
+</header>
+<div class="container">
+<div class="cards">
+<div class="card"><h2>POS</h2><p>Sell Products</p><a href="pos.html">Open</a></div>
+<div class="card"><h2>Inventory</h2><p>Manage Stock</p><a href="inventory.html">Open</a></div>
+<div class="card"><h2>Sales</h2><p>View Sales History</p><a href="sales.html">Open</a></div>
+<div class="card"><h2>Customers</h2><p>Manage Customers</p><a href="customers.html">Open</a></div>
+<div class="card"><h2>Reports</h2><p>Business Reports</p><a href="reports.html">Open</a></div>
+<div class="card"><h2>Dashboard</h2><p>Business Overview</p><a href="dashboard.html">Open</a></div>
+</div>
+</div>
+<script>
+function logout(){
+    localStorage.removeItem("goldbizna_logged_in");
+    window.location.replace("login.html");
+}
+</script>
+</body>
+</html>

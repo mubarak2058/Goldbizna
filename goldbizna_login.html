@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goldbizna Login</title>
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif}
+body{
+margin:0;
+background:#f4f4f4;
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+.login-box{
+width:92%;
+max-width:380px;
+background:#fff;
+padding:30px;
+border-radius:14px;
+box-shadow:0 4px 18px rgba(0,0,0,.15);
+text-align:center;
+}
+.logo{
+font-size:30px;
+font-weight:bold;
+color:#0b7a0b;
+margin-bottom:8px;
+}
+.subtitle{color:#666;margin-bottom:25px}
+input{
+width:100%;
+padding:14px;
+font-size:18px;
+border:1px solid #ccc;
+border-radius:7px;
+outline:none;
+text-align:center;
+}
+input:focus{border-color:#0b7a0b}
+button{
+width:100%;
+margin-top:15px;
+padding:14px;
+border:0;
+border-radius:7px;
+background:#0b7a0b;
+color:white;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+}
+button:hover{background:#095f09}
+#message{
+margin-top:15px;
+font-weight:bold;
+min-height:22px;
+}
+.success{color:#0b7a0b}
+.error{color:#b00020}
+</style>
+</head>
+<body>
+
+<div class="login-box">
+<div class="logo">GOLDBIZNA</div>
+<div class="subtitle">Business Management System</div>
+
+<form id="loginForm">
+<input
+type="password"
+id="password"
+placeholder="Enter password"
+autocomplete="current-password"
+required
+>
+<button type="submit">Login</button>
+</form>
+
+<div id="message"></div>
+</div>
+
+<script>
+const PASSWORD = "1234";
+
+document.getElementById("loginForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    const password = document.getElementById("password").value;
+    const message = document.getElementById("message");
+
+    if(password === PASSWORD){
+        localStorage.setItem("goldbizna_logged_in", "true");
+
+        message.textContent = "Password Granted";
+        message.className = "success";
+
+        setTimeout(function(){
+            window.location.href = "index.html";
+        }, 500);
+    }else{
+        localStorage.removeItem("goldbizna_logged_in");
+        message.textContent = "Incorrect password";
+        message.className = "error";
+    }
+});
+</script>
+
+</body>
+</html>

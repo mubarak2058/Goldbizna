@@ -1,2 +1,0 @@
-# Goldbizna
-A business account 

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Goldbizna POS Pro - Sales</title><style>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Goldbizna POS Pro - Savings</title><style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
 body{background:#f5f7f6;color:#222;overflow-x:hidden}
 .topbar{position:fixed;top:0;left:0;right:0;height:64px;background:#087a0b;color:#fff;display:flex;align-items:center;padding:0 22px;z-index:20;box-shadow:0 2px 8px #0002}
@@ -37,13 +37,15 @@ body{background:#f5f7f6;color:#222;overflow-x:hidden}
 <a href="pos.html" class=""><span class="nav-icon">▣</span>POS</a>
 <a href="inventory.html" class=""><span class="nav-icon">▤</span>Inventory</a>
 <a href="customers.html" class=""><span class="nav-icon">♧</span>Customers</a>
-<a href="sales.html" class="active"><span class="nav-icon">▱</span>Sales</a>
-<a href="savings.html" class=""><span class="nav-icon">◈</span>Savings</a>
+<a href="sales.html" class=""><span class="nav-icon">▱</span>Sales</a>
+<a href="savings.html" class="active"><span class="nav-icon">◈</span>Savings</a>
 <a href="reports.html" class=""><span class="nav-icon">▥</span>Reports</a>
 <a href="users.html" class=""><span class="nav-icon">♙</span>Users</a>
 <a href="settings.html" class=""><span class="nav-icon">⚙</span>Settings</a>
 <div class="nav-title">Other</div>
 <a href="login.html" class="logout"><span class="nav-icon">⇥</span>Logout</a>
-</nav><div class="footer-card"><b>Goldbizna POS Pro</b><br><br>Version 1.0.0<br><br>© 2026 All rights reserved</div></aside><main class="main"><section class="content"><div class="page-head"><div><h1>Sales History</h1><p>View completed sales</p></div><button class="btn" onclick="clearSales()">Clear Sales</button></div>
-<div class="panel"><div class="panel-head"><h2>Sales</h2></div><div class="table-wrap"><table class="activity"><thead><tr><th>Date</th><th>Product</th><th>Customer</th><th>Qty</th><th>Total</th></tr></thead><tbody id="rows"></tbody></table></div></div>
-<script>function render(){let a=JSON.parse(localStorage.getItem('goldbizna_sales')||'[]');rows.innerHTML=a.length?a.map(s=>`<tr><td>${s.date} ${s.time||''}</td><td>${s.product}</td><td>${s.customer}</td><td>${s.qty}</td><td>KSh ${Number(s.total).toLocaleString()}</td></tr>`).join(''):'<tr><td colspan="5">No sales yet.</td></tr>'}function clearSales(){if(confirm('Clear all sales?')){localStorage.removeItem('goldbizna_sales');render()}}render();</script></section></main><script>function applyGoldbiznaUser(){const n=localStorage.getItem('goldbizna_username')||'User';const e=document.getElementById('userName'),a=document.getElementById('userAvatar');if(e)e.textContent=n;if(a)a.textContent=n.charAt(0).toUpperCase()}applyGoldbiznaUser();</script></body></html>
+</nav><div class="footer-card"><b>Goldbizna POS Pro</b><br><br>Version 1.0.0<br><br>© 2026 All rights reserved</div></aside><main class="main"><section class="content"><div class="page-head"><div><h1>Savings</h1><p>Track your savings entries</p></div></div>
+<div class="cards"><div class="card"><div class="card-title">Total Savings</div><div class="card-value" id="total">KSh 0</div><div class="card-note">All saved entries</div></div></div>
+<div class="panel"><div class="panel-head"><h2>Add Saving</h2></div><div class="form-grid"><div class="field"><label>Amount (KSh)</label><input id="amount" type="number" min="0"></div><div class="field"><label>Description</label><input id="desc"></div></div><div class="actions"><button class="btn" onclick="add()">Save Entry</button></div></div>
+<div class="panel"><div class="panel-head"><h2>Savings History</h2></div><div class="table-wrap"><table class="activity"><thead><tr><th>Date</th><th>Description</th><th>Amount</th></tr></thead><tbody id="rows"></tbody></table></div></div>
+<script>function get(){return JSON.parse(localStorage.getItem('goldbizna_savings')||'[]')}function render(){let a=get();total.textContent='KSh '+a.reduce((x,y)=>x+Number(y.amount),0).toLocaleString();rows.innerHTML=a.length?a.map(s=>`<tr><td>${s.date}</td><td>${s.desc||'Saving'}</td><td>KSh ${Number(s.amount).toLocaleString()}</td></tr>`).join(''):'<tr><td colspan="3">No savings yet.</td></tr>'}function add(){let n=+amount.value;if(n<=0){alert('Enter a valid amount.');return}let a=get();a.unshift({amount:n,desc:desc.value.trim(),date:new Date().toISOString().slice(0,10)});localStorage.setItem('goldbizna_savings',JSON.stringify(a));amount.value='';desc.value='';render()}render();</script></section></main><script>function applyGoldbiznaUser(){const n=localStorage.getItem('goldbizna_username')||'User';const e=document.getElementById('userName'),a=document.getElementById('userAvatar');if(e)e.textContent=n;if(a)a.textContent=n.charAt(0).toUpperCase()}applyGoldbiznaUser();</script></body></html>

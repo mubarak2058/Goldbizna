@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Goldbizna POS Pro - Sales</title><style>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Goldbizna POS Pro - Customers</title><style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
 body{background:#f5f7f6;color:#222;overflow-x:hidden}
 .topbar{position:fixed;top:0;left:0;right:0;height:64px;background:#087a0b;color:#fff;display:flex;align-items:center;padding:0 22px;z-index:20;box-shadow:0 2px 8px #0002}
@@ -36,14 +36,17 @@ body{background:#f5f7f6;color:#222;overflow-x:hidden}
 <a href="index.html" class=""><span class="nav-icon">⌂</span>Home</a>
 <a href="pos.html" class=""><span class="nav-icon">▣</span>POS</a>
 <a href="inventory.html" class=""><span class="nav-icon">▤</span>Inventory</a>
-<a href="customers.html" class=""><span class="nav-icon">♧</span>Customers</a>
-<a href="sales.html" class="active"><span class="nav-icon">▱</span>Sales</a>
+<a href="customers.html" class="active"><span class="nav-icon">♧</span>Customers</a>
+<a href="sales.html" class=""><span class="nav-icon">▱</span>Sales</a>
 <a href="savings.html" class=""><span class="nav-icon">◈</span>Savings</a>
 <a href="reports.html" class=""><span class="nav-icon">▥</span>Reports</a>
 <a href="users.html" class=""><span class="nav-icon">♙</span>Users</a>
 <a href="settings.html" class=""><span class="nav-icon">⚙</span>Settings</a>
 <div class="nav-title">Other</div>
 <a href="login.html" class="logout"><span class="nav-icon">⇥</span>Logout</a>
-</nav><div class="footer-card"><b>Goldbizna POS Pro</b><br><br>Version 1.0.0<br><br>© 2026 All rights reserved</div></aside><main class="main"><section class="content"><div class="page-head"><div><h1>Sales History</h1><p>View completed sales</p></div><button class="btn" onclick="clearSales()">Clear Sales</button></div>
-<div class="panel"><div class="panel-head"><h2>Sales</h2></div><div class="table-wrap"><table class="activity"><thead><tr><th>Date</th><th>Product</th><th>Customer</th><th>Qty</th><th>Total</th></tr></thead><tbody id="rows"></tbody></table></div></div>
-<script>function render(){let a=JSON.parse(localStorage.getItem('goldbizna_sales')||'[]');rows.innerHTML=a.length?a.map(s=>`<tr><td>${s.date} ${s.time||''}</td><td>${s.product}</td><td>${s.customer}</td><td>${s.qty}</td><td>KSh ${Number(s.total).toLocaleString()}</td></tr>`).join(''):'<tr><td colspan="5">No sales yet.</td></tr>'}function clearSales(){if(confirm('Clear all sales?')){localStorage.removeItem('goldbizna_sales');render()}}render();</script></section></main><script>function applyGoldbiznaUser(){const n=localStorage.getItem('goldbizna_username')||'User';const e=document.getElementById('userName'),a=document.getElementById('userAvatar');if(e)e.textContent=n;if(a)a.textContent=n.charAt(0).toUpperCase()}applyGoldbiznaUser();</script></body></html>
+</nav><div class="footer-card"><b>Goldbizna POS Pro</b><br><br>Version 1.0.0<br><br>© 2026 All rights reserved</div></aside><main class="main"><section class="content"><div class="page-head"><div><h1>Customers</h1><p>Manage customer records</p></div></div>
+<div class="panel"><div class="panel-head"><h2>Add Customer</h2></div><div class="form-grid"><div class="field"><label>Name</label><input id="name"></div><div class="field"><label>Phone</label><input id="phone"></div><div class="field full"><label>Notes</label><textarea id="notes"></textarea></div></div><div class="actions"><button class="btn" onclick="addCustomer()">Save Customer</button></div></div>
+<div class="panel"><div class="panel-head"><h2>Customer Records</h2></div><div class="table-wrap"><table class="activity"><thead><tr><th>Name</th><th>Phone</th><th>Notes</th><th>Action</th></tr></thead><tbody id="rows"></tbody></table></div></div>
+<script>
+function get(){return JSON.parse(localStorage.getItem('goldbizna_customers')||'[]')}function render(){let a=get();rows.innerHTML=a.length?a.map((p,i)=>`<tr><td>${p.name}</td><td>${p.phone||'—'}</td><td>${p.notes||'—'}</td><td><button class="btn" onclick="del(${i})">Delete</button></td></tr>`).join(''):'<tr><td colspan="4">No customers yet.</td></tr>'}function addCustomer(){let name=document.getElementById('name').value.trim();if(!name){alert('Enter customer name.');return}let a=get();a.push({name,phone:phone.value.trim(),notes:notes.value.trim()});localStorage.setItem('goldbizna_customers',JSON.stringify(a));document.querySelectorAll('input,textarea').forEach(x=>x.value='');render()}function del(i){let a=get();a.splice(i,1);localStorage.setItem('goldbizna_customers',JSON.stringify(a));render()}render();
+</script></section></main><script>function applyGoldbiznaUser(){const n=localStorage.getItem('goldbizna_username')||'User';const e=document.getElementById('userName'),a=document.getElementById('userAvatar');if(e)e.textContent=n;if(a)a.textContent=n.charAt(0).toUpperCase()}applyGoldbiznaUser();</script></body></html>

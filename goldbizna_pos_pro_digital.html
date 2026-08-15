@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Goldbizna POS Pro</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#f5f7f5;color:#202520}button,input,select{font:inherit}button{cursor:pointer}
+.top{height:72px;background:#fff;border-bottom:1px solid #e0e5e0;display:flex;align-items:center;gap:14px;padding:0 18px;position:sticky;top:0;z-index:30}
+.menu{border:0;background:none;font-size:26px}.brand{font-size:21px;font-weight:800;color:#087a0b;white-space:nowrap}
+.searchWrap{position:relative;flex:1;max-width:650px;margin:auto}.search{width:100%;height:48px;border:1px solid #ccd4cc;border-radius:9px;padding:0 48px 0 15px;outline:0}
+.search:focus{border-color:#087a0b;box-shadow:0 0 0 3px #087a0b16}.plus{position:absolute;right:7px;top:6px;width:36px;height:36px;border:0;border-radius:50%;background:#1688e8;color:#fff;font-size:23px}
+.topBtns{display:flex;gap:8px}.topBtn{width:48px;height:44px;border:0;border-radius:8px;color:#fff;font-size:20px}.bag{background:#321a9d}.usr{background:#087a0b}
+.page{max-width:1500px;margin:auto;padding:15px}.customers{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:15px}
+.field label{display:block;font-size:13px;font-weight:700;margin:0 0 7px 3px;color:#465046}.control{height:46px;width:100%;border:1px solid #d0d7d0;background:#fff;border-radius:8px;padding:0 12px;outline:0}
+.work{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:15px}.cart{background:#fff;border:1px solid #e0e5e0;border-radius:9px;min-height:650px;display:flex;flex-direction:column}
+.head,.row{display:grid;grid-template-columns:2.4fr 1.35fr 1.15fr 1.25fr 1.25fr 34px;align-items:center}.head{min-height:58px;border-bottom:1px solid #e6eae6;padding:0 17px;font-weight:800;font-size:13px}.body{flex:1;overflow:auto}
+.empty{min-height:380px;height:100%;display:flex;align-items:center;justify-content:center;color:#909990;text-align:center;padding:20px}.row{padding:11px 17px;border-bottom:1px solid #edf0ed;gap:7px}.pname{font-weight:800}.meta{font-size:10px;color:#7d857d;margin-top:3px}
+.qty{display:flex;align-items:center;gap:3px}.qbtn{width:29px;height:32px;border:1px solid #cdd4cd;background:#fff;border-radius:5px;font-weight:bold;font-size:17px}.qin{width:56px;height:32px;border:1px solid #cdd4cd;border-radius:5px;text-align:center}.price{width:100%;height:32px;border:1px solid #cdd4cd;border-radius:5px}.del{border:0;background:none;font-size:23px}
+.info{border-top:1px solid #e5e9e5;padding:15px 20px;display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:14px}.actions{background:#fff;border:1px solid #e0e5e0;border-radius:9px;margin-top:12px;padding:13px;display:flex;align-items:center;gap:8px;min-height:76px;flex-wrap:wrap}
+.act{height:42px;padding:0 13px;border:1px solid #ccd4cc;background:#fff;border-radius:7px;font-weight:700}.dark{background:#273444;color:#fff;border-color:#273444}.blue{background:#1688e8;color:#fff;border-color:#1688e8}.red{background:#e52d32;color:#fff;border-color:#e52d32}.green{background:#087a0b;color:#fff;border-color:#087a0b}
+.totalBox{margin-left:auto;text-align:right}.totalBox strong{font-size:20px}.side{background:#f7f9f7;border:1px solid #e0e5e0;border-radius:9px;padding:9px;max-height:760px;overflow:auto}.sideTitle{font-size:11px;font-weight:800;color:#687168;padding:6px}
+.quick{background:#fff;border:1px solid #e2e7e2;border-radius:8px;padding:10px;margin-bottom:9px;display:flex;gap:9px;cursor:pointer;min-height:90px}.quick:hover{border-color:#9ec49f}.icon{width:44px;height:44px;background:#edf7ed;border-radius:7px;display:flex;align-items:center;justify-content:center;color:#087a0b;font-size:20px;flex:none}.qname{font-weight:800;font-size:13px;line-height:1.3}.qprice{font-size:13px;margin-top:5px}.tax{font-size:10px;color:#7b837c;margin-top:4px}
+.results{display:none;position:absolute;left:0;right:0;top:55px;background:#fff;border:1px solid #d9dfd9;border-radius:9px;box-shadow:0 8px 24px #0002;max-height:320px;overflow:auto;z-index:60}.result{padding:11px 14px;border-bottom:1px solid #edf0ed;display:flex;justify-content:space-between;align-items:center;cursor:pointer}.result:hover{background:#f0f8f0}.rname{font-weight:800}.rmeta{font-size:10px;color:#788078;margin-top:3px}.rprice{font-weight:800;color:#087a0b}
+.modal{display:none;position:fixed;inset:0;background:#0009;z-index:100;align-items:center;justify-content:center;padding:14px}.card{background:#fff;width:min(520px,100%);border-radius:13px;padding:20px;max-height:92vh;overflow:auto}.close{float:right;border:0;background:none;font-size:26px}.paygrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}.payopt{padding:14px;border:1px solid #ccd3cc;background:#fff;border-radius:8px;font-weight:800}.payform{display:none;margin-top:13px}.payform input{width:100%;height:43px;margin:5px 0;border:1px solid #ccd3cc;border-radius:7px;padding:0 10px}.final{width:100%;height:44px;background:#087a0b;color:#fff;border:0;border-radius:7px;margin-top:6px;font-weight:800}
+.toast{display:none;position:fixed;right:16px;bottom:16px;background:#222;color:#fff;padding:11px 15px;border-radius:8px;z-index:500}
+#receiptOverlay{display:none;position:fixed;inset:0;z-index:1000;background:#07110bd9;backdrop-filter:blur(5px);overflow:auto;padding:22px 12px}
+.receiptCard{width:min(760px,100%);margin:auto;background:#fff;border-radius:17px;overflow:hidden;box-shadow:0 20px 70px #0005}
+.receiptHead{background:linear-gradient(135deg,#087a0b,#16a63a);color:#fff;padding:23px 26px;display:flex;justify-content:space-between;align-items:center;gap:15px}
+.logo{font-size:27px;font-weight:900}.sub{font-size:12px;opacity:.9;margin-top:4px}.paid{background:#fff;color:#087a0b;padding:9px 14px;border-radius:25px;font-weight:900;font-size:12px}
+.receiptBody{padding:24px 26px}.rinfo{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}.ibox{background:#f6f9f6;border:1px solid #e1e8e1;border-radius:9px;padding:11px}.ilabel{font-size:9px;color:#788078;text-transform:uppercase;font-weight:800;margin-bottom:5px}.ivalue{font-size:12px;font-weight:800;word-break:break-word}
+.items{border:1px solid #e1e7e1;border-radius:10px;overflow:hidden}.ih,.ir{display:grid;grid-template-columns:1fr 65px 100px 115px;align-items:center}.ih{background:#f1f5f1;color:#647064;font-size:10px;font-weight:900;padding:11px}.ir{padding:12px 11px;border-top:1px solid #edf0ed;font-size:12px}.iname{font-weight:800}.icode{font-size:9px;color:#8a928b;margin-top:3px}.center{text-align:center}.right{text-align:right}.totals{width:min(340px,100%);margin:19px 0 0 auto}.tl{display:flex;justify-content:space-between;padding:6px 0;color:#606960;font-size:12px}.grand{display:flex;justify-content:space-between;border-top:2px solid #087a0b;padding-top:12px;margin-top:5px;font-size:20px;font-weight:900;color:#087a0b}.paymentBox{margin-top:18px;background:#f3faf3;border:1px solid #cfe4cf;border-radius:10px;padding:14px}.ptitle{color:#087a0b;font-weight:900;margin-bottom:7px}.prow{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;gap:10px}.receiptActions{display:flex;gap:9px;margin-top:18px}.printBtn{flex:1;height:45px;border:0;border-radius:8px;background:#087a0b;color:#fff;font-weight:900}.closeBtn{height:45px;padding:0 19px;border:1px solid #ccd4cc;border-radius:8px;background:#fff;font-weight:800}.receiptFoot{text-align:center;border-top:1px solid #e6eae6;padding:17px}.thanks{font-weight:900;color:#087a0b}.foottext{font-size:11px;color:#778078;margin-top:4px}
+@media(max-width:950px){.work{grid-template-columns:1fr}.side{display:none}.customers{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.top{padding:0 8px;gap:7px}.brand{font-size:16px}.search{font-size:13px}.topBtn{width:42px}.customers{grid-template-columns:1fr;gap:9px}.head{grid-template-columns:2fr 1fr 1fr 30px;font-size:11px}.head div:nth-child(3),.head div:nth-child(4){display:none}.row{grid-template-columns:2fr 1fr 1fr 30px;font-size:11px}.row .taxCol,.row .priceCol{display:none}.info{padding:13px;font-size:12px}.totalBox{width:100%;margin-left:0;text-align:left}.rinfo{grid-template-columns:1fr 1fr}.receiptBody{padding:17px}.receiptHead{padding:19px}.logo{font-size:22px}.ih,.ir{grid-template-columns:1fr 48px 75px}.ih div:nth-child(3),.ih div:nth-child(4),.ir div:nth-child(3),.ir div:nth-child(4){text-align:right}.receiptActions{flex-direction:column}.closeBtn{width:100%}}
+@media print{body *{visibility:hidden!important}#receiptOverlay,#receiptOverlay *{visibility:visible!important}#receiptOverlay{position:absolute!important;inset:0!important;background:#fff!important;padding:0!important;display:block!important}.receiptCard{width:100%!important;max-width:760px!important;box-shadow:none!important;border-radius:0!important}.receiptActions{display:none!important}.receiptHead{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<header class="top">
+<button class="menu" id="menuBtn">☰</button><div class="brand">🛒 Goldbizna POS</div>
+<div class="searchWrap"><input id="search" class="search" placeholder="Search product or scan barcode" autocomplete="off"><button class="plus" id="focusBtn">+</button><div id="results" class="results"></div></div>
+<div class="topBtns"><button class="topBtn bag" id="bagBtn">🛍</button><button class="topBtn usr" id="userBtn">👤</button></div>
+</header>
+<main class="page">
+<section class="customers">
+<div class="field"><label>Select Customer (optional)</label><input id="customerSelect" class="control" placeholder="Search customer"></div>
+<div class="field"><label>Salesperson (you)</label><select id="salesperson" class="control"></select></div>
+<div class="field"><label>Customer Name</label><input id="customerName" class="control" placeholder="Customer Name"></div>
+</section>
+<section class="work">
+<div>
+<div class="cart">
+<div class="head"><div>Product ＋</div><div>Quantity</div><div>Price Group</div><div>Price inc. tax</div><div>Subtotal</div><div>✕</div></div>
+<div class="body"><div id="empty" class="empty">Search an inventory product above and tap it to add it directly to the cart.</div><div id="list"></div></div>
+<div class="info"><div>Items: <strong id="items">0</strong></div><div>Total: <strong>KSh <span id="infoTotal">0.00</span></strong></div><div>Order Tax (−): 0</div><div>Shipping (+): 0</div></div>
+</div>
+<div class="actions">
+<button class="act" id="clearAllBtn">↩ Clear All</button><button class="act" id="moreBtn">More Options ⌃</button><button class="act dark" id="suspendBtn">🔒 Suspend Cart</button><button class="act blue" id="quoteBtn">＋ Sale Quotation</button><button class="act red" id="clearCartBtn">♜ Clear Cart</button>
+<div class="totalBox">Total<br><strong>Payable: KSh <span id="payable">0.00</span></strong></div><button class="act green" id="paymentBtn">💳 Payment</button>
+</div>
+</div>
+<aside class="side"><div class="sideTitle">QUICK PRODUCTS</div><div id="quick"></div></aside>
+</section>
+</main>
+<footer style="margin:15px;background:#eef8eb;color:#39733e;text-align:center;padding:12px;border-radius:8px">Goldbizna POS Pro • Digital • Fast • Organized</footer>
+
+<div id="payment" class="modal"><div class="card"><button class="close" id="payClose">×</button><h2>Complete Payment</h2><p style="margin-top:7px">Total payable: <strong>KSh <span id="payTotal">0.00</span></strong></p>
+<div class="paygrid">
+<button class="payopt" data-pay="M-Pesa">📱 M-Pesa</button><button class="payopt" data-pay="Cash">💵 Cash</button><button class="payopt" data-pay="Card">💳 Card</button><button class="payopt" data-pay="Bank">🏦 Bank</button><button class="payopt" data-pay="Split" style="grid-column:1/-1">🔀 Split Payment</button>
+</div><div id="payform" class="payform"></div></div></div>
+<div id="toast" class="toast"></div>
+
+<div id="receiptOverlay">
+<div class="receiptCard">
+<div class="receiptHead"><div><div class="logo">🛒 GOLDBIZNA</div><div class="sub">Professional Digital Sales Receipt</div></div><div class="paid">✓ PAID</div></div>
+<div class="receiptBody">
+<div class="rinfo">
+<div class="ibox"><div class="ilabel">Receipt No.</div><div class="ivalue" id="rNo">—</div></div>
+<div class="ibox"><div class="ilabel">Customer</div><div class="ivalue" id="rCustomer">Walk-in Customer</div></div>
+<div class="ibox"><div class="ilabel">You were served by</div><div class="ivalue" id="rServed">User</div></div>
+<div class="ibox"><div class="ilabel">Date & Time</div><div class="ivalue" id="rDate">—</div></div>
+</div>
+<div class="items"><div class="ih"><div>PRODUCT</div><div class="center">QTY</div><div class="right">PRICE</div><div class="right">SUBTOTAL</div></div><div id="rItems"></div></div>
+<div class="totals"><div class="tl"><span>Items</span><strong id="rCount">0</strong></div><div class="tl"><span>Payment Method</span><strong id="rMethod">—</strong></div><div class="grand"><span>TOTAL</span><span>KSh <span id="rTotal">0.00</span></span></div></div>
+<div class="paymentBox"><div class="ptitle">💳 Payment Information</div><div class="prow"><span>Method</span><strong id="rMethod2">—</strong></div><div class="prow" id="mpesaRow"><span>M-Pesa details</span><strong id="rMpesa">—</strong></div></div>
+<div class="receiptActions"><button class="printBtn" id="printReceipt">🖨️ PRINT RECEIPT</button><button class="closeBtn" id="closeReceipt">✕ Close</button></div>
+</div>
+<div class="receiptFoot"><div class="thanks">Thank you for shopping with Goldbizna!</div><div class="foottext">We appreciate your business.</div></div>
+</div></div>
+
+<script>
+const IK='goldbizna_inventory',SK='goldbizna_sales',UK='goldbizna_username';
+let inventory=[],cart=[],paymentMethod='',paymentExtra={};
+const $=id=>document.getElementById(id), money=n=>Number(n||0).toFixed(2);
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function inv(){try{const x=JSON.parse(localStorage.getItem(IK)||'[]');return Array.isArray(x)?x:[]}catch(e){return[]}}
+function pname(p){return p?.name||p?.productName||p?.title||'Unnamed Product'} function pprice(p){return Number(p?.price??p?.sellingPrice??p?.salePrice??0)}
+function pstock(p){return Number(p?.stock??p?.quantity??p?.qty??0)} function pcode(p){return p?.sku||p?.barcode||p?.code||''}
+function total(){return cart.reduce((s,x)=>s+x.qty*pprice(inventory[x.index]),0)}
+function toast(x){$('toast').textContent=x;$('toast').style.display='block';clearTimeout(window.gbT);window.gbT=setTimeout(()=>$('toast').style.display='none',1800)}
+function renderSalesperson(){const s=$('salesperson');let u=localStorage.getItem(UK)||'User';s.innerHTML='<option>'+esc(u)+'</option>'}
+function searchProducts(){inventory=inv();const q=$('search').value.trim().toLowerCase(),box=$('results');if(!q){box.style.display='none';return}const f=inventory.filter(p=>pname(p).toLowerCase().includes(q)||String(pcode(p)).toLowerCase().includes(q)).slice(0,15);box.innerHTML=f.length?f.map(p=>{const i=inventory.indexOf(p);return `<div class="result" data-add="${i}"><div><div class="rname">${esc(pname(p))}</div><div class="rmeta">${esc(pcode(p))} · Stock: ${pstock(p)}</div></div><div class="rprice">KSh ${money(pprice(p))}</div></div>`}).join(''):'<div class="result">No matching product found in inventory.</div>';box.style.display='block'}
+function add(i){inventory=inv();const p=inventory[i];if(!p||pstock(p)<=0){toast('Product is out of stock');return}const x=cart.find(a=>a.index===i);if(x){if(x.qty+.5<=pstock(p))x.qty=+(x.qty+.5).toFixed(2);else return toast('Not enough stock')}else cart.push({index:i,qty:1});$('search').value='';$('results').style.display='none';render()}
+function changeQty(i,d){const x=cart.find(a=>a.index===i);if(!x)return;const s=pstock(inventory[i]),q=+(x.qty+d).toFixed(2);if(q<=0)cart=cart.filter(a=>a!==x);else if(q<=s)x.qty=q;else toast('Not enough stock');render()}
+function setQty(i,v){const x=cart.find(a=>a.index===i);if(!x)return;let q=Number(v);if(!isFinite(q)||q<=0){cart=cart.filter(a=>a!==x)}else x.qty=+Math.min(q,pstock(inventory[i])).toFixed(2);render()}
+function removeItem(i){cart=cart.filter(a=>a.index!==i);render()}
+function render(){inventory=inv();$('empty').style.display=cart.length?'none':'flex';$('list').innerHTML=cart.map(x=>{const p=inventory[x.index],pr=pprice(p),sub=x.qty*pr;return `<div class="row"><div><div class="pname">${esc(pname(p))}</div><div class="meta">${esc(pcode(p))}</div></div><div class="qty"><button class="qbtn" data-q="${x.index}" data-d="-0.5">−</button><input class="qin" type="number" min=".5" step=".5" value="${x.qty}" data-input="${x.index}"><button class="qbtn" data-q="${x.index}" data-d="0.5">+</button></div><div class="priceCol"><select class="price"><option>Default</option></select></div><div class="taxCol">KSh ${money(pr)}</div><div>KSh ${money(sub)}</div><button class="del" data-del="${x.index}">×</button></div>`}).join('');const t=total();$('items').textContent=cart.reduce((s,x)=>s+x.qty,0).toString().replace(/\.0$/,'');$('infoTotal').textContent=money(t);$('payable').textContent=money(t)}
+function quick(){inventory=inv();$('quick').innerHTML=inventory.filter(p=>pstock(p)>0).slice(0,12).map(p=>{const i=inventory.indexOf(p);return `<div class="quick" data-quick="${i}"><div class="icon">▣</div><div><div class="qname">${esc(pname(p))}</div><div class="qprice">KSh ${money(pprice(p))}</div><div class="tax">Stock: ${pstock(p)}</div></div></div>`}).join('')||'<div style="padding:12px;color:#777">No inventory products found.</div>'}
+function clearCart(){cart=[];render();toast('Cart cleared')} function clearAll(){cart=[];$('customerName').value='';$('customerSelect').value='';$('search').value='';$('results').style.display='none';render();toast('POS cleared')}
+function openPay(){if(!cart.length)return toast('Cart is empty');$('payTotal').textContent=money(total());$('payment').style.display='flex'}
+function closePay(){$('payment').style.display='none';$('payform').style.display='none';paymentExtra={}}
+function payForm(m){paymentMethod=m;paymentExtra={};const f=$('payform');f.style.display='block';if(m==='M-Pesa')f.innerHTML='<input id="mpesaPhone" type="tel" placeholder="M-Pesa phone number"><input id="mpesaCode" placeholder="M-Pesa transaction code (optional)"><button class="final" id="finishBtn">Confirm M-Pesa Payment</button>';else if(m==='Cash')f.innerHTML='<input id="cash" type="number" min="0" placeholder="Amount received"><div>Change: KSh <strong id="change">0.00</strong></div><button class="final" id="finishBtn">Finalize Cash Sale</button>';else if(m==='Bank')f.innerHTML='<input id="bankRef" placeholder="Bank transaction/reference"><button class="final" id="finishBtn">Payment Received — Finalize Sale</button>';else if(m==='Split')f.innerHTML='<input id="sm" type="number" placeholder="M-Pesa amount"><input id="sc" type="number" placeholder="Cash amount"><input id="sd" type="number" placeholder="Card amount"><input id="sb" type="number" placeholder="Bank amount"><div>Entered: KSh <strong id="se">0.00</strong> · Remaining: KSh <strong id="sr">0.00</strong></div><button class="final" id="finishBtn">Finalize Split Sale</button>';else f.innerHTML='<p style="margin:8px 0">Confirm that the Card payment has been received.</p><button class="final" id="finishBtn">Payment Received — Finalize Sale</button>';if(m==='Cash')$('cash').oninput=()=>{$('change').textContent=money(Math.max(0,Number($('cash').value||0)-total()))};if(m==='Split')['sm','sc','sd','sb'].forEach(id=>$(id).oninput=updateSplit);$('finishBtn').onclick=()=>finish()}
+function updateSplit(){const e=['sm','sc','sd','sb'].reduce((s,id)=>s+Number($(id)?.value||0),0);$('se').textContent=money(e);$('sr').textContent=money(total()-e)}
+function finish(){const t=total();if(paymentMethod==='M-Pesa'&&!$('mpesaPhone')?.value.trim())return toast('Enter M-Pesa phone number');if(paymentMethod==='Bank'&&!$('bankRef')?.value.trim())return toast('Enter bank reference');if(paymentMethod==='Cash'&&Number($('cash').value||0)<t)return toast('Amount received is less than total');if(paymentMethod==='Split'){const e=['sm','sc','sd','sb'].reduce((s,id)=>s+Number($(id)?.value||0),0);if(Math.abs(e-t)>.009)return toast('Split payment must equal total')}inventory=inv();const customer=$('customerName').value.trim()||'Walk-in Customer',user=localStorage.getItem(UK)||$('salesperson').value||'User';const sale={id:'GB-'+Date.now(),date:new Date().toISOString(),customerName:customer,servedBy:user,paymentMethod,total:t,items:cart.map(x=>({name:pname(inventory[x.index]),qty:x.qty,price:pprice(inventory[x.index])})),mpesaPhone:$('mpesaPhone')?.value.trim()||'',mpesaCode:$('mpesaCode')?.value.trim()||'',bankRef:$('bankRef')?.value.trim()||''};inventory=inventory.map((p,i)=>{const x=cart.find(a=>a.index===i);if(!x)return p;const c={...p},s=Math.max(0,pstock(p)-x.qty);if('stock'in c)c.stock=s;else if('quantity'in c)c.quantity=s;else if('qty'in c)c.qty=s;else c.stock=s;return c});localStorage.setItem(IK,JSON.stringify(inventory));let sales=[];try{sales=JSON.parse(localStorage.getItem(SK)||'[]')}catch(e){}if(!Array.isArray(sales))sales=[];sales.push(sale);localStorage.setItem(SK,JSON.stringify(sales));closePay();showReceipt(sale);cart=[];quick()}
+function showReceipt(s){$('rNo').textContent=s.id;$('rCustomer').textContent=s.customerName;$('rServed').textContent=s.servedBy;$('rDate').textContent=new Date(s.date).toLocaleString();$('rMethod').textContent=s.paymentMethod;$('rMethod2').textContent=s.paymentMethod;$('rTotal').textContent=money(s.total);$('rCount').textContent=s.items.reduce((a,x)=>a+Number(x.qty||0),0);$('rItems').innerHTML=s.items.map(x=>`<div class="ir"><div><div class="iname">${esc(x.name)}</div></div><div class="center">${x.qty}</div><div class="right">KSh ${money(x.price)}</div><div class="right"><strong>KSh ${money(x.qty*x.price)}</strong></div></div>`).join('');$('mpesaRow').style.display=s.paymentMethod==='M-Pesa'?'flex':'none';$('rMpesa').textContent=s.mpesaCode||s.mpesaPhone||'Payment confirmed';$('receiptOverlay').style.display='block';document.body.style.overflow='hidden'}
+function closeReceipt(){$('receiptOverlay').style.display='none';document.body.style.overflow=''}
+function printReceipt(){window.print()}
+$('search').addEventListener('input',searchProducts);$('focusBtn').onclick=()=>$('search').focus();$('results').addEventListener('click',e=>{const el=e.target.closest('[data-add]');if(el)add(Number(el.dataset.add))});$('quick').addEventListener('click',e=>{const el=e.target.closest('[data-quick]');if(el)add(Number(el.dataset.quick))});$('list').addEventListener('click',e=>{const q=e.target.closest('[data-q]');const d=e.target.closest('[data-del]');if(q)changeQty(Number(q.dataset.q),Number(q.dataset.d));if(d)removeItem(Number(d.dataset.del))});$('list').addEventListener('change',e=>{const el=e.target.closest('[data-input]');if(el)setQty(Number(el.dataset.input),el.value)});$('clearCartBtn').onclick=clearCart;$('clearAllBtn').onclick=clearAll;$('paymentBtn').onclick=openPay;$('payClose').onclick=closePay;document.querySelectorAll('[data-pay]').forEach(b=>b.onclick=()=>payForm(b.dataset.pay));$('printReceipt').onclick=printReceipt;$('closeReceipt').onclick=closeReceipt;$('quoteBtn').onclick=()=>toast('Quotation feature ready for future sales-history connection');$('suspendBtn').onclick=()=>toast('Suspend Cart is ready — connect it to your saved holds when needed');$('moreBtn').onclick=()=>toast('More POS options');$('menuBtn').onclick=()=>toast('Goldbizna POS menu');$('bagBtn').onclick=()=>toast('Sales basket');$('userBtn').onclick=()=>toast('Current user: '+(localStorage.getItem(UK)||'User'));document.addEventListener('keydown',e=>{if($('receiptOverlay').style.display==='block'&&e.key==='Enter'){e.preventDefault();printReceipt()}if($('receiptOverlay').style.display==='block'&&e.key==='Escape'){closeReceipt()}});
+renderSalesperson();render();quick();
+</script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MABROUK TRADER'S - Credit & Debt Management</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#f5f7f5;color:#202520}
+.top{height:68px;background:#087a0b;color:#fff;display:flex;align-items:center;padding:0 20px;gap:18px;position:sticky;top:0;z-index:20;box-shadow:0 2px 8px #0002}
+.brand{font-size:20px;font-weight:900;white-space:nowrap}.spacer{flex:1}
+.top a{color:#fff;text-decoration:none;background:#ffffff18;padding:10px 13px;border-radius:7px;font-size:13px}
+.page{max-width:1400px;margin:auto;padding:20px}
+h1{font-size:27px}.sub{color:#737b73;margin-top:5px;font-size:13px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0}
+.card{background:#fff;border:1px solid #e0e5e0;border-radius:10px;padding:17px;box-shadow:0 2px 6px #0000000b}
+.label{font-size:11px;color:#737b73;text-transform:uppercase;font-weight:800}.value{font-size:23px;font-weight:900;color:#087a0b;margin-top:8px}
+.panel{background:#fff;border:1px solid #e0e5e0;border-radius:10px;overflow:hidden;margin-top:18px}
+.toolbar{padding:15px;display:flex;gap:10px;flex-wrap:wrap;border-bottom:1px solid #e6eae6}
+input,select{height:42px;border:1px solid #ccd4cc;border-radius:7px;padding:0 11px;background:#fff;outline:none}
+input:focus,select:focus{border-color:#087a0b;box-shadow:0 0 0 3px #087a0b14}
+.search{flex:1;min-width:220px}.btn{height:42px;padding:0 14px;border:0;border-radius:7px;background:#087a0b;color:#fff;font-weight:800;cursor:pointer}.secondary{background:#fff;color:#333;border:1px solid #ccd4cc}
+.tableWrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:850px}
+th,td{text-align:left;padding:13px 15px;border-bottom:1px solid #edf0ed;font-size:12px}th{background:#f5f8f5;color:#687168;font-size:10px;text-transform:uppercase}
+.badge{display:inline-block;padding:5px 8px;border-radius:20px;font-size:10px;font-weight:900}.open{background:#fff0d2;color:#8a6100}.paid{background:#e7f7e8;color:#087a0b}.overdue{background:#ffe5e5;color:#b21f1f}
+.action{border:1px solid #ccd4cc;background:#fff;border-radius:6px;padding:7px 9px;cursor:pointer;font-weight:700;font-size:11px}.action.green{background:#087a0b;color:#fff;border-color:#087a0b}
+.empty{text-align:center;padding:45px;color:#7c857c}
+.modal{display:none;position:fixed;inset:0;background:#0009;z-index:100;align-items:center;justify-content:center;padding:15px}
+.modalCard{background:#fff;width:min(520px,100%);border-radius:12px;padding:20px;max-height:92vh;overflow:auto}
+.close{float:right;border:0;background:none;font-size:25px;cursor:pointer}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}.full{grid-column:1/-1}
+.field label{display:block;font-size:11px;color:#697169;font-weight:800;margin:0 0 5px}
+.notice{background:#f3faf3;border:1px solid #cfe4cf;border-radius:8px;padding:11px;font-size:12px;margin-top:12px}
+.toast{display:none;position:fixed;right:15px;bottom:15px;background:#222;color:#fff;padding:11px 15px;border-radius:8px;z-index:200}
+@media(max-width:900px){.cards{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.top{padding:0 10px}.brand{font-size:15px}.top a{font-size:10px;padding:8px}.page{padding:12px}.cards{grid-template-columns:1fr 1fr}.form{grid-template-columns:1fr}.full{grid-column:auto}}
+</style>
+</head>
+<body>
+<header class="top">
+<div class="brand">🛒 MABROUK TRADER'S</div>
+<div class="spacer"></div>
+<a href="pos.html">← POS</a>
+<a href="sales.html">Sales History</a>
+</header>
+
+<main class="page">
+<h1>Credit & Debt Management</h1>
+<p class="sub">Track customer credit, partial payments, balances and due dates.</p>
+
+<section class="cards">
+<div class="card"><div class="label">Total Credit</div><div class="value" id="totalCredit">KSh 0.00</div></div>
+<div class="card"><div class="label">Paid</div><div class="value" id="totalPaid">KSh 0.00</div></div>
+<div class="card"><div class="label">Outstanding</div><div class="value" id="outstanding">KSh 0.00</div></div>
+<div class="card"><div class="label">Open Accounts</div><div class="value" id="openAccounts">0</div></div>
+</section>
+
+<section class="panel">
+<div class="toolbar">
+<input id="search" class="search" placeholder="Search customer, invoice or mobile">
+<select id="status"><option value="ALL">All Status</option><option value="OPEN">Open</option><option value="OVERDUE">Overdue</option><option value="PAID">Paid</option></select>
+<button class="btn secondary" id="refresh">↻ Refresh</button>
+</div>
+<div class="tableWrap">
+<table class="table">
+<thead><tr><th>Customer</th><th>Invoice</th><th>Date</th><th>Total</th><th>Paid</th><th>Balance</th><th>Due Date</th><th>Status</th><th>Action</th></tr></thead>
+<tbody id="rows"></tbody>
+</table>
+</div>
+</section>
+</main>
+
+<div class="modal" id="payModal">
+<div class="modalCard">
+<button class="close" id="close">×</button>
+<h2>Record Customer Payment</h2>
+<p style="margin-top:6px;color:#707870;font-size:12px" id="debtInfo"></p>
+<div class="form">
+<div class="field full"><label>Amount Received (KSh)</label><input id="amount" type="number" min="0" step="0.01"></div>
+<div class="field"><label>Payment Method</label><select id="method"><option>M-Pesa</option><option>Cash</option><option>Card</option><option>Bank</option></select></div>
+<div class="field"><label>Reference / M-Pesa Code</label><input id="ref" placeholder="Optional"></div>
+</div>
+<div class="notice">The payment will reduce the customer's outstanding balance and be saved in payment history.</div>
+<button class="btn" id="save" style="width:100%;margin-top:14px">Record Payment</button>
+</div>
+</div>
+
+<div class="modal" id="receiptModal">
+<div class="modalCard" id="paymentReceipt" style="text-align:center">
+<button class="close" id="closeReceipt">×</button>
+<div style="color:#087a0b;font-size:23px;font-weight:900;margin-top:10px">MABROUK TRADER'S</div>
+<div style="font-size:11px;color:#777;margin-top:4px">CUSTOMER PAYMENT RECEIPT</div>
+<hr style="margin:16px 0;border:0;border-top:1px solid #ddd">
+<div id="receiptText" style="text-align:left;font-size:13px;line-height:1.8"></div>
+<button class="btn" onclick="window.print()" style="margin-top:15px;width:100%">🖨 Print Payment Receipt</button>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DK='goldbizna_debts',PK='goldbizna_debt_payments';
+let debts=[],selected=null;
+const $=id=>document.getElementById(id);
+const money=n=>Number(n||0).toFixed(2);
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function load(){try{debts=JSON.parse(localStorage.getItem(DK)||'[]')}catch(e){debts=[]}if(!Array.isArray(debts))debts=[]}
+function save(){localStorage.setItem(DK,JSON.stringify(debts))}
+function toast(t){$('toast').textContent=t;$('toast').style.display='block';clearTimeout(window.tt);window.tt=setTimeout(()=>$('toast').style.display='none',1800)}
+function isOverdue(d){return Number(d.balance||0)>0&&d.dueDate&&new Date(d.dueDate+'T23:59:59')<new Date()}
+function status(d){if(Number(d.balance||0)<=.009)return 'PAID';if(isOverdue(d))return 'OVERDUE';return 'OPEN'}
+function render(){
+ load();
+ const q=$('search').value.trim().toLowerCase(), st=$('status').value;
+ const filtered=debts.filter(d=>{
+   const s=status(d);
+   const text=(d.customerName+' '+d.id+' '+(d.mobile||'')).toLowerCase();
+   return (!q||text.includes(q))&&(st==='ALL'||s===st)
+ });
+ $('rows').innerHTML=filtered.length?filtered.map(d=>{
+   const s=status(d);
+   return `<tr>
+   <td><b>${esc(d.customerName||'Customer')}</b><br><small>${esc(d.mobile||'')}</small></td>
+   <td>${esc(d.id)}</td><td>${new Date(d.date).toLocaleDateString()}</td>
+   <td>KSh ${money(d.amount)}</td><td>KSh ${money(d.paid)}</td><td><b>KSh ${money(d.balance)}</b></td>
+   <td>${esc(d.dueDate||'—')}</td><td><span class="badge ${s.toLowerCase()}">${s}</span></td>
+   <td>${s!=='PAID'?`<button class="action green" data-pay="${esc(d.id)}">Record Payment</button>`:'<span style="color:#087a0b;font-weight:800">Cleared</span>'}</td>
+   </tr>`
+ }).join(''):'<tr><td colspan="9" class="empty">No credit accounts found.</td></tr>';
+ const total=debts.reduce((a,d)=>a+Number(d.amount||0),0),paid=debts.reduce((a,d)=>a+Number(d.paid||0),0);
+ $('totalCredit').textContent='KSh '+money(total);$('totalPaid').textContent='KSh '+money(paid);
+ $('outstanding').textContent='KSh '+money(debts.reduce((a,d)=>a+Math.max(0,Number(d.balance||0)),0));
+ $('openAccounts').textContent=debts.filter(d=>status(d)!=='PAID').length;
+}
+function openPayment(id){
+ selected=debts.find(d=>d.id===id);if(!selected)return;
+ $('amount').value='';$('ref').value='';
+ $('amount').max=selected.balance;
+ $('debtInfo').textContent=`${selected.customerName} • ${selected.id} • Balance: KSh ${money(selected.balance)}`;
+ $('payModal').style.display='flex';
+}
+function recordPayment(){
+ if(!selected)return;
+ const amount=Number($('amount').value||0);
+ if(amount<=0)return toast('Enter a payment amount');
+ if(amount>Number(selected.balance)+.009)return toast('Payment is greater than the balance');
+ const method=$('method').value,ref=$('ref').value.trim(),oldBalance=Number(selected.balance);
+ selected.paid=Number(selected.paid||0)+amount;selected.balance=Math.max(0,oldBalance-amount);
+ const payments=JSON.parse(localStorage.getItem(PK)||'[]');
+ const payment={id:'PAY-'+Date.now(),date:new Date().toISOString(),invoice:selected.id,customerName:selected.customerName,amount,method,reference:ref,balanceAfter:selected.balance};
+ payments.push(payment);localStorage.setItem(PK,JSON.stringify(payments));save();
+ $('payModal').style.display='none';
+ $('receiptText').innerHTML=`<b>Payment No.:</b> ${esc(payment.id)}<br><b>Invoice:</b> ${esc(selected.id)}<br><b>Customer:</b> ${esc(selected.customerName)}<br><b>Date:</b> ${new Date(payment.date).toLocaleString()}<br><b>Method:</b> ${esc(method)}<br><b>Reference:</b> ${esc(ref||'—')}<br><b>Amount Received:</b> <strong>KSh ${money(amount)}</strong><br><b>Balance Remaining:</b> <strong>KSh ${money(selected.balance)}</strong>`;
+ $('receiptModal').style.display='flex';render();toast('Payment recorded');
+}
+$('rows').addEventListener('click',e=>{const b=e.target.closest('[data-pay]');if(b)openPayment(b.dataset.pay)});
+$('save').onclick=recordPayment;$('refresh').onclick=render;$('search').oninput=render;$('status').onchange=render;
+$('close').onclick=()=>$('payModal').style.display='none';$('closeReceipt').onclick=()=>$('receiptModal').style.display='none';
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MABROUK TRADER'S - Customers</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}body{background:#f5f7f5;color:#202520}
+.top{height:68px;background:#087a0b;color:#fff;display:flex;align-items:center;padding:0 20px;gap:15px;position:sticky;top:0;z-index:20}.brand{font-size:20px;font-weight:900;white-space:nowrap}.spacer{flex:1}.top a{color:#fff;text-decoration:none;background:#ffffff18;padding:9px 12px;border-radius:7px;font-size:12px}
+.page{max-width:1450px;margin:auto;padding:20px}h1{font-size:27px}.sub{color:#727a72;font-size:13px;margin-top:5px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}.card{background:#fff;border:1px solid #e0e5e0;border-radius:10px;padding:17px;box-shadow:0 2px 6px #0000000b}.label{font-size:10px;color:#737b73;font-weight:900;text-transform:uppercase}.value{font-size:23px;font-weight:900;color:#087a0b;margin-top:8px}
+.panel{background:#fff;border:1px solid #e0e5e0;border-radius:10px;overflow:hidden;margin-top:15px}.toolbar{padding:14px;display:flex;gap:9px;flex-wrap:wrap;border-bottom:1px solid #e6eae6}
+input,button{height:42px;border:1px solid #ccd4cc;border-radius:7px;padding:0 12px;background:#fff}input{outline:0}.search{flex:1;min-width:220px}button{cursor:pointer;font-weight:800}.green{background:#087a0b;color:#fff;border-color:#087a0b}
+.table{width:100%;border-collapse:collapse;min-width:850px}.wrap{overflow:auto}.table th,.table td{text-align:left;padding:13px 14px;border-bottom:1px solid #edf0ed;font-size:12px}.table th{font-size:10px;color:#687168;background:#f5f8f5;text-transform:uppercase}
+.action{padding:7px 9px;height:auto;font-size:11px}.empty{text-align:center;color:#777;padding:35px}
+.modal{display:none;position:fixed;inset:0;background:#0009;z-index:100;align-items:center;justify-content:center;padding:15px}.modalCard{background:#fff;width:min(850px,100%);max-height:94vh;overflow:auto;border-radius:13px;padding:20px}.close{float:right;border:0;background:none;font-size:26px}
+.detail{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:15px 0}.box{background:#f5f8f5;border:1px solid #e0e6e0;border-radius:8px;padding:10px}.box small{display:block;color:#788078;font-size:9px;text-transform:uppercase;font-weight:900}.box b{display:block;margin-top:5px;font-size:12px;word-break:break-word}
+.tabs{display:flex;gap:7px;margin:15px 0}.tab{height:38px}.active{background:#087a0b;color:#fff;border-color:#087a0b}.section{display:none}.section.show{display:block}.mini{width:100%;border-collapse:collapse}.mini td,.mini th{padding:9px;border-bottom:1px solid #edf0ed;font-size:11px;text-align:left}.mini th{background:#f5f8f5}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:10px}.form label{font-size:10px;font-weight:900;color:#687168;display:block;margin-bottom:5px}.full{grid-column:1/-1}.toast{display:none;position:fixed;right:15px;bottom:15px;background:#222;color:#fff;padding:11px 15px;border-radius:8px;z-index:200}
+@media(max-width:900px){.cards{grid-template-columns:1fr 1fr}.detail{grid-template-columns:1fr 1fr}}@media(max-width:600px){.brand{font-size:15px}.page{padding:12px}.cards{grid-template-columns:1fr 1fr}.detail,.form{grid-template-columns:1fr}.full{grid-column:auto}}
+</style></head><body>
+<header class="top"><div class="brand">🛒 MABROUK TRADER'S</div><div class="spacer"></div><a href="pos.html">POS</a><a href="sales.html">Sales</a><a href="debts.html">Debts</a><a href="reports.html">Reports</a></header>
+<main class="page"><h1>Customers</h1><p class="sub">Customer profiles, purchase history, payments and outstanding credit.</p>
+<section class="cards"><div class="card"><div class="label">Customers</div><div class="value" id="count">0</div></div><div class="card"><div class="label">Customer Sales</div><div class="value" id="sales">KSh 0.00</div></div><div class="card"><div class="label">Outstanding Credit</div><div class="value" id="credit">KSh 0.00</div></div><div class="card"><div class="label">Active Credit Accounts</div><div class="value" id="accounts">0</div></div></section>
+<section class="panel"><div class="toolbar"><input id="search" class="search" placeholder="Search name or phone"><button class="green" id="newBtn">＋ New Customer</button><button id="refresh">↻ Refresh</button></div>
+<div class="wrap"><table class="table"><thead><tr><th>Customer</th><th>Phone</th><th>Purchases</th><th>Total Spent</th><th>Credit Balance</th><th>Last Purchase</th><th>Action</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+</main>
+
+<div class="modal" id="profileModal"><div class="modalCard"><button class="close" id="close">×</button><h2 id="title">Customer Profile</h2><div class="detail" id="detail"></div>
+<div class="tabs"><button class="tab active" data-tab="purchases">Purchases</button><button class="tab" data-tab="payments">Payments</button><button class="tab" data-tab="creditTab">Credit</button></div>
+<div id="purchases" class="section show"><table class="mini"><thead><tr><th>Invoice</th><th>Date</th><th>Total</th><th>Payment</th></tr></thead><tbody id="purchaseRows"></tbody></table></div>
+<div id="payments" class="section"><table class="mini"><thead><tr><th>Payment</th><th>Date</th><th>Amount</th><th>Method</th><th>Reference</th></tr></thead><tbody id="paymentRows"></tbody></table></div>
+<div id="creditTab" class="section"><table class="mini"><thead><tr><th>Invoice</th><th>Total</th><th>Paid</th><th>Balance</th><th>Status</th></tr></thead><tbody id="creditRows"></tbody></table></div>
+</div></div>
+
+<div class="modal" id="newModal"><div class="modalCard" style="max-width:520px"><button class="close" id="newClose">×</button><h2>New Customer</h2><div class="form" style="margin-top:18px"><div><label>Customer Name</label><input id="newName" style="width:100%" placeholder="Full name"></div><div><label>Phone Number</label><input id="newPhone" style="width:100%" placeholder="07..."></div><div class="full"><label>Notes</label><input id="newNotes" style="width:100%" placeholder="Optional notes"></div></div><button class="green" id="saveCustomer" style="width:100%;margin-top:15px">Save Customer</button></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const SK='goldbizna_sales',DK='goldbizna_debts',CK='goldbizna_customers',PK='goldbizna_debt_payments';
+let sales=[],debts=[],customers=[],payments=[],selected=null;
+const $=id=>document.getElementById(id),money=n=>Number(n||0).toFixed(2);
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function load(){try{sales=JSON.parse(localStorage.getItem(SK)||'[]');debts=JSON.parse(localStorage.getItem(DK)||'[]');customers=JSON.parse(localStorage.getItem(CK)||'[]');payments=JSON.parse(localStorage.getItem(PK)||'[]')}catch(e){sales=[];debts=[];customers=[];payments=[]}for(const x of [sales,debts,customers,payments])if(!Array.isArray(x))x=[]}
+function saveCustomers(){localStorage.setItem(CK,JSON.stringify(customers))}
+function key(c){return ((c.name||'')+'|'+(c.phone||'')).toLowerCase()}
+function build(){load();let map={};customers.forEach(c=>map[key(c)]={...c});
+sales.forEach(s=>{let k=key({name:s.customerName||'Walk-in Customer',phone:s.mobile||''});if(!map[k])map[k]={id:'CUS-'+Date.now()+'-'+Object.keys(map).length,name:s.customerName||'Walk-in Customer',phone:s.mobile||'',notes:''}});
+debts.forEach(d=>{let k=key({name:d.customerName||'Customer',phone:d.mobile||''});if(!map[k])map[k]={id:'CUS-'+Date.now()+'-'+Object.keys(map).length,name:d.customerName||'Customer',phone:d.mobile||'',notes:''}});
+customers=Object.values(map);saveCustomers()}
+function render(){build();let q=$('search').value.trim().toLowerCase();let arr=customers.filter(c=>(c.name+' '+c.phone).toLowerCase().includes(q));let totalSales=sales.reduce((a,s)=>a+Number(s.total||0),0),credit=debts.reduce((a,d)=>a+Math.max(0,Number(d.balance||0)),0);
+$('count').textContent=customers.length;$('sales').textContent='KSh '+money(totalSales);$('credit').textContent='KSh '+money(credit);$('accounts').textContent=debts.filter(d=>Number(d.balance||0)>0).length;
+$('rows').innerHTML=arr.length?arr.map(c=>{let ss=sales.filter(s=>key({name:s.customerName||'Walk-in Customer',phone:s.mobile||''})===key(c));let ds=debts.filter(d=>key({name:d.customerName||'Customer',phone:d.mobile||''})===key(c));let spent=ss.reduce((a,s)=>a+Number(s.total||0),0),bal=ds.reduce((a,d)=>a+Math.max(0,Number(d.balance||0)),0),last=ss.sort((a,b)=>new Date(b.date)-new Date(a.date))[0];return `<tr><td><b>${esc(c.name)}</b></td><td>${esc(c.phone||'—')}</td><td>${ss.length}</td><td>KSh ${money(spent)}</td><td><b>KSh ${money(bal)}</b></td><td>${last?new Date(last.date).toLocaleDateString():'—'}</td><td><button class="action green" data-open="${esc(c.id)}">Open Profile</button></td></tr>`}).join(''):'<tr><td colspan="7" class="empty">No customers found.</td></tr>'}
+function openProfile(id){build();selected=customers.find(c=>c.id===id);if(!selected)return;$('title').textContent=selected.name;
+let ss=sales.filter(s=>key({name:s.customerName||'Walk-in Customer',phone:s.mobile||''})===key(selected)),ds=debts.filter(d=>key({name:d.customerName||'Customer',phone:d.mobile||''})===key(selected)),ps=payments.filter(p=>key({name:p.customerName||'',phone:p.mobile||''})===key(selected)||ds.some(d=>d.id===p.invoice));
+let spent=ss.reduce((a,s)=>a+Number(s.total||0),0),bal=ds.reduce((a,d)=>a+Math.max(0,Number(d.balance||0)),0);
+$('detail').innerHTML=[['Name',selected.name],['Phone',selected.phone||'—'],['Total Spent','KSh '+money(spent)],['Credit Balance','KSh '+money(bal)]].map(x=>`<div class="box"><small>${x[0]}</small><b>${esc(x[1])}</b></div>`).join('');
+$('purchaseRows').innerHTML=ss.length?ss.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(s=>`<tr><td>${esc(s.id)}</td><td>${new Date(s.date).toLocaleDateString()}</td><td>KSh ${money(s.total)}</td><td>${esc(s.paymentMethod||'—')}</td></tr>`).join(''):'<tr><td colspan="4" class="empty">No purchases.</td></tr>';
+$('paymentRows').innerHTML=ps.length?ps.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(p=>`<tr><td>${esc(p.id)}</td><td>${new Date(p.date).toLocaleDateString()}</td><td>KSh ${money(p.amount)}</td><td>${esc(p.method||'—')}</td><td>${esc(p.reference||'—')}</td></tr>`).join(''):'<tr><td colspan="5" class="empty">No payments.</td></tr>';
+$('creditRows').innerHTML=ds.length?ds.map(d=>`<tr><td>${esc(d.id)}</td><td>KSh ${money(d.amount)}</td><td>KSh ${money(d.paid)}</td><td>KSh ${money(d.balance)}</td><td>${Number(d.balance)<=0?'PAID':(d.dueDate&&new Date(d.dueDate)<new Date()?'OVERDUE':'OPEN')}</td></tr>`).join(''):'<tr><td colspan="5" class="empty">No credit accounts.</td></tr>';
+$('profileModal').style.display='flex'}
+$('rows').addEventListener('click',e=>{let b=e.target.closest('[data-open]');if(b)openProfile(b.dataset.open)});
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.section').forEach(x=>x.classList.remove('show'));b.classList.add('active');$(b.dataset.tab).classList.add('show')});
+$('search').oninput=render;$('refresh').onclick=render;$('close').onclick=()=>$('profileModal').style.display='none';$('newBtn').onclick=()=>$('newModal').style.display='flex';$('newClose').onclick=()=>$('newModal').style.display='none';
+$('saveCustomer').onclick=()=>{let n=$('newName').value.trim(),p=$('newPhone').value.trim();if(!n)return alert('Enter customer name');build();if(customers.some(c=>key(c)===key({name:n,phone:p})))return alert('Customer already exists');customers.push({id:'CUS-'+Date.now(),name:n,phone:p,notes:$('newNotes').value.trim()});saveCustomers();$('newName').value='';$('newPhone').value='';$('newNotes').value='';$('newModal').style.display='none';render()};
+render();
+</script></body></html>

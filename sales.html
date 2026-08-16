@@ -1,49 +1,160 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Goldbizna POS Pro - Sales</title><style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MABROUK TRADER'S - Sales History</title>
+<style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
-body{background:#f5f7f6;color:#222;overflow-x:hidden}
-.topbar{position:fixed;top:0;left:0;right:0;height:64px;background:#087a0b;color:#fff;display:flex;align-items:center;padding:0 22px;z-index:20;box-shadow:0 2px 8px #0002}
-.brand{font-size:22px;font-weight:800;white-space:nowrap}.brand span{color:#ffd43b}.store{margin-left:55px;font-size:14px}
-.top-actions{margin-left:auto;display:flex;align-items:center;gap:24px;font-size:14px}.admin{display:flex;align-items:center;gap:9px}
-.avatar{width:38px;height:38px;border-radius:50%;background:#fff;color:#087a0b;display:flex;align-items:center;justify-content:center;font-weight:bold}
-.sidebar{position:fixed;left:0;top:64px;bottom:0;width:230px;background:#fff;border-right:1px solid #e3e7e5;padding:20px 14px;overflow-y:auto;z-index:10}
-.nav-title{font-size:11px;color:#888;margin:15px 12px 8px;text-transform:uppercase}
-.nav a{display:flex;align-items:center;gap:13px;text-decoration:none;color:#333;padding:12px 13px;border-radius:8px;margin:3px 0;font-size:15px}
-.nav a:hover,.nav a.active{background:#eaf6ed;color:#087a0b;font-weight:600}.nav-icon{width:21px;text-align:center;font-size:18px}
-.logout{color:#d92323!important;margin-top:15px!important}
-.footer-card{margin:28px 12px 0;background:#f5faf6;border-radius:8px;padding:18px 8px;text-align:center;font-size:12px;color:#35553c}
-.main{margin-left:230px;padding-top:64px;min-height:100vh}.content{padding:28px 30px}
-.page-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}.page-head h1{font-size:27px}.page-head p{color:#777;margin-top:5px;font-size:14px}
-.btn{border:0;background:#087a0b;color:#fff;border-radius:7px;padding:10px 15px;cursor:pointer}.btn.secondary{background:#fff;color:#333;border:1px solid #ddd}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:17px}.card{background:#fff;border:1px solid #e3e7e5;border-radius:10px;padding:19px;box-shadow:0 2px 6px #0000000b}
-.card-title{color:#777;font-size:13px}.card-value{font-size:25px;font-weight:bold;margin-top:10px;color:#087a0b}.card-note{font-size:12px;color:#777;margin-top:7px}
-.panel{background:#fff;border:1px solid #e3e7e5;border-radius:10px;margin-top:22px;box-shadow:0 2px 6px #0000000b}
-.panel-head{padding:18px 20px;border-bottom:1px solid #e7e9e8;display:flex;justify-content:space-between;align-items:center}.panel-head h2{font-size:18px}
-.table-wrap{overflow:auto}.activity{width:100%;border-collapse:collapse}.activity th,.activity td{text-align:left;padding:13px 20px;border-bottom:1px solid #eee;font-size:13px}.activity th{color:#777;font-weight:500;background:#fafafa}
-.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;padding:20px}.field label{display:block;font-size:13px;color:#666;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;padding:11px;border:1px solid #dfe4e1;border-radius:7px;background:#fff}.full{grid-column:1/-1}
-.actions{padding:0 20px 20px;display:flex;gap:10px}
-.notice{margin:18px 20px;padding:14px;border-radius:8px;background:#f5faf6;color:#35553c;font-size:13px}
-@media(max-width:1000px){.cards{grid-template-columns:repeat(2,1fr)}.store{margin-left:25px}}
-@media(max-width:700px){
-.topbar{height:58px;padding:0 10px}.brand{font-size:16px}.store{display:none}.top-actions{gap:8px;font-size:11px}.admin div:last-child{display:none}.avatar{width:31px;height:31px}
-.sidebar{top:58px;width:145px;padding:12px 7px}.nav a{padding:10px 7px;font-size:12px;gap:7px}.nav-icon{font-size:15px;width:18px}.footer-card{margin:18px 5px 0;padding:12px 4px}
-.main{margin-left:145px;padding-top:58px}.content{padding:15px 10px}.page-head h1{font-size:21px}.page-head p{font-size:11px}.btn{padding:8px;font-size:11px}
-.cards{gap:8px}.card{padding:12px}.card-value{font-size:19px}.card-title{font-size:11px}.panel{margin-top:12px}.panel-head{padding:13px}.panel-head h2{font-size:15px}
-.form-grid{grid-template-columns:1fr;padding:13px}.full{grid-column:auto}.actions{padding:0 13px 13px}.activity th,.activity td{padding:10px;font-size:10px}
+body{background:#f5f7f5;color:#202520}
+.top{height:68px;background:#087a0b;color:#fff;display:flex;align-items:center;padding:0 20px;gap:18px;position:sticky;top:0;z-index:20;box-shadow:0 2px 8px #0002}
+.brand{font-size:20px;font-weight:900;white-space:nowrap}.spacer{flex:1}
+.top a{color:#fff;text-decoration:none;background:#ffffff18;padding:10px 13px;border-radius:7px;font-size:13px}
+.page{max-width:1450px;margin:auto;padding:20px}
+h1{font-size:27px}.sub{color:#737b73;margin-top:5px;font-size:13px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0}
+.card{background:#fff;border:1px solid #e0e5e0;border-radius:10px;padding:17px;box-shadow:0 2px 6px #0000000b}
+.label{font-size:11px;color:#737b73;text-transform:uppercase;font-weight:800}.value{font-size:23px;font-weight:900;color:#087a0b;margin-top:8px}
+.panel{background:#fff;border:1px solid #e0e5e0;border-radius:10px;overflow:hidden;margin-top:18px}
+.toolbar{padding:15px;display:flex;gap:9px;flex-wrap:wrap;border-bottom:1px solid #e6eae6}
+input,select{height:42px;border:1px solid #ccd4cc;border-radius:7px;padding:0 11px;background:#fff;outline:none}
+.search{flex:1;min-width:220px}
+.btn{height:42px;padding:0 14px;border:0;border-radius:7px;background:#087a0b;color:#fff;font-weight:800;cursor:pointer}
+.secondary{background:#fff;color:#333;border:1px solid #ccd4cc}
+.tableWrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:1000px}
+th,td{text-align:left;padding:13px 14px;border-bottom:1px solid #edf0ed;font-size:12px}th{background:#f5f8f5;color:#687168;font-size:10px;text-transform:uppercase}
+.badge{display:inline-block;padding:5px 8px;border-radius:20px;font-size:10px;font-weight:900}.paid{background:#e7f7e8;color:#087a0b}.credit{background:#fff0d2;color:#8a6100}
+.action{border:1px solid #ccd4cc;background:#fff;border-radius:6px;padding:7px 9px;cursor:pointer;font-weight:700;font-size:11px}.action.green{background:#087a0b;color:#fff;border-color:#087a0b}.action.red{background:#fff0f0;color:#b21f1f;border-color:#efbcbc}
+.empty{text-align:center;padding:45px;color:#7c857c}
+.modal{display:none;position:fixed;inset:0;background:#0009;z-index:100;align-items:center;justify-content:center;padding:15px}
+.modalCard{background:#fff;width:min(760px,100%);border-radius:13px;padding:20px;max-height:94vh;overflow:auto}
+.close{float:right;border:0;background:none;font-size:26px;cursor:pointer}
+.detailGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:15px 0}.box{background:#f5f8f5;border:1px solid #e0e6e0;border-radius:8px;padding:10px}.box small{display:block;color:#788078;font-size:9px;text-transform:uppercase;font-weight:800}.box b{display:block;margin-top:5px;font-size:12px;word-break:break-word}
+.items{border:1px solid #e0e5e0;border-radius:8px;overflow:hidden}.item{display:grid;grid-template-columns:1fr 70px 100px 110px;padding:10px;border-bottom:1px solid #edf0ed;font-size:11px}.item.head{background:#f4f7f4;color:#687168;font-weight:900}
+.total{text-align:right;margin-top:15px;font-size:20px;color:#087a0b;font-weight:900}
+.modalActions{display:flex;gap:8px;margin-top:15px}.modalActions button{flex:1}
+.toast{display:none;position:fixed;right:15px;bottom:15px;background:#222;color:#fff;padding:11px 15px;border-radius:8px;z-index:200}
+@media(max-width:900px){.cards{grid-template-columns:1fr 1fr}.detailGrid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.top{padding:0 10px}.brand{font-size:15px}.top a{font-size:10px;padding:8px}.page{padding:12px}.cards{grid-template-columns:1fr 1fr}.detailGrid{grid-template-columns:1fr 1fr}}
+@media print{
+body *{visibility:hidden!important}.printArea,.printArea *{visibility:visible!important}.printArea{position:absolute!important;left:0;top:0;width:100%!important}
 }
-</style></head><body>
-<header class="topbar"><div class="brand">GOLDBIZNA <span>POS</span> PRO</div><div class="store">Goldbizna Store (KSh)　⌄</div><div class="top-actions"><div onclick="location.reload()" style="cursor:pointer">↻ Refresh</div><div onclick="location.href='inventory.html'" style="cursor:pointer">＋ Add Product</div><div class="admin"><div class="avatar" id="userAvatar">U</div><div><b id="userName">User</b><br><small>Goldbizna User</small></div><span>⌄</span></div></div></header>
-<aside class="sidebar"><nav class="nav">
-<a href="index.html" class=""><span class="nav-icon">⌂</span>Home</a>
-<a href="pos.html" class=""><span class="nav-icon">▣</span>POS</a>
-<a href="inventory.html" class=""><span class="nav-icon">▤</span>Inventory</a>
-<a href="customers.html" class=""><span class="nav-icon">♧</span>Customers</a>
-<a href="sales.html" class="active"><span class="nav-icon">▱</span>Sales</a>
-<a href="savings.html" class=""><span class="nav-icon">◈</span>Savings</a>
-<a href="reports.html" class=""><span class="nav-icon">▥</span>Reports</a>
-<a href="users.html" class=""><span class="nav-icon">♙</span>Users</a>
-<a href="settings.html" class=""><span class="nav-icon">⚙</span>Settings</a>
-<div class="nav-title">Other</div>
-<a href="login.html" class="logout"><span class="nav-icon">⇥</span>Logout</a>
-</nav><div class="footer-card"><b>Goldbizna POS Pro</b><br><br>Version 1.0.0<br><br>© 2026 All rights reserved</div></aside><main class="main"><section class="content"><div class="page-head"><div><h1>Sales History</h1><p>View completed sales</p></div><button class="btn" onclick="clearSales()">Clear Sales</button></div>
-<div class="panel"><div class="panel-head"><h2>Sales</h2></div><div class="table-wrap"><table class="activity"><thead><tr><th>Date</th><th>Product</th><th>Customer</th><th>Qty</th><th>Total</th></tr></thead><tbody id="rows"></tbody></table></div></div>
-<script>function render(){let a=JSON.parse(localStorage.getItem('goldbizna_sales')||'[]');rows.innerHTML=a.length?a.map(s=>`<tr><td>${s.date} ${s.time||''}</td><td>${s.product}</td><td>${s.customer}</td><td>${s.qty}</td><td>KSh ${Number(s.total).toLocaleString()}</td></tr>`).join(''):'<tr><td colspan="5">No sales yet.</td></tr>'}function clearSales(){if(confirm('Clear all sales?')){localStorage.removeItem('goldbizna_sales');render()}}render();</script></section></main><script>function applyGoldbiznaUser(){const n=localStorage.getItem('goldbizna_username')||'User';const e=document.getElementById('userName'),a=document.getElementById('userAvatar');if(e)e.textContent=n;if(a)a.textContent=n.charAt(0).toUpperCase()}applyGoldbiznaUser();</script></body></html>
+</style>
+</head>
+<body>
+<header class="top">
+<div class="brand">🛒 MABROUK TRADER'S</div>
+<div class="spacer"></div>
+<a href="pos.html">← POS</a><a href="debts.html">Credit & Debts</a>
+</header>
+
+<main class="page">
+<h1>Sales History</h1>
+<p class="sub">Search, inspect and reprint completed sales.</p>
+
+<section class="cards">
+<div class="card"><div class="label">Total Sales</div><div class="value" id="totalSales">KSh 0.00</div></div>
+<div class="card"><div class="label">Today's Sales</div><div class="value" id="todaySales">KSh 0.00</div></div>
+<div class="card"><div class="label">Transactions</div><div class="value" id="transactions">0</div></div>
+<div class="card"><div class="label">Profit</div><div class="value" id="profit">KSh 0.00</div></div>
+</section>
+
+<section class="panel">
+<div class="toolbar">
+<input id="search" class="search" placeholder="Search invoice, customer, mobile, M-Pesa code...">
+<select id="method"><option value="ALL">All Payment Methods</option><option>M-Pesa</option><option>Cash</option><option>Card</option><option>Bank</option><option>Split</option><option>Credit</option></select>
+<input id="date" type="date">
+<button class="btn secondary" id="clearDate">Clear Date</button>
+<button class="btn secondary" id="refresh">↻ Refresh</button>
+</div>
+<div class="tableWrap">
+<table class="table">
+<thead><tr><th>Invoice</th><th>Date</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>Action</th></tr></thead>
+<tbody id="rows"></tbody>
+</table>
+</div>
+</section>
+</main>
+
+<div class="modal" id="detailModal">
+<div class="modalCard printArea">
+<button class="close" id="close">×</button>
+<div style="text-align:center;color:#087a0b;font-size:25px;font-weight:900">MABROUK TRADER'S</div>
+<div style="text-align:center;font-size:11px;color:#777;margin-top:3px">SALE DETAILS / REPRINT</div>
+<div class="detailGrid" id="details"></div>
+<div class="items">
+<div class="item head"><div>PRODUCT</div><div>QTY</div><div>PRICE</div><div>AMOUNT</div></div>
+<div id="items"></div>
+</div>
+<div class="total" id="grand"></div>
+<div class="modalActions">
+<button class="btn" onclick="window.print()">🖨 Print</button>
+<button class="btn secondary" id="close2">Close</button>
+</div>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SK='goldbizna_sales',IK='goldbizna_inventory';
+let sales=[];
+const $=id=>document.getElementById(id);
+const money=n=>Number(n||0).toFixed(2);
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function load(){try{sales=JSON.parse(localStorage.getItem(SK)||'[]')}catch(e){sales=[]}if(!Array.isArray(sales))sales=[]}
+function toast(t){$('toast').textContent=t;$('toast').style.display='block';clearTimeout(window.st);window.st=setTimeout(()=>$('toast').style.display='none',1800)}
+function render(){
+ load();
+ const q=$('search').value.trim().toLowerCase(),m=$('method').value,d=$('date').value;
+ const filtered=sales.slice().reverse().filter(s=>{
+  const text=(s.id+' '+(s.customerName||'')+' '+(s.mobile||'')+' '+(s.mpesaCode||'')+' '+(s.orderRef||'')).toLowerCase();
+  const day=d?new Date(s.date).toISOString().slice(0,10):'';
+  return (!q||text.includes(q))&&(m==='ALL'||s.paymentMethod===m)&&(!d||day===d);
+ });
+ $('rows').innerHTML=filtered.length?filtered.map(s=>{
+  const qty=(s.items||[]).reduce((a,x)=>a+Number(x.qty||0),0);
+  return `<tr>
+  <td><b>${esc(s.id)}</b>${s.orderRef?'<br><small>'+esc(s.orderRef)+'</small>':''}</td>
+  <td>${new Date(s.date).toLocaleString()}</td>
+  <td><b>${esc(s.customerName||'Walk-in Customer')}</b><br><small>${esc(s.mobile||'')}</small></td>
+  <td>${qty}</td><td><b>KSh ${money(s.total)}</b></td><td>${esc(s.paymentMethod||'—')}</td>
+  <td><span class="badge ${s.status==='CREDIT'?'credit':'paid'}">${esc(s.status||'PAID')}</span></td>
+  <td><button class="action green" data-view="${esc(s.id)}">View</button> <button class="action red" data-delete="${esc(s.id)}">Delete</button></td>
+  </tr>`
+ }).join(''):'<tr><td colspan="8" class="empty">No sales found.</td></tr>';
+
+ const total=sales.reduce((a,s)=>a+Number(s.total||0),0);
+ const todayKey=new Date().toISOString().slice(0,10);
+ const today=sales.filter(s=>new Date(s.date).toISOString().slice(0,10)===todayKey);
+ $('totalSales').textContent='KSh '+money(total);
+ $('todaySales').textContent='KSh '+money(today.reduce((a,s)=>a+Number(s.total||0),0));
+ $('transactions').textContent=sales.length;
+ $('profit').textContent='KSh '+money(sales.reduce((a,s)=>a+Number(s.grossProfit||0),0));
+}
+function show(id){
+ const s=sales.find(x=>x.id===id);if(!s)return;
+ $('details').innerHTML=[
+ ['Invoice',s.id],['Customer',s.customerName||'Walk-in Customer'],['Date',new Date(s.date).toLocaleString()],['Served By',s.servedBy||'User'],
+ ['Mobile',s.mobile||'—'],['Customer PIN',s.customerPin||'—'],['Payment',s.paymentMethod||'—'],['Status',s.status||'PAID'],
+ ['Till',s.tillNo||'—'],['Company PIN',s.companyPin||'—'],['M-Pesa Code',s.mpesaCode||'—'],['Order Ref',s.orderRef||'—']
+ ].map(x=>`<div class="box"><small>${esc(x[0])}</small><b>${esc(x[1])}</b></div>`).join('');
+ $('items').innerHTML=(s.items||[]).map(x=>`<div class="item"><div><b>${esc(x.name)}</b><br><small>${esc(x.uom||'PC')}</small></div><div>${x.qty}</div><div>KSh ${money(x.price)}</div><div>KSh ${money(x.amount)}</div></div>`).join('');
+ $('grand').textContent='Total: KSh '+money(s.total);
+ $('detailModal').style.display='flex';
+}
+function del(id){
+ const s=sales.find(x=>x.id===id);if(!s)return;
+ if(!confirm('Delete this sale from sales history? Inventory will NOT be restored automatically.'))return;
+ sales=sales.filter(x=>x.id!==id);localStorage.setItem(SK,JSON.stringify(sales));render();toast('Sale removed from history');
+}
+$('rows').addEventListener('click',e=>{
+ const v=e.target.closest('[data-view]'),d=e.target.closest('[data-delete]');
+ if(v)show(v.dataset.view);if(d)del(d.dataset.delete);
+});
+$('search').oninput=render;$('method').onchange=render;$('date').onchange=render;$('refresh').onclick=render;
+$('clearDate').onclick=()=>{$('date').value='';render()};$('close').onclick=()=>$('detailModal').style.display='none';$('close2').onclick=()=>$('detailModal').style.display='none';
+render();
+</script>
+</body>
+</html>

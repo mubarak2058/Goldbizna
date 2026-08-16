@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MABROUK TRADER'S - Reports</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}body{background:#f5f7f5;color:#202520}.top{height:68px;background:#087a0b;color:#fff;display:flex;align-items:center;padding:0 20px;gap:15px;position:sticky;top:0;z-index:10}.brand{font-size:20px;font-weight:900}.spacer{flex:1}.top a{color:#fff;text-decoration:none;background:#ffffff18;padding:9px 12px;border-radius:7px;font-size:12px}.page{max-width:1450px;margin:auto;padding:20px}h1{font-size:27px}.sub{font-size:13px;color:#727a72;margin-top:5px}.filters{background:#fff;border:1px solid #e0e5e0;border-radius:10px;padding:14px;margin:18px 0;display:flex;gap:9px;flex-wrap:wrap}input,select,button{height:42px;border:1px solid #ccd4cc;border-radius:7px;padding:0 12px;background:#fff}button{cursor:pointer;font-weight:800}.green{background:#087a0b;color:#fff;border-color:#087a0b}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:#fff;border:1px solid #e0e5e0;border-radius:10px;padding:17px;box-shadow:0 2px 6px #0000000b}.label{font-size:10px;color:#737b73;text-transform:uppercase;font-weight:900}.value{font-size:24px;font-weight:900;color:#087a0b;margin-top:8px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:15px}.panel{background:#fff;border:1px solid #e0e5e0;border-radius:10px;overflow:hidden}.head{padding:15px;border-bottom:1px solid #e6eae6;font-weight:900}.body{padding:15px}.line{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #edf0ed;font-size:12px}.bar{height:10px;background:#e7ece7;border-radius:20px;overflow:hidden;margin-top:5px}.fill{height:100%;background:#087a0b;border-radius:20px}.table{width:100%;border-collapse:collapse}.table th,.table td{text-align:left;padding:10px;border-bottom:1px solid #edf0ed;font-size:11px}.table th{color:#687168;background:#f5f8f5}.empty{text-align:center;color:#777;padding:30px}.toast{display:none;position:fixed;right:15px;bottom:15px;background:#222;color:#fff;padding:11px 15px;border-radius:8px}@media(max-width:900px){.cards{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}}@media(max-width:600px){.brand{font-size:15px}.page{padding:12px}.cards{grid-template-columns:1fr 1fr}.top a{font-size:10px;padding:7px}}
+</style></head><body>
+<header class="top"><div class="brand">🛒 MABROUK TRADER'S</div><div class="spacer"></div><a href="pos.html">POS</a><a href="sales.html">Sales</a><a href="debts.html">Debts</a></header>
+<main class="page"><h1>Business Reports</h1><p class="sub">See sales performance, payment methods, top products and stock value.</p>
+<div class="filters"><input id="from" type="date"><input id="to" type="date"><select id="period"><option value="all">All Sales</option><option value="today">Today</option><option value="month">This Month</option></select><button class="green" id="refresh">↻ Generate Report</button><button id="print">🖨 Print</button></div>
+<section class="cards">
+<div class="card"><div class="label">Sales Revenue</div><div class="value" id="revenue">KSh 0.00</div></div>
+<div class="card"><div class="label">Gross Profit</div><div class="value" id="profit">KSh 0.00</div></div>
+<div class="card"><div class="label">Transactions</div><div class="value" id="tx">0</div></div>
+<div class="card"><div class="label">Average Sale</div><div class="value" id="avg">KSh 0.00</div></div>
+</section>
+<section class="cards" style="margin-top:15px">
+<div class="card"><div class="label">Inventory Items</div><div class="value" id="stockItems">0</div></div>
+<div class="card"><div class="label">Stock Units</div><div class="value" id="stockUnits">0</div></div>
+<div class="card"><div class="label">Stock Value</div><div class="value" id="stockValue">KSh 0.00</div></div>
+<div class="card"><div class="label">Low Stock</div><div class="value" id="lowStock">0</div></div>
+</section>
+<div class="grid">
+<section class="panel"><div class="head">Payment Methods</div><div class="body" id="methods"></div></section>
+<section class="panel"><div class="head">Top Products</div><div class="body" id="products"></div></section>
+</div>
+<section class="panel" style="margin-top:15px"><div class="head">Daily Sales Summary</div><div class="body" style="overflow:auto"><table class="table"><thead><tr><th>Date</th><th>Transactions</th><th>Revenue</th><th>Profit</th></tr></thead><tbody id="daily"></tbody></table></div></section>
+</main>
+<script>
+const SK='goldbizna_sales',IK='goldbizna_inventory';const $=x=>document.getElementById(x);const money=n=>Number(n||0).toFixed(2);
+let sales=[],inventory=[];
+function load(){try{sales=JSON.parse(localStorage.getItem(SK)||'[]');inventory=JSON.parse(localStorage.getItem(IK)||'[]')}catch(e){sales=[];inventory=[]}if(!Array.isArray(sales))sales=[];if(!Array.isArray(inventory))inventory=[]}
+function filtered(){let a=[...sales],p=$('period').value,from=$('from').value,to=$('to').value,now=new Date();if(p==='today'){let k=now.toISOString().slice(0,10);a=a.filter(s=>new Date(s.date).toISOString().slice(0,10)===k)}if(p==='month')a=a.filter(s=>{let d=new Date(s.date);return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth()});if(from)a=a.filter(s=>new Date(s.date).toISOString().slice(0,10)>=from);if(to)a=a.filter(s=>new Date(s.date).toISOString().slice(0,10)<=to);return a}
+function render(){load();let a=filtered(),rev=a.reduce((x,s)=>x+Number(s.total||0),0),pr=a.reduce((x,s)=>x+Number(s.grossProfit||0),0);$('revenue').textContent='KSh '+money(rev);$('profit').textContent='KSh '+money(pr);$('tx').textContent=a.length;$('avg').textContent='KSh '+money(a.length?rev/a.length:0);
+let units=inventory.reduce((x,p)=>x+Number(p.stock??p.quantity??0),0),value=inventory.reduce((x,p)=>x+Number(p.stock??p.quantity??0)*Number(p.price??0),0),low=inventory.filter(p=>Number(p.stock??p.quantity??0)<=Number(p.low??5)).length;$('stockItems').textContent=inventory.length;$('stockUnits').textContent=units;$('stockValue').textContent='KSh '+money(value);$('lowStock').textContent=low;
+let pm={};a.forEach(s=>pm[s.paymentMethod||'Unknown']=(pm[s.paymentMethod||'Unknown']||0)+Number(s.total||0));let max=Math.max(...Object.values(pm),1);$('methods').innerHTML=Object.keys(pm).length?Object.entries(pm).sort((x,y)=>y[1]-x[1]).map(([k,v])=>`<div class="line"><div><b>${k}</b><div class="bar" style="width:180px"><div class="fill" style="width:${v/max*100}%"></div></div></div><b>KSh ${money(v)}</b></div>`).join(''):'<div class="empty">No sales.</div>';
+let prod={};a.forEach(s=>(s.items||[]).forEach(i=>{let k=i.name||'Unknown';prod[k]=(prod[k]||0)+Number(i.qty||0)}));let top=Object.entries(prod).sort((x,y)=>y[1]-x[1]).slice(0,10);$('products').innerHTML=top.length?top.map(([k,v],i)=>`<div class="line"><span>${i+1}. ${k}</span><b>${v}</b></div>`).join(''):'<div class="empty">No product sales.</div>';
+let days={};a.forEach(s=>{let k=new Date(s.date).toISOString().slice(0,10);if(!days[k])days[k]={n:0,r:0,p:0};days[k].n++;days[k].r+=Number(s.total||0);days[k].p+=Number(s.grossProfit||0)});$('daily').innerHTML=Object.entries(days).sort((x,y)=>y[0].localeCompare(x[0])).map(([d,v])=>`<tr><td>${d}</td><td>${v.n}</td><td>KSh ${money(v.r)}</td><td>KSh ${money(v.p)}</td></tr>`).join('')||'<tr><td colspan="4" class="empty">No sales.</td></tr>'}
+$('refresh').onclick=render;$('period').onchange=render;$('from').onchange=render;$('to').onchange=render;$('print').onclick=()=>window.print();render();
+</script></body></html>

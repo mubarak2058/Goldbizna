@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MABROUK TRADER'S - Dashboard & Reports</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#f5f7f5;color:#202520}
+.top{height:64px;background:#087a0b;color:#fff;display:flex;align-items:center;padding:0 22px;gap:18px;position:sticky;top:0;z-index:20;box-shadow:0 2px 8px #0002}
+.brand{font-size:21px;font-weight:900;white-space:nowrap}.brand span{color:#ffd43b}.store{font-size:13px}
+.user{margin-left:auto;display:flex;align-items:center;gap:9px}.avatar{width:36px;height:36px;border-radius:50%;background:#fff;color:#087a0b;display:flex;align-items:center;justify-content:center;font-weight:900}
+.sidebar{position:fixed;top:64px;bottom:0;left:0;width:225px;background:#fff;border-right:1px solid #e1e6e1;padding:18px 12px;overflow:auto}
+.nav a{display:flex;gap:12px;align-items:center;padding:12px;border-radius:8px;text-decoration:none;color:#333;margin:3px 0;font-size:14px}
+.nav a:hover,.nav a.active{background:#eaf6ed;color:#087a0b;font-weight:800}.ico{width:21px;text-align:center;font-size:17px}
+.main{margin-left:225px;padding:25px;min-height:100vh}.head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}.head h1{font-size:27px}.head p{color:#727a72;font-size:13px;margin-top:5px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.btn{border:0;border-radius:7px;padding:10px 14px;background:#087a0b;color:#fff;font-weight:700;cursor:pointer}.btn.light{background:#fff;color:#333;border:1px solid #d6ddd6}
+.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:15px}.card{background:#fff;border:1px solid #e1e6e1;border-radius:10px;padding:18px;box-shadow:0 2px 7px #0000000a}.label{font-size:12px;color:#707870}.value{font-size:25px;font-weight:900;color:#087a0b;margin-top:9px}.note{font-size:11px;color:#818981;margin-top:6px}
+.grid{display:grid;grid-template-columns:1.45fr 1fr;gap:15px;margin-top:15px}.panel{background:#fff;border:1px solid #e1e6e1;border-radius:10px;overflow:hidden}.ph{padding:16px 18px;border-bottom:1px solid #e8ece8;display:flex;justify-content:space-between;align-items:center}.ph h2{font-size:16px}.body{padding:16px}
+.filters{display:flex;gap:8px;flex-wrap:wrap}.filters select,.filters input{height:39px;border:1px solid #d3dad3;border-radius:7px;padding:0 9px;background:#fff}
+.chart{height:250px;display:flex;align-items:flex-end;gap:8px;padding:15px 5px 5px;border-bottom:1px solid #e8ece8}.barwrap{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px;min-width:20px}.bar{width:100%;max-width:38px;background:#087a0b;border-radius:5px 5px 0 0;min-height:2px}.barlabel{font-size:9px;color:#777;white-space:nowrap}.barvalue{font-size:9px;font-weight:700;color:#087a0b}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px 13px;border-bottom:1px solid #edf0ed;font-size:12px}th{background:#fafbfa;color:#707870;font-weight:700}td.right,th.right{text-align:right}.scroll{overflow:auto;max-height:320px}
+.badge{display:inline-block;padding:4px 7px;border-radius:20px;font-size:10px;font-weight:800;background:#eaf6ed;color:#087a0b}.warn{background:#fff4dc;color:#9b6800}.danger{background:#ffe8e8;color:#b52323}
+.empty{text-align:center;padding:30px;color:#858d85;font-size:13px}.lowrow{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #edf0ed;gap:10px}.lowname{font-weight:700;font-size:12px}.lowstock{font-size:11px}
+.reportTools{margin-top:15px}.reportTools .body{padding:12px}.summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.mini{background:#f7faf7;border:1px solid #e1e9e1;border-radius:8px;padding:12px}.mini b{font-size:17px;color:#087a0b;display:block;margin-top:5px}
+@media(max-width:1200px){.cards{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:1050px){.cards{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.summary{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.top{height:56px;padding:0 10px}.brand{font-size:15px}.store{display:none}.sidebar{top:56px;width:145px;padding:10px 6px}.nav a{font-size:11px;padding:10px 7px;gap:6px}.main{margin-left:145px;padding:14px 9px}.head h1{font-size:21px}.cards{gap:8px}.card{padding:12px}.value{font-size:18px}.grid{gap:10px}.ph{padding:12px}.body{padding:11px}.summary{gap:7px;grid-template-columns:repeat(2,1fr)}.mini{padding:9px}th,td{padding:9px 7px;font-size:10px}}
+@media print{.top,.sidebar,.actions,.filters,.reportTools{display:none!important}.main{margin:0;padding:0}.panel{box-shadow:none}.grid{grid-template-columns:1fr}.cards{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<header class="top">
+<div class="brand">MABROUK <span>TRADER'S</span></div><div class="store">Business Dashboard</div>
+<div class="user"><div class="avatar">A</div><div><b id="userName">Admin</b><br><small>Administrator</small></div></div>
+</header>
+
+<aside class="sidebar"><nav class="nav">
+<a href="index.html"><span class="ico">⌂</span>Home</a>
+<a href="pos.html"><span class="ico">▣</span>POS</a>
+<a href="inventory.html"><span class="ico">▤</span>Inventory</a>
+<a href="customers.html"><span class="ico">♧</span>Customers</a>
+<a href="sales.html"><span class="ico">▱</span>Sales</a>
+<a href="savings.html"><span class="ico">◈</span>Savings</a>
+<a href="dashboard.html" class="active"><span class="ico">▥</span>Dashboard</a>
+<a href="reports.html"><span class="ico">▤</span>Reports</a>
+<a href="users.html"><span class="ico">♙</span>Users</a>
+<a href="settings.html"><span class="ico">⚙</span>Settings</a>
+<a href="login.html" style="color:#d92323;margin-top:14px"><span class="ico">⇥</span>Logout</a>
+</nav></aside>
+
+<main class="main">
+<div class="head">
+<div><h1>Dashboard</h1><p>Real-time overview of MABROUK TRADER'S sales and stock.</p></div>
+<div class="actions"><button class="btn light" onclick="location.reload()">↻ Refresh</button><button class="btn light" onclick="window.print()">🖨 Print</button><button class="btn" onclick="exportCSV()">⬇ Export CSV</button></div>
+</div>
+
+<div class="cards">
+<div class="card"><div class="label">Today's Sales</div><div class="value" id="todaySales">KSh 0.00</div><div class="note" id="todaySalesNote">0 transactions</div></div>
+<div class="card"><div class="label">Today's Transactions</div><div class="value" id="todayCount">0</div><div class="note">Completed sales</div></div><div class="card"><div class="label">Today's Gross Profit</div><div class="value" id="todayProfit">KSh 0.00</div><div class="note" id="profitNote">Add cost prices in Inventory</div></div>
+<div class="card"><div class="label">Inventory Value</div><div class="value" id="stockValue">KSh 0.00</div><div class="note" id="stockCount">0 products</div></div>
+<div class="card"><div class="label">Low Stock</div><div class="value" id="lowCount">0</div><div class="note">Products needing attention</div></div>
+</div>
+
+<div class="grid">
+<section class="panel">
+<div class="ph"><h2>Sales Performance</h2><div class="filters"><select id="period" onchange="renderAll()"><option value="7">Last 7 days</option><option value="14">Last 14 days</option><option value="30">Last 30 days</option></select></div></div>
+<div class="body"><div id="chart" class="chart"></div></div>
+</section>
+
+<section class="panel">
+<div class="ph"><h2>Payment Breakdown</h2></div>
+<div class="body"><table><thead><tr><th>Method</th><th class="right">Amount</th><th class="right">Sales</th></tr></thead><tbody id="payments"></tbody></table></div>
+</section>
+</div>
+
+<div class="grid">
+<section class="panel">
+<div class="ph"><h2>Best-Selling Products</h2></div>
+<div class="scroll"><table><thead><tr><th>Product</th><th class="right">Quantity</th><th class="right">Sales</th></tr></thead><tbody id="products"></tbody></table></div>
+</section>
+
+<section class="panel">
+<div class="ph"><h2>Low Stock Alerts</h2></div>
+<div class="body" id="lowStock"></div>
+</section>
+</div>
+
+<section class="panel reportTools">
+<div class="ph"><h2>Sales Report</h2><div class="filters">
+<input type="date" id="fromDate"><input type="date" id="toDate"><button class="btn" onclick="renderReport()">Apply</button><button class="btn light" onclick="clearDates()">Clear</button>
+</div></div>
+<div class="body">
+<div style="font-size:11px;color:#747c74;margin-bottom:10px">Gross profit is calculated only for products that have a cost/buying price saved in inventory.</div>
+<div class="summary">
+<div class="mini">Sales<b id="rSales">KSh 0.00</b></div>
+<div class="mini">Transactions<b id="rTransactions">0</b></div>
+<div class="mini">Items Sold<b id="rItems">0</b></div>
+<div class="mini">Average Sale<b id="rAverage">KSh 0.00</b></div><div class="mini">Gross Profit<b id="rProfit">KSh 0.00</b></div>
+</div>
+<div class="scroll" style="margin-top:15px"><table><thead><tr><th>Receipt</th><th>Date</th><th>Customer</th><th>Served By</th><th>Payment</th><th class="right">Total</th></tr></thead><tbody id="reportRows"></tbody></table></div>
+</div>
+</section>
+</main>
+
+<script>
+const SK='goldbizna_sales',IK='goldbizna_inventory',UK='goldbizna_username';
+const $=id=>document.getElementById(id);
+const money=n=>'KSh '+Number(n||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+function sales(){try{let x=JSON.parse(localStorage.getItem(SK)||'[]');return Array.isArray(x)?x:[]}catch(e){return[]}}
+function inventory(){try{let x=JSON.parse(localStorage.getItem(IK)||'[]');return Array.isArray(x)?x:[]}catch(e){return[]}}
+function pname(p){return p?.name||p?.productName||p?.title||'Unnamed Product'}
+function pstock(p){return Number(p?.stock??p?.quantity??p?.qty??0)}
+function pprice(p){return Number(p?.price??p?.sellingPrice??p?.salePrice??0)}
+function dateKey(d){const x=new Date(d);return isNaN(x)?'':x.toISOString().slice(0,10)}
+function localKey(d){const x=new Date(d);return isNaN(x)?'':x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')}
+function todayKey(){return localKey(new Date())}
+function allSales(){return sales().sort((a,b)=>new Date(b.date)-new Date(a.date))}
+function todaySales(){return allSales().filter(s=>localKey(s.date)===todayKey())}
+function stockValue(){return inventory().reduce((n,p)=>n+pstock(p)*pprice(p),0)}
+function costPrice(p){return Number(p?.costPrice??p?.cost??p?.buyingPrice??p?.purchasePrice??NaN)}
+function saleProfit(s){
+ return (s.items||[]).reduce((n,i)=>{
+   const p=inventory().find(x=>pname(x)===String(i.name||''));
+   const cost=costPrice(p);
+   return n+(Number.isFinite(cost)?(Number(i.price||0)-cost)*Number(i.qty||0):0);
+ },0);
+}
+function renderCards(){
+ const ts=todaySales(), total=ts.reduce((n,s)=>n+Number(s.total||0),0), inv=inventory();
+ const profits=ts.reduce((n,s)=>n+saleProfit(s),0);
+ const hasCosts=inv.some(p=>Number.isFinite(costPrice(p)));
+ $('todaySales').textContent=money(total);$('todayCount').textContent=ts.length;
+ $('todaySalesNote').textContent=ts.length+' transaction'+(ts.length===1?'':'s');
+ $('todayProfit').textContent=money(profits);
+ $('profitNote').textContent=hasCosts?'Estimated gross profit':'Add cost prices in Inventory';
+ $('stockValue').textContent=money(stockValue());$('stockCount').textContent=inv.length+' product'+(inv.length===1?'':'s');
+ $('lowCount').textContent=lowProducts().length;
+ $('userName').textContent=localStorage.getItem(UK)||'Admin';
+}
+function renderChart(){
+ const days=Number($('period').value||7), arr=[];
+ for(let i=days-1;i>=0;i--){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-i);const key=localKey(d);const amount=sales().filter(s=>localKey(s.date)===key).reduce((n,s)=>n+Number(s.total||0),0);arr.push({d,amount})}
+ const max=Math.max(1,...arr.map(x=>x.amount));
+ $('chart').innerHTML=arr.map(x=>`<div class="barwrap"><div class="barvalue">${x.amount?Math.round(x.amount):''}</div><div class="bar" style="height:${Math.max(2,x.amount/max*180)}px" title="${money(x.amount)}"></div><div class="barlabel">${x.d.toLocaleDateString(undefined,{day:'2-digit',month:'short'})}</div></div>`).join('');
+}
+function renderPayments(){
+ const map={};sales().forEach(s=>{const m=s.paymentMethod||'Unknown';if(!map[m])map[m]={amount:0,count:0};map[m].amount+=Number(s.total||0);map[m].count++});
+ const keys=Object.keys(map).sort((a,b)=>map[b].amount-map[a].amount);
+ $('payments').innerHTML=keys.length?keys.map(k=>`<tr><td><span class="badge">${k}</span></td><td class="right">${money(map[k].amount)}</td><td class="right">${map[k].count}</td></tr>`).join(''):'<tr><td colspan="3" class="empty">No completed sales yet.</td></tr>';
+}
+function renderProducts(){
+ const map={};sales().forEach(s=>(s.items||[]).forEach(i=>{const n=i.name||'Unnamed Product';if(!map[n])map[n]={qty:0,sales:0};map[n].qty+=Number(i.qty||0);map[n].sales+=Number(i.qty||0)*Number(i.price||0)}));
+ const rows=Object.entries(map).sort((a,b)=>b[1].sales-a[1].sales).slice(0,15);
+ $('products').innerHTML=rows.length?rows.map(([n,v])=>`<tr><td>${escapeHTML(n)}</td><td class="right">${v.qty}</td><td class="right">${money(v.sales)}</td></tr>`).join(''):'<tr><td colspan="3" class="empty">No product sales yet.</td></tr>';
+}
+function renderLow(){
+ const rows=lowProducts().sort((a,b)=>pstock(a)-pstock(b));
+ $('lowStock').innerHTML=rows.length?rows.map(p=>{const st=pstock(p),lim=Number(p.low??5);return `<div class="lowrow"><div><div class="lowname">${escapeHTML(pname(p))}</div><div class="lowstock">Stock: <b>${st}</b> / Alert level: ${lim}</div></div><span class="badge ${st<=0?'danger':'warn'}">${st<=0?'OUT OF STOCK':'LOW STOCK'}</span></div>`}).join(''):'<div class="empty">✓ Stock levels look good.</div>';
+}
+function escapeHTML(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function filteredSales(){
+ const from=$('fromDate').value,to=$('toDate').value;
+ return allSales().filter(s=>{const k=localKey(s.date);return (!from||k>=from)&&(!to||k<=to)})
+}
+function renderReport(){
+ const a=filteredSales(), total=a.reduce((n,s)=>n+Number(s.total||0),0), items=a.reduce((n,s)=>n+(s.items||[]).reduce((x,i)=>x+Number(i.qty||0),0),0), profit=a.reduce((n,s)=>n+saleProfit(s),0);
+ $('rSales').textContent=money(total);$('rTransactions').textContent=a.length;$('rItems').textContent=items;$('rAverage').textContent=money(a.length?total/a.length:0);$('rProfit').textContent=money(profit);
+ $('reportRows').innerHTML=a.length?a.map(s=>`<tr><td>${escapeHTML(s.id||'—')}</td><td>${new Date(s.date).toLocaleString()}</td><td>${escapeHTML(s.customerName||'Walk-in Customer')}</td><td>${escapeHTML(s.servedBy||'User')}</td><td>${escapeHTML(s.paymentMethod||'—')}</td><td class="right">${money(s.total)}</td></tr>`).join(''):'<tr><td colspan="6" class="empty">No sales found for the selected dates.</td></tr>';
+}
+function clearDates(){$('fromDate').value='';$('toDate').value='';renderReport()}
+function csvCell(v){return '"'+String(v??'').replace(/"/g,'""')+'"'}
+function exportCSV(){
+ const a=filteredSales();
+ if(!a.length)return alert('No sales to export.');
+ const rows=[['Receipt','Date','Customer','Served By','Payment Method','Total']];
+ a.forEach(s=>rows.push([s.id,new Date(s.date).toLocaleString(),s.customerName||'Walk-in Customer',s.servedBy||'User',s.paymentMethod||'',Number(s.total||0).toFixed(2)]));
+ const blob=new Blob([rows.map(r=>r.map(csvCell).join(',')).join('\n')],{type:'text/csv;charset=utf-8'});
+ const url=URL.createObjectURL(blob),aEl=document.createElement('a');aEl.href=url;aEl.download='mabrouk_traders_sales_report.csv';aEl.click();URL.revokeObjectURL(url);
+}
+function renderAll(){renderCards();renderChart();renderPayments();renderProducts();renderLow();renderReport()}
+renderAll();
+setInterval(renderAll,5000);
+</script>
+</body>
+</html>

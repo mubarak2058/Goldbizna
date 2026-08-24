@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Goldbizna Login</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f7f6;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:16px}.box{width:min(390px,100%);background:#fff;padding:30px;border-radius:16px;box-shadow:0 10px 30px #0002}.brand{text-align:center;font-size:24px;font-weight:bold;color:#087a0b;margin-bottom:8px}.sub{text-align:center;color:#777;margin-bottom:25px}.field{margin-bottom:15px}.field label{display:block;font-size:13px;color:#666;margin-bottom:6px}.field input{width:100%;padding:12px;border:1px solid #ddd;border-radius:7px}.btn{width:100%;padding:12px;background:#087a0b;color:white;border:0;border-radius:7px;font-weight:bold;cursor:pointer}.btn:disabled{opacity:.65;cursor:not-allowed}.link{display:block;text-align:center;margin-top:14px;color:#087a0b;text-decoration:none;font-size:13px}.error{color:#d92323;text-align:center;font-size:13px;margin-top:12px;display:none}.hint{text-align:center;color:#888;font-size:11px;margin-top:15px;line-height:1.5}
+</style>
+<script type="module" src="auth.js"></script>
+</head>
+<body>
+<div class="box">
+  <div class="brand">GOLDBIZNA POS PRO</div>
+  <div class="sub">Secure sign in</div>
+  <form id="loginForm">
+    <div class="field"><label for="email">Email</label><input id="email" type="email" autocomplete="username" placeholder="you@example.com" required></div>
+    <div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" placeholder="Enter your password" required></div>
+    <button id="loginBtn" class="btn" type="submit">Sign in</button>
+    <div id="error" class="error"></div>
+    <a href="#" id="resetLink" class="link">Forgot password?</a>
+  </form>
+  <div class="hint">Goldbizna now uses Firebase Authentication. Passwords are no longer stored in the website or in localStorage.</div>
+</div>
+<script type="module">
+import { login, resetPassword } from './auth.js';
+const form = document.getElementById('loginForm');
+const btn = document.getElementById('loginBtn');
+const error = document.getElementById('error');
+const email = document.getElementById('email');
+const password = document.getElementById('password');
+
+function showError(message) { error.textContent = message; error.style.display = 'block'; }
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  error.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Signing in…';
+  try {
+    await login(email.value, password.value);
+    window.location.replace('index.html');
+  } catch (e) {
+    const code = e?.code || '';
+    const message = code.includes('invalid-credential') || code.includes('wrong-password') || code.includes('user-not-found')
+      ? 'Incorrect email or password.'
+      : code.includes('too-many-requests')
+        ? 'Too many attempts. Please wait and try again.'
+        : (e?.message || 'Unable to sign in.');
+    showError(message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Sign in';
+  }
+});
+
+document.getElementById('resetLink').addEventListener('click', async (event) => {
+  event.preventDefault();
+  if (!email.value.trim()) { showError('Enter your email first, then tap Forgot password.'); return; }
+  try {
+    await resetPassword(email.value);
+    showError('Password reset email sent. Check your inbox.');
+    error.style.color = '#087a0b';
+  } catch (e) {
+    error.style.color = '#d92323';
+    showError(e?.message || 'Unable to send password reset email.');
+  }
+});
+</script>
+</body>
+</html>

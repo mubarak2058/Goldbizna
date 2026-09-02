@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MABROUK TRADER'S - Inventory</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#f5f7f6;color:#222;overflow-x:hidden}
+.topbar{position:fixed;top:0;left:0;right:0;height:64px;background:#087a0b;color:#fff;display:flex;align-items:center;padding:0 22px;z-index:20;box-shadow:0 2px 8px #0002}
+.brand{font-size:21px;font-weight:900;white-space:nowrap}.brand span{color:#ffd43b}.store{margin-left:45px;font-size:13px}
+.top-actions{margin-left:auto;display:flex;align-items:center;gap:18px;font-size:13px}.admin{display:flex;align-items:center;gap:8px}.avatar{width:36px;height:36px;border-radius:50%;background:#fff;color:#087a0b;display:flex;align-items:center;justify-content:center;font-weight:bold}
+.sidebar{position:fixed;left:0;top:64px;bottom:0;width:225px;background:#fff;border-right:1px solid #e3e7e5;padding:18px 12px;overflow-y:auto}.nav a{display:flex;align-items:center;gap:12px;text-decoration:none;color:#333;padding:11px 12px;border-radius:8px;margin:3px 0;font-size:14px}.nav a:hover,.nav a.active{background:#eaf6ed;color:#087a0b;font-weight:700}.nav-icon{width:20px;text-align:center;font-size:17px}.logout{color:#d92323!important;margin-top:15px!important}
+.main{margin-left:225px;padding-top:64px;min-height:100vh}.content{padding:25px}
+.page-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:18px}.page-head h1{font-size:27px}.page-head p{color:#777;margin-top:5px;font-size:13px}
+.btn{border:0;background:#087a0b;color:#fff;border-radius:7px;padding:10px 14px;cursor:pointer;font-weight:700}.btn.secondary{background:#fff;color:#333;border:1px solid #d5ddd5}.btn.danger{background:#e52d32}.actions{display:flex;gap:8px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}.stat{background:#fff;border:1px solid #e3e7e5;border-radius:10px;padding:16px}.stat small{color:#777}.stat b{display:block;font-size:22px;color:#087a0b;margin-top:7px}
+.panel{background:#fff;border:1px solid #e3e7e5;border-radius:10px;margin-top:16px;box-shadow:0 2px 6px #0000000b}.panel-head{padding:16px 18px;border-bottom:1px solid #e7e9e8;display:flex;justify-content:space-between;align-items:center;gap:10px}.panel-head h2{font-size:17px}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;padding:18px}.field label{display:block;font-size:12px;color:#666;margin-bottom:6px;font-weight:700}.field input{width:100%;padding:11px;border:1px solid #d7ded8;border-radius:7px;outline:0}.field input:focus{border-color:#087a0b;box-shadow:0 0 0 3px #087a0b14}.hint{font-size:10px;color:#7c847c;margin-top:5px}.actions2{padding:0 18px 18px;display:flex;gap:8px}
+.searchbar{padding:14px 18px;display:flex;gap:9px}.searchbar input{flex:1;padding:11px;border:1px solid #d7ded8;border-radius:7px}
+.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px 14px;border-bottom:1px solid #edf0ed;font-size:12px}th{background:#fafafa;color:#737b73;font-weight:700}.badge{display:inline-block;padding:4px 7px;border-radius:20px;font-size:10px;font-weight:800}.good{background:#eaf6ed;color:#087a0b}.warn{background:#fff3d9;color:#9b6800}.bad{background:#ffe8e8;color:#b52323}.empty{text-align:center;color:#7d857d;padding:30px}
+#cloudStatus{font-size:11px;font-weight:700}.online{color:#087a0b}.offline{color:#b52323}
+.auth-note{display:none;margin-top:16px;padding:14px;border-radius:8px;background:#fff3d9;color:#765400;font-size:13px}
+@media(max-width:1050px){.stats{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.topbar{height:57px;padding:0 9px}.brand{font-size:15px}.store{display:none}.top-actions{gap:6px;font-size:10px}.admin div:last-child{display:none}.avatar{width:31px;height:31px}.sidebar{top:57px;width:145px;padding:10px 6px}.nav a{font-size:11px;padding:10px 7px;gap:6px}.main{margin-left:145px;padding-top:57px}.content{padding:12px 9px}.page-head h1{font-size:21px}.stats{gap:7px}.stat{padding:11px}.stat b{font-size:17px}.form-grid{grid-template-columns:1fr;padding:13px}.actions2{padding:0 13px 13px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+<div class="brand">MABROUK <span>TRADER'S</span></div><div class="store">Inventory Management</div>
+<div class="top-actions"><div onclick="location.reload()" style="cursor:pointer">↻ Refresh</div><div class="admin"><div class="avatar">A</div><div><b id="userName">Checking...</b><br><small id="userRole">Checking access...</small></div></div></div>
+</header>
+<aside class="sidebar"><nav class="nav">
+<a href="index.html"><span class="nav-icon">⌂</span>Home</a>
+<a href="pos.html"><span class="nav-icon">▣</span>POS</a>
+<a href="inventory.html" class="active"><span class="nav-icon">▤</span>Inventory</a>
+<a href="customers.html"><span class="nav-icon">♧</span>Customers</a>
+<a href="sales.html"><span class="nav-icon">▱</span>Sales</a>
+<a href="savings.html"><span class="nav-icon">◈</span>Savings</a>
+<a href="dashboard.html"><span class="nav-icon">▥</span>Dashboard</a>
+<a href="reports.html"><span class="nav-icon">▤</span>Reports</a>
+<a href="users.html"><span class="nav-icon">♙</span>Users</a>
+<a href="settings.html"><span class="nav-icon">⚙</span>Settings</a>
+<a href="login.html" class="logout"><span class="nav-icon">⇥</span>Logout</a>
+</nav></aside>
+
+<main class="main"><section class="content">
+<div class="page-head"><div><h1>Inventory</h1><p>Manage stock, buying cost, selling price and profit margins.</p></div><div class="actions"><button class="btn secondary" onclick="location.href='pos.html'">Open POS</button><button class="btn" onclick="focusName()">＋ Add Product</button></div></div>
+
+<div id="authNote" class="auth-note"></div>
+
+<div class="stats"><div class="stat"><small>Products</small><b id="productCount">0</b></div><div class="stat"><small>Units in Stock</small><b id="units">0</b></div><div class="stat"><small>Stock Cost Value</small><b id="costValue">KSh 0.00</b></div><div class="stat"><small>Potential Sales Value</small><b id="salesValue">KSh 0.00</b></div></div>
+
+<div class="panel" id="addPanel"><div class="panel-head"><h2>Add Product</h2><span id="cloudStatus" class="online">Checking authentication...</span></div>
+<div class="form-grid"><div class="field"><label>Product Name *</label><input id="name" placeholder="e.g. Sugar 1kg"></div><div class="field"><label>Stock *</label><input id="stock" type="number" min="0" step="0.01" placeholder="e.g. 20"></div><div class="field"><label>Buying / Cost Price *</label><input id="cost" type="number" min="0" step="0.01" placeholder="e.g. 90"></div><div class="field"><label>Selling Price *</label><input id="price" type="number" min="0" step="0.01" placeholder="e.g. 120"></div><div class="field"><label>Low Stock Level</label><input id="low" type="number" min="0" step="0.01" value="5"></div><div class="field"><label>SKU / Barcode (optional)</label><input id="sku" placeholder="Optional code"></div></div>
+<div class="actions2"><button class="btn" onclick="addProduct()">Save Product</button><button class="btn secondary" onclick="resetForm()">Clear</button></div></div>
+
+<div class="panel"><div class="panel-head"><h2>Products</h2><span id="countLabel" style="font-size:11px;color:#777"></span></div><div class="searchbar"><input id="filter" placeholder="Search product or SKU..." oninput="render()"></div><div class="table-wrap"><table><thead><tr><th>Product</th><th>Stock</th><th>Buying Cost</th><th>Selling Price</th><th>Margin</th><th>Stock Value</th><th>Status</th><th>Action</th></tr></thead><tbody id="rows"></tbody></table></div></div>
+</section></main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+const firebaseConfig={
+  apiKey:"AIzaSyA8XB6aY45-yHT0uZ6NUhptMoNkYqgwqOs",
+  authDomain:"goldbizna.firebaseapp.com",
+  projectId:"goldbizna",
+  storageBucket:"goldbizna.firebasestorage.app",
+  messagingSenderId:"559981054862",
+  appId:"1:559981054862:web:0635c689607d3baa3272df",
+  measurementId:"G-95XL3BNQJF"
+};
+
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
+const auth=getAuth(app);
+const inventoryRef=collection(db,"inventory");
+const $=id=>document.getElementById(id);
+
+let products=[];
+let unsubscribeInventory=null;
+let currentUser=null;
+
+const money=n=>'KSh '+Number(n||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+function nameOf(p){return p?.name||p?.productName||p?.title||'Unnamed Product'}
+function costOf(p){return Number(p?.costPrice??p?.cost??p?.buyingPrice??p?.purchasePrice??0)}
+function priceOf(p){return Number(p?.price??p?.sellingPrice??p?.salePrice??0)}
+function stockOf(p){return Number(p?.stock??p?.quantity??p?.qty??0)}
+function lowOf(p){return Number(p?.low??p?.lowStockLevel??5)}
+function codeOf(p){return String(p?.sku??p?.barcode??p?.code??'')}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function margin(p){return priceOf(p)-costOf(p)}
+function setCloudStatus(text,ok=true){$('cloudStatus').textContent=text;$('cloudStatus').className=ok?'online':'offline'}
+function status(p){const s=stockOf(p),l=lowOf(p);if(s<=0)return '<span class="badge bad">OUT OF STOCK</span>';if(s<=l)return '<span class="badge warn">LOW STOCK</span>';return '<span class="badge good">IN STOCK</span>'}
+
+function render(){
+  const q=$('filter').value.trim().toLowerCase();
+  const list=products.filter(p=>!q||nameOf(p).toLowerCase().includes(q)||codeOf(p).toLowerCase().includes(q));
+  $('rows').innerHTML=list.length?list.map(p=>{
+    const c=costOf(p),sp=priceOf(p),m=margin(p),st=stockOf(p);
+    return `<tr><td><b>${esc(nameOf(p))}</b>${codeOf(p)?`<div style="font-size:9px;color:#888">${esc(codeOf(p))}</div>`:''}</td><td>${st}</td><td>${money(c)}</td><td>${money(sp)}</td><td><span class="badge ${m>=0?'good':'bad'}">${money(m)} / unit</span></td><td>${money(st*sp)}</td><td>${status(p)}</td><td><button class="btn secondary" onclick="editProduct('${p.id}')">Edit</button> <button class="btn danger" onclick="delProduct('${p.id}')">Delete</button></td></tr>`
+  }).join(''):'<tr><td colspan="8" class="empty">No products found.</td></tr>';
+
+  $('countLabel').textContent=products.length+' product'+(products.length===1?'':'s');
+  $('productCount').textContent=products.length;
+  $('units').textContent=products.reduce((n,p)=>n+stockOf(p),0);
+  $('costValue').textContent=money(products.reduce((n,p)=>n+stockOf(p)*costOf(p),0));
+  $('salesValue').textContent=money(products.reduce((n,p)=>n+stockOf(p)*priceOf(p),0));
+  $('userName').textContent=currentUser?.displayName||currentUser?.email||localStorage.getItem('goldbizna_username')||'User';
+}
+
+function stopInventoryListener(){
+  if(unsubscribeInventory){unsubscribeInventory();unsubscribeInventory=null;}
+}
+
+function startInventoryListener(){
+  stopInventoryListener();
+  setCloudStatus('Loading Firebase inventory...',true);
+
+  unsubscribeInventory=onSnapshot(inventoryRef,snap=>{
+    products=snap.docs.map(d=>({id:d.id,...d.data()}));
+    products.sort((a,b)=>nameOf(a).localeCompare(nameOf(b)));
+    setCloudStatus('☁ Cloud inventory connected',true);
+    $('authNote').style.display='none';
+    render();
+  },err=>{
+    console.error('FIREBASE INVENTORY ERROR:',err);
+    products=[];
+    render();
+
+    const code=err?.code||'unknown';
+    let message='Firebase inventory error: '+(err?.message||code);
+
+    if(code==='permission-denied'){
+      message='Firebase denied access to the inventory. Your Firestore Rules must allow this signed-in user to read the inventory collection.';
+    }
+
+    setCloudStatus('☁ Firebase access failed',false);
+    $('authNote').textContent=message;
+    $('authNote').style.display='block';
+  });
+}
+
+async function addProduct(){
+  if(!currentUser)return alert('You must be signed in before saving a product.');
+
+  const name=$('name').value.trim(),stock=Number($('stock').value),cost=Number($('cost').value),price=Number($('price').value),low=Number($('low').value),sku=$('sku').value.trim();
+
+  if(!name)return alert('Enter product name.');
+  if(!Number.isFinite(stock)||stock<0)return alert('Enter a valid stock quantity.');
+  if(!Number.isFinite(cost)||cost<0)return alert('Enter a valid buying/cost price.');
+  if(!Number.isFinite(price)||price<0)return alert('Enter a valid selling price.');
+
+  try{
+    setCloudStatus('Saving product...',true);
+    await addDoc(inventoryRef,{
+      name,
+      stock,
+      costPrice:cost,
+      price,
+      low:Number.isFinite(low)&&low>=0?low:5,
+      sku,
+      createdAt:serverTimestamp(),
+      updatedAt:serverTimestamp()
+    });
+    resetForm();
+    setCloudStatus('☁ Cloud inventory connected',true);
+    alert('Product saved to Firebase successfully.');
+  }catch(e){
+    console.error('ADD PRODUCT ERROR:',e);
+    setCloudStatus('Firebase save failed',false);
+    alert('Could not save product to Firebase.\n\n'+(e.message||e.code||'Unknown Firebase error'));
+  }
+}
+
+async function editProduct(id){
+  if(!currentUser)return alert('You must be signed in before editing a product.');
+  const p=products.find(x=>x.id===id);if(!p)return;
+
+  const nc=prompt('Buying / cost price:',costOf(p));if(nc===null)return;
+  const ns=prompt('Selling price:',priceOf(p));if(ns===null)return;
+  const st=prompt('Stock quantity:',stockOf(p));if(st===null)return;
+  const low=prompt('Low stock level:',lowOf(p));if(low===null)return;
+
+  const c=Number(nc),sp=Number(ns),stock=Number(st),lo=Number(low);
+  if([c,sp,stock,lo].some(x=>!Number.isFinite(x)||x<0))return alert('Invalid value. Product was not changed.');
+
+  try{
+    await updateDoc(doc(db,'inventory',id),{costPrice:c,price:sp,stock,low:lo,updatedAt:serverTimestamp()});
+  }catch(e){
+    console.error('EDIT PRODUCT ERROR:',e);
+    alert('Could not update product in Firebase.\n\n'+(e.message||e.code||'Unknown Firebase error'));
+  }
+}
+
+async function delProduct(id){
+  if(!currentUser)return alert('You must be signed in before deleting a product.');
+  if(!confirm('Delete this product from inventory?'))return;
+
+  try{
+    await deleteDoc(doc(db,'inventory',id));
+  }catch(e){
+    console.error('DELETE PRODUCT ERROR:',e);
+    alert('Could not delete product in Firebase.\n\n'+(e.message||e.code||'Unknown Firebase error'));
+  }
+}
+
+function resetForm(){
+  $('name').value='';$('stock').value='';$('cost').value='';$('price').value='';$('low').value=5;$('sku').value='';
+}
+
+function focusName(){
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(()=>$('name').focus(),250);
+}
+
+onAuthStateChanged(auth,user=>{
+  currentUser=user;
+
+  if(!user){
+    stopInventoryListener();
+    products=[];
+    render();
+    $('userName').textContent='Not signed in';
+    $('userRole').textContent='Authentication required';
+    setCloudStatus('Sign in required',false);
+    $('authNote').textContent='You are not signed in. Please sign in through login.html before accessing Firebase inventory.';
+    $('authNote').style.display='block';
+    return;
+  }
+
+  $('userName').textContent=user.displayName||user.email||'User';
+  $('userRole').textContent='Signed in';
+  $('authNote').style.display='none';
+  startInventoryListener();
+});
+
+window.addProduct=addProduct;
+window.editProduct=editProduct;
+window.delProduct=delProduct;
+window.resetForm=resetForm;
+window.focusName=focusName;
+window.render=render;
+
+render();
+</script>
+</body>
+</html>

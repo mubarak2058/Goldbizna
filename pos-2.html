@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MABROUK TRADER'S POS Pro</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#f5f7f6;color:#222;overflow:hidden}
+button,input,select{font:inherit}button{cursor:pointer}
+.topbar{height:64px;background:#087a0b;color:#fff;display:flex;align-items:center;padding:0 18px;gap:15px;box-shadow:0 2px 8px #0002;position:fixed;top:0;left:0;right:0;z-index:50}
+.menu{border:0;background:transparent;color:#fff;font-size:25px}
+.brand{font-size:20px;font-weight:900;white-space:nowrap}.brand span{color:#ffd43b}
+.cloud{font-size:11px;font-weight:800;margin-left:auto}
+.user{display:flex;align-items:center;gap:8px;font-size:12px}.avatar{width:34px;height:34px;border-radius:50%;background:#fff;color:#087a0b;display:flex;align-items:center;justify-content:center;font-weight:900}
+.main{padding-top:64px;height:100dvh;display:flex;flex-direction:column}
+.toolbar{background:#fff;border-bottom:1px solid #e0e5e0;padding:10px 14px;display:flex;gap:10px;align-items:center;position:relative;z-index:40}
+.searchWrap{position:relative;flex:1}.search{width:100%;height:46px;border:1px solid #ccd4cc;border-radius:8px;padding:0 45px 0 13px;outline:0}.search:focus{border-color:#087a0b;box-shadow:0 0 0 3px #087a0b16}
+.scan{position:absolute;right:5px;top:5px;width:36px;height:36px;border:0;border-radius:7px;background:#1688e8;color:#fff;font-size:19px}
+.results{display:none;position:absolute;left:0;right:0;top:51px;background:#fff;border:1px solid #d5ddd5;border-radius:8px;box-shadow:0 8px 25px #0003;max-height:330px;overflow:auto;z-index:100}
+.result{padding:11px 13px;border-bottom:1px solid #edf0ed;display:flex;justify-content:space-between;gap:10px;align-items:center}.result:hover{background:#f3faf3}
+.rname{font-weight:900}.rmeta{font-size:10px;color:#777;margin-top:3px}.rprice{font-weight:900;color:#087a0b;white-space:nowrap}.out{opacity:.45;cursor:not-allowed}
+.toolbtn{height:44px;padding:0 13px;border:1px solid #ccd4cc;background:#fff;border-radius:7px;font-weight:800;white-space:nowrap}.toolbtn.green{background:#087a0b;color:#fff;border-color:#087a0b}.toolbtn.blue{background:#1688e8;color:#fff;border-color:#1688e8}
+.content{flex:1;min-height:0;padding:12px;display:grid;grid-template-columns:minmax(0,1fr) 245px;gap:12px}
+.left{min-width:0;min-height:0;display:flex;flex-direction:column;gap:10px}
+.details{background:#fff;border:1px solid #e0e5e0;border-radius:8px;padding:10px;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;flex:none}
+.field label{display:block;font-size:10px;color:#687168;font-weight:800;margin:0 0 4px 2px}.control{width:100%;height:38px;border:1px solid #d2d9d2;border-radius:6px;padding:0 9px;outline:0;background:#fff}.control:focus{border-color:#087a0b}
+.customerBox{position:relative}.customerResults{display:none;position:absolute;left:0;right:0;top:59px;background:#fff;border:1px solid #d9dfd9;border-radius:7px;box-shadow:0 7px 20px #0002;z-index:80;max-height:180px;overflow:auto}.customerResult{padding:9px;border-bottom:1px solid #edf0ed;cursor:pointer;font-size:11px}.customerResult b{display:block}.customerResult small{color:#777}
+.cart{background:#fff;border:1px solid #e0e5e0;border-radius:8px;flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.cartHead,.cartRow{display:grid;grid-template-columns:minmax(190px,2.5fr) 90px 145px 105px 120px 34px;align-items:center;gap:7px}
+.cartHead{height:45px;flex:none;border-bottom:1px solid #e5e9e5;padding:0 12px;font-size:11px;font-weight:900;background:#fafcfa}
+.cartBody{flex:1;min-height:0;overflow:auto}.cartRow{padding:8px 12px;border-bottom:1px solid #edf0ed;font-size:12px}.pname{font-weight:900}.pmeta{font-size:9px;color:#777;margin-top:3px}
+.uomIn,.qin{height:31px;border:1px solid #ccd4cc;border-radius:5px;text-align:center;background:#fff}.uomIn{width:78px}.qty{display:flex;align-items:center;gap:3px}.qbtn{width:28px;height:31px;border:1px solid #ccd4cc;background:#fff;border-radius:5px;font-weight:900}.qin{width:55px}.amount,.price{text-align:right;font-weight:900}.del{border:0;background:none;font-size:20px;color:#a22}
+.empty{height:100%;min-height:180px;display:flex;align-items:center;justify-content:center;text-align:center;color:#8a928a;padding:25px;font-size:13px}
+.cartFoot{flex:none;border-top:1px solid #e5e9e5;padding:9px 12px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;font-size:11px}.cartFoot b{font-size:14px}
+.actions{background:#fff;border:1px solid #e0e5e0;border-radius:8px;padding:9px;display:flex;align-items:center;gap:7px;flex:none;min-height:57px}.act{height:39px;padding:0 11px;border:1px solid #ccd4cc;background:#fff;border-radius:6px;font-weight:800;font-size:11px}.dark{background:#273444;color:#fff;border-color:#273444}.red{background:#e52d32;color:#fff;border-color:#e52d32}.green{background:#087a0b;color:#fff;border-color:#087a0b}.blue{background:#1688e8;color:#fff;border-color:#1688e8}.total{margin-left:auto;text-align:right;white-space:nowrap}.total strong{font-size:19px}
+.side{background:#fff;border:1px solid #e0e5e0;border-radius:8px;min-height:0;overflow:auto;padding:9px}.sideTitle{font-size:11px;font-weight:900;color:#687168;margin:3px 3px 9px}.quick{display:flex;gap:8px;padding:9px;border:1px solid #e4e9e4;border-radius:7px;margin-bottom:8px;cursor:pointer}.quick:hover{background:#f3faf3}.qicon{width:38px;height:38px;background:#edf7ed;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#087a0b;font-weight:900}.qname{font-size:11px;font-weight:900}.qprice{font-size:11px;color:#087a0b;font-weight:800;margin-top:3px}.qstock{font-size:9px;color:#777;margin-top:2px}
+.modal{display:none;position:fixed;inset:0;background:#0009;z-index:200;align-items:center;justify-content:center;padding:12px}.card{background:#fff;border-radius:11px;width:min(520px,100%);max-height:92vh;overflow:auto;padding:18px}.close{float:right;border:0;background:none;font-size:26px}.paygrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.payopt{padding:13px;border:1px solid #ccd4cc;background:#fff;border-radius:7px;font-weight:900}.payopt.active{border:2px solid #087a0b;background:#edf7ed}.payform{margin-top:12px;display:none}.payform input,.payform select{width:100%;height:41px;border:1px solid #ccd4cc;border-radius:6px;padding:0 9px;margin:4px 0}.final{width:100%;height:44px;margin-top:7px;border:0;border-radius:7px;background:#087a0b;color:#fff;font-weight:900}.splitgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.toast{display:none;position:fixed;right:14px;bottom:14px;background:#222;color:#fff;padding:10px 14px;border-radius:7px;z-index:600;font-size:12px}
+#receiptOverlay{display:none;position:fixed;inset:0;background:#07110bd9;z-index:500;padding:15px 8px;overflow:auto}.receiptCard{width:min(470px,100%);margin:auto;background:#fff;color:#000;border-radius:4px;overflow:hidden}.receiptPaper{padding:20px 22px}.receiptTop{text-align:center}.receiptLogo{font-size:24px;font-weight:900}.receiptType{font-size:18px;font-weight:900;margin-top:4px}.receiptSub,.receiptContact{font-size:11px;font-weight:800;margin-top:4px}.stamp{display:inline-block;border:2px solid #000;padding:3px 12px;font-size:11px;font-weight:900;margin:7px}.rule{border:0;border-top:2px solid #000;margin:8px 0}.rinfo{font-size:12px;line-height:1.7}.rline{display:grid;grid-template-columns:115px 1fr;gap:5px}.rline span{font-weight:800;overflow-wrap:anywhere}.ritems{margin-top:14px}.rhead,.ritem{display:grid;grid-template-columns:minmax(0,1fr) 48px 70px 78px;gap:4px}.rhead{font-size:10px;font-weight:900;border-bottom:2px solid #000;padding-bottom:5px}.ritem{font-size:12px;font-weight:800;padding:7px 0;border-bottom:1px dotted #333}.ritem b{font-weight:900}.center{text-align:center}.right{text-align:right}.rtot{margin-top:12px;font-size:12px}.tline{display:flex;justify-content:space-between;padding:3px 0}.grand{font-size:19px;font-weight:900;border-top:3px solid #000;margin-top:5px;padding-top:7px}.rpayment{border-top:2px solid #000;margin-top:9px;padding-top:7px;font-size:11px}.thanks{text-align:center;font-size:12px;font-weight:900;margin-top:15px}.foot{text-align:center;font-size:10px;margin-top:5px}.receiptActions{display:flex;gap:7px;background:#f3f5f3;border-top:1px solid #ddd;padding:12px}.print{flex:1;height:40px;border:0;border-radius:6px;background:#087a0b;color:#fff;font-weight:900}.closeReceipt{height:40px;padding:0 15px;border:1px solid #ccd4cc;background:#fff;border-radius:6px;font-weight:800}
+@media(max-width:1050px){.content{grid-template-columns:1fr}.side{display:none}.details{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){body{overflow:hidden}.topbar{height:56px;padding:0 8px}.brand{font-size:14px}.cloud{display:none}.user{font-size:10px}.avatar{width:30px;height:30px}.main{padding-top:56px}.toolbar{padding:7px}.toolbtn{height:42px;padding:0 8px;font-size:10px}.details{grid-template-columns:1fr 1fr;padding:8px}.cartHead,.cartRow{grid-template-columns:minmax(130px,1.8fr) 65px 120px 75px 85px 25px;padding-left:7px;padding-right:7px}.cartHead{font-size:9px}.cartRow{font-size:10px}.qbtn{width:23px}.qin{width:42px}.cartFoot{grid-template-columns:1fr 1fr}.actions{gap:5px}.act{padding:0 7px;font-size:9px}.total strong{font-size:15px}}
+@media print{body *{visibility:hidden!important}#receiptOverlay,#receiptOverlay *{visibility:visible!important}#receiptOverlay{position:absolute!important;inset:0!important;background:#fff!important;padding:0!important;display:block!important}.receiptCard{width:100%!important;max-width:470px!important}.receiptActions{display:none!important}}
+</style>
+</head>
+<body>
+<header class="topbar">
+<button class="menu" onclick="location.href='index.html'">☰</button>
+<div class="brand">MABROUK <span>TRADER'S</span> POS Pro</div>
+<div id="cloud" class="cloud">☁ Connecting...</div>
+<div class="user"><div class="avatar">A</div><div><b id="userName">Checking...</b><br><small id="userRole">Checking access...</small></div></div>
+</header>
+
+<main class="main">
+<div class="toolbar">
+<div class="searchWrap">
+<input id="search" class="search" placeholder="Search product or scan barcode" autocomplete="off">
+<button id="focusBtn" class="scan">⌕</button>
+<div id="results" class="results"></div>
+</div>
+<button class="toolbtn" id="customerQuick">♧ Customer</button>
+<button class="toolbtn" id="suspendBtn">🔒 Suspend</button>
+<button class="toolbtn blue" id="quoteBtn">＋ Quotation</button>
+</div>
+
+<section class="content">
+<div class="left">
+<section class="details">
+<div class="field"><label>Customer Name</label><input id="customerName" class="control" placeholder="Walk-in Customer"></div>
+<div class="field customerBox"><label>Select Customer</label><input id="customerSelect" class="control" placeholder="Search customer" autocomplete="off"><div id="customerResults" class="customerResults"></div></div>
+<div class="field"><label>Customer PIN</label><input id="customerPin" class="control" placeholder="P051403892L"></div>
+<div class="field"><label>Mobile</label><input id="customerMobile" class="control" placeholder="07XXXXXXXX" type="tel"></div>
+<div class="field"><label>Customer Type</label><select id="customerType" class="control"><option>WALK-IN</option><option>CUSTOMER</option><option>WHOLESALE</option><option>RETAIL</option></select></div>
+<div class="field"><label>Approved By / Salesperson</label><select id="salesperson" class="control"></select></div>
+<div class="field"><label>Till / Counter</label><input id="tillNo" class="control" value="TILL 1"></div>
+<div class="field"><label>Company PIN</label><input id="companyPin" class="control" placeholder="Company PIN"></div>
+<div class="field"><label>Order / Reference No.</label><input id="orderRef" class="control" placeholder="Optional"></div>
+<div class="field"><label>Sale Note</label><input id="saleNote" class="control" placeholder="Optional note"></div>
+</section>
+
+<section class="cart">
+<div class="cartHead"><div>PRODUCT</div><div>UOM</div><div>QUANTITY</div><div>PRICE</div><div>AMOUNT</div><div>✕</div></div>
+<div id="cartBody" class="cartBody"><div id="empty" class="empty">Search an inventory product above and tap it to add directly to the cart.</div><div id="cartList"></div></div>
+<div class="cartFoot">
+<div>Items<br><b id="items">0</b></div><div>Units<br><b id="units">0</b></div><div>Subtotal<br><b>KSh <span id="subtotal">0.00</span></b></div><div>Total Payable<br><b>KSh <span id="total">0.00</span></b></div>
+</div>
+</section>
+
+<div class="actions">
+<button class="act" id="clearAllBtn">↩ Clear All</button>
+<button class="act dark" id="clearCartBtn">♜ Clear Cart</button>
+<div class="total">TOTAL PAYABLE<br><strong>KSh <span id="payable">0.00</span></strong></div>
+<button class="act green" id="paymentBtn">💳 Payment</button>
+</div>
+</div>
+
+<aside class="side">
+<div class="sideTitle">QUICK PRODUCTS</div>
+<div id="quick"></div>
+</aside>
+</section>
+</main>
+
+<div id="payment" class="modal">
+<div class="card">
+<button class="close" id="payClose">×</button>
+<h2>Complete Payment</h2>
+<p style="margin-top:6px">Total payable: <b>KSh <span id="payTotal">0.00</span></b></p>
+<div class="paygrid">
+<button class="payopt" data-pay="M-Pesa">📱 M-Pesa</button>
+<button class="payopt" data-pay="Cash">💵 Cash</button>
+<button class="payopt" data-pay="Card">💳 Card</button>
+<button class="payopt" data-pay="Bank">🏦 Bank</button>
+<button class="payopt" data-pay="Split" style="grid-column:1/-1">🔀 Split Payment</button>
+<button class="payopt" data-pay="Credit" style="grid-column:1/-1;background:#fff8e8">📝 Credit / Customer Debt</button>
+</div>
+<div id="payform" class="payform"></div>
+</div>
+</div>
+
+<div id="receiptOverlay">
+<div class="receiptCard">
+<div class="receiptPaper">
+<div class="receiptTop"><div class="receiptLogo">MABROUK TRADER'S</div><div class="receiptType">CASH SALE</div><div class="receiptSub">MABROUK TRADER'S POS PRO</div><div class="receiptContact">Professional Digital Sales Receipt</div><div class="stamp" id="receiptStamp">PAID</div></div>
+<hr class="rule">
+<div class="rinfo">
+<div class="rline"><b>Invoice No.:</b><span id="rNo">—</span></div>
+<div class="rline"><b>Customer Name:</b><span id="rCustomer">Walk-in Customer</span></div>
+<div class="rline"><b>Customer PIN:</b><span id="rPin">—</span></div>
+<div class="rline"><b>Mobile:</b><span id="rMobile">—</span></div>
+<div class="rline"><b>Customer Type:</b><span id="rType">WALK-IN</span></div>
+<div class="rline"><b>Approved by:</b><span id="rServed">User</span></div>
+<div class="rline"><b>Till:</b><span id="rTill">TILL 1</span></div>
+<div class="rline"><b>Company PIN:</b><span id="rCompanyPin">—</span></div>
+<div class="rline"><b>Date:</b><span id="rDate">—</span></div>
+</div>
+<div class="ritems"><div class="rhead"><div>PRODUCT / UOM</div><div class="center">QTY</div><div class="right">PRICE</div><div class="right">AMOUNT</div></div><div id="rItems"></div></div>
+<div class="rtot">
+<div class="tline"><span>Total Items</span><b id="rCount">0</b></div>
+<div class="tline"><span>Subtotal</span><b>KSh <span id="rSubtotal">0.00</span></b></div>
+<div class="tline"><span>Payment Method</span><b id="rMethod">—</b></div>
+<div class="tline" id="rDueLine" style="display:none"><span>Balance Due</span><b>KSh <span id="rDue">0.00</span></b></div>
+<div class="tline grand"><span>TOTAL</span><span>KSh <span id="rTotal">0.00</span></span></div>
+</div>
+<div class="rpayment"><b>Payment Details:</b> <span id="rPaymentDetails">—</span></div>
+<div class="thanks">Thank you for shopping with MABROUK TRADER'S!</div>
+<div class="foot">We appreciate your business.</div>
+</div>
+<div class="receiptActions"><button class="print" id="printReceipt">🖨 PRINT RECEIPT</button><button class="closeReceipt" id="closeReceipt">✕ Close</button></div>
+</div>
+</div>
+<div id="toast" class="toast"></div>
+
+<script type="module">
+import {initializeApp,getApps,getApp} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import {getFirestore,collection,onSnapshot,addDoc,doc,updateDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+import {getAuth,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+const firebaseConfig={
+apiKey:"AIzaSyA8XB6aY45-yHT0uZ6NUhptMoNkYqgwqOs",
+authDomain:"goldbizna.firebaseapp.com",
+projectId:"goldbizna",
+storageBucket:"goldbizna.firebasestorage.app",
+messagingSenderId:"559981054862",
+appId:"1:559981054862:web:0635c689607d3baa3272df",
+measurementId:"G-95XL3BNQJF"
+};
+const app=getApps().length?getApp():initializeApp(firebaseConfig);
+const db=getFirestore(app),auth=getAuth(app);
+const inventoryRef=collection(db,"inventory"),salesRef=collection(db,"sales"),customersRef=collection(db,"customers");
+const $=id=>document.getElementById(id);
+
+let inventory=[],cart=[],customers=[],currentUser=null,inventoryReady=false,paymentMethod="",paymentExtra={};
+
+const pname=p=>p?.name||p?.productName||p?.title||"Unnamed Product";
+const cost=p=>Number(p?.costPrice??p?.cost??p?.buyingPrice??p?.purchasePrice??0);
+const price=p=>Number(p?.price??p?.sellingPrice??p?.salePrice??0);
+const stock=p=>Number(p?.stock??p?.quantity??p?.qty??0);
+const code=p=>String(p?.sku??p?.barcode??p?.code??"");
+const uom=p=>p?.uom||p?.unit||p?.unitOfMeasure||"PC";
+const money=n=>Number(n||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+
+function toast(msg){$("toast").textContent=msg;$("toast").style.display="block";clearTimeout(window.gbToast);window.gbToast=setTimeout(()=>$("toast").style.display="none",2200)}
+function renderUser(){const name=currentUser?.displayName||currentUser?.email||localStorage.getItem("goldbizna_username")||"User";$("userName").textContent=name;$("userRole").textContent=currentUser?"Signed in":"Authentication required";$("salesperson").innerHTML=`<option>${esc(name)}</option>`}
+function subTotal(){return cart.reduce((s,x)=>s+x.qty*x.unitPrice,0)}
+function total(){return subTotal()}
+
+function focusSearch(){setTimeout(()=>{$("search").focus();$("search").select()},50)}
+function renderSearch(){
+const box=$("results"),q=$("search").value.trim().toLowerCase();
+if(!inventoryReady){box.innerHTML='<div class="result">☁ Connecting to Firebase inventory...</div>';box.style.display="block";return}
+if(!q){box.style.display="none";return}
+const found=inventory.filter(p=>pname(p).toLowerCase().includes(q)||code(p).toLowerCase().includes(q)).slice(0,20);
+box.innerHTML=found.length?found.map(p=>{
+const i=inventory.indexOf(p),st=stock(p),disabled=st<=0;
+return `<div class="result ${disabled?"out":""}" data-index="${i}">
+<div><div class="rname">${esc(pname(p))}</div><div class="rmeta">${esc(code(p))||"No SKU"} · ${esc(uom(p))} · Stock: ${st}</div></div>
+<div class="rprice">KSh ${money(price(p))}</div></div>`;
+}).join(""):'<div class="result">No matching product found in Firebase inventory.</div>';
+box.style.display="block";
+}
+
+function addProduct(index){
+const p=inventory[index];if(!p)return;
+if(stock(p)<=0)return toast("Product is out of stock");
+let existing=cart.find(x=>x.index===index);
+if(existing){if(existing.qty+1>stock(p))return toast("Not enough stock");existing.qty=+(existing.qty+1).toFixed(2)}
+else cart.push({index,qty:1,unitPrice:price(p),uom:uom(p)});
+renderCart();$("search").value="";$("results").style.display="none";focusSearch();
+}
+
+function renderCart(){
+$("empty").style.display=cart.length?"none":"flex";
+$("cartList").innerHTML=cart.map((x,i)=>{
+const p=inventory[x.index];if(!p)return "";
+const max=stock(p);
+return `<div class="cartRow">
+<div><div class="pname">${esc(pname(p))}</div><div class="pmeta">${esc(code(p))||"No SKU"} · Available: ${max}</div></div>
+<div><input class="uomIn" value="${esc(x.uom)}" onchange="changeUom(${i},this.value)"></div>
+<div class="qty"><button class="qbtn" onclick="changeQty(${i},-1)">−</button><input class="qin" type="number" min="0" step="0.5" value="${x.qty}" onchange="setQty(${i},this.value)"><button class="qbtn" onclick="changeQty(${i},1)">＋</button></div>
+<div class="price">KSh ${money(x.unitPrice)}</div><div class="amount">KSh ${money(x.qty*x.unitPrice)}</div><button class="del" onclick="removeItem(${i})">×</button>
+</div>`;
+}).join("");
+const units=cart.reduce((s,x)=>s+x.qty,0),st=subTotal();
+$("items").textContent=cart.length;$("units").textContent=money(units);$("subtotal").textContent=money(st);$("total").textContent=money(total());$("payable").textContent=money(total());
+}
+
+window.changeUom=(i,v)=>{if(cart[i])cart[i].uom=v||uom(inventory[cart[i].index]);renderCart()};
+window.changeQty=(i,d)=>{
+if(!cart[i])return;const p=inventory[cart[i].index],n=+(cart[i].qty+d).toFixed(2);
+if(n<0)return;if(n>stock(p))return toast("Not enough stock");cart[i].qty=n;renderCart()
+};
+window.setQty=(i,v)=>{
+if(!cart[i])return;const p=inventory[cart[i].index],n=Number(v);
+if(!Number.isFinite(n)||n<0)return toast("Invalid quantity");
+if(n>stock(p))return toast("Not enough stock");cart[i].qty=n;renderCart()
+};
+window.removeItem=i=>{cart.splice(i,1);renderCart();focusSearch()};
+
+function renderQuick(){
+$("quick").innerHTML=inventory.filter(p=>stock(p)>0).slice(0,12).map(p=>{
+const i=inventory.indexOf(p);
+return `<div class="quick" onclick="addProduct(${i})"><div class="qicon">▣</div><div><div class="qname">${esc(pname(p))}</div><div class="qprice">KSh ${money(price(p))}</div><div class="qstock">Stock: ${stock(p)} ${esc(uom(p))}</div></div></div>`;
+}).join("")||'<div style="font-size:11px;color:#777;padding:10px">No products available.</div>';
+}
+window.addProduct=addProduct;
+
+function renderCustomers(){
+const q=$("customerSelect").value.trim().toLowerCase(),box=$("customerResults");
+if(!q){box.style.display="none";return}
+const found=customers.filter(c=>String(c.name||c.customerName||"").toLowerCase().includes(q)||String(c.mobile||c.phone||"").includes(q)).slice(0,10);
+box.innerHTML=found.map(c=>`<div class="customerResult" data-customer="${esc(c.id)}"><b>${esc(c.name||c.customerName||"Unnamed")}</b><small>${esc(c.mobile||c.phone||"")} ${c.pin?"· "+esc(c.pin):""}</small></div>`).join("")||'<div class="customerResult">No customer found.</div>';
+box.style.display="block";
+}
+
+$("search").addEventListener("input",renderSearch);
+$("search").addEventListener("keydown",e=>{
+if(e.key==="Enter"){
+const first=$("results").querySelector("[data-index]");
+if(first&&!first.classList.contains("out"))addProduct(Number(first.dataset.index));
+}
+});
+$("results").addEventListener("click",e=>{
+const r=e.target.closest("[data-index]");if(!r)return;
+if(r.classList.contains("out"))return toast("Product is out of stock");
+addProduct(Number(r.dataset.index));
+});
+$("focusBtn").onclick=focusSearch;
+
+$("customerSelect").addEventListener("input",renderCustomers);
+$("customerResults").addEventListener("click",e=>{
+const r=e.target.closest("[data-customer]");if(!r)return;const c=customers.find(x=>x.id===r.dataset.customer);if(!c)return;
+$("customerName").value=c.name||c.customerName||"";$("customerMobile").value=c.mobile||c.phone||"";$("customerPin").value=c.pin||c.customerPin||"";$("customerType").value=c.type||c.customerType||"CUSTOMER";$("customerSelect").value=c.name||c.customerName||"";$("customerResults").style.display="none";
+});
+$("customerQuick").onclick=()=>{$("customerSelect").focus()};
+
+$("clearCartBtn").onclick=()=>{if(!cart.length)return;if(confirm("Clear all products from the cart?")){cart=[];renderCart();focusSearch()}};
+$("clearAllBtn").onclick=()=>{if(!confirm("Clear the cart and sale/customer details?"))return;cart=[];["customerName","customerSelect","customerPin","customerMobile","companyPin","orderRef","saleNote"].forEach(id=>$(id).value="");$("customerType").value="WALK-IN";$("tillNo").value="TILL 1";renderCart();focusSearch()};
+
+$("suspendBtn").onclick=()=>{if(!cart.length)return toast("Cart is empty");localStorage.setItem("mabrouk_suspended_cart",JSON.stringify({cart,customer:{name:$("customerName").value,mobile:$("customerMobile").value,pin:$("customerPin").value},savedAt:new Date().toISOString()}));toast("Cart suspended");cart=[];renderCart();focusSearch()};
+$("quoteBtn").onclick=()=>{if(!cart.length)return toast("Add products before making a quotation");toast("Sale quotation prepared — connect your quotation page when ready")};
+
+function openPayment(){
+if(!cart.length)return toast("Add products to the cart first");
+$("payTotal").textContent=money(total());$("payment").style.display="flex";paymentMethod="";paymentExtra={};$("payform").style.display="none";$("payform").innerHTML="";document.querySelectorAll(".payopt").forEach(x=>x.classList.remove("active"));
+}
+$("paymentBtn").onclick=openPayment;
+$("payClose").onclick=()=>$("payment").style.display="none";
+document.querySelectorAll(".payopt").forEach(btn=>btn.onclick=()=>selectPayment(btn.dataset.pay,btn));
+
+function selectPayment(method,btn){
+paymentMethod=method;paymentExtra={};document.querySelectorAll(".payopt").forEach(x=>x.classList.remove("active"));btn.classList.add("active");
+const f=$("payform");f.style.display="block";
+if(method==="M-Pesa")f.innerHTML=`<label style="font-size:11px;font-weight:800">Customer M-Pesa Number</label><input id="mpesaPhone" type="tel" placeholder="07XXXXXXXX" value="${esc($("customerMobile").value)}"><button class="final" id="mpesaPrompt">📱 SEND M-PESA PROMPT</button><button class="final" id="completePay" style="display:none">✓ CONFIRM PAYMENT</button><div id="mpesaStatus" style="font-size:11px;margin-top:7px"></div>`;
+else if(method==="Cash")f.innerHTML=`<label style="font-size:11px;font-weight:800">Cash Received</label><input id="cashReceived" type="number" min="${total()}" step="0.01" placeholder="${money(total())}"><div style="font-size:12px;margin-top:5px">Change: KSh <b id="change">0.00</b></div><button class="final" id="completePay">✓ COMPLETE CASH SALE</button>`;
+else if(method==="Card")f.innerHTML=`<input id="paymentRef" placeholder="Card transaction/reference (optional)"><button class="final" id="completePay">✓ CONFIRM CARD PAYMENT</button>`;
+else if(method==="Bank")f.innerHTML=`<input id="paymentRef" placeholder="Bank transaction/reference"><button class="final" id="completePay">✓ CONFIRM BANK PAYMENT</button>`;
+else if(method==="Credit")f.innerHTML=`<div style="padding:9px;background:#fff3d9;border:1px solid #f0d79a;border-radius:6px;font-size:11px">Credit sale will be recorded as customer debt. Make sure the customer name and mobile are provided.</div><input id="creditDueDate" type="date"><button class="final" id="completePay">✓ RECORD CUSTOMER DEBT</button>`;
+else if(method==="Split")f.innerHTML=`<div class="splitgrid"><div><label style="font-size:10px;font-weight:800">First Method</label><select id="split1"><option>Cash</option><option>M-Pesa</option><option>Card</option><option>Bank</option></select><input id="splitAmt1" type="number" min="0" step="0.01" placeholder="Amount"></div><div><label style="font-size:10px;font-weight:800">Second Method</label><select id="split2"><option>M-Pesa</option><option>Cash</option><option>Card</option><option>Bank</option></select><input id="splitAmt2" type="number" min="0" step="0.01" placeholder="Amount"></div></div><div style="font-size:11px;margin-top:7px">Remaining: KSh <b id="splitRemain">${money(total())}</b></div><button class="final" id="completePay">✓ COMPLETE SPLIT PAYMENT</button>`;
+if(method==="M-Pesa"){$("mpesaPrompt").onclick=sendMpesaPrompt;$("mpesaPhone").oninput=()=>{}}
+if(method==="Cash"){$("cashReceived").oninput=()=>{$("change").textContent=money(Math.max(0,Number($("cashReceived").value||0)-total()))};$("completePay").onclick=()=>completeSale({received:Number($("cashReceived").value||0),change:Math.max(0,Number($("cashReceived").value||0)-total())})}
+if(method==="Card"||method==="Bank")$("completePay").onclick=()=>completeSale({reference:$("paymentRef").value.trim()});
+if(method==="Credit")$("completePay").onclick=()=>completeSale({dueDate:$("creditDueDate").value});
+if(method==="Split"){const update=()=>{const a=Number($("splitAmt1").value||0),b=Number($("splitAmt2").value||0);$("splitRemain").textContent=money(Math.max(0,total()-a-b))};$("splitAmt1").oninput=update;$("splitAmt2").oninput=update;$("completePay").onclick=()=>completeSale({first:$("split1").value,firstAmount:Number($("splitAmt1").value||0),second:$("split2").value,secondAmount:Number($("splitAmt2").value||0)})}
+}
+
+async function sendMpesaPrompt(){
+const phone=$("mpesaPhone").value.trim();
+if(!/^0?7\d{8}$/.test(phone))return toast("Enter a valid Kenyan mobile number");
+$("mpesaStatus").textContent="M-Pesa prompt endpoint is not configured in this POS yet.";
+$("mpesaStatus").style.color="#9b6800";
+toast("M-Pesa prompt needs your Daraja/Worker endpoint");
+}
+
+function invoiceNo(){return "MBT-"+Date.now().toString().slice(-10)}
+async function completeSale(extra={}){
+if(!currentUser)return toast("You must be signed in");
+if(!cart.length)return toast("Cart is empty");
+if(paymentMethod==="Cash"&&extra.received<total())return toast("Cash received is less than total");
+if(paymentMethod==="Split"&&Math.abs((extra.firstAmount+extra.secondAmount)-total())>.01)return toast("Split amounts must equal the total");
+if(paymentMethod==="Credit"&&!$("customerName").value.trim())return toast("Enter customer name for credit sale");
+const no=invoiceNo(),now=new Date();
+const sale={invoiceNo:no,customerName:$("customerName").value.trim()||"Walk-in Customer",customerPin:$("customerPin").value.trim(),mobile:$("customerMobile").value.trim(),customerType:$("customerType").value,approvedBy:$("salesperson").value,till:$("tillNo").value.trim()||"TILL 1",companyPin:$("companyPin").value.trim(),orderRef:$("orderRef").value.trim(),saleNote:$("saleNote").value.trim(),paymentMethod,paymentDetails:extra,total:total(),subtotal:subTotal(),items:cart.map(x=>{const p=inventory[x.index];return {productId:p.id,name:pname(p),sku:code(p),uom:x.uom,qty:x.qty,price:x.unitPrice,amount:x.qty*x.unitPrice,cost:cost(p)}}),createdAt:serverTimestamp(),createdBy:currentUser.uid};
+try{
+$("payform").querySelector(".final")?.setAttribute("disabled","true");
+for(const x of cart){
+const p=inventory[x.index],newStock=stock(p)-x.qty;
+if(newStock<0)throw new Error("Not enough stock for "+pname(p));
+await updateDoc(doc(db,"inventory",p.id),{stock:newStock,updatedAt:serverTimestamp()});
+}
+await addDoc(salesRef,sale);
+showReceipt(sale,no,now,extra);
+$("payment").style.display="none";cart=[];renderCart();focusSearch();
+}catch(e){console.error(e);toast("Sale failed: "+(e.message||e.code||"Unknown Firebase error"))}
+}
+
+function showReceipt(s,no,now,extra){
+$("rNo").textContent=no;$("rCustomer").textContent=s.customerName;$("rPin").textContent=s.customerPin||"—";$("rMobile").textContent=s.mobile||"—";$("rType").textContent=s.customerType;$("rServed").textContent=s.approvedBy;$("rTill").textContent=s.till;$("rCompanyPin").textContent=s.companyPin||"—";$("rDate").textContent=now.toLocaleString();
+$("rItems").innerHTML=s.items.map(x=>`<div class="ritem"><div><b>${esc(x.name)}</b><div style="font-size:9px">${esc(x.uom)}</div></div><div class="center">${x.qty}</div><div class="right">KSh ${money(x.price)}</div><div class="right">KSh ${money(x.amount)}</div></div>`).join("");
+$("rCount").textContent=s.items.length;$("rSubtotal").textContent=money(s.subtotal);$("rMethod").textContent=s.paymentMethod;$("rTotal").textContent=money(s.total);
+let details="";
+if(s.paymentMethod==="Cash")details=`Cash received KSh ${money(extra.received)} · Change KSh ${money(extra.change)}`;
+else if(s.paymentMethod==="M-Pesa")details=`M-Pesa ${esc($("customerMobile").value||"Customer number")}`;
+else if(s.paymentMethod==="Split")details=`${extra.first}: KSh ${money(extra.firstAmount)} + ${extra.second}: KSh ${money(extra.secondAmount)}`;
+else if(extra.reference)details=`Reference: ${esc(extra.reference)}`;
+else if(s.paymentMethod==="Credit"){details="Customer debt recorded";$("rDueLine").style.display="flex";$("rDue").textContent=money(s.total);$("receiptStamp").textContent="CREDIT"}
+else {$("rDueLine").style.display="none"}
+$("rPaymentDetails").textContent=details||s.paymentMethod;$("receiptOverlay").style.display="block";
+}
+$("closeReceipt").onclick=()=>$("receiptOverlay").style.display="none";
+$("printReceipt").onclick=()=>window.print();
+
+onAuthStateChanged(auth,user=>{
+currentUser=user;renderUser();
+if(!user){$("cloud").textContent="☁ Sign in required";$("cloud").style.color="#ffd43b";return}
+$("cloud").textContent="☁ Firebase connected";$("cloud").style.color="#fff";
+onSnapshot(inventoryRef,snap=>{
+inventory=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>pname(a).localeCompare(pname(b)));
+inventoryReady=true;renderSearch();renderQuick();
+},err=>{$("cloud").textContent="☁ Inventory access failed";console.error(err);toast("Firebase inventory access failed")});
+onSnapshot(customersRef,snap=>{customers=snap.docs.map(d=>({id:d.id,...d.data()}))},err=>console.log("Customers listener:",err));
+});
+renderCart();
+</script>
+</body>
+</html>

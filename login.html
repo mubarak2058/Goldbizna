@@ -4,179 +4,269 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MABROUK TRADER'S - Login</title>
+
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
-body{min-height:100vh;background:linear-gradient(135deg,#087a0b,#0b5d18);display:flex;align-items:center;justify-content:center;padding:20px}
-.card{width:100%;max-width:430px;background:#fff;border-radius:16px;padding:30px;box-shadow:0 15px 45px #0005}
-.logo{text-align:center;color:#087a0b;font-size:27px;font-weight:900;margin-bottom:6px}
-.logo span{color:#d69f00}
-.sub{text-align:center;color:#777;font-size:13px;margin-bottom:25px}
-label{display:block;font-size:12px;font-weight:bold;color:#555;margin:14px 0 6px}
-input{width:100%;padding:13px;border:1px solid #d5ddd5;border-radius:8px;outline:0;font-size:14px}
-input:focus{border-color:#087a0b;box-shadow:0 0 0 3px #087a0b15}
-.btn{width:100%;border:0;background:#087a0b;color:#fff;padding:13px;border-radius:8px;margin-top:20px;font-weight:bold;cursor:pointer;font-size:14px}
-.btn:disabled{opacity:.6;cursor:not-allowed}
-.msg{display:none;margin-top:14px;padding:12px;border-radius:8px;font-size:12px;line-height:1.5}
-.error{display:block;background:#ffe8e8;color:#a51d1d}
-.success{display:block;background:#eaf6ed;color:#087a0b}
-.loading{text-align:center;color:#777;font-size:12px;margin-top:15px}
-.small{text-align:center;margin-top:18px;font-size:11px;color:#888}
-.eye{position:relative}
-.eye button{position:absolute;right:8px;top:7px;border:0;background:transparent;padding:8px;cursor:pointer}
-.eye input{padding-right:45px}
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:linear-gradient(135deg,#087a0b,#004d07);
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:20px
+}
+.login{
+width:100%;
+max-width:400px;
+background:#fff;
+border-radius:18px;
+padding:28px;
+box-shadow:0 10px 35px #0005;
+text-align:center
+}
+.logo{
+font-size:27px;
+font-weight:bold;
+color:#087a0b;
+margin-bottom:5px
+}
+.sub{
+color:#666;
+margin-bottom:25px
+}
+input{
+width:100%;
+padding:14px;
+margin:8px 0;
+border:1px solid #ccc;
+border-radius:9px;
+font-size:16px;
+outline:none
+}
+input:focus{border-color:#087a0b}
+button{
+width:100%;
+padding:14px;
+margin-top:12px;
+border:0;
+border-radius:9px;
+background:#087a0b;
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor:pointer
+}
+button:disabled{opacity:.6}
+#msg{
+margin-top:15px;
+padding:11px;
+border-radius:8px;
+display:none;
+font-weight:bold
+}
+.ok{background:#e5f7e7;color:#087a0b}
+.err{background:#ffe7e7;color:#b00000}
 </style>
 </head>
+
 <body>
 
-<div class="card">
-  <div class="logo">MABROUK <span>TRADER'S</span></div>
-  <div class="sub">Secure Business Management System</div>
+<div class="login">
 
-  <form id="loginForm">
-    <label>Username or Email</label>
-    <input id="loginUser" autocomplete="username" placeholder="Enter username or email" required>
+<div class="logo">MABROUK TRADER'S</div>
+<div class="sub">Secure Business Login</div>
 
-    <label>Password</label>
-    <div class="eye">
-      <input id="loginPass" type="password" autocomplete="current-password" placeholder="Enter password" required>
-      <button type="button" onclick="togglePassword()">👁</button>
-    </div>
+<input id="username" type="text"
+placeholder="Username or Email"
+autocomplete="username">
 
-    <button class="btn" id="loginBtn">LOGIN</button>
-  </form>
+<input id="password" type="password"
+placeholder="Password"
+autocomplete="current-password">
 
-  <div id="msg" class="msg"></div>
-  <div id="loading" class="loading"></div>
+<button id="loginBtn">LOGIN</button>
 
-  <div class="small">MABROUK TRADER'S • Secure Access</div>
+<div id="msg"></div>
+
 </div>
 
 <script type="module">
-import{initializeApp}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
 import{
- getAuth,
- signInWithEmailAndPassword,
- onAuthStateChanged
+initializeApp
+}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+import{
+getAuth,
+signInWithEmailAndPassword,
+signOut
 }from"https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
 import{
- getFirestore,
- doc,
- getDoc
+getFirestore,
+doc,
+getDoc
 }from"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const firebaseConfig={
- apiKey:"AIzaSyA8XB6aY45-yHT0uZ6NUhptMoNkYqgwqOs",
- authDomain:"goldbizna.firebaseapp.com",
- projectId:"goldbizna",
- storageBucket:"goldbizna.firebasestorage.app",
- messagingSenderId:"559981054862",
- appId:"1:559981054862:web:0635c689607d3baa3272df",
- measurementId:"G-95XL3BNQJF"
+apiKey:"AIzaSyA8XB6aY45-yHT0uZ6NUhptMoNkYqgwqOs",
+authDomain:"goldbizna.firebaseapp.com",
+projectId:"goldbizna",
+storageBucket:"goldbizna.firebasestorage.app",
+messagingSenderId:"559981054862",
+appId:"1:559981054862:web:0635c689607d3baa3272df",
+measurementId:"G-95XL3BNQJF"
 };
 
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
 
-const $=id=>document.getElementById(id);
+const username=document.getElementById("username");
+const password=document.getElementById("password");
+const btn=document.getElementById("loginBtn");
+const msg=document.getElementById("msg");
 
-function message(text,type="error"){
- const m=$("msg");
- m.textContent=text;
- m.className="msg "+type;
+function message(text,type="err"){
+msg.textContent=text;
+msg.className=type;
+msg.style.display="block";
 }
 
-function clearMessage(){
- $("msg").className="msg";
- $("msg").textContent="";
+async function findEmail(value){
+
+value=value.trim();
+
+if(value.includes("@")) return value;
+
+const ref=doc(db,"usernames",value.toLowerCase());
+const snap=await getDoc(ref);
+
+if(!snap.exists()) return null;
+
+return snap.data().email||null;
 }
 
-function firebaseError(e){
- const c=e?.code||"";
- if(c.includes("invalid-credential")||c.includes("wrong-password")||c.includes("user-not-found"))
-   return "Incorrect username/email or password.";
- if(c.includes("too-many-requests"))
-   return "Too many login attempts. Please wait and try again.";
- if(c.includes("network"))
-   return "Network problem. Check your internet connection.";
- return e?.message||"Login failed.";
+async function login(){
+
+const name=username.value.trim();
+const pass=password.value;
+
+if(!name||!pass){
+message("Enter your username and password.");
+return;
 }
 
-window.togglePassword=()=>{
- const x=$("loginPass");
- x.type=x.type==="password"?"text":"password";
-};
+btn.disabled=true;
+btn.textContent="LOGGING IN...";
+msg.style.display="none";
 
-async function findEmail(username){
- const key=username.trim().toLowerCase();
+try{
 
- if(key.includes("@"))return key;
+const email=await findEmail(name);
 
- const snap=await getDoc(doc(db,"usernames",key));
-
- if(!snap.exists())return null;
-
- return snap.data()?.email||null;
+if(!email){
+throw new Error("Username was not found.");
 }
 
-$("loginForm").addEventListener("submit",async e=>{
- e.preventDefault();
- clearMessage();
+const result=await signInWithEmailAndPassword(
+auth,
+email,
+pass
+);
 
- const username=$("loginUser").value.trim();
- const password=$("loginPass").value;
+const user=result.user;
 
- if(!username||!password)return message("Enter your username and password.");
+const profileRef=doc(db,"users",user.uid);
+const profileSnap=await getDoc(profileRef);
 
- $("loginBtn").disabled=true;
- $("loading").textContent="Signing in...";
+if(!profileSnap.exists()){
 
- try{
-   const email=await findEmail(username);
+await signOut(auth);
 
-   if(!email){
-     throw new Error("Username not found.");
-   }
+throw new Error(
+"Your Firebase account exists, but your MABROUK TRADER'S user profile has not been created yet."
+);
+}
 
-   const cred=await signInWithEmailAndPassword(auth,email,password);
+const profile=profileSnap.data();
 
-   const userSnap=await getDoc(doc(db,"users",cred.user.uid));
+if(profile.status==="disabled"){
 
-   if(!userSnap.exists()){
-     await auth.signOut();
-     throw new Error("Your account profile was not found.");
-   }
+await signOut(auth);
 
-   const data=userSnap.data();
+throw new Error(
+"Your account has been disabled. Contact the Owner."
+);
+}
 
-   if(data.status==="disabled"){
-     await auth.signOut();
-     throw new Error("Your account has been disabled. Contact the Owner.");
-   }
+localStorage.setItem(
+"goldbizna_username",
+profile.username||name
+);
 
-   localStorage.setItem("goldbizna_username",data.username||username);
-   localStorage.setItem("goldbizna_uid",cred.user.uid);
+localStorage.setItem(
+"goldbizna_uid",
+user.uid
+);
 
-   message("Login successful. Opening MABROUK TRADER'S...","success");
+localStorage.setItem(
+"goldbizna_role",
+profile.role||""
+);
 
-   setTimeout(()=>{
-     location.href="index.html";
-   },500);
+localStorage.setItem(
+"goldbizna_logged_in",
+"true"
+);
 
- }catch(e){
-   console.error(e);
-   message(firebaseError(e));
- }finally{
-   $("loginBtn").disabled=false;
-   $("loading").textContent="";
- }
+message(
+"Welcome "+(profile.fullName||profile.username||"")+
+" — "+(profile.role||"User"),
+"ok"
+);
+
+setTimeout(()=>{
+window.location.href="index.html";
+},700);
+
+}catch(error){
+
+console.error(error);
+
+let text=error.message;
+
+if(error.code==="auth/invalid-credential"){
+text="Incorrect username/email or password.";
+}
+
+if(error.code==="auth/user-disabled"){
+text="This Firebase account has been disabled.";
+}
+
+message("❌ "+text);
+
+password.value="";
+password.focus();
+
+btn.disabled=false;
+btn.textContent="LOGIN";
+}
+
+}
+
+btn.addEventListener("click",login);
+
+password.addEventListener("keydown",e=>{
+if(e.key==="Enter")login();
 });
 
-onAuthStateChanged(auth,user=>{
- if(user){
-   $("loading").textContent="Checking account...";
- }
+username.addEventListener("keydown",e=>{
+if(e.key==="Enter")password.focus();
 });
+
 </script>
 
 </body>

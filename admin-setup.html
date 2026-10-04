@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MABROUK TRADER'S - Admin Setup</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial;background:#f1f7f2;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.card{background:white;width:100%;max-width:430px;padding:25px;border-radius:16px;box-shadow:0 5px 25px #0002;text-align:center}
+h2{color:#087a0b;margin-top:0}
+p{color:#555;line-height:1.5}
+button{width:100%;padding:14px;border:0;border-radius:10px;background:#087a0b;color:white;font-size:16px;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.6}
+#status{margin-top:18px;padding:12px;border-radius:8px;background:#f1f1f1;font-weight:bold}
+</style>
+</head>
+
+<body>
+<div class="card">
+<h2>MABROUK TRADER'S</h2>
+<h3>Owner/Admin Setup</h3>
+
+<p>This will create the Firebase Owner/Admin profile for:</p>
+<p><b>mubarakjumamasoud@gmail.com</b></p>
+
+<button id="setup">CREATE ADMIN PROFILE</button>
+
+<div id="status">Checking Firebase login...</div>
+</div>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import{
+getAuth,
+onAuthStateChanged
+}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import{
+getFirestore,
+doc,
+setDoc,
+serverTimestamp
+}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+const firebaseConfig={
+apiKey:"AIzaSyA8XB6aY45-yHT0uZ6NUhptMoNkYqgwqOs",
+authDomain:"goldbizna.firebaseapp.com",
+projectId:"goldbizna",
+storageBucket:"goldbizna.firebasestorage.app",
+messagingSenderId:"559981054862",
+appId:"1:559981054862:web:0635c689607d3baa3272df",
+measurementId:"G-95XL3BNQJF"
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+const ADMIN_UID="szplJ5HPQWbysc7mkBWN1KPVwC22";
+const ADMIN_EMAIL="mubarakjumamasoud@gmail.com";
+
+const permissions={
+Dashboard:true,
+POS:true,
+Inventory:true,
+Customers:true,
+"Sales History":true,
+Reports:true,
+Savings:true,
+Payments:true,
+Discounts:true,
+"Refunds/Voids":true,
+"Stock Adjustments":true,
+"User Management":true,
+Settings:true,
+"Backup & Restore":true
+};
+
+const status=document.getElementById("status");
+const btn=document.getElementById("setup");
+
+let currentUser=null;
+
+onAuthStateChanged(auth,user=>{
+currentUser=user;
+
+if(!user){
+status.textContent="❌ Please sign in first with the Admin Firebase account.";
+btn.disabled=true;
+return;
+}
+
+if(user.uid!==ADMIN_UID||user.email!==ADMIN_EMAIL){
+status.textContent="❌ Wrong Firebase account. Sign in as the Owner/Admin account.";
+btn.disabled=true;
+return;
+}
+
+status.textContent="✅ Admin account detected. Ready.";
+btn.disabled=false;
+});
+
+btn.onclick=async()=>{
+if(!currentUser)return;
+
+btn.disabled=true;
+status.textContent="Creating Owner/Admin profile...";
+
+try{
+
+await setDoc(
+doc(db,"users",ADMIN_UID),
+{
+uid:ADMIN_UID,
+fullName:"Mubarak",
+username:"admin",
+email:ADMIN_EMAIL,
+phone:"",
+role:"Owner/Admin",
+status:"active",
+permissions:permissions,
+createdAt:serverTimestamp(),
+updatedAt:serverTimestamp()
+},
+{merge:true}
+);
+
+await setDoc(
+doc(db,"usernames","admin"),
+{
+uid:ADMIN_UID,
+email:ADMIN_EMAIL,
+username:"admin",
+updatedAt:serverTimestamp()
+},
+{merge:true}
+);
+
+status.textContent="✅ SUCCESS! Owner/Admin profile created.";
+
+btn.textContent="ADMIN PROFILE READY";
+
+}catch(error){
+
+console.error(error);
+status.textContent="❌ ERROR: "+error.message;
+btn.disabled=false;
+
+}
+};
+</script>
+</body>
+</html>

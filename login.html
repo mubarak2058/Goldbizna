@@ -4,42 +4,111 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MABROUK TRADER'S - Login</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial;background:linear-gradient(135deg,#087a0b,#003d06);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.card{width:100%;max-width:400px;background:#fff;padding:28px;border-radius:18px;box-shadow:0 10px 35px #0005;text-align:center}
-h2{color:#087a0b;margin:0 0 6px}
-p{color:#666}
-input{width:100%;padding:14px;margin:7px 0;border:1px solid #ccc;border-radius:9px;font-size:16px}
-button{width:100%;padding:14px;margin-top:12px;border:0;border-radius:9px;background:#087a0b;color:#fff;font-size:16px;font-weight:bold}
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:linear-gradient(135deg,#087a0b,#003f06);
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:20px
+}
+.box{
+width:100%;
+max-width:410px;
+background:#fff;
+padding:30px 25px;
+border-radius:18px;
+box-shadow:0 10px 35px #0006;
+text-align:center
+}
+.logo{
+font-size:27px;
+font-weight:bold;
+color:#087a0b;
+margin-bottom:5px
+}
+.sub{
+color:#666;
+margin-bottom:25px
+}
+input{
+width:100%;
+padding:15px;
+margin:7px 0;
+border:1px solid #ccc;
+border-radius:9px;
+font-size:16px;
+outline:none
+}
+input:focus{border-color:#087a0b}
+button{
+width:100%;
+padding:15px;
+margin-top:12px;
+border:0;
+border-radius:9px;
+background:#087a0b;
+color:#fff;
+font-size:17px;
+font-weight:bold;
+cursor:pointer
+}
 button:disabled{opacity:.6}
-#msg{margin-top:15px;padding:12px;border-radius:8px;display:none;word-break:break-word}
+#status{
+margin-top:16px;
+padding:12px;
+border-radius:9px;
+display:none;
+font-weight:bold;
+word-break:break-word
+}
+.success{
+background:#e5f7e7;
+color:#087a0b
+}
+.error{
+background:#ffe7e7;
+color:#b00000
+}
 </style>
 </head>
 
 <body>
 
-<div class="card">
-<h2>MABROUK TRADER'S</h2>
-<p>Secure Business Login</p>
+<div class="box">
 
-<input id="email" type="email"
-placeholder="Email"
+<div class="logo">MABROUK TRADER'S</div>
+<div class="sub">Business Management System</div>
+
+<input
+id="email"
+type="email"
 value="mubarakjumamasoud@gmail.com"
+placeholder="Email"
 autocomplete="username">
 
-<input id="password" type="password"
+<input
+id="password"
+type="password"
 placeholder="Password"
 autocomplete="current-password">
 
-<button id="login">LOGIN</button>
+<button id="loginBtn">LOGIN</button>
 
-<div id="msg"></div>
+<div id="status"></div>
+
 </div>
 
 <script type="module">
 
-import{initializeApp}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import{
+initializeApp
+}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
 import{
 getAuth,
@@ -50,9 +119,11 @@ import{
 getFirestore,
 doc,
 setDoc,
-getDoc,
 serverTimestamp
 }from"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+/* FIREBASE */
 
 const firebaseConfig={
 apiKey:"AIzaSyA8XB6aY45-yHT0uZ6NUhptMoNkYqgwqOs",
@@ -68,10 +139,16 @@ const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
 
-const ADMIN_UID="szplJ5HPQWbysc7mkBWN1KPVwC22";
-const ADMIN_EMAIL="mubarakjumamasoud@gmail.com";
 
-const permissions={
+/* YOUR OWNER ACCOUNT */
+
+const OWNER_UID="szplJ5HPQWbysc7mkBWN1KPVwC22";
+const OWNER_EMAIL="mubarakjumamasoud@gmail.com";
+
+
+/* ALL OWNER PERMISSIONS */
+
+const OWNER_PERMISSIONS={
 Dashboard:true,
 POS:true,
 Inventory:true,
@@ -88,136 +165,200 @@ Settings:true,
 "Backup & Restore":true
 };
 
-const email=document.getElementById("email");
-const password=document.getElementById("password");
-const btn=document.getElementById("login");
-const msg=document.getElementById("msg");
 
-function show(text,good=false){
-msg.textContent=text;
-msg.style.display="block";
-msg.style.background=good?"#e5f7e7":"#ffe7e7";
-msg.style.color=good?"#087a0b":"#b00000";
+const emailBox=document.getElementById("email");
+const passwordBox=document.getElementById("password");
+const loginBtn=document.getElementById("loginBtn");
+const statusBox=document.getElementById("status");
+
+
+function showStatus(text,success=false){
+
+statusBox.textContent=text;
+statusBox.style.display="block";
+
+if(success){
+statusBox.className="success";
+}else{
+statusBox.className="error";
 }
 
-btn.onclick=async()=>{
+}
 
-const mail=email.value.trim();
-const pass=password.value;
 
-if(!mail||!pass){
-show("Enter your email and password.");
+/* LOGIN */
+
+async function login(){
+
+const email=emailBox.value.trim();
+const password=passwordBox.value;
+
+if(!email){
+showStatus("Please enter your email.");
 return;
 }
 
-btn.disabled=true;
-btn.textContent="LOGGING IN...";
-msg.style.display="none";
+if(!password){
+showStatus("Please enter your password.");
+return;
+}
+
+loginBtn.disabled=true;
+loginBtn.textContent="LOGGING IN...";
+statusBox.style.display="none";
+
 
 try{
 
+/* FIREBASE AUTH */
+
 const result=await signInWithEmailAndPassword(
 auth,
-mail,
-pass
+email,
+password
 );
 
 const user=result.user;
 
-if(user.uid===ADMIN_UID&&user.email===ADMIN_EMAIL){
+
+/*
+OWNER ACCOUNT
+If Firebase UID matches your account,
+automatically create/update the profile.
+*/
+
+if(
+user.uid===OWNER_UID &&
+user.email===OWNER_EMAIL
+){
 
 await setDoc(
-doc(db,"users",ADMIN_UID),
+doc(db,"users",OWNER_UID),
 {
-uid:ADMIN_UID,
+uid:OWNER_UID,
 fullName:"Mubarak",
 username:"admin",
-email:ADMIN_EMAIL,
+email:OWNER_EMAIL,
 phone:"",
 role:"Owner/Admin",
 status:"active",
-permissions:permissions,
+permissions:OWNER_PERMISSIONS,
 updatedAt:serverTimestamp()
 },
 {merge:true}
 );
+
+
+/* USERNAME */
 
 await setDoc(
 doc(db,"usernames","admin"),
 {
-uid:ADMIN_UID,
-email:ADMIN_EMAIL,
+uid:OWNER_UID,
+email:OWNER_EMAIL,
 username:"admin",
 updatedAt:serverTimestamp()
 },
 {merge:true}
 );
 
-localStorage.setItem("goldbizna_logged_in","true");
-localStorage.setItem("goldbizna_uid",ADMIN_UID);
-localStorage.setItem("goldbizna_username","admin");
-localStorage.setItem("goldbizna_role","Owner/Admin");
 
-show("✅ Welcome Mubarak — Owner/Admin",true);
+/* SAVE LOGIN SESSION */
 
-setTimeout(()=>{
-location.href="index.html";
-},800);
+localStorage.setItem(
+"goldbizna_logged_in",
+"true"
+);
 
-return;
-}
+localStorage.setItem(
+"goldbizna_uid",
+OWNER_UID
+);
 
-const profile=await getDoc(doc(db,"users",user.uid));
+localStorage.setItem(
+"goldbizna_username",
+"admin"
+);
 
-if(!profile.exists()){
-show("❌ Your Firebase account has no user profile yet.");
-btn.disabled=false;
-btn.textContent="LOGIN";
-return;
-}
+localStorage.setItem(
+"goldbizna_role",
+"Owner/Admin"
+);
 
-const data=profile.data();
 
-if(data.status==="disabled"){
-show("❌ This account is disabled.");
-btn.disabled=false;
-btn.textContent="LOGIN";
-return;
-}
+showStatus(
+"✅ Welcome Mubarak — Owner/Admin",
+true
+);
 
-localStorage.setItem("goldbizna_logged_in","true");
-localStorage.setItem("goldbizna_uid",user.uid);
-localStorage.setItem("goldbizna_username",data.username||"");
-localStorage.setItem("goldbizna_role",data.role||"");
-
-show("✅ Login successful",true);
+loginBtn.textContent="LOGIN SUCCESSFUL";
 
 setTimeout(()=>{
-location.href="index.html";
-},800);
+window.location.replace("index.html");
+},1000);
+
+return;
+}
+
+
+/*
+OTHER USERS
+*/
+
+showStatus(
+"Firebase login successful, but this account is not registered in MABROUK TRADER'S."
+);
+
+loginBtn.disabled=false;
+loginBtn.textContent="LOGIN";
+
 
 }catch(error){
 
 console.error(error);
 
+let message="Login failed.";
+
 if(error.code==="auth/invalid-credential"){
-show("❌ Incorrect email or password.");
-}else if(error.code==="auth/user-disabled"){
-show("❌ This Firebase account is disabled.");
-}else{
-show("❌ "+error.code+" — "+error.message);
+message="❌ Incorrect email or password.";
+}
+else if(error.code==="auth/user-not-found"){
+message="❌ Firebase account was not found.";
+}
+else if(error.code==="auth/wrong-password"){
+message="❌ Incorrect password.";
+}
+else if(error.code==="auth/user-disabled"){
+message="❌ This Firebase account is disabled.";
+}
+else{
+message="❌ "+error.code+" — "+error.message;
 }
 
-password.value="";
-btn.disabled=false;
-btn.textContent="LOGIN";
+showStatus(message);
+
+passwordBox.value="";
+passwordBox.focus();
+
+loginBtn.disabled=false;
+loginBtn.textContent="LOGIN";
 
 }
 
-};
+}
 
-password.addEventListener("keydown",e=>{
-if(e.key==="Enter")btn.click();
+
+/* BUTTON */
+
+loginBtn.addEventListener("click",login);
+
+
+/* ENTER KEY */
+
+passwordBox.addEventListener("keydown",e=>{
+if(e.key==="Enter"){
+login();
+}
 });
 
 </script>

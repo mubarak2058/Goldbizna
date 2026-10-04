@@ -5,98 +5,52 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MABROUK TRADER'S - Settings</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
-body{background:#f5f7f6;color:#222;overflow-x:hidden}
-.topbar{position:fixed;top:0;left:0;right:0;height:64px;background:#087a0b;color:#fff;display:flex;align-items:center;padding:0 22px;z-index:20;box-shadow:0 2px 8px #0002}
-.brand{font-size:21px;font-weight:900}.brand span{color:#ffd43b}.top-actions{margin-left:auto;font-size:13px}
-.sidebar{position:fixed;left:0;top:64px;bottom:0;width:225px;background:#fff;border-right:1px solid #e3e7e5;padding:18px 12px;overflow-y:auto}
-.nav a{display:flex;gap:12px;align-items:center;text-decoration:none;color:#333;padding:11px 12px;border-radius:8px;margin:3px 0;font-size:14px}
-.nav a:hover,.nav a.active{background:#eaf6ed;color:#087a0b;font-weight:bold}
-.logout{color:#d92323!important;margin-top:15px!important}
-.main{margin-left:225px;padding-top:64px;min-height:100vh}
-.content{padding:25px}
-.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.head h1{font-size:27px}.head p{color:#777;font-size:13px;margin-top:5px}
-.btn{border:0;background:#087a0b;color:#fff;border-radius:7px;padding:10px 14px;cursor:pointer;font-weight:bold}
-.btn.red{background:#d92323}.btn.gray{background:#fff;color:#333;border:1px solid #d5ddd5}
-.panel{background:#fff;border:1px solid #e3e7e5;border-radius:10px;margin-bottom:18px;box-shadow:0 2px 6px #0000000b}
-.panel-head{padding:16px 18px;border-bottom:1px solid #e7e9e8;display:flex;justify-content:space-between;align-items:center}
-.panel-head h2{font-size:17px}
-.form{padding:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
-.field label{display:block;font-size:12px;font-weight:bold;color:#666;margin-bottom:6px}
-.field input,.field select{width:100%;padding:11px;border:1px solid #d7ded8;border-radius:7px;background:#fff}
-.perms{padding:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
-.perm{border:1px solid #e0e5e1;border-radius:8px;padding:11px;display:flex;align-items:center;justify-content:space-between;font-size:12px}
-.switch{width:43px;height:23px;background:#bbb;border-radius:20px;cursor:pointer;padding:3px}
-.switch i{display:block;width:17px;height:17px;border-radius:50%;background:#fff;transition:.2s}
-.switch.on{background:#087a0b}.switch.on i{transform:translateX(20px)}
-.actions{padding:0 18px 18px;display:flex;gap:8px;flex-wrap:wrap}
-.table-wrap{overflow:auto}
-table{width:100%;border-collapse:collapse}
-th,td{text-align:left;padding:12px 14px;border-bottom:1px solid #edf0ed;font-size:12px}
-th{background:#fafafa;color:#737b73}
-.badge{display:inline-block;padding:4px 8px;border-radius:20px;font-size:10px;font-weight:bold}
-.good{background:#eaf6ed;color:#087a0b}.bad{background:#ffe8e8;color:#b52323}
-.note{padding:12px 18px;background:#fff3d9;color:#765400;font-size:12px;line-height:1.5}
-.status{font-size:11px;font-weight:bold}.online{color:#087a0b}.offline{color:#b52323}
-@media(max-width:900px){.form,.perms{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:700px){
-.topbar{height:57px;padding:0 10px}.brand{font-size:15px}
-.sidebar{top:57px;width:145px;padding:10px 6px}.nav a{font-size:11px;padding:10px 7px}
-.main{margin-left:145px;padding-top:57px}.content{padding:12px 9px}
-.form,.perms{grid-template-columns:1fr}.head h1{font-size:21px}
-}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial;background:#f3f6f3;color:#222}
+header{background:#087a0b;color:#fff;padding:15px;font-size:20px;font-weight:bold}
+nav{background:#075d08;padding:8px;display:flex;gap:6px;overflow:auto}
+nav button{border:0;background:#fff;color:#075d08;padding:9px 13px;border-radius:6px;font-weight:bold}
+main{max-width:1000px;margin:auto;padding:12px}
+.card{background:#fff;padding:15px;margin-bottom:12px;border-radius:10px;box-shadow:0 1px 5px #bbb}
+h2{margin:0 0 12px;color:#087a0b;font-size:18px}
+input,select,textarea{width:100%;padding:10px;margin:5px 0;border:1px solid #bbb;border-radius:6px}
+button{cursor:pointer}
+.primary{background:#087a0b;color:white;border:0;padding:10px 15px;border-radius:6px;font-weight:bold}
+.danger{background:#c62828;color:white;border:0;padding:7px 10px;border-radius:5px}
+.gray{background:#777;color:#fff;border:0;padding:7px 10px;border-radius:5px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.perms{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.perms label{background:#f1f4f1;padding:8px;border-radius:5px;font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:8px;border-bottom:1px solid #ddd;text-align:left}
+.status{font-weight:bold}
+@media(max-width:650px){.grid,.perms{grid-template-columns:1fr}table{font-size:11px}}
 </style>
 </head>
+
 <body>
+<header>MABROUK TRADER'S — Settings</header>
 
-<header class="topbar">
- <div class="brand">MABROUK <span>TRADER'S</span></div>
- <div class="top-actions"><span id="topUser">Checking...</span></div>
-</header>
-
-<aside class="sidebar">
-<nav class="nav">
-<a href="index.html">⌂ Home</a>
-<a href="pos.html">▣ POS</a>
-<a href="inventory.html">▤ Inventory</a>
-<a href="customers.html">♧ Customers</a>
-<a href="sales.html">▱ Sales</a>
-<a href="savings.html">◈ Savings</a>
-<a href="dashboard.html">▥ Dashboard</a>
-<a href="reports.html">▤ Reports</a>
-<a href="users.html">♙ Users</a>
-<a href="settings.html" class="active">⚙ Settings</a>
-<a href="#" class="logout" onclick="logout()">⇥ Logout</a>
+<nav>
+<button onclick="show('users')">Users</button>
+<button onclick="show('business')">Business</button>
+<button onclick="show('pos')">POS</button>
+<button onclick="show('system')">System</button>
+<button onclick="show('activity')">Activity</button>
 </nav>
-</aside>
 
-<main class="main">
-<section class="content">
+<main>
 
-<div class="head">
-<div>
-<h1>User & Permission Control Center</h1>
-<p>Manage MABROUK TRADER'S users and access.</p>
-</div>
-<div><span id="firebaseStatus" class="status">Connecting...</span></div>
-</div>
+<section id="users" class="card">
+<h2>User Management</h2>
 
-<div class="panel">
-<div class="panel-head">
-<h2>Add / Edit User</h2>
-<span id="editLabel">New User</span>
-</div>
-
-<div class="form">
-<div class="field"><label>Full Name</label><input id="fullName" placeholder="e.g. Ahmed Mubarak"></div>
-<div class="field"><label>Username *</label><input id="username" placeholder="e.g. ahmed"></div>
-<div class="field"><label>Email *</label><input id="email" type="email" placeholder="user@email.com"></div>
-<div class="field"><label>Phone</label><input id="phone" placeholder="07xxxxxxxx"></div>
-<div class="field"><label>Password *</label><input id="password" type="password" placeholder="Minimum 6 characters"></div>
-<div class="field">
-<label>Role</label>
-<select id="role" onchange="applyRole()">
+<div class="grid">
+<input id="fullName" placeholder="Full Name">
+<input id="username" placeholder="Username">
+<input id="email" type="email" placeholder="Email">
+<input id="phone" placeholder="Phone">
+<input id="password" type="password" placeholder="Password">
+<select id="role">
 <option>Owner/Admin</option>
 <option>Manager</option>
 <option>Cashier</option>
@@ -104,75 +58,82 @@ th{background:#fafafa;color:#737b73}
 <option>Viewer</option>
 </select>
 </div>
-</div>
 
-<div class="panel-head"><h2>Permissions</h2><button class="btn gray" onclick="allPermissions()">Enable All</button></div>
-<div class="perms" id="permissions"></div>
+<h3>Permissions</h3>
+<div id="permissions" class="perms"></div>
 
-<div class="actions">
-<button class="btn" onclick="saveUser()">Save User</button>
-<button class="btn gray" onclick="clearForm()">Clear</button>
-</div>
+<button class="primary" onclick="saveUser()">➕ Add User</button>
+<button class="gray" onclick="clearUser()">Clear</button>
 
-<div class="note">
-<strong>Owner protection:</strong> The main Owner account cannot be disabled and cannot have its full permissions removed from this screen.
-</div>
-</div>
-
-<div class="panel">
-<div class="panel-head">
-<h2>Users</h2>
-<span id="userCount">0 users</span>
-</div>
-<div class="table-wrap">
-<table>
-<thead>
-<tr><th>Name</th><th>Username</th><th>Role</th><th>Status</th><th>Permissions</th><th>Action</th></tr>
-</thead>
-<tbody id="userRows"></tbody>
-</table>
-</div>
-</div>
-
-<div class="panel">
-<div class="panel-head"><h2>Activity Log</h2></div>
-<div class="table-wrap">
-<table>
-<thead><tr><th>Date</th><th>User</th><th>Action</th></tr></thead>
-<tbody id="logRows"></tbody>
-</table>
-</div>
-</div>
-
+<hr>
+<h3>Users</h3>
+<div id="usersTable">Loading...</div>
 </section>
+
+<section id="business" class="card" style="display:none">
+<h2>Business Settings</h2>
+<div class="grid">
+<input id="bizName" placeholder="Business Name">
+<input id="bizPhone" placeholder="Phone">
+<input id="bizEmail" placeholder="Email">
+<input id="bizLocation" placeholder="Location">
+</div>
+<textarea id="bizAddress" placeholder="Business Address"></textarea>
+<button class="primary" onclick="saveSettings('business')">Save Business</button>
+</section>
+
+<section id="pos" class="card" style="display:none">
+<h2>POS & Receipt Settings</h2>
+<div class="grid">
+<input id="currency" placeholder="Currency e.g. KES">
+<input id="till" placeholder="Default Till / Counter">
+<input id="receiptTitle" placeholder="Receipt Title">
+<input id="footerText" placeholder="Receipt Footer">
+</div>
+<label><input id="showLogo" type="checkbox"> Show logo on receipt</label><br><br>
+<label><input id="showCustomer" type="checkbox"> Show customer details</label><br><br>
+<button class="primary" onclick="saveSettings('pos')">Save POS Settings</button>
+</section>
+
+<section id="system" class="card" style="display:none">
+<h2>System Settings</h2>
+<div class="grid">
+<select id="theme">
+<option value="green">Green</option>
+<option value="dark">Dark</option>
+</select>
+<select id="language">
+<option>English</option>
+<option>Arabic</option>
+</select>
+</div>
+<label><input id="autoBackup" type="checkbox"> Enable automatic backup</label><br><br>
+<button class="primary" onclick="saveSettings('system')">Save System</button>
+</section>
+
+<section id="activity" class="card" style="display:none">
+<h2>Activity Log</h2>
+<div id="activityLog">Loading...</div>
+</section>
+
+<section class="card">
+<h2>Firebase Status</h2>
+<div class="status" id="firebaseStatus">Connecting...</div>
+</section>
+
 </main>
 
 <script type="module">
 import{initializeApp,getApps}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 import{
- getAuth,
- onAuthStateChanged,
- createUserWithEmailAndPassword,
- updateProfile
+getAuth,onAuthStateChanged,createUserWithEmailAndPassword,updateProfile,signOut
 }from"https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 import{
- getFirestore,
- collection,
- doc,
- getDoc,
- getDocs,
- setDoc,
- updateDoc,
- query,
- orderBy,
- limit,
- addDoc,
- serverTimestamp,
- deleteDoc
+getFirestore,doc,getDoc,setDoc,updateDoc,collection,getDocs,addDoc,serverTimestamp
 }from"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const firebaseConfig={
-apiKey:"AIzaSyA8XB6aY45-yHT0uZ6NUhptMoNkYqgwqOs",
+apiKey:"AIzaSyA8XB6aY45-yHT0uZ6NU5gYqgwqOs",
 authDomain:"goldbizna.firebaseapp.com",
 projectId:"goldbizna",
 storageBucket:"goldbizna.firebasestorage.app",
@@ -181,366 +142,261 @@ appId:"1:559981054862:web:0635c689607d3baa3272df",
 measurementId:"G-95XL3BNQJF"
 };
 
-const app=initializeApp(firebaseConfig);
+const app=getApps().length?getApps()[0]:initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
 
-const secondaryApp=initializeApp(firebaseConfig,"UserCreator");
-const secondaryAuth=getAuth(secondaryApp);
-
-const $=id=>document.getElementById(id);
+const creatorApp=initializeApp(firebaseConfig,"UserCreator");
+const creatorAuth=getAuth(creatorApp);
 
 const permissionNames=[
-"Dashboard","POS","Inventory","Customers","Sales History","Reports",
-"Savings","Payments","Discounts","Refunds / Voids","Stock Adjustments",
-"User Management","Settings","Backup & Restore"
+"Dashboard","POS","Inventory","Customers","Sales History",
+"Reports","Savings","Payments","Discounts","Refunds / Voids",
+"Stock Adjustments","User Management","Settings","Backup & Restore"
 ];
 
+let currentUser=null,editId=null;
 let permissions={};
-let users=[];
-let currentUser=null;
-let editingUid=null;
 
-function makePermissions(value=false){
- const x={};
- permissionNames.forEach(p=>x[p]=value);
- return x;
-}
+const pbox=document.getElementById("permissions");
 
-function drawPermissions(){
- $("permissions").innerHTML=permissionNames.map(p=>{
-   const on=!!permissions[p];
-   return `<div class="perm">
-   <span>${p}</span>
-   <div class="switch ${on?"on":""}" onclick="togglePermission('${p}')"><i></i></div>
-   </div>`;
- }).join("");
-}
-
-window.togglePermission=p=>{
- permissions[p]=!permissions[p];
- drawPermissions();
-};
-
-window.allPermissions=()=>{
- permissions=makePermissions(true);
- drawPermissions();
-};
-
-const presets={
-"Owner/Admin":makePermissions(true),
-"Manager":{
-"Dashboard":true,"POS":true,"Inventory":true,"Customers":true,
-"Sales History":true,"Reports":true,"Savings":true,"Payments":true,
-"Discounts":true,"Refunds / Voids":true,"Stock Adjustments":true,
-"User Management":true,"Settings":true,"Backup & Restore":true
-},
-"Cashier":{
-"Dashboard":true,"POS":true,"Inventory":false,"Customers":true,
-"Sales History":true,"Reports":false,"Savings":false,"Payments":true,
-"Discounts":false,"Refunds / Voids":false,"Stock Adjustments":false,
-"User Management":false,"Settings":false,"Backup & Restore":false
-},
-"Inventory Staff":{
-"Dashboard":true,"POS":false,"Inventory":true,"Customers":false,
-"Sales History":false,"Reports":false,"Savings":false,"Payments":false,
-"Discounts":false,"Refunds / Voids":false,"Stock Adjustments":true,
-"User Management":false,"Settings":false,"Backup & Restore":false
-},
-"Viewer":{
-"Dashboard":true,"POS":false,"Inventory":false,"Customers":false,
-"Sales History":true,"Reports":true,"Savings":true,"Payments":false,
-"Discounts":false,"Refunds / Voids":false,"Stock Adjustments":false,
-"User Management":false,"Settings":false,"Backup & Restore":false
-}
-};
-
-window.applyRole=()=>{
- const role=$("role").value;
- permissions={...presets[role]};
- drawPermissions();
-};
-
-function showStatus(text,ok=true){
- $("firebaseStatus").textContent=text;
- $("firebaseStatus").className="status "+(ok?"online":"offline");
-}
-
-async function loadUsers(){
- const snap=await getDocs(collection(db,"users"));
- users=snap.docs.map(d=>({uid:d.id,...d.data()}));
- renderUsers();
-}
-
-function renderUsers(){
- $("userCount").textContent=users.length+" user"+(users.length===1?"":"s");
-
- $("userRows").innerHTML=users.length?users.map(u=>{
-   const count=Object.values(u.permissions||{}).filter(Boolean).length;
-   const owner=u.role==="Owner/Admin";
-   return `<tr>
-   <td><b>${escapeHtml(u.fullName||"-")}</b></td>
-   <td>${escapeHtml(u.username||"-")}</td>
-   <td>${escapeHtml(u.role||"-")}</td>
-   <td><span class="badge ${u.status==="disabled"?"bad":"good"}">${u.status==="disabled"?"DISABLED":"ACTIVE"}</span></td>
-   <td>${owner?"FULL ACCESS":count+"/"+permissionNames.length}</td>
-   <td>
-   <button class="btn gray" onclick="editUser('${u.uid}')">Edit</button>
-   ${owner?"":"<button class='btn red' onclick=\"toggleUser('"+u.uid+"')\">"+(u.status==="disabled"?"Enable":"Disable")+"</button>"}
-   </td>
-   </tr>`;
- }).join(""):`<tr><td colspan="6" style="text-align:center;padding:30px;color:#777">No users found.</td></tr>`;
-}
-
-function escapeHtml(s){
- return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-}
-
-async function saveUser(){
- if(!currentUser)return alert("You must be signed in.");
-
- const fullName=$("fullName").value.trim();
- const username=$("username").value.trim().toLowerCase();
- const email=$("email").value.trim().toLowerCase();
- const phone=$("phone").value.trim();
- const password=$("password").value;
- const role=$("role").value;
-
- if(!fullName||!username||!email)return alert("Full name, username and email are required.");
- if(!editingUid&&!password)return alert("Password is required for a new user.");
- if(!editingUid&&password.length<6)return alert("Password must be at least 6 characters.");
-
- try{
-   $("firebaseStatus").textContent="Saving user...";
-
-   if(editingUid){
-     const old=users.find(u=>u.uid===editingUid);
-     if(!old)return;
-
-     const update={
-       fullName,username,email,phone,role,
-       permissions:role==="Owner/Admin"?makePermissions(true):permissions,
-       updatedAt:serverTimestamp()
-     };
-
-     if(old.role==="Owner/Admin"){
-       update.role="Owner/Admin";
-       update.permissions=makePermissions(true);
-       update.status="active";
-     }
-
-     await updateDoc(doc(db,"users",editingUid),update);
-
-     await setDoc(doc(db,"usernames",username),{
-       uid:editingUid,email,username
-     });
-
-     await addLog("Updated user: "+username);
-
-     alert("User updated successfully.");
-   }else{
-     const usernameSnap=await getDoc(doc(db,"usernames",username));
-     if(usernameSnap.exists())return alert("That username is already in use.");
-
-     const cred=await createUserWithEmailAndPassword(
-       secondaryAuth,email,password
-     );
-
-     await updateProfile(cred.user,{displayName:fullName});
-
-     const data={
-       uid:cred.user.uid,
-       fullName,
-       username,
-       email,
-       phone,
-       role,
-       status:"active",
-       permissions:role==="Owner/Admin"?makePermissions(true):permissions,
-       createdAt:serverTimestamp(),
-       updatedAt:serverTimestamp()
-     };
-
-     await setDoc(doc(db,"users",cred.user.uid),data);
-
-     await setDoc(doc(db,"usernames",username),{
-       uid:cred.user.uid,
-       email,
-       username
-     });
-
-     await addLog("Created user: "+username);
-
-     await secondaryAuth.signOut();
-
-     alert("User created successfully.");
-   }
-
-   clearForm();
-   await loadUsers();
-   showStatus("☁ Firebase connected",true);
-
- }catch(e){
-   console.error(e);
-   showStatus("Firebase error",false);
-   alert("Could not save user.\n\n"+(e.message||e.code||"Unknown Firebase error"));
- }
-}
-
-window.editUser=async uid=>{
- const u=users.find(x=>x.uid===uid);
- if(!u)return;
-
- editingUid=uid;
- $("editLabel").textContent="Editing: "+(u.username||"User");
- $("fullName").value=u.fullName||"";
- $("username").value=u.username||"";
- $("email").value=u.email||"";
- $("phone").value=u.phone||"";
- $("password").value="";
- $("role").value=u.role||"Viewer";
-
- permissions=u.role==="Owner/Admin"
-   ?makePermissions(true)
-   :{...makePermissions(false),...(u.permissions||{})};
-
- drawPermissions();
- window.scrollTo({top:0,behavior:"smooth"});
-};
-
-window.toggleUser=async uid=>{
- const u=users.find(x=>x.uid===uid);
- if(!u)return;
- if(u.role==="Owner/Admin")return alert("The Owner account is protected.");
-
- const disabled=u.status==="disabled";
-
- if(!confirm((disabled?"Enable ":"Disable ")+u.username+"?"))return;
-
- try{
-   await updateDoc(doc(db,"users",uid),{
-     status:disabled?"active":"disabled",
-     updatedAt:serverTimestamp()
-   });
-
-   await addLog((disabled?"Enabled ":"Disabled ")+u.username);
-
-   await loadUsers();
- }catch(e){
-   alert("Could not change user status.\n\n"+(e.message||e.code));
- }
-};
-
-window.clearForm=()=>{
- editingUid=null;
- $("editLabel").textContent="New User";
- $("fullName").value="";
- $("username").value="";
- $("email").value="";
- $("phone").value="";
- $("password").value="";
- $("role").value="Viewer";
- permissions={...presets.Viewer};
- drawPermissions();
-};
-
-async function addLog(action){
- try{
-   await addDoc(collection(db,"activityLog"),{
-     uid:currentUser.uid,
-     username:currentUser.email||"Owner",
-     action,
-     createdAt:serverTimestamp()
-   });
- }catch(e){
-   console.warn("Activity log failed",e);
- }
-}
-
-async function loadLogs(){
- try{
-   const q=query(
-     collection(db,"activityLog"),
-     orderBy("createdAt","desc"),
-     limit(50)
-   );
-
-   const snap=await getDocs(q);
-
-   $("logRows").innerHTML=snap.docs.map(d=>{
-     const x=d.data();
-     const date=x.createdAt?.toDate?
-       x.createdAt.toDate().toLocaleString():
-       "Just now";
-
-     return `<tr>
-       <td>${escapeHtml(date)}</td>
-       <td>${escapeHtml(x.username||"-")}</td>
-       <td>${escapeHtml(x.action||"-")}</td>
-     </tr>`;
-   }).join("")||`<tr><td colspan="3" style="text-align:center;padding:25px">No activity yet.</td></tr>`;
- }catch(e){
-   $("logRows").innerHTML=`<tr><td colspan="3" style="text-align:center;padding:25px;color:#b52323">Activity log unavailable.</td></tr>`;
- }
-}
-
-window.logout=async()=>{
- await auth.signOut();
- localStorage.removeItem("goldbizna_username");
- localStorage.removeItem("goldbizna_uid");
- location.href="login.html";
-};
-
-onAuthStateChanged(auth,async user=>{
- if(!user){
-   location.href="login.html";
-   return;
- }
-
- currentUser=user;
-
- try{
-   const snap=await getDoc(doc(db,"users",user.uid));
-
-   if(!snap.exists()){
-     alert("Your account profile is missing.");
-     await auth.signOut();
-     location.href="login.html";
-     return;
-   }
-
-   const data=snap.data();
-
-   if(data.status==="disabled"){
-     alert("Your account has been disabled.");
-     await auth.signOut();
-     location.href="login.html";
-     return;
-   }
-
-   if(data.role!=="Owner/Admin"&&!data.permissions?.["Settings"]){
-     alert("You do not have permission to access Settings.");
-     location.href="index.html";
-     return;
-   }
-
-   $("topUser").textContent=data.fullName||data.username||user.email;
-
-   permissions={...presets.Viewer};
-   drawPermissions();
-
-   await loadUsers();
-   await loadLogs();
-
-   showStatus("☁ Firebase connected",true);
-
- }catch(e){
-   console.error(e);
-   showStatus("Firebase connection failed",false);
-   alert("Could not load your Firebase user profile.");
- }
+permissionNames.forEach(p=>{
+let id="p_"+p.replace(/[^a-z0-9]/gi,"");
+pbox.innerHTML+=`<label><input type="checkbox" id="${id}" checked> ${p}</label>`;
+permissions[p]=true;
 });
 
+function getPermissions(){
+let x={};
+permissionNames.forEach(p=>{
+let id="p_"+p.replace(/[^a-z0-9]/gi,"");
+x[p]=document.getElementById(id).checked;
+});
+return x;
+}
+
+function setPermissions(x={}){
+permissionNames.forEach(p=>{
+let id="p_"+p.replace(/[^a-z0-9]/gi,"");
+document.getElementById(id).checked=x[p]!==false;
+});
+}
+
+window.show=function(id){
+["users","business","pos","system","activity"].forEach(x=>{
+document.getElementById(x).style.display=x===id?"block":"none";
+});
+if(id==="activity")loadActivity();
+};
+
+window.clearUser=function(){
+editId=null;
+["fullName","username","email","phone","password"].forEach(x=>document.getElementById(x).value="");
+document.getElementById("role").value="Cashier";
+setPermissions({});
+};
+
+window.saveUser=async function(){
+let name=fullName.value.trim(),
+username=usernameInput(),
+email=emailInput(),
+phone=phoneInput(),
+pass=password.value,
+role=roleInput();
+
+if(!name||!username||!email||(!editId&&!pass)){
+alert(editId?"Name, username and email are required.":"Name, username, email and password are required.");
+return;
+}
+
+try{
+if(editId){
+await updateDoc(doc(db,"users",editId),{
+fullName:name,username,email,phone,role,permissions:getPermissions(),
+updatedAt:serverTimestamp()
+});
+await addLog("Updated user: "+username);
+alert("User updated successfully.");
+}else{
+let snap=await getDocs(collection(db,"users"));
+let duplicate=[...snap.docs].some(d=>(d.data().username||"").toLowerCase()===username.toLowerCase());
+if(duplicate){alert("Username already exists.");return}
+
+let cred=await createUserWithEmailAndPassword(creatorAuth,email,pass);
+await updateProfile(cred.user,{displayName:name});
+
+await setDoc(doc(db,"users",cred.user.uid),{
+uid:cred.user.uid,fullName:name,username,email,phone,role,
+permissions:getPermissions(),active:true,createdAt:serverTimestamp()
+});
+
+await setDoc(doc(db,"usernames",username.toLowerCase()),{
+uid:cred.user.uid,email
+});
+
+await addLog("Created user: "+username);
+await signOut(creatorAuth);
+alert("User created successfully.");
+}
+
+clearUser();
+loadUsers();
+
+}catch(e){
+alert("Error: "+e.message);
+try{await signOut(creatorAuth)}catch(_){}
+}
+};
+
+function usernameInput(){return document.getElementById("username").value.trim()}
+function emailInput(){return document.getElementById("email").value.trim()}
+function phoneInput(){return document.getElementById("phone").value.trim()}
+function roleInput(){return document.getElementById("role").value}
+
+window.editUser=async function(id){
+let s=await getDoc(doc(db,"users",id));
+if(!s.exists())return;
+let u=s.data();
+editId=id;
+fullName.value=u.fullName||"";
+username.value=u.username||"";
+email.value=u.email||"";
+phone.value=u.phone||"";
+role.value=u.role||"Cashier";
+password.value="";
+setPermissions(u.permissions||{});
+window.show("users");
+scrollTo(0,0);
+};
+
+window.toggleUser=async function(id,active){
+await updateDoc(doc(db,"users",id),{active});
+await addLog((active?"Enabled ":"Disabled ")+id);
+loadUsers();
+};
+
+async function loadUsers(){
+let snap=await getDocs(collection(db,"users"));
+let html="<table><tr><th>Name</th><th>Username</th><th>Role</th><th>Status</th><th>Action</th></tr>";
+
+snap.forEach(d=>{
+let u=d.data();
+html+=`<tr>
+<td>${u.fullName||""}</td>
+<td>${u.username||""}</td>
+<td>${u.role||""}</td>
+<td>${u.active===false?"Disabled":"Active"}</td>
+<td>
+<button class="gray" onclick="editUser('${d.id}')">Edit</button>
+<button class="${u.active===false?'primary':'danger'}"
+onclick="toggleUser('${d.id}',${u.active===false})">
+${u.active===false?"Enable":"Disable"}
+</button>
+</td></tr>`;
+});
+
+document.getElementById("usersTable").innerHTML=html+"</table>";
+}
+
+window.saveSettings=async function(type){
+let data={updatedAt:serverTimestamp()};
+
+if(type==="business")data={
+name:bizName.value,phone:bizPhone.value,email:bizEmail.value,
+location:bizLocation.value,address:bizAddress.value,updatedAt:serverTimestamp()
+};
+
+if(type==="pos")data={
+currency:currency.value,till:till.value,receiptTitle:receiptTitle.value,
+footerText:footerText.value,showLogo:showLogo.checked,
+showCustomer:showCustomer.checked,updatedAt:serverTimestamp()
+};
+
+if(type==="system")data={
+theme:theme.value,language:language.value,
+autoBackup:autoBackup.checked,updatedAt:serverTimestamp()
+};
+
+await setDoc(doc(db,"settings",type),data,{merge:true});
+await addLog("Updated "+type+" settings");
+alert("Settings saved.");
+};
+
+async function loadSettings(){
+for(let type of["business","pos","system"]){
+let s=await getDoc(doc(db,"settings",type));
+if(!s.exists())continue;
+let x=s.data();
+
+if(type==="business"){
+bizName.value=x.name||"";bizPhone.value=x.phone||"";
+bizEmail.value=x.email||"";bizLocation.value=x.location||"";
+bizAddress.value=x.address||"";
+}
+
+if(type==="pos"){
+currency.value=x.currency||"KES";till.value=x.till||"TILL 1";
+receiptTitle.value=x.receiptTitle||"MABROUK TRADER'S";
+footerText.value=x.footerText||"Thank you";
+showLogo.checked=x.showLogo!==false;
+showCustomer.checked=x.showCustomer!==false;
+}
+
+if(type==="system"){
+theme.value=x.theme||"green";language.value=x.language||"English";
+autoBackup.checked=!!x.autoBackup;
+}
+}
+}
+
+async function addLog(action){
+if(!currentUser)return;
+await addDoc(collection(db,"activityLog"),{
+action,user:currentUser.email,createdAt:serverTimestamp()
+});
+}
+
+async function loadActivity(){
+let snap=await getDocs(collection(db,"activityLog"));
+let rows=[];
+snap.forEach(d=>rows.push(d.data()));
+rows.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+rows=rows.slice(0,30);
+
+document.getElementById("activityLog").innerHTML=rows.map(x=>
+`<p><b>${x.action||""}</b><br><small>${x.user||""}</small></p>`
+).join("")||"No activity yet.";
+}
+
+onAuthStateChanged(auth,async u=>{
+if(!u){
+location.href="login.html";
+return;
+}
+
+currentUser=u;
+
+try{
+let profile=await getDoc(doc(db,"users",u.uid));
+
+if(!profile.exists()){
+alert("Your account profile was not found.");
+location.href="login.html";
+return;
+}
+
+firebaseStatus.textContent="● Firebase Connected";
+firebaseStatus.style.color="green";
+
+await loadUsers();
+await loadSettings();
+
+}catch(e){
+firebaseStatus.textContent="Firebase Error";
+firebaseStatus.style.color="red";
+console.error(e);
+}
+});
 </script>
 </body>
-  </html>
+</html>

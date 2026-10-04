@@ -4,28 +4,46 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MABROUK TRADER'S - Savings</title>
-
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial;background:#f4f7f4;color:#222}
-header{background:#087a0b;color:white;padding:16px;font-size:21px;font-weight:bold}
-nav{background:#fff;padding:10px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid #ddd}
-nav a{padding:9px 12px;text-decoration:none;color:#176b1b;font-weight:bold;font-size:13px}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial;background:#f4f7f4;color:#222}
+header{background:#087a0b;color:white;padding:16px;font-size:20px;font-weight:bold}
+nav{background:white;padding:9px;display:flex;gap:5px;flex-wrap:wrap;border-bottom:1px solid #ddd}
+nav a{padding:8px 10px;text-decoration:none;color:#176b1b;font-weight:bold;font-size:13px}
 main{padding:15px;max-width:1200px;margin:auto}
-h1{color:#087a0b}.card{background:white;padding:15px;margin:12px 0;border-radius:10px;border:1px solid #ddd}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-input,select,textarea,button{width:100%;padding:10px;border:1px solid #ccc;border-radius:6px}
-textarea{min-height:70px}button{background:#087a0b;color:white;border:0;font-weight:bold;cursor:pointer}
-button.gray{background:#666}button.red{background:#c62828}button.orange{background:#b76b00}
-table{width:100%;border-collapse:collapse;min-width:800px}
-th,td{padding:9px;border-bottom:1px solid #ddd;text-align:left;font-size:13px}
-th{background:#eef5ee}.table{overflow:auto}
+h1,h2,h3{color:#087a0b}
+.card{background:white;padding:15px;margin:12px 0;border-radius:10px;border:1px solid #ddd}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.stat{background:white;padding:15px;border-radius:10px;border:1px solid #ddd}
-.stat b{display:block;color:#087a0b;font-size:20px;margin-top:6px}
-.status{font-weight:bold}.active{color:#087a0b}.withdrawn{color:#b76b00}.cancelled{color:#c62828}
+.stat{background:white;padding:14px;border-radius:10px;border:1px solid #ddd}
+.stat b{display:block;color:#087a0b;font-size:19px;margin-top:6px}
+.customers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.customer{background:white;border:1px solid #ddd;border-radius:10px;padding:15px;cursor:pointer}
+.customer:hover{border-color:#087a0b}
+.customer h3{margin:0 0 8px}
+.balance{font-size:21px;font-weight:bold;color:#087a0b}
+input,select,textarea,button{width:100%;padding:10px;border:1px solid #ccc;border-radius:6px}
+textarea{min-height:65px}
+button{background:#087a0b;color:white;border:0;font-weight:bold;cursor:pointer}
+button.gray{background:#666}
+button.red{background:#c62828}
+button.orange{background:#b76b00}
+button:disabled{opacity:.6}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.table{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:700px}
+th,td{padding:9px;border-bottom:1px solid #ddd;text-align:left;font-size:13px}
+th{background:#eef5ee}
 .msg{padding:10px;margin:10px 0;border-radius:6px;background:#fff3cd;display:none}
-@media(max-width:700px){.grid,.stats{grid-template-columns:1fr 1fr}.grid .wide{grid-column:1/3}}
-@media(max-width:450px){.grid,.stats{grid-template-columns:1fr}.grid .wide{grid-column:auto}}
+.hidden{display:none}
+.back{margin-bottom:10px}
+.customerTop{display:flex;justify-content:space-between;gap:10px;align-items:center}
+@media(max-width:700px){
+.stats,.customers,.grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:450px){
+.stats,.customers,.grid{grid-template-columns:1fr}
+.customerTop{display:block}
+}
 </style>
 </head>
 
@@ -50,26 +68,56 @@ MABROUK TRADER'S — SAVINGS
 <main>
 
 <h1>Savings</h1>
-
 <div id="msg" class="msg"></div>
 
 <div class="stats">
-<div class="stat">Total Savings<b id="total">KSh 0</b></div>
+<div class="stat">Total Savings<b id="total">KSh 0.00</b></div>
 <div class="stat">Customers<b id="count">0</b></div>
-<div class="stat">Today's Deposits<b id="today">KSh 0</b></div>
-<div class="stat">Active Accounts<b id="active">0</b></div>
+<div class="stat">Today's Deposits<b id="today">KSh 0.00</b></div>
+<div class="stat">Active Transactions<b id="active">0</b></div>
 </div>
+
+<!-- CUSTOMER LIST -->
+<section id="customerPage">
+
+<div class="card">
+<h3>Customers Savings</h3>
+<input id="search" placeholder="Search customer name...">
+</div>
+
+<div id="customers" class="customers">
+<div class="card">Loading customers...</div>
+</div>
+
+</section>
+
+<!-- CUSTOMER ACCOUNT -->
+<section id="accountPage" class="hidden">
+
+<button class="gray back" id="back">← Back to Customers</button>
 
 <div class="card">
 
-<h3>Add Saving</h3>
+<div class="customerTop">
+<div>
+<h2 id="accountName">Customer</h2>
+<div>Total Saved</div>
+<div class="balance" id="accountTotal">KSh 0.00</div>
+</div>
+
+<div style="width:180px">
+<button id="addBtn">＋ Add Saving</button>
+</div>
+</div>
+
+</div>
+
+<!-- ADD SAVING -->
+<div id="addBox" class="card hidden">
+
+<h3 id="formTitle">Add Saving</h3>
 
 <div class="grid">
-
-<div>
-<label>Customer</label>
-<input id="customer" placeholder="Customer name">
-</div>
 
 <div>
 <label>Amount</label>
@@ -106,9 +154,9 @@ MABROUK TRADER'S — SAVINGS
 </select>
 </div>
 
-<div class="wide">
+<div>
 <label>Note</label>
-<textarea id="note" placeholder="Optional note"></textarea>
+<input id="note" placeholder="Optional note">
 </div>
 
 </div>
@@ -117,17 +165,14 @@ MABROUK TRADER'S — SAVINGS
 
 <button id="save">Save Saving</button>
 <br><br>
-<button class="gray" id="clear">Clear</button>
+<button class="gray" id="cancel">Cancel</button>
 
 </div>
 
+<!-- TRANSACTIONS -->
 <div class="card">
 
-<h3>Savings History</h3>
-
-<input id="search" placeholder="Search customer, reference, payment...">
-
-<br><br>
+<h3>Transaction History</h3>
 
 <div class="table">
 
@@ -135,7 +180,6 @@ MABROUK TRADER'S — SAVINGS
 <thead>
 <tr>
 <th>Date</th>
-<th>Customer</th>
 <th>Amount</th>
 <th>Payment</th>
 <th>Reference</th>
@@ -144,15 +188,18 @@ MABROUK TRADER'S — SAVINGS
 </tr>
 </thead>
 
-<tbody id="list">
-<tr><td colspan="7">Connecting to Firebase...</td></tr>
+<tbody id="transactions">
+<tr>
+<td colspan="6">No transactions.</td>
+</tr>
 </tbody>
 
 </table>
 
 </div>
-
 </div>
+
+</section>
 
 </main>
 
@@ -175,135 +222,191 @@ appId:"1:559981054862:web:0635c689607d3baa3272df"
 const app=initializeApp(firebaseConfig);
 const db=getFirestore(app);
 
-let data=[],editing=null;
+let data=[];
+let selected="";
+let editing=null;
 
 const $=id=>document.getElementById(id);
 
+function name(x){
+return x.customerName||x.customer||x.name||"Unknown";
+}
+
 function money(n){
-return Number(n||0).toLocaleString("en-KE",
-{minimumFractionDigits:2});
+return Number(n||0).toLocaleString("en-KE",{
+minimumFractionDigits:2
+});
 }
 
 function today(){
 return new Date().toISOString().slice(0,10);
 }
 
-function name(x){
-return x.customerName||x.customer||x.name||"";
-}
-
-function show(text){
-$("msg").textContent=text;
+function show(t){
+$("msg").textContent=t;
 $("msg").style.display="block";
 setTimeout(()=>$("msg").style.display="none",3000);
 }
 
+function activeAmount(customer){
+return data
+.filter(x=>name(x)===customer&&
+(x.status||"ACTIVE").toUpperCase()==="ACTIVE")
+.reduce((a,x)=>a+Number(x.amount||0),0);
+}
+
+function loadCustomers(){
+
+let map={};
+
+data.forEach(x=>{
+let n=name(x).trim();
+if(!n)return;
+if(!map[n])map[n]=[];
+map[n].push(x);
+});
+
+let names=Object.keys(map).sort();
+
+let q=$("search").value.toLowerCase();
+names=names.filter(n=>n.toLowerCase().includes(q));
+
+$("customers").innerHTML=names.length?
+names.map(n=>{
+
+let records=map[n];
+let total=activeAmount(n);
+
+return `
+<div class="customer" onclick="openCustomer('${encodeURIComponent(n)}')">
+<h3>${escapeHtml(n)}</h3>
+<div>${records.length} transaction${records.length==1?"":"s"}</div>
+<br>
+<div class="balance">KSh ${money(total)}</div>
+<small>Tap to open account →</small>
+</div>
+`;
+
+}).join("")
+:
+`<div class="card">No customers found.</div>`;
+
+}
+
+function escapeHtml(v){
+return String(v).replace(/[&<>"']/g,m=>({
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#039;"
+}[m]));
+}
+
+function openCustomerPage(customer){
+
+selected=customer;
+
+$("customerPage").classList.add("hidden");
+$("accountPage").classList.remove("hidden");
+
+$("accountName").textContent=customer;
+
+renderAccount();
+
+window.scrollTo({top:0,behavior:"smooth"});
+
+}
+
+window.openCustomer=id=>{
+openCustomerPage(decodeURIComponent(id));
+};
+
+function renderAccount(){
+
+let records=data
+.filter(x=>name(x)===selected)
+.sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+
+$("accountTotal").textContent=
+"KSh "+money(activeAmount(selected));
+
+$("transactions").innerHTML=records.length?
+records.map(x=>{
+
+let st=(x.status||"ACTIVE").toUpperCase();
+
+return `
+<tr>
+<td>${escapeHtml(x.date||"")}</td>
+<td><b>KSh ${money(x.amount)}</b></td>
+<td>${escapeHtml(x.paymentMethod||"")}</td>
+<td>${escapeHtml(x.reference||"")}</td>
+<td>${st}</td>
+<td>
+<button onclick="editSaving('${x.id}')">Edit</button>
+<br><br>
+${st==="ACTIVE"?
+`<button class="orange" onclick="withdraw('${x.id}')">
+Withdraw
+</button><br><br>`:""}
+<button class="red" onclick="removeSaving('${x.id}')">
+Delete
+</button>
+</td>
+</tr>
+`;
+
+}).join("")
+:
+`<tr><td colspan="6">No transactions yet.</td></tr>`;
+
+}
+
 function clearForm(){
+
 editing=null;
-$("customer").value="";
+
 $("amount").value="";
 $("date").value=today();
 $("reference").value="";
 $("payment").value="Cash";
 $("status").value="ACTIVE";
 $("note").value="";
+
+$("formTitle").textContent="Add Saving";
 $("save").textContent="Save Saving";
-}
-
-async function load(){
-
-try{
-
-$("cloud").textContent="Loading...";
-
-const s=await getDocs(collection(db,"savings"));
-
-data=s.docs.map(x=>({id:x.id,...x.data()}));
-
-render();
-
-$("cloud").textContent="Firebase ✓";
-
-}catch(e){
-
-console.error(e);
-
-$("cloud").textContent="Firebase Error";
-
-$("list").innerHTML=
-`<tr><td colspan="7">
-Firebase error: ${e.message}
-</td></tr>`;
 
 }
 
-}
+$("addBtn").onclick=()=>{
+clearForm();
+$("addBox").classList.remove("hidden");
+$("amount").focus();
+};
 
-function render(){
+$("cancel").onclick=()=>{
+$("addBox").classList.add("hidden");
+clearForm();
+};
 
-let q=$("search").value.toLowerCase();
-
-let rows=data.filter(x=>
-(name(x)+" "+(x.reference||"")+" "+
-(x.paymentMethod||"")+" "+(x.note||""))
-.toLowerCase().includes(q)
-);
-
-$("list").innerHTML=rows.length?
-rows.map(x=>{
-
-let st=(x.status||"ACTIVE").toUpperCase();
-
-return `<tr>
-<td>${x.date||""}</td>
-<td>${name(x)}</td>
-<td><b>KSh ${money(x.amount)}</b></td>
-<td>${x.paymentMethod||""}</td>
-<td>${x.reference||""}</td>
-<td class="${st.toLowerCase()}">${st}</td>
-<td>
-<button onclick="editSaving('${x.id}')">Edit</button>
-<br><br>
-${st==="ACTIVE"?
-`<button class="orange" onclick="withdraw('${x.id}')">Withdraw</button><br><br>`:""}
-<button class="red" onclick="removeSaving('${x.id}')">Delete</button>
-</td>
-</tr>`
-
-}).join("")
-:
-`<tr><td colspan="7">No savings found.</td></tr>`;
-
-let active=data.filter(x=>
-(x.status||"ACTIVE").toUpperCase()==="ACTIVE"
-);
-
-let total=active.reduce(
-(a,x)=>a+Number(x.amount||0),0
-);
-
-let td=active.filter(x=>x.date===today())
-.reduce((a,x)=>a+Number(x.amount||0),0);
-
-$("total").textContent="KSh "+money(total);
-$("today").textContent="KSh "+money(td);
-$("active").textContent=active.length;
-
-$("count").textContent=
-new Set(active.map(name).filter(Boolean)).size;
-
-}
+$("back").onclick=()=>{
+$("accountPage").classList.add("hidden");
+$("customerPage").classList.remove("hidden");
+selected="";
+};
 
 $("save").onclick=async()=>{
 
-let customer=$("customer").value.trim();
 let amount=Number($("amount").value);
 
-if(!customer)return show("Enter customer name.");
-if(!amount||amount<=0)return show("Enter a valid amount.");
+if(!amount||amount<=0){
+show("Enter a valid amount.");
+return;
+}
 
 let obj={
-customerName:customer,
+customerName:selected,
 amount:amount,
 date:$("date").value||today(),
 reference:$("reference").value.trim(),
@@ -322,7 +425,8 @@ $("save").disabled=true;
 if(editing){
 
 await updateDoc(
-doc(db,"savings",editing),obj
+doc(db,"savings",editing),
+obj
 );
 
 show("Saving updated.");
@@ -330,18 +434,23 @@ show("Saving updated.");
 }else{
 
 await addDoc(
-collection(db,"savings"),obj
+collection(db,"savings"),
+obj
 );
 
-show("Saving added.");
+show("Saving added successfully.");
 
 }
 
-clearForm();
+$("addBox").classList.add("hidden");
+
 await load();
+
+renderAccount();
 
 }catch(e){
 
+console.error(e);
 show("Error: "+e.message);
 
 }finally{
@@ -360,7 +469,6 @@ if(!x)return;
 
 editing=id;
 
-$("customer").value=name(x);
 $("amount").value=x.amount||"";
 $("date").value=x.date||today();
 $("reference").value=x.reference||"";
@@ -368,9 +476,15 @@ $("payment").value=x.paymentMethod||"Cash";
 $("status").value=x.status||"ACTIVE";
 $("note").value=x.note||"";
 
+$("formTitle").textContent="Edit Saving";
 $("save").textContent="Update Saving";
 
-window.scrollTo({top:0,behavior:"smooth"});
+$("addBox").classList.remove("hidden");
+
+window.scrollTo({
+top:document.body.scrollHeight,
+behavior:"smooth"
+});
 
 };
 
@@ -386,7 +500,9 @@ doc(db,"savings",id),
 );
 
 show("Saving withdrawn.");
-load();
+
+await load();
+renderAccount();
 
 }catch(e){
 
@@ -407,7 +523,9 @@ doc(db,"savings",id)
 );
 
 show("Saving deleted.");
-load();
+
+await load();
+renderAccount();
 
 }catch(e){
 
@@ -417,8 +535,62 @@ show(e.message);
 
 };
 
-$("search").oninput=render;
-$("clear").onclick=clearForm;
+$("search").oninput=loadCustomers;
+
+async function load(){
+
+try{
+
+$("cloud").textContent="Loading...";
+
+let s=await getDocs(
+collection(db,"savings")
+);
+
+data=s.docs.map(x=>({
+id:x.id,
+...x.data()
+}));
+
+$("cloud").textContent="Firebase ✓";
+
+let active=data.filter(x=>
+(x.status||"ACTIVE").toUpperCase()==="ACTIVE"
+);
+
+let total=active.reduce(
+(a,x)=>a+Number(x.amount||0),0
+);
+
+let td=active
+.filter(x=>x.date===today())
+.reduce((a,x)=>a+Number(x.amount||0),0);
+
+$("total").textContent="KSh "+money(total);
+$("today").textContent="KSh "+money(td);
+$("active").textContent=active.length;
+
+$("count").textContent=
+new Set(data.map(name).filter(Boolean)).size;
+
+loadCustomers();
+
+if(selected)renderAccount();
+
+}catch(e){
+
+console.error(e);
+
+$("cloud").textContent="Firebase Error";
+
+$("customers").innerHTML=
+`<div class="card">
+Firebase error: ${escapeHtml(e.message)}
+</div>`;
+
+}
+
+}
 
 $("date").value=today();
 

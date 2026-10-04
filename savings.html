@@ -2,337 +2,429 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MABROUK TRADER'S - Savings</title>
+
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
-body{background:#f5f7f6;color:#222;overflow-x:hidden}
-button,input,select,textarea{font:inherit}button{cursor:pointer}
-.topbar{position:fixed;top:0;left:0;right:0;height:64px;background:#087a0b;color:#fff;display:flex;align-items:center;padding:0 18px;z-index:1000;box-shadow:0 2px 10px #0002}
-.brand{font-size:20px;font-weight:900}.brand span{color:#ffd83d}.store{margin-left:22px;opacity:.85;font-size:13px}
-.top-actions{margin-left:auto;display:flex;align-items:center;gap:18px;font-size:13px}.admin{display:flex;align-items:center;gap:9px}
-.avatar{width:35px;height:35px;border-radius:50%;background:#fff;color:#087a0b;display:grid;place-items:center;font-weight:900}
-.sidebar{position:fixed;top:64px;left:0;bottom:0;width:205px;background:#fff;border-right:1px solid #dfe5df;padding:14px 10px;z-index:900;overflow-y:auto}
-.nav{display:flex;flex-direction:column;gap:5px}.nav a{text-decoration:none;color:#354035;padding:11px 12px;border-radius:9px;font-size:13px;display:flex;align-items:center;gap:10px;font-weight:700}
-.nav a:hover{background:#eef5ee}.nav a.active{background:#e6f3e7;color:#087a0b}.nav a.logout{margin-top:12px;color:#b52323}.nav-icon{width:22px;text-align:center;font-size:16px}
-.main{margin-left:205px;padding-top:64px;min-height:100vh}.content{padding:22px}
-.page-head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:18px}.page-head h1{font-size:25px;color:#193219}.page-head p{color:#697169;font-size:13px;margin-top:5px}.head-actions{display:flex;gap:8px;flex-wrap:wrap}
-.btn{border:0;border-radius:8px;min-height:40px;padding:0 15px;font-weight:800}.btn.primary{background:#087a0b;color:#fff}.btn.secondary{background:#eef3ee;color:#263426;border:1px solid #d8e0d8}.btn.danger{background:#c62828;color:#fff}.btn.small{min-height:34px;padding:0 11px;font-size:12px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:18px}.stat{background:#fff;border:1px solid #dfe5df;border-radius:12px;padding:16px;box-shadow:0 2px 10px #00000008}
-.stat-title{color:#707870;font-size:12px;font-weight:700;margin-bottom:8px}.stat-value{font-size:22px;font-weight:900;color:#182318}.stat-sub{color:#7a827a;font-size:11px;margin-top:5px}
-.card{background:#fff;border:1px solid #dfe5df;border-radius:12px;box-shadow:0 2px 10px #00000008;margin-bottom:18px}.card-head{padding:15px 17px;border-bottom:1px solid #e8ece8;display:flex;justify-content:space-between;align-items:center;gap:10px}.card-head h2{font-size:16px;color:#203020}.card-head small{color:#737b73}
-.form{padding:17px}.form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.field label{display:block;font-size:12px;font-weight:800;color:#555d55;margin-bottom:6px}
-.field input,.field select,.field textarea{width:100%;border:1px solid #cfd7cf;border-radius:8px;background:#fff;min-height:42px;padding:0 11px;outline:none}.field textarea{min-height:88px;padding:10px 11px;resize:vertical}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:#087a0b;box-shadow:0 0 0 3px #087a0b18}.span-2{grid-column:span 2}.span-4{grid-column:span 4}
-.customer-row{display:flex;gap:8px}.customer-row input{flex:1}.form-actions{margin-top:15px;display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
-.searchbar{padding:14px 17px;border-bottom:1px solid #e8ece8;display:flex;gap:10px;align-items:center}.searchbar input{flex:1;min-height:42px;border:1px solid #cfd7cf;border-radius:8px;padding:0 12px;outline:none}.searchbar input:focus{border-color:#087a0b;box-shadow:0 0 0 3px #087a0b18}
-.table-wrap{width:100%;overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:900px}th,td{padding:12px 13px;border-bottom:1px solid #edf0ed;text-align:left;font-size:12px}
-th{background:#f8faf8;color:#626a62;font-size:11px;font-weight:900;text-transform:uppercase}td{color:#333b33}.amount{font-weight:900;color:#087a0b}
-.status{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;font-size:10px;font-weight:900}.status.active{background:#e7f5e8;color:#087a0b}.status.withdrawn{background:#fff0df;color:#9b5900}.status.cancelled{background:#ffe7e7;color:#b52323}
-.empty,.loading,.error{text-align:center;padding:35px 15px;color:#727a72}.error{color:#b52323;background:#fff7f7}.actions{display:flex;gap:6px;flex-wrap:wrap}
-.mini{border:1px solid #d5ddd5;background:#fff;border-radius:6px;padding:6px 9px;font-size:11px;font-weight:800}.mini.edit{color:#087a0b}.mini.delete{color:#b52323}.mini.withdraw{color:#9b5900}
-#cloudStatus{font-size:11px;font-weight:800}.online{color:#dfffe1}.offline{color:#ffd2d2}
-.modal{display:none;position:fixed;inset:0;background:#0007;z-index:2000;padding:20px;align-items:center;justify-content:center}.modal-box{width:min(560px,100%);max-height:92vh;overflow-y:auto;background:#fff;border-radius:14px;box-shadow:0 18px 60px #0004}
-.modal-head{padding:15px 17px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #e8ece8}.modal-head h3{font-size:16px}.close{width:34px;height:34px;border:0;border-radius:8px;background:#f0f2f0;font-size:18px}.modal-body{padding:17px}.modal-actions{padding:0 17px 17px;display:flex;justify-content:flex-end;gap:8px}
-.customer-results{margin-top:8px;border:1px solid #dfe5df;border-radius:8px;overflow:hidden;display:none;max-height:220px;overflow-y:auto}.customer-item{padding:11px;border-bottom:1px solid #eef1ee;cursor:pointer}.customer-item:hover{background:#f4f8f4}.customer-item b{display:block;font-size:12px}.customer-item span{display:block;font-size:11px;color:#727972;margin-top:3px}
-.toast{display:none;position:fixed;right:20px;bottom:20px;background:#222;color:#fff;padding:13px 16px;border-radius:9px;font-size:12px;font-weight:700;z-index:3000;box-shadow:0 7px 25px #0004;max-width:360px}
-.note{font-size:11px;color:#757d75;margin-top:6px}.firebase-error{display:none;margin-bottom:15px;background:#fff1f1;color:#a30000;border:1px solid #f0baba;border-radius:10px;padding:12px;font-size:12px;font-weight:700;line-height:1.5}
-.customer-view-button{border:0;background:transparent;padding:0;margin:0;color:#087a0b;font-weight:900;cursor:pointer;text-align:left}
-.customer-view-button:hover{text-decoration:underline}
-.customer-stat{background:#fff;border:1px solid #dfe5df;border-radius:9px;padding:12px}.customer-stat-label{color:#727a72;font-size:10px;font-weight:800}.customer-stat-value{font-size:17px;font-weight:900;margin-top:5px}
-@media(max-width:1100px){.stats{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:repeat(2,1fr)}.span-4{grid-column:span 2}}
-@media(max-width:760px){.topbar{height:57px;padding:0 10px}.brand{font-size:15px}.store{display:none}.top-actions{gap:7px;font-size:10px}.admin div:last-child{display:none}.avatar{width:31px;height:31px}.sidebar{top:57px;width:145px;padding:10px 6px}.nav a{font-size:11px;padding:10px 7px;gap:6px}.main{margin-left:145px;padding-top:57px}.content{padding:12px 9px}.page-head{align-items:flex-start;flex-direction:column}.page-head h1{font-size:21px}.stats{gap:7px}.stat{padding:11px}.stat-value{font-size:17px}.form-grid{grid-template-columns:1fr}.span-2,.span-4{grid-column:span 1}}
-@media(max-width:520px){.stats{grid-template-columns:1fr 1fr}.content{padding:10px 7px}.top-actions>div:first-child{display:none}}
-@media(max-width:600px){#customerSavingStats{grid-template-columns:1fr 1fr!important}}
+*{box-sizing:border-box}body{margin:0;font-family:Arial;background:#f4f7f4;color:#222}
+header{background:#087a0b;color:white;padding:16px;font-size:21px;font-weight:bold}
+nav{background:#fff;padding:10px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid #ddd}
+nav a{padding:9px 12px;text-decoration:none;color:#176b1b;font-weight:bold;font-size:13px}
+main{padding:15px;max-width:1200px;margin:auto}
+h1{color:#087a0b}.card{background:white;padding:15px;margin:12px 0;border-radius:10px;border:1px solid #ddd}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+input,select,textarea,button{width:100%;padding:10px;border:1px solid #ccc;border-radius:6px}
+textarea{min-height:70px}button{background:#087a0b;color:white;border:0;font-weight:bold;cursor:pointer}
+button.gray{background:#666}button.red{background:#c62828}button.orange{background:#b76b00}
+table{width:100%;border-collapse:collapse;min-width:800px}
+th,td{padding:9px;border-bottom:1px solid #ddd;text-align:left;font-size:13px}
+th{background:#eef5ee}.table{overflow:auto}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat{background:white;padding:15px;border-radius:10px;border:1px solid #ddd}
+.stat b{display:block;color:#087a0b;font-size:20px;margin-top:6px}
+.status{font-weight:bold}.active{color:#087a0b}.withdrawn{color:#b76b00}.cancelled{color:#c62828}
+.msg{padding:10px;margin:10px 0;border-radius:6px;background:#fff3cd;display:none}
+@media(max-width:700px){.grid,.stats{grid-template-columns:1fr 1fr}.grid .wide{grid-column:1/3}}
+@media(max-width:450px){.grid,.stats{grid-template-columns:1fr}.grid .wide{grid-column:auto}}
 </style>
 </head>
+
 <body>
-<header class="topbar">
-<div class="brand">MABROUK <span>TRADER'S</span></div><div class="store">Savings Management</div>
-<div class="top-actions"><div id="cloudStatus" class="online">Starting Firebase...</div><div class="admin"><div class="avatar" id="avatar">A</div><div><b id="userName">User</b><br><small id="userRole">Checking access...</small></div></div></div>
+
+<header>
+MABROUK TRADER'S — SAVINGS
+<span id="cloud" style="float:right;font-size:12px">Connecting...</span>
 </header>
 
-<aside class="sidebar"><nav class="nav">
-<a href="index.html"><span class="nav-icon">⌂</span>Home</a><a href="pos.html"><span class="nav-icon">▣</span>POS</a><a href="inventory.html"><span class="nav-icon">▤</span>Inventory</a><a href="customers.html"><span class="nav-icon">♧</span>Customers</a><a href="sales.html"><span class="nav-icon">▱</span>Sales</a><a href="savings.html" class="active"><span class="nav-icon">◈</span>Savings</a><a href="dashboard.html"><span class="nav-icon">▥</span>Dashboard</a><a href="reports.html"><span class="nav-icon">▤</span>Reports</a><a href="users.html"><span class="nav-icon">♙</span>Users</a><a href="settings.html"><span class="nav-icon">⚙</span>Settings</a><a href="login.html" class="logout" id="logoutLink"><span class="nav-icon">⇥</span>Logout</a>
-</nav></aside>
+<nav>
+<a href="index.html">Home</a>
+<a href="pos.html">POS</a>
+<a href="inventory.html">Inventory</a>
+<a href="customers.html">Customers</a>
+<a href="sales.html">Sales</a>
+<a href="savings.html">Savings</a>
+<a href="reports.html">Reports</a>
+<a href="settings.html">Settings</a>
+</nav>
 
-<main class="main"><div class="content">
-<div id="firebaseError" class="firebase-error"></div>
-<div class="page-head"><div><h1>Savings</h1><p>Manage customer savings, deposits, balances and withdrawals.</p></div><div class="head-actions"><button class="btn secondary" id="refreshBtn">↻ Refresh</button><button class="btn primary" id="newSavingBtn">＋ New Saving</button></div></div>
+<main>
 
-<section class="stats">
-<div class="stat"><div class="stat-title">TOTAL SAVINGS</div><div class="stat-value" id="totalSavings">KSh 0.00</div><div class="stat-sub">All active customer savings</div></div>
-<div class="stat"><div class="stat-title">CUSTOMERS</div><div class="stat-value" id="customerCount">0</div><div class="stat-sub">Unique saving customers</div></div>
-<div class="stat"><div class="stat-title">TODAY'S DEPOSITS</div><div class="stat-value" id="todayDeposits">KSh 0.00</div><div class="stat-sub">Deposits recorded today</div></div>
-<div class="stat"><div class="stat-title">ACTIVE ACCOUNTS</div><div class="stat-value" id="activeAccounts">0</div><div class="stat-sub">Active saving records</div></div>
-</section>
+<h1>Savings</h1>
 
-<section class="card"><div class="card-head"><div><h2>Add Saving</h2><small>Record a new customer deposit</small></div><span id="formMode">New Entry</span></div>
-<div class="form"><div class="form-grid">
-<div class="field span-2"><label>Customer</label><div class="customer-row"><input type="text" id="customerName" placeholder="Search or enter customer name" autocomplete="off"><button class="btn secondary" id="newCustomerBtn" type="button">＋ Customer</button></div><div class="customer-results" id="customerResults"></div><div class="note" id="selectedCustomerNote"></div></div>
-<div class="field"><label>Amount (KSh)</label><input type="number" id="amount" min="0" step="0.01" placeholder="0.00"></div>
-<div class="field"><label>Date</label><input type="date" id="savingDate"></div>
-<div class="field"><label>Reference</label><input type="text" id="reference" placeholder="Receipt / transaction reference"></div>
-<div class="field"><label>Payment Method</label><select id="paymentMethod"><option value="Cash">Cash</option><option value="M-Pesa">M-Pesa</option><option value="Bank">Bank</option><option value="Card">Card</option><option value="Other">Other</option></select></div>
-<div class="field"><label>Status</label><select id="status"><option value="ACTIVE">ACTIVE</option><option value="WITHDRAWN">WITHDRAWN</option><option value="CANCELLED">CANCELLED</option></select></div>
-<div class="field span-2"><label>Note</label><textarea id="note" placeholder="Optional note"></textarea></div>
+<div id="msg" class="msg"></div>
+
+<div class="stats">
+<div class="stat">Total Savings<b id="total">KSh 0</b></div>
+<div class="stat">Customers<b id="count">0</b></div>
+<div class="stat">Today's Deposits<b id="today">KSh 0</b></div>
+<div class="stat">Active Accounts<b id="active">0</b></div>
 </div>
-<div class="form-actions"><button class="btn secondary" id="cancelEditBtn" type="button" style="display:none">Cancel Edit</button><button class="btn secondary" id="clearBtn" type="button">Clear</button><button class="btn primary" id="saveBtn" type="button">Save Saving</button></div>
-</div></section>
 
-<section class="card"><div class="card-head"><div><h2>Savings History</h2><small id="recordCount">0 records</small></div></div>
-<div class="searchbar"><input type="text" id="searchInput" placeholder="Search customer, reference, payment method or note..."><button class="btn secondary" id="clearSearchBtn">Clear</button></div>
-<div class="table-wrap"><table><thead><tr><th>Date</th><th>Customer</th><th>Amount</th><th>Payment</th><th>Reference</th><th>Status</th><th>Recorded By</th><th>Actions</th></tr></thead><tbody id="savingsBody"><tr><td colspan="8" class="loading">Connecting to Firebase...</td></tr></tbody></table></div>
-</section>
-</div></main>
+<div class="card">
 
-<div class="modal" id="editModal"><div class="modal-box"><div class="modal-head"><h3>Edit Saving</h3><button class="close" id="closeEditModal">✕</button></div><div class="modal-body"><div class="form-grid">
-<div class="field span-2"><label>Customer</label><input type="text" id="editCustomer"></div><div class="field"><label>Amount (KSh)</label><input type="number" id="editAmount" min="0" step="0.01"></div><div class="field"><label>Date</label><input type="date" id="editDate"></div>
-<div class="field"><label>Payment Method</label><select id="editPaymentMethod"><option>Cash</option><option>M-Pesa</option><option>Bank</option><option>Card</option><option>Other</option></select></div><div class="field"><label>Status</label><select id="editStatus"><option>ACTIVE</option><option>WITHDRAWN</option><option>CANCELLED</option></select></div><div class="field span-2"><label>Reference</label><input type="text" id="editReference"></div><div class="field span-2"><label>Note</label><textarea id="editNote"></textarea></div>
-</div></div><div class="modal-actions"><button class="btn secondary" id="cancelEditModalBtn">Cancel</button><button class="btn primary" id="updateSavingBtn">Update Saving</button></div></div></div>
+<h3>Add Saving</h3>
 
-<div class="modal" id="customerModal"><div class="modal-box"><div class="modal-head"><h3>New Customer</h3><button class="close" id="closeCustomerModal">✕</button></div><div class="modal-body"><div class="form-grid">
-<div class="field span-2"><label>Customer Name</label><input type="text" id="newCustomerName" placeholder="Customer full name"></div><div class="field"><label>Phone</label><input type="text" id="newCustomerPhone" placeholder="07..."></div><div class="field"><label>PIN / ID</label><input type="text" id="newCustomerPin" placeholder="Optional"></div>
-</div></div><div class="modal-actions"><button class="btn secondary" id="cancelCustomerBtn">Cancel</button><button class="btn primary" id="saveCustomerBtn">Save Customer</button></div></div></div>
+<div class="grid">
 
-<div class="toast" id="toast"></div>
+<div>
+<label>Customer</label>
+<input id="customer" placeholder="Customer name">
+</div>
+
+<div>
+<label>Amount</label>
+<input id="amount" type="number" step="0.01" placeholder="0.00">
+</div>
+
+<div>
+<label>Date</label>
+<input id="date" type="date">
+</div>
+
+<div>
+<label>Reference</label>
+<input id="reference" placeholder="Reference">
+</div>
+
+<div>
+<label>Payment</label>
+<select id="payment">
+<option>Cash</option>
+<option>M-Pesa</option>
+<option>Bank</option>
+<option>Card</option>
+<option>Other</option>
+</select>
+</div>
+
+<div>
+<label>Status</label>
+<select id="status">
+<option>ACTIVE</option>
+<option>WITHDRAWN</option>
+<option>CANCELLED</option>
+</select>
+</div>
+
+<div class="wide">
+<label>Note</label>
+<textarea id="note" placeholder="Optional note"></textarea>
+</div>
+
+</div>
+
+<br>
+
+<button id="save">Save Saving</button>
+<br><br>
+<button class="gray" id="clear">Clear</button>
+
+</div>
+
+<div class="card">
+
+<h3>Savings History</h3>
+
+<input id="search" placeholder="Search customer, reference, payment...">
+
+<br><br>
+
+<div class="table">
+
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Customer</th>
+<th>Amount</th>
+<th>Payment</th>
+<th>Reference</th>
+<th>Status</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="list">
+<tr><td colspan="7">Connecting to Firebase...</td></tr>
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</main>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import { getAuth,onAuthStateChanged,signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-import { getFirestore,collection,addDoc,getDocs,updateDoc,deleteDoc,doc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-const firebaseConfig={apiKey:"AIzaSyA8XB6a45-yHT0uZ6NUhptMoNkYqgwqOs",authDomain:"goldbizna.firebaseapp.com",projectId:"goldbizna",storageBucket:"goldbizna.firebasestorage.app",messagingSenderId:"559981054862",appId:"1:559981054862:web:0635c689607d3baa3272df"};
+import{initializeApp}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import{
+getFirestore,collection,addDoc,getDocs,updateDoc,deleteDoc,doc
+}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-let app=null,db=null,auth=null;
-let firebaseReady=false;
+const firebaseConfig={
+apiKey:"AIzaSyA8XB6a45-yHT0uZ6NUhptMoNkYqgwqOs",
+authDomain:"goldbizna.firebaseapp.com",
+projectId:"goldbizna",
+storageBucket:"goldbizna.firebasestorage.app",
+messagingSenderId:"559981054862",
+appId:"1:559981054862:web:0635c689607d3baa3272df"
+};
 
-try{
-  app=initializeApp(firebaseConfig);
-  db=getFirestore(app);
-  auth=getAuth(app);
-  firebaseReady=true;
-  setStatus("Firebase connected • checking data...","online");
-}catch(error){
-  console.error("Firebase initialization error:",error);
-  showFirebaseError("Firebase initialization failed: "+(error?.message||"Unknown error"));
-}
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
 
-let savings=[],customers=[],currentUser=null,editingId=null,selectedCustomerId="",selectedCustomerForView=null;
+let data=[],editing=null;
 
 const $=id=>document.getElementById(id);
 
-function setStatus(text,type="online"){const el=$("cloudStatus");if(el){el.textContent=text;el.className=type}}
-function showFirebaseError(message){console.error(message);const box=$("firebaseError");if(box){box.style.display="block";box.textContent=message}setStatus("Firebase error","offline");$("savingsBody").innerHTML=`<tr><td colspan="8" class="error">${escapeHtml(message)}</td></tr>`}
-function hideFirebaseError(){const box=$("firebaseError");if(box)box.style.display="none"}
-function toast(message){const el=$("toast");el.textContent=message;el.style.display="block";clearTimeout(window.__toastTimer);window.__toastTimer=setTimeout(()=>el.style.display="none",3500)}
-function escapeHtml(value){return String(value??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
-function money(value){return Number(value||0).toLocaleString("en-KE",{minimumFractionDigits:2,maximumFractionDigits:2})}
-function todayISO(){const d=new Date();const local=new Date(d.getTime()-d.getTimezoneOffset()*60000);return local.toISOString().slice(0,10)}
-function normalizeDate(value){
-if(!value)return "";
-if(typeof value==="object"&&typeof value.toDate==="function"){try{const d=value.toDate();if(!isNaN(d.getTime())){const local=new Date(d.getTime()-d.getTimezoneOffset()*60000);return local.toISOString().slice(0,10)}}catch(e){console.warn(e)}}
-if(value instanceof Date){if(isNaN(value.getTime()))return "";const local=new Date(value.getTime()-value.getTimezoneOffset()*60000);return local.toISOString().slice(0,10)}
-if(typeof value==="string"){const clean=value.trim();if(!clean)return "";if(/^\d{4}-\d{2}-\d{2}$/.test(clean))return clean;const d=new Date(clean);if(!isNaN(d.getTime())){const local=new Date(d.getTime()-d.getTimezoneOffset()*60000);return local.toISOString().slice(0,10)}}
-return "";
-}
-function formatDate(value){const date=normalizeDate(value);if(!date)return "—";const d=new Date(date+"T00:00:00");if(isNaN(d.getTime()))return "—";return d.toLocaleDateString("en-KE",{day:"2-digit",month:"short",year:"numeric"})}
-function getCustomerName(c){return String(c?.name||c?.customerName||c?.fullName||"").trim()}
-function getCustomerPhone(c){return String(c?.phone||c?.mobile||c?.customerMobile||"").trim()}
-function getCustomerPin(c){return String(c?.pin||c?.customerPin||c?.idNumber||"").trim()}
-
-if(auth)onAuthStateChanged(auth,async user=>{
-if(!user){currentUser=null;$("userName").textContent="Not signed in";$("userRole").textContent="Authentication required";$("avatar").textContent="?";setStatus("Not signed in","offline");$("savingsBody").innerHTML=`<tr><td colspan="8" class="error">You are not signed in. Please login first.</td></tr>`;return}
-currentUser=user;const name=user.displayName||user.email?.split("@")[0]||"User";$("userName").textContent=name;$("userRole").textContent=user.email||"Authenticated";$("avatar").textContent=name.charAt(0).toUpperCase();setStatus("Firebase connected","online");hideFirebaseError();await loadCustomers();await loadSavings();
-});
-
-async function loadCustomers(){
-if(!db){showFirebaseError("Firebase database is not initialized.");return}
-try{setStatus("Loading customers...","online");const snapshot=await getDocs(collection(db,"customers"));customers=snapshot.docs.map(item=>({id:item.id,...item.data()}));setStatus("Firebase connected • "+customers.length+" customers","online")}
-catch(error){console.error(error);if(error.code==="permission-denied")showFirebaseError("Firebase denied access to customers. Check your Firestore security rules.");else toast("Could not load customers from Firebase.")}
+function money(n){
+return Number(n||0).toLocaleString("en-KE",
+{minimumFractionDigits:2});
 }
 
-async function loadSavings(){
-if(!db){showFirebaseError("Firebase database is not initialized.");return}
+function today(){
+return new Date().toISOString().slice(0,10);
+}
+
+function name(x){
+return x.customerName||x.customer||x.name||"";
+}
+
+function show(text){
+$("msg").textContent=text;
+$("msg").style.display="block";
+setTimeout(()=>$("msg").style.display="none",3000);
+}
+
+function clearForm(){
+editing=null;
+$("customer").value="";
+$("amount").value="";
+$("date").value=today();
+$("reference").value="";
+$("payment").value="Cash";
+$("status").value="ACTIVE";
+$("note").value="";
+$("save").textContent="Save Saving";
+}
+
+async function load(){
+
 try{
-setStatus("Loading savings from Firebase...","online");
-$("savingsBody").innerHTML=`<tr><td colspan="8" class="loading">Loading savings from Firebase...</td></tr>`;
-const snapshot=await getDocs(collection(db,"savings"));
-savings=snapshot.docs.map(item=>({id:item.id,...item.data()}));
-savings.sort((a,b)=>((normalizeDate(b.date)||normalizeDate(b.createdAt)||"").localeCompare(normalizeDate(a.date)||normalizeDate(a.createdAt)||"")));
-renderSavings();setStatus("Firebase connected • "+savings.length+" savings","online");
-}catch(error){
-console.error(error);let message="Could not load savings from Firebase.";
-if(error.code==="permission-denied")message="Firestore permission denied. Your Firebase connection works, but Firestore rules are blocking the savings collection.";
-if(error.code==="failed-precondition")message="Firestore configuration is incomplete.";
-if(error.code==="unavailable")message="Firebase is temporarily unavailable. Check your internet connection.";
-showFirebaseError(message);
-}
+
+$("cloud").textContent="Loading...";
+
+const s=await getDocs(collection(db,"savings"));
+
+data=s.docs.map(x=>({id:x.id,...x.data()}));
+
+render();
+
+$("cloud").textContent="Firebase ✓";
+
+}catch(e){
+
+console.error(e);
+
+$("cloud").textContent="Firebase Error";
+
+$("list").innerHTML=
+`<tr><td colspan="7">
+Firebase error: ${e.message}
+</td></tr>`;
+
 }
 
-function findCustomerForSaving(item){
-if(!item)return null;
-if(item.customerId){const byId=customers.find(c=>c.id===item.customerId);if(byId)return byId}
-const name=String(item.customerName||"").trim().toLowerCase();
-if(!name)return null;
-return customers.find(c=>getCustomerName(c).toLowerCase()===name)||null;
 }
 
-function renderSavings(){
-const search=$("searchInput").value.trim().toLowerCase();let rows=[...savings];
-if(search)rows=rows.filter(item=>[item.customerName,item.reference,item.paymentMethod,item.note,item.status,item.recordedBy].join(" ").toLowerCase().includes(search));
-$("recordCount").textContent=rows.length+" record"+(rows.length===1?"":"s");
-if(!rows.length){$("savingsBody").innerHTML=`<tr><td colspan="8" class="empty">No savings records found.</td></tr>`;updateStats();return}
-$("savingsBody").innerHTML=rows.map(item=>{
-const status=String(item.status||"ACTIVE").toUpperCase();
-const statusClass=status==="ACTIVE"?"active":status==="WITHDRAWN"?"withdrawn":"cancelled";
-const customer=findCustomerForSaving(item);const customerName=item.customerName||getCustomerName(customer)||"Unknown Customer";
+function render(){
+
+let q=$("search").value.toLowerCase();
+
+let rows=data.filter(x=>
+(name(x)+" "+(x.reference||"")+" "+
+(x.paymentMethod||"")+" "+(x.note||""))
+.toLowerCase().includes(q)
+);
+
+$("list").innerHTML=rows.length?
+rows.map(x=>{
+
+let st=(x.status||"ACTIVE").toUpperCase();
+
 return `<tr>
-<td>${escapeHtml(formatDate(item.date))}</td>
-<td><button type="button" class="customer-view-button" data-customer-id="${escapeHtml(item.customerId||"")}" data-customer-name="${escapeHtml(customerName)}">${escapeHtml(customerName)}</button>${customer?`<div style="font-size:10px;color:#777;margin-top:3px">${escapeHtml(getCustomerPhone(customer)||getCustomerPin(customer)||"Customer")}</div>`:""}</td>
-<td class="amount">KSh ${money(item.amount)}</td><td>${escapeHtml(item.paymentMethod||"Cash")}</td><td>${escapeHtml(item.reference||"—")}</td>
-<td><span class="status ${statusClass}">${escapeHtml(status)}</span></td><td>${escapeHtml(item.recordedBy||"—")}</td>
-<td><div class="actions"><button class="mini edit" type="button" data-action="edit" data-id="${escapeHtml(item.id)}">Edit</button>${status==="ACTIVE"?`<button class="mini withdraw" type="button" data-action="withdraw" data-id="${escapeHtml(item.id)}">Withdraw</button>`:""}<button class="mini delete" type="button" data-action="delete" data-id="${escapeHtml(item.id)}">Delete</button></div></td>
-</tr>`}).join("");
-document.querySelectorAll(".customer-view-button").forEach(b=>b.addEventListener("click",()=>openCustomerSavings(b.dataset.customerId||"",b.dataset.customerName||"")));
-document.querySelectorAll("#savingsBody button[data-action]").forEach(b=>b.addEventListener("click",async()=>{const action=b.dataset.action,id=b.dataset.id;if(action==="edit")editSaving(id);if(action==="withdraw")await withdrawSaving(id);if(action==="delete")await deleteSaving(id)}));
-updateStats();
+<td>${x.date||""}</td>
+<td>${name(x)}</td>
+<td><b>KSh ${money(x.amount)}</b></td>
+<td>${x.paymentMethod||""}</td>
+<td>${x.reference||""}</td>
+<td class="${st.toLowerCase()}">${st}</td>
+<td>
+<button onclick="editSaving('${x.id}')">Edit</button>
+<br><br>
+${st==="ACTIVE"?
+`<button class="orange" onclick="withdraw('${x.id}')">Withdraw</button><br><br>`:""}
+<button class="red" onclick="removeSaving('${x.id}')">Delete</button>
+</td>
+</tr>`
+
+}).join("")
+:
+`<tr><td colspan="7">No savings found.</td></tr>`;
+
+let active=data.filter(x=>
+(x.status||"ACTIVE").toUpperCase()==="ACTIVE"
+);
+
+let total=active.reduce(
+(a,x)=>a+Number(x.amount||0),0
+);
+
+let td=active.filter(x=>x.date===today())
+.reduce((a,x)=>a+Number(x.amount||0),0);
+
+$("total").textContent="KSh "+money(total);
+$("today").textContent="KSh "+money(td);
+$("active").textContent=active.length;
+
+$("count").textContent=
+new Set(active.map(name).filter(Boolean)).size;
+
 }
 
-function updateStats(){
-let total=0,todayAmount=0,active=0;const customerSet=new Set();const todayDate=todayISO();
-savings.forEach(item=>{
-const amount=Number(item.amount||0),status=String(item.status||"ACTIVE").toUpperCase();
-if(status==="ACTIVE"){total+=amount;active++;if(normalizeDate(item.date)===todayDate)todayAmount+=amount}
-const name=String(item.customerName||"").trim().toLowerCase();if(name)customerSet.add(name);
-});
-$("totalSavings").textContent="KSh "+money(total);$("customerCount").textContent=customerSet.size;$("todayDeposits").textContent="KSh "+money(todayAmount);$("activeAccounts").textContent=active;
-}
+$("save").onclick=async()=>{
 
-$("customerName").addEventListener("input",()=>{
-selectedCustomerId="";$("selectedCustomerNote").textContent="";const query=$("customerName").value.trim().toLowerCase(),box=$("customerResults");
-if(!query){box.style.display="none";return}
-const matches=customers.filter(c=>getCustomerName(c).toLowerCase().includes(query)||getCustomerPhone(c).toLowerCase().includes(query)||getCustomerPin(c).toLowerCase().includes(query)).slice(0,10);
-if(!matches.length){box.innerHTML=`<div class="customer-item"><b>No matching customer</b><span>You can enter a new customer name.</span></div>`;box.style.display="block";return}
-box.innerHTML=matches.map(c=>`<div class="customer-item" data-id="${escapeHtml(c.id)}"><b>${escapeHtml(getCustomerName(c)||"Customer")}</b><span>${escapeHtml(getCustomerPhone(c)||getCustomerPin(c)||"Customer")}</span></div>`).join("");box.style.display="block";
-box.querySelectorAll(".customer-item[data-id]").forEach(el=>el.addEventListener("click",()=>{const c=customers.find(x=>x.id===el.dataset.id);if(!c)return;selectedCustomerId=c.id;$("customerName").value=getCustomerName(c)||"Customer";$("selectedCustomerNote").textContent="Customer selected: "+getCustomerName(c);box.style.display="none"}));
-});
+let customer=$("customer").value.trim();
+let amount=Number($("amount").value);
 
-$("newCustomerBtn").onclick=()=>{$("customerModal").style.display="flex";$("newCustomerName").focus()};
-$("closeCustomerModal").onclick=closeCustomerModal;$("cancelCustomerBtn").onclick=closeCustomerModal;
-function closeCustomerModal(){$("customerModal").style.display="none";$("newCustomerName").value="";$("newCustomerPhone").value="";$("newCustomerPin").value=""}
+if(!customer)return show("Enter customer name.");
+if(!amount||amount<=0)return show("Enter a valid amount.");
 
-$("saveCustomerBtn").onclick=async()=>{
-const name=$("newCustomerName").value.trim(),phone=$("newCustomerPhone").value.trim(),pin=$("newCustomerPin").value.trim();
-if(!name){toast("Enter customer name.");$("newCustomerName").focus();return}if(!db){toast("Firebase database is not available.");return}
-try{
-$("saveCustomerBtn").disabled=true;$("saveCustomerBtn").textContent="Saving...";
-const ref=await addDoc(collection(db,"customers"),{name,phone,pin,createdAt:new Date().toISOString(),createdBy:currentUser?.email||"Unknown"});
-customers.push({id:ref.id,name,phone,pin});$("customerName").value=name;selectedCustomerId=ref.id;$("selectedCustomerNote").textContent="New customer selected: "+name;closeCustomerModal();toast("Customer created successfully.");
-}catch(error){console.error(error);if(error.code==="permission-denied")showFirebaseError("Permission denied. Firestore rules do not allow creating customers.");else toast("Could not create customer: "+(error?.message||"Unknown error"))}
-finally{$("saveCustomerBtn").disabled=false;$("saveCustomerBtn").textContent="Save Customer"}
+let obj={
+customerName:customer,
+amount:amount,
+date:$("date").value||today(),
+reference:$("reference").value.trim(),
+paymentMethod:$("payment").value,
+status:$("status").value,
+note:$("note").value.trim(),
+recordedBy:
+localStorage.getItem("goldbizna_username")||"User",
+createdAt:new Date().toISOString()
 };
 
-$("saveBtn").onclick=async()=>{
-const customerName=$("customerName").value.trim(),amount=Number($("amount").value),date=$("savingDate").value,reference=$("reference").value.trim(),paymentMethod=$("paymentMethod").value,status=$("status").value,note=$("note").value.trim();
-if(!customerName){toast("Enter or select a customer.");$("customerName").focus();return}
-if(!Number.isFinite(amount)||amount<=0){toast("Enter a valid saving amount.");$("amount").focus();return}
-if(!date){toast("Select the saving date.");return}if(!db){toast("Firebase database is not available.");return}
 try{
-$("saveBtn").disabled=true;$("saveBtn").textContent="Saving...";
-if(!selectedCustomerId){const match=customers.find(c=>getCustomerName(c).toLowerCase()===customerName.toLowerCase());if(match)selectedCustomerId=match.id}
-await addDoc(collection(db,"savings"),{customerId:selectedCustomerId||"",customerName,amount,date,reference,paymentMethod,status,note,recordedBy:currentUser?.email||currentUser?.displayName||"Unknown",createdAt:new Date().toISOString()});
-toast("Saving recorded successfully.");clearForm();await loadSavings();
-}catch(error){console.error(error);if(error.code==="permission-denied")showFirebaseError("Saving was blocked by Firestore security rules.");else toast("Could not save saving: "+(error?.message||"Unknown error"))}
-finally{$("saveBtn").disabled=false;$("saveBtn").textContent="Save Saving"}
+
+$("save").disabled=true;
+
+if(editing){
+
+await updateDoc(
+doc(db,"savings",editing),obj
+);
+
+show("Saving updated.");
+
+}else{
+
+await addDoc(
+collection(db,"savings"),obj
+);
+
+show("Saving added.");
+
+}
+
+clearForm();
+await load();
+
+}catch(e){
+
+show("Error: "+e.message);
+
+}finally{
+
+$("save").disabled=false;
+
+}
+
 };
 
-async function editSaving(id){
-const item=savings.find(x=>x.id===id);if(!item){toast("Saving record was not found.");return}
-editingId=id;$("editCustomer").value=item.customerName||"";$("editAmount").value=item.amount||"";$("editDate").value=normalizeDate(item.date);$("editPaymentMethod").value=item.paymentMethod||"Cash";$("editStatus").value=item.status||"ACTIVE";$("editReference").value=item.reference||"";$("editNote").value=item.note||"";$("editModal").style.display="flex";
-}
-$("closeEditModal").onclick=closeEditModal;$("cancelEditModalBtn").onclick=closeEditModal;
-function closeEditModal(){$("editModal").style.display="none";editingId=null}
+window.editSaving=id=>{
 
-$("updateSavingBtn").onclick=async()=>{
-if(!editingId){toast("No saving selected.");return}
-const customer=$("editCustomer").value.trim(),amount=Number($("editAmount").value),date=$("editDate").value,payment=$("editPaymentMethod").value,status=$("editStatus").value,reference=$("editReference").value.trim(),note=$("editNote").value.trim();
-if(!customer||!Number.isFinite(amount)||amount<=0||!date){toast("Complete all required fields.");return}
-try{
-$("updateSavingBtn").disabled=true;$("updateSavingBtn").textContent="Updating...";
-const existing=savings.find(x=>x.id===editingId);
-await updateDoc(doc(db,"savings",editingId),{customerName:customer,customerId:existing?.customerId||"",amount,date,paymentMethod:payment,status,reference,note,updatedAt:new Date().toISOString(),updatedBy:currentUser?.email||"Unknown"});
-closeEditModal();toast("Saving updated successfully.");await loadSavings();
-}catch(error){console.error(error);toast(error.code==="permission-denied"?"Permission denied while updating saving.":"Could not update saving.")}
-finally{$("updateSavingBtn").disabled=false;$("updateSavingBtn").textContent="Update Saving"}
+let x=data.find(a=>a.id===id);
+
+if(!x)return;
+
+editing=id;
+
+$("customer").value=name(x);
+$("amount").value=x.amount||"";
+$("date").value=x.date||today();
+$("reference").value=x.reference||"";
+$("payment").value=x.paymentMethod||"Cash";
+$("status").value=x.status||"ACTIVE";
+$("note").value=x.note||"";
+
+$("save").textContent="Update Saving";
+
+window.scrollTo({top:0,behavior:"smooth"});
+
 };
 
-async function withdrawSaving(id){
-const item=savings.find(x=>x.id===id);if(!item){toast("Saving record was not found.");return}
-if(!confirm("Withdraw this saving of KSh "+money(item.amount)+" for "+(item.customerName||"this customer")+"?"))return;
-try{await updateDoc(doc(db,"savings",id),{status:"WITHDRAWN",withdrawnAt:new Date().toISOString(),withdrawnBy:currentUser?.email||"Unknown"});toast("Saving marked as withdrawn.");await loadSavings()}
-catch(error){console.error(error);toast(error.code==="permission-denied"?"Permission denied while withdrawing saving.":"Could not withdraw saving.")}
-}
-async function deleteSaving(id){
-const item=savings.find(x=>x.id===id);if(!item){toast("Saving record was not found.");return}
-if(!confirm("Delete this saving record?\n\n"+(item.customerName||"Customer")+" — KSh "+money(item.amount)))return;
-try{await deleteDoc(doc(db,"savings",id));toast("Saving deleted.");await loadSavings()}
-catch(error){console.error(error);toast(error.code==="permission-denied"?"Permission denied while deleting saving.":"Could not delete saving.")}
+window.withdraw=async id=>{
+
+if(!confirm("Withdraw this saving?"))return;
+
+try{
+
+await updateDoc(
+doc(db,"savings",id),
+{status:"WITHDRAWN"}
+);
+
+show("Saving withdrawn.");
+load();
+
+}catch(e){
+
+show(e.message);
+
 }
 
-function createCustomerSavingsModal(){
-if($("customerSavingsModal"))return;
-const modal=document.createElement("div");modal.id="customerSavingsModal";modal.className="modal";
-modal.innerHTML=`<div class="modal-box" style="width:min(850px,100%);max-height:94vh">
-<div class="modal-head"><div><h3 id="customerSavingsTitle" style="color:#193219;font-size:18px">Customer Savings</h3><div id="customerSavingsSubtitle" style="color:#737b73;font-size:11px;margin-top:4px">Customer account</div></div><button class="close" id="closeCustomerSavingsModal" type="button">✕</button></div>
-<div class="modal-body">
-<div id="customerProfile" style="background:#f7faf7;border:1px solid #e0e8e0;border-radius:12px;padding:15px;margin-bottom:15px"></div>
-<div id="customerSavingStats" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:17px"></div>
-<div style="border:1px solid #e0e5e0;border-radius:10px;overflow:hidden"><div style="padding:12px 14px;background:#f8faf8;border-bottom:1px solid #e5eae5;font-size:13px;font-weight:900;color:#203020">Savings History</div>
-<div style="max-height:390px;overflow:auto"><table style="width:100%;border-collapse:collapse;min-width:650px"><thead><tr><th style="padding:10px;text-align:left;background:#f8faf8;font-size:10px">DATE</th><th style="padding:10px;text-align:left;background:#f8faf8;font-size:10px">AMOUNT</th><th style="padding:10px;text-align:left;background:#f8faf8;font-size:10px">PAYMENT</th><th style="padding:10px;text-align:left;background:#f8faf8;font-size:10px">REFERENCE</th><th style="padding:10px;text-align:left;background:#f8faf8;font-size:10px">STATUS</th></tr></thead><tbody id="customerSavingsBody"></tbody></table></div></div>
-</div>
-<div class="modal-actions"><button class="btn secondary" id="customerSavingsCloseBtn" type="button">Close</button><button class="btn primary" id="customerNewSavingBtn" type="button">＋ New Saving</button></div></div>`;
-document.body.appendChild(modal);
-$("closeCustomerSavingsModal").onclick=closeCustomerSavingsModal;$("customerSavingsCloseBtn").onclick=closeCustomerSavingsModal;
-$("customerNewSavingBtn").onclick=()=>{const c=selectedCustomerForView;closeCustomerSavingsModal();if(c){$("customerName").value=getCustomerName(c);selectedCustomerId=c.id;$("selectedCustomerNote").textContent="Customer selected: "+getCustomerName(c)}window.scrollTo({top:0,behavior:"smooth"});setTimeout(()=>$("amount").focus(),350)};
-modal.addEventListener("click",e=>{if(e.target===modal)closeCustomerSavingsModal()});
-}
-function closeCustomerSavingsModal(){const modal=$("customerSavingsModal");if(modal)modal.style.display="none"}
+};
 
-function openCustomerSavings(customerId,customerName){
-createCustomerSavingsModal();let customer=null;
-if(customerId)customer=customers.find(c=>c.id===customerId)||null;
-if(!customer&&customerName){const target=customerName.trim().toLowerCase();customer=customers.find(c=>getCustomerName(c).toLowerCase()===target)||null}
-selectedCustomerForView=customer;
-const displayName=getCustomerName(customer)||customerName||"Customer";
-$("customerSavingsTitle").textContent=displayName;$("customerSavingsSubtitle").textContent=customer?"Customer savings account":"Savings records";
-let customerSavings;
-if(customer){customerSavings=savings.filter(item=>(item.customerId&&item.customerId===customer.id)||String(item.customerName||"").trim().toLowerCase()===displayName.trim().toLowerCase())}
-else customerSavings=savings.filter(item=>String(item.customerName||"").trim().toLowerCase()===displayName.trim().toLowerCase());
-customerSavings.sort((a,b)=>(normalizeDate(b.date)||normalizeDate(b.createdAt)||"").localeCompare(normalizeDate(a.date)||normalizeDate(a.createdAt)||""));
-let activeTotal=0,withdrawnTotal=0,cancelledTotal=0,depositCount=0;
-customerSavings.forEach(item=>{const amount=Number(item.amount||0),status=String(item.status||"ACTIVE").toUpperCase();if(status==="ACTIVE"){activeTotal+=amount;depositCount++}if(status==="WITHDRAWN")withdrawnTotal+=amount;if(status==="CANCELLED")cancelledTotal+=amount});
-const phone=getCustomerPhone(customer),pin=getCustomerPin(customer);
-$("customerProfile").innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:15px;flex-wrap:wrap"><div><div style="font-size:19px;font-weight:900;color:#193219">${escapeHtml(displayName)}</div><div style="font-size:11px;color:#737b73;margin-top:5px">${phone?"Phone: "+escapeHtml(phone):"Phone: —"} &nbsp;&nbsp;•&nbsp;&nbsp; ${pin?"PIN / ID: "+escapeHtml(pin):"PIN / ID: —"}</div></div><div style="background:#e6f3e7;color:#087a0b;border-radius:10px;padding:10px 13px;font-size:11px;font-weight:900">CUSTOMER SAVINGS</div></div>`;
-$("customerSavingStats").innerHTML=`<div class="customer-stat"><div class="customer-stat-label">CURRENT SAVINGS</div><div class="customer-stat-value" style="color:#087a0b">KSh ${money(activeTotal)}</div></div><div class="customer-stat"><div class="customer-stat-label">DEPOSITS</div><div class="customer-stat-value">${depositCount}</div></div><div class="customer-stat"><div class="customer-stat-label">WITHDRAWN</div><div class="customer-stat-value" style="color:#9b5900">KSh ${money(withdrawnTotal)}</div></div><div class="customer-stat"><div class="customer-stat-label">CANCELLED</div><div class="customer-stat-value" style="color:#b52323">KSh ${money(cancelledTotal)}</div></div>`;
-if(!customerSavings.length){$("customerSavingsBody").innerHTML=`<tr><td colspan="5" style="padding:35px 15px;text-align:center;color:#737b73;font-size:12px">This customer has no savings records yet.</td></tr>`}
-else $("customerSavingsBody").innerHTML=customerSavings.map(item=>{const status=String(item.status||"ACTIVE").toUpperCase(),statusClass=status==="ACTIVE"?"active":status==="WITHDRAWN"?"withdrawn":"cancelled";return `<tr><td style="padding:10px;border-bottom:1px solid #edf0ed;font-size:11px">${escapeHtml(formatDate(item.date))}</td><td style="padding:10px;border-bottom:1px solid #edf0ed;font-weight:900;color:#087a0b;font-size:11px">KSh ${money(item.amount)}</td><td style="padding:10px;border-bottom:1px solid #edf0ed;font-size:11px">${escapeHtml(item.paymentMethod||"Cash")}</td><td style="padding:10px;border-bottom:1px solid #edf0ed;font-size:11px">${escapeHtml(item.reference||"—")}</td><td style="padding:10px;border-bottom:1px solid #edf0ed"><span class="status ${statusClass}">${escapeHtml(status)}</span></td></tr>`}).join("");
-$("customerSavingsModal").style.display="flex";
+window.removeSaving=async id=>{
+
+if(!confirm("Delete this saving permanently?"))return;
+
+try{
+
+await deleteDoc(
+doc(db,"savings",id)
+);
+
+show("Saving deleted.");
+load();
+
+}catch(e){
+
+show(e.message);
+
 }
 
-function clearForm(){$("customerName").value="";$("amount").value="";$("savingDate").value=todayISO();$("reference").value="";$("paymentMethod").value="Cash";$("status").value="ACTIVE";$("note").value="";$("customerResults").style.display="none";$("selectedCustomerNote").textContent="";selectedCustomerId="";editingId=null;$("formMode").textContent="New Entry";$("saveBtn").textContent="Save Saving";$("cancelEditBtn").style.display="none"}
-$("clearBtn").onclick=clearForm;$("cancelEditBtn").onclick=clearForm;
-$("searchInput").addEventListener("input",renderSavings);$("clearSearchBtn").onclick=()=>{$("searchInput").value="";renderSavings()};
-$("refreshBtn").onclick=async()=>{if(!currentUser){toast("Please login first.");return}try{$("refreshBtn").disabled=true;$("refreshBtn").textContent="Refreshing...";await loadCustomers();await loadSavings();toast("Savings refreshed from Firebase.")}finally{$("refreshBtn").disabled=false;$("refreshBtn").textContent="↻ Refresh"}};
-$("newSavingBtn").onclick=()=>{window.scrollTo({top:0,behavior:"smooth"});setTimeout(()=>$("customerName").focus(),300)};
-$("logoutLink").onclick=async event=>{event.preventDefault();try{await signOut(auth);window.location.href="login.html"}catch(error){console.error(error);toast("Logout failed.")}};
-$("editModal").addEventListener("click",e=>{if(e.target===$("editModal"))closeEditModal()});
-$("customerModal").addEventListener("click",e=>{if(e.target===$("customerModal"))closeCustomerModal()});
-$("savingDate").value=todayISO();
-document.addEventListener("click",e=>{const results=$("customerResults"),input=$("customerName");if(results&&!results.contains(e.target)&&e.target!==input)results.style.display="none"});
-window.addEventListener("error",e=>{console.error("Page error:",e.error||e.message);if(e.message&&!String(e.message).toLowerCase().includes("script error"))toast("A page error occurred. Check the browser console.")});
-window.addEventListener("unhandledrejection",e=>{console.error("Unhandled error:",e.reason);const message=e.reason?.message||String(e.reason||"Unknown error");if(message.toLowerCase().includes("permission")||message.toLowerCase().includes("firebase")||message.toLowerCase().includes("firestore"))showFirebaseError("Firebase error: "+message)});
-if(!db)showFirebaseError("Firebase could not start. Check your Firebase configuration.");
+};
+
+$("search").oninput=render;
+$("clear").onclick=clearForm;
+
+$("date").value=today();
+
+load();
+
 </script>
+
 </body>
-</html>
+            </html>

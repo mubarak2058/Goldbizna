@@ -6,127 +6,273 @@
 <title>MABROUK TRADER'S - Login</title>
 
 <style>
-*{box-sizing:border-box}
-body{
+*{
+box-sizing:border-box;
 margin:0;
+padding:0;
+}
+
+html,body{
+width:100%;
+height:100%;
+}
+
+body{
 font-family:Arial,sans-serif;
-background:linear-gradient(135deg,#087a0b,#003f06);
-min-height:100vh;
+background:linear-gradient(135deg,#064f08,#087a0b,#0b9910);
 display:flex;
 align-items:center;
 justify-content:center;
-padding:20px
+overflow:hidden;
 }
-.box{
+
+.login-wrapper{
 width:100%;
-max-width:410px;
+height:100%;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:18px;
+}
+
+.login-card{
+width:min(410px,100%);
 background:#fff;
-padding:30px 25px;
 border-radius:18px;
-box-shadow:0 10px 35px #0006;
-text-align:center
+padding:30px 25px;
+box-shadow:0 12px 40px rgba(0,0,0,.30);
+text-align:center;
+position:relative;
 }
+
 .logo{
-font-size:27px;
-font-weight:bold;
-color:#087a0b;
-margin-bottom:5px
-}
-.sub{
-color:#666;
-margin-bottom:25px
-}
-input{
-width:100%;
-padding:15px;
-margin:7px 0;
-border:1px solid #ccc;
-border-radius:9px;
-font-size:16px;
-outline:none
-}
-input:focus{border-color:#087a0b}
-button{
-width:100%;
-padding:15px;
-margin-top:12px;
-border:0;
-border-radius:9px;
+width:72px;
+height:72px;
+margin:0 auto 14px;
+border-radius:50%;
 background:#087a0b;
 color:#fff;
-font-size:17px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:30px;
 font-weight:bold;
-cursor:pointer
+box-shadow:0 4px 12px rgba(0,0,0,.2);
 }
-button:disabled{opacity:.6}
-#status{
-margin-top:16px;
-padding:12px;
-border-radius:9px;
-display:none;
+
+h1{
+color:#087a0b;
+font-size:24px;
+margin-bottom:5px;
+}
+
+.subtitle{
+color:#777;
+font-size:13px;
+margin-bottom:24px;
+}
+
+.field{
+text-align:left;
+margin-bottom:13px;
+}
+
+.field label{
+display:block;
+font-size:13px;
 font-weight:bold;
-word-break:break-word
+margin-bottom:5px;
+color:#333;
 }
-.success{
-background:#e5f7e7;
-color:#087a0b
+
+.field input{
+width:100%;
+padding:13px;
+border:1px solid #bbb;
+border-radius:8px;
+font-size:15px;
+outline:none;
 }
+
+.field input:focus{
+border-color:#087a0b;
+box-shadow:0 0 0 2px rgba(8,122,11,.12);
+}
+
+.login-btn{
+width:100%;
+border:0;
+background:#087a0b;
+color:#fff;
+padding:13px;
+border-radius:8px;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+margin-top:5px;
+}
+
+.login-btn:active{
+transform:scale(.98);
+}
+
+.login-btn:disabled{
+opacity:.6;
+cursor:not-allowed;
+}
+
 .error{
-background:#ffe7e7;
-color:#b00000
+display:none;
+background:#ffebee;
+color:#c62828;
+padding:10px;
+border-radius:7px;
+font-size:13px;
+margin-bottom:12px;
+}
+
+.loading{
+display:none;
+color:#087a0b;
+font-size:13px;
+margin-top:10px;
+}
+
+.footer{
+margin-top:20px;
+font-size:11px;
+color:#888;
+}
+
+.shield{
+margin-top:13px;
+font-size:11px;
+color:#087a0b;
+font-weight:bold;
+}
+
+@media(max-height:600px){
+.login-card{
+padding:20px;
+}
+
+.logo{
+width:55px;
+height:55px;
+font-size:23px;
+}
+
+h1{
+font-size:20px;
+}
+
+.subtitle{
+margin-bottom:15px;
+}
 }
 </style>
 </head>
 
 <body>
 
-<div class="box">
+<div class="login-wrapper">
 
-<div class="logo">MABROUK TRADER'S</div>
-<div class="sub">Business Management System</div>
+<div class="login-card">
 
+<div class="logo">M</div>
+
+<h1>MABROUK TRADER'S</h1>
+
+<div class="subtitle">
+Secure Business Management System
+</div>
+
+<div id="error" class="error"></div>
+
+<form id="loginForm">
+
+<div class="field">
+<label>Username</label>
 <input
-id="email"
-type="email"
-value="mubarakjumamasoud@gmail.com"
-placeholder="Email"
-autocomplete="username">
+id="username"
+type="text"
+placeholder="Enter username"
+autocomplete="username"
+required
+>
+</div>
 
+<div class="field">
+<label>Password</label>
 <input
 id="password"
 type="password"
-placeholder="Password"
-autocomplete="current-password">
+placeholder="Enter password"
+autocomplete="current-password"
+required
+>
+</div>
 
-<button id="loginBtn">LOGIN</button>
+<button
+id="loginBtn"
+class="login-btn"
+type="submit"
+>
+LOGIN
+</button>
 
-<div id="status"></div>
+<div id="loading" class="loading">
+Signing in securely...
+</div>
+
+</form>
+
+<div class="shield">
+🔒 Authorized access only
+</div>
+
+<div class="footer">
+MABROUK TRADER'S POS Pro
+</div>
 
 </div>
+
+</div>
+
 
 <script type="module">
 
 import{
-initializeApp
-}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+initializeApp,
+getApps
+}
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
 import{
 getAuth,
-signInWithEmailAndPassword
-}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+signInWithEmailAndPassword,
+onAuthStateChanged,
+signOut
+}
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
 import{
 getFirestore,
 doc,
-setDoc,
-serverTimestamp
-}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+getDoc,
+collection,
+getDocs,
+query,
+where
+}
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-
-/* FIREBASE */
 
 const firebaseConfig={
-apiKey:"AIzaSyA8XB6aY45-yHT0uZ6NUhptMoNkYqgwqOs",
+apiKey:"AIzaSyA8XB6aY45-yHT0uZ6NU5gYqgwqOs",
 authDomain:"goldbizna.firebaseapp.com",
 projectId:"goldbizna",
 storageBucket:"goldbizna.firebasestorage.app",
@@ -135,135 +281,206 @@ appId:"1:559981054862:web:0635c689607d3baa3272df",
 measurementId:"G-95XL3BNQJF"
 };
 
-const app=initializeApp(firebaseConfig);
+
+const app=
+getApps().length
+?getApps()[0]
+:initializeApp(firebaseConfig);
+
 const auth=getAuth(app);
 const db=getFirestore(app);
 
 
-/* YOUR OWNER ACCOUNT */
-
-const OWNER_UID="szplJ5HPQWbysc7mkBWN1KPVwC22";
-const OWNER_EMAIL="mubarakjumamasoud@gmail.com";
-
-
-/* ALL OWNER PERMISSIONS */
-
-const OWNER_PERMISSIONS={
-Dashboard:true,
-POS:true,
-Inventory:true,
-Customers:true,
-"Sales History":true,
-Reports:true,
-Savings:true,
-Payments:true,
-Discounts:true,
-"Refunds/Voids":true,
-"Stock Adjustments":true,
-"User Management":true,
-Settings:true,
-"Backup & Restore":true
-};
-
-
-const emailBox=document.getElementById("email");
-const passwordBox=document.getElementById("password");
+const form=document.getElementById("loginForm");
+const usernameInput=document.getElementById("username");
+const passwordInput=document.getElementById("password");
 const loginBtn=document.getElementById("loginBtn");
-const statusBox=document.getElementById("status");
+const errorBox=document.getElementById("error");
+const loading=document.getElementById("loading");
 
 
-function showStatus(text,success=false){
+function showError(text){
 
-statusBox.textContent=text;
-statusBox.style.display="block";
-
-if(success){
-statusBox.className="success";
-}else{
-statusBox.className="error";
-}
+errorBox.textContent=text;
+errorBox.style.display="block";
 
 }
+
+
+function hideError(){
+
+errorBox.style.display="none";
+
+}
+
+
+/* Already logged in? */
+
+onAuthStateChanged(auth,(user)=>{
+
+if(user){
+
+location.replace("index.html");
+
+}
+
+});
 
 
 /* LOGIN */
 
-async function login(){
+form.addEventListener("submit",async e=>{
 
-const email=emailBox.value.trim();
-const password=passwordBox.value;
+e.preventDefault();
 
-if(!email){
-showStatus("Please enter your email.");
+hideError();
+
+const username=
+usernameInput.value.trim();
+
+const password=
+passwordInput.value;
+
+
+if(!username||!password){
+
+showError(
+"Please enter your username and password."
+);
+
 return;
+
 }
 
-if(!password){
-showStatus("Please enter your password.");
-return;
-}
 
 loginBtn.disabled=true;
-loginBtn.textContent="LOGGING IN...";
-statusBox.style.display="none";
+loading.style.display="block";
 
 
 try{
 
-/* FIREBASE AUTH */
+let email="";
 
-const result=await signInWithEmailAndPassword(
+
+/*
+First try the usernames collection.
+*/
+
+const usernameDoc=
+await getDoc(
+doc(
+db,
+"usernames",
+username.toLowerCase()
+)
+);
+
+
+if(usernameDoc.exists()){
+
+email=usernameDoc.data().email||"";
+
+}
+
+
+/*
+Fallback: search users collection.
+*/
+
+if(!email){
+
+const q=
+query(
+collection(db,"users"),
+where("username","==",username)
+);
+
+const result=
+await getDocs(q);
+
+if(!result.empty){
+
+email=
+result.docs[0].data().email||"";
+
+}
+
+}
+
+
+/*
+Allow email directly too.
+*/
+
+if(!email&&username.includes("@")){
+
+email=username;
+
+}
+
+
+if(!email){
+
+showError(
+"Username or password is incorrect."
+);
+
+loginBtn.disabled=false;
+loading.style.display="none";
+return;
+
+}
+
+
+/*
+Firebase verifies the password.
+*/
+
+const credential=
+await signInWithEmailAndPassword(
 auth,
 email,
 password
 );
 
-const user=result.user;
+
+const user=credential.user;
 
 
 /*
-OWNER ACCOUNT
-If Firebase UID matches your account,
-automatically create/update the profile.
+Check whether the user has been disabled
+inside the MABROUK TRADER'S system.
 */
 
+const profile=
+await getDoc(
+doc(db,"users",user.uid)
+);
+
+
 if(
-user.uid===OWNER_UID &&
-user.email===OWNER_EMAIL
+profile.exists() &&
+profile.data().active===false
 ){
 
-await setDoc(
-doc(db,"users",OWNER_UID),
-{
-uid:OWNER_UID,
-fullName:"Mubarak",
-username:"admin",
-email:OWNER_EMAIL,
-phone:"",
-role:"Owner/Admin",
-status:"active",
-permissions:OWNER_PERMISSIONS,
-updatedAt:serverTimestamp()
-},
-{merge:true}
+await signOut(auth);
+
+showError(
+"This account has been disabled."
 );
 
+loginBtn.disabled=false;
+loading.style.display="none";
+return;
 
-/* USERNAME */
-
-await setDoc(
-doc(db,"usernames","admin"),
-{
-uid:OWNER_UID,
-email:OWNER_EMAIL,
-username:"admin",
-updatedAt:serverTimestamp()
-},
-{merge:true}
-);
+}
 
 
-/* SAVE LOGIN SESSION */
+/*
+Session markers for the existing pages.
+These are NOT the security mechanism.
+Firebase Authentication is.
+*/
 
 localStorage.setItem(
 "goldbizna_logged_in",
@@ -271,94 +488,45 @@ localStorage.setItem(
 );
 
 localStorage.setItem(
-"goldbizna_uid",
-OWNER_UID
+"loggedIn",
+"true"
+);
+
+localStorage.setItem(
+"gb_login",
+"true"
 );
 
 localStorage.setItem(
 "goldbizna_username",
-"admin"
+username
 );
-
-localStorage.setItem(
-"goldbizna_role",
-"Owner/Admin"
-);
-
-
-showStatus(
-"✅ Welcome Mubarak — Owner/Admin",
-true
-);
-
-loginBtn.textContent="LOGIN SUCCESSFUL";
-
-setTimeout(()=>{
-window.location.replace("index.html");
-},1000);
-
-return;
-}
 
 
 /*
-OTHER USERS
+Successful login.
 */
 
-showStatus(
-"Firebase login successful, but this account is not registered in MABROUK TRADER'S."
+location.replace("index.html");
+
+
+}catch(e){
+
+console.error(e);
+
+showError(
+"Username or password is incorrect."
 );
 
-loginBtn.disabled=false;
-loginBtn.textContent="LOGIN";
+passwordInput.value="";
 
-
-}catch(error){
-
-console.error(error);
-
-let message="Login failed.";
-
-if(error.code==="auth/invalid-credential"){
-message="❌ Incorrect email or password.";
-}
-else if(error.code==="auth/user-not-found"){
-message="❌ Firebase account was not found.";
-}
-else if(error.code==="auth/wrong-password"){
-message="❌ Incorrect password.";
-}
-else if(error.code==="auth/user-disabled"){
-message="❌ This Firebase account is disabled.";
-}
-else{
-message="❌ "+error.code+" — "+error.message;
-}
-
-showStatus(message);
-
-passwordBox.value="";
-passwordBox.focus();
+passwordInput.focus();
 
 loginBtn.disabled=false;
-loginBtn.textContent="LOGIN";
+loading.style.display="none";
 
 }
 
-}
-
-
-/* BUTTON */
-
-loginBtn.addEventListener("click",login);
-
-
-/* ENTER KEY */
-
-passwordBox.addEventListener("keydown",e=>{
-if(e.key==="Enter"){
-login();
-}
 });
 
 </script>

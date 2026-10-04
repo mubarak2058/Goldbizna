@@ -6,676 +6,224 @@
 <title>MABROUK TRADER'S - Savings</title>
 
 <style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  font-family:Arial,sans-serif
-}
-
-body{
-  background:#f5f7f6;
-  color:#222;
-  overflow-x:hidden
-}
-
-button,input,select,textarea{
-  font:inherit
-}
-
-button{
-  cursor:pointer
-}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#f5f7f6;color:#222;overflow-x:hidden}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
 
 .topbar{
-  position:fixed;
-  top:0;
-  left:0;
-  right:0;
-  height:64px;
-  background:#087a0b;
-  color:#fff;
-  display:flex;
-  align-items:center;
-  padding:0 18px;
-  z-index:1000;
-  box-shadow:0 2px 10px #0002
+position:fixed;top:0;left:0;right:0;height:64px;background:#087a0b;color:#fff;
+display:flex;align-items:center;padding:0 18px;z-index:1000;box-shadow:0 2px 10px #0002
 }
-
-.brand{
-  font-size:20px;
-  font-weight:900;
-  letter-spacing:.3px
-}
-
-.brand span{
-  color:#ffd83d
-}
-
-.store{
-  margin-left:22px;
-  opacity:.85;
-  font-size:13px
-}
-
-.top-actions{
-  margin-left:auto;
-  display:flex;
-  align-items:center;
-  gap:18px;
-  font-size:13px
-}
-
-.admin{
-  display:flex;
-  align-items:center;
-  gap:9px
-}
-
+.brand{font-size:20px;font-weight:900}
+.brand span{color:#ffd83d}
+.store{margin-left:22px;opacity:.85;font-size:13px}
+.top-actions{margin-left:auto;display:flex;align-items:center;gap:18px;font-size:13px}
+.admin{display:flex;align-items:center;gap:9px}
 .avatar{
-  width:35px;
-  height:35px;
-  border-radius:50%;
-  background:#fff;
-  color:#087a0b;
-  display:grid;
-  place-items:center;
-  font-weight:900
+width:35px;height:35px;border-radius:50%;background:#fff;color:#087a0b;
+display:grid;place-items:center;font-weight:900
 }
 
 .sidebar{
-  position:fixed;
-  top:64px;
-  left:0;
-  bottom:0;
-  width:205px;
-  background:#fff;
-  border-right:1px solid #dfe5df;
-  padding:14px 10px;
-  z-index:900;
-  overflow-y:auto
+position:fixed;top:64px;left:0;bottom:0;width:205px;background:#fff;
+border-right:1px solid #dfe5df;padding:14px 10px;z-index:900;overflow-y:auto
 }
-
-.nav{
-  display:flex;
-  flex-direction:column;
-  gap:5px
-}
-
+.nav{display:flex;flex-direction:column;gap:5px}
 .nav a{
-  text-decoration:none;
-  color:#354035;
-  padding:11px 12px;
-  border-radius:9px;
-  font-size:13px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:700
+text-decoration:none;color:#354035;padding:11px 12px;border-radius:9px;
+font-size:13px;display:flex;align-items:center;gap:10px;font-weight:700
 }
+.nav a:hover{background:#eef5ee}
+.nav a.active{background:#e6f3e7;color:#087a0b}
+.nav a.logout{margin-top:12px;color:#b52323}
+.nav-icon{width:22px;text-align:center;font-size:16px}
 
-.nav a:hover{
-  background:#eef5ee
-}
-
-.nav a.active{
-  background:#e6f3e7;
-  color:#087a0b
-}
-
-.nav a.logout{
-  margin-top:12px;
-  color:#b52323
-}
-
-.nav-icon{
-  width:22px;
-  text-align:center;
-  font-size:16px
-}
-
-.main{
-  margin-left:205px;
-  padding-top:64px;
-  min-height:100vh
-}
-
-.content{
-  padding:22px
-}
+.main{margin-left:205px;padding-top:64px;min-height:100vh}
+.content{padding:22px}
 
 .page-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-  margin-bottom:18px
+display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:18px
 }
-
-.page-head h1{
-  font-size:25px;
-  color:#193219
-}
-
-.page-head p{
-  color:#697169;
-  font-size:13px;
-  margin-top:5px
-}
-
-.head-actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap
-}
+.page-head h1{font-size:25px;color:#193219}
+.page-head p{color:#697169;font-size:13px;margin-top:5px}
+.head-actions{display:flex;gap:8px;flex-wrap:wrap}
 
 .btn{
-  border:0;
-  border-radius:8px;
-  min-height:40px;
-  padding:0 15px;
-  font-weight:800
+border:0;border-radius:8px;min-height:40px;padding:0 15px;font-weight:800
 }
-
-.btn.primary{
-  background:#087a0b;
-  color:#fff
-}
-
-.btn.secondary{
-  background:#eef3ee;
-  color:#263426;
-  border:1px solid #d8e0d8
-}
-
-.btn.danger{
-  background:#c62828;
-  color:#fff
-}
-
-.btn.small{
-  min-height:34px;
-  padding:0 11px;
-  font-size:12px
-}
+.btn.primary{background:#087a0b;color:#fff}
+.btn.secondary{background:#eef3ee;color:#263426;border:1px solid #d8e0d8}
+.btn.danger{background:#c62828;color:#fff}
+.btn.small{min-height:34px;padding:0 11px;font-size:12px}
 
 .stats{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:13px;
-  margin-bottom:18px
+display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:18px
 }
-
 .stat{
-  background:#fff;
-  border:1px solid #dfe5df;
-  border-radius:12px;
-  padding:16px;
-  box-shadow:0 2px 10px #00000008
+background:#fff;border:1px solid #dfe5df;border-radius:12px;padding:16px;
+box-shadow:0 2px 10px #00000008
 }
-
-.stat-title{
-  color:#707870;
-  font-size:12px;
-  font-weight:700;
-  margin-bottom:8px
-}
-
-.stat-value{
-  font-size:22px;
-  font-weight:900;
-  color:#182318
-}
-
-.stat-sub{
-  color:#7a827a;
-  font-size:11px;
-  margin-top:5px
-}
+.stat-title{color:#707870;font-size:12px;font-weight:700;margin-bottom:8px}
+.stat-value{font-size:22px;font-weight:900;color:#182318}
+.stat-sub{color:#7a827a;font-size:11px;margin-top:5px}
 
 .card{
-  background:#fff;
-  border:1px solid #dfe5df;
-  border-radius:12px;
-  box-shadow:0 2px 10px #00000008;
-  margin-bottom:18px
+background:#fff;border:1px solid #dfe5df;border-radius:12px;
+box-shadow:0 2px 10px #00000008;margin-bottom:18px
 }
-
 .card-head{
-  padding:15px 17px;
-  border-bottom:1px solid #e8ece8;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px
+padding:15px 17px;border-bottom:1px solid #e8ece8;
+display:flex;justify-content:space-between;align-items:center;gap:10px
 }
+.card-head h2{font-size:16px;color:#203020}
+.card-head small{color:#737b73}
 
-.card-head h2{
-  font-size:16px;
-  color:#203020
-}
-
-.card-head small{
-  color:#737b73
-}
-
-.form{
-  padding:17px
-}
-
-.form-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:13px
-}
-
+.form{padding:17px}
+.form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
 .field label{
-  display:block;
-  font-size:12px;
-  font-weight:800;
-  color:#555d55;
-  margin-bottom:6px
+display:block;font-size:12px;font-weight:800;color:#555d55;margin-bottom:6px
 }
-
-.field input,
-.field select,
-.field textarea{
-  width:100%;
-  border:1px solid #cfd7cf;
-  border-radius:8px;
-  background:#fff;
-  min-height:42px;
-  padding:0 11px;
-  outline:none
+.field input,.field select,.field textarea{
+width:100%;border:1px solid #cfd7cf;border-radius:8px;background:#fff;
+min-height:42px;padding:0 11px;outline:none
 }
-
-.field textarea{
-  min-height:88px;
-  padding:10px 11px;
-  resize:vertical
+.field textarea{min-height:88px;padding:10px 11px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{
+border-color:#087a0b;box-shadow:0 0 0 3px #087a0b18
 }
+.span-2{grid-column:span 2}
+.span-4{grid-column:span 4}
 
-.field input:focus,
-.field select:focus,
-.field textarea:focus{
-  border-color:#087a0b;
-  box-shadow:0 0 0 3px #087a0b18
-}
-
-.span-2{
-  grid-column:span 2
-}
-
-.span-4{
-  grid-column:span 4
-}
-
-.customer-row{
-  display:flex;
-  gap:8px
-}
-
-.customer-row input{
-  flex:1
-}
-
+.customer-row{display:flex;gap:8px}
+.customer-row input{flex:1}
 .form-actions{
-  margin-top:15px;
-  display:flex;
-  justify-content:flex-end;
-  gap:8px;
-  flex-wrap:wrap
+margin-top:15px;display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap
 }
 
 .searchbar{
-  padding:14px 17px;
-  border-bottom:1px solid #e8ece8;
-  display:flex;
-  gap:10px;
-  align-items:center
+padding:14px 17px;border-bottom:1px solid #e8ece8;
+display:flex;gap:10px;align-items:center
 }
-
 .searchbar input{
-  flex:1;
-  min-height:42px;
-  border:1px solid #cfd7cf;
-  border-radius:8px;
-  padding:0 12px;
-  outline:none
+flex:1;min-height:42px;border:1px solid #cfd7cf;border-radius:8px;
+padding:0 12px;outline:none
 }
-
 .searchbar input:focus{
-  border-color:#087a0b;
-  box-shadow:0 0 0 3px #087a0b18
+border-color:#087a0b;box-shadow:0 0 0 3px #087a0b18
 }
 
-.table-wrap{
-  width:100%;
-  overflow-x:auto
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:850px
-}
-
+.table-wrap{width:100%;overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:900px}
 th,td{
-  padding:12px 13px;
-  border-bottom:1px solid #edf0ed;
-  text-align:left;
-  font-size:12px
+padding:12px 13px;border-bottom:1px solid #edf0ed;
+text-align:left;font-size:12px
 }
-
 th{
-  background:#f8faf8;
-  color:#626a62;
-  font-size:11px;
-  font-weight:900;
-  text-transform:uppercase;
-  position:sticky;
-  top:0;
-  z-index:1
+background:#f8faf8;color:#626a62;font-size:11px;font-weight:900;
+text-transform:uppercase
 }
-
-td{
-  color:#333b33
-}
-
-.amount{
-  font-weight:900;
-  color:#087a0b
-}
+td{color:#333b33}
+.amount{font-weight:900;color:#087a0b}
 
 .status{
-  display:inline-flex;
-  align-items:center;
-  padding:5px 8px;
-  border-radius:999px;
-  font-size:10px;
-  font-weight:900
+display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;
+font-size:10px;font-weight:900
 }
+.status.active{background:#e7f5e8;color:#087a0b}
+.status.withdrawn{background:#fff0df;color:#9b5900}
+.status.cancelled{background:#ffe7e7;color:#b52323}
 
-.status.active{
-  background:#e7f5e8;
-  color:#087a0b
-}
+.empty,.loading,.error{text-align:center;padding:35px 15px;color:#727a72}
+.error{color:#b52323;background:#fff7f7}
 
-.status.withdrawn{
-  background:#fff0df;
-  color:#9b5900
-}
-
-.status.cancelled{
-  background:#ffe7e7;
-  color:#b52323
-}
-
-.empty,
-.loading,
-.error{
-  text-align:center;
-  padding:35px 15px;
-  color:#727a72
-}
-
-.error{
-  color:#b52323;
-  background:#fff7f7
-}
-
-.actions{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap
-}
-
+.actions{display:flex;gap:6px;flex-wrap:wrap}
 .mini{
-  border:1px solid #d5ddd5;
-  background:#fff;
-  border-radius:6px;
-  padding:6px 9px;
-  font-size:11px;
-  font-weight:800
+border:1px solid #d5ddd5;background:#fff;border-radius:6px;
+padding:6px 9px;font-size:11px;font-weight:800
 }
+.mini.edit{color:#087a0b}
+.mini.delete{color:#b52323}
+.mini.withdraw{color:#9b5900}
 
-.mini.edit{
-  color:#087a0b
-}
-
-.mini.delete{
-  color:#b52323
-}
-
-#cloudStatus{
-  font-size:11px;
-  font-weight:800
-}
-
-.online{
-  color:#087a0b
-}
-
-.offline{
-  color:#b52323
-}
+#cloudStatus{font-size:11px;font-weight:800}
+.online{color:#dfffe1}
+.offline{color:#ffd2d2}
 
 .modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:#0007;
-  z-index:2000;
-  padding:20px;
-  align-items:center;
-  justify-content:center
+display:none;position:fixed;inset:0;background:#0007;z-index:2000;
+padding:20px;align-items:center;justify-content:center
 }
-
 .modal-box{
-  width:min(560px,100%);
-  max-height:92vh;
-  overflow-y:auto;
-  background:#fff;
-  border-radius:14px;
-  box-shadow:0 18px 60px #0004
+width:min(560px,100%);max-height:92vh;overflow-y:auto;background:#fff;
+border-radius:14px;box-shadow:0 18px 60px #0004
 }
-
 .modal-head{
-  padding:15px 17px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-bottom:1px solid #e8ece8
+padding:15px 17px;display:flex;justify-content:space-between;
+align-items:center;border-bottom:1px solid #e8ece8
 }
-
-.modal-head h3{
-  font-size:16px
-}
-
+.modal-head h3{font-size:16px}
 .close{
-  width:34px;
-  height:34px;
-  border:0;
-  border-radius:8px;
-  background:#f0f2f0;
-  font-size:18px
+width:34px;height:34px;border:0;border-radius:8px;
+background:#f0f2f0;font-size:18px
 }
-
-.modal-body{
-  padding:17px
-}
-
+.modal-body{padding:17px}
 .modal-actions{
-  padding:0 17px 17px;
-  display:flex;
-  justify-content:flex-end;
-  gap:8px
+padding:0 17px 17px;display:flex;justify-content:flex-end;gap:8px
 }
 
 .customer-results{
-  margin-top:8px;
-  border:1px solid #dfe5df;
-  border-radius:8px;
-  overflow:hidden;
-  display:none;
-  max-height:220px;
-  overflow-y:auto
+margin-top:8px;border:1px solid #dfe5df;border-radius:8px;
+overflow:hidden;display:none;max-height:220px;overflow-y:auto
 }
-
 .customer-item{
-  padding:11px;
-  border-bottom:1px solid #eef1ee;
-  cursor:pointer
+padding:11px;border-bottom:1px solid #eef1ee;cursor:pointer
 }
-
-.customer-item:last-child{
-  border-bottom:0
-}
-
-.customer-item:hover{
-  background:#f4f8f4
-}
-
-.customer-item b{
-  display:block;
-  font-size:12px
-}
-
-.customer-item span{
-  display:block;
-  font-size:11px;
-  color:#727972;
-  margin-top:3px
-}
+.customer-item:hover{background:#f4f8f4}
+.customer-item b{display:block;font-size:12px}
+.customer-item span{display:block;font-size:11px;color:#727972;margin-top:3px}
 
 .toast{
-  display:none;
-  position:fixed;
-  right:20px;
-  bottom:20px;
-  background:#222;
-  color:#fff;
-  padding:13px 16px;
-  border-radius:9px;
-  font-size:12px;
-  font-weight:700;
-  z-index:3000;
-  box-shadow:0 7px 25px #0004;
-  max-width:330px
+display:none;position:fixed;right:20px;bottom:20px;background:#222;color:#fff;
+padding:13px 16px;border-radius:9px;font-size:12px;font-weight:700;
+z-index:3000;box-shadow:0 7px 25px #0004;max-width:360px
 }
+.note{font-size:11px;color:#757d75;margin-top:6px}
 
-.note{
-  font-size:11px;
-  color:#757d75;
-  margin-top:6px
+.firebase-error{
+display:none;margin-bottom:15px;background:#fff1f1;color:#a30000;
+border:1px solid #f0baba;border-radius:10px;padding:12px;font-size:12px;
+font-weight:700;line-height:1.5
 }
 
 @media(max-width:1100px){
-  .stats{
-    grid-template-columns:repeat(2,1fr)
-  }
-
-  .form-grid{
-    grid-template-columns:repeat(2,1fr)
-  }
-
-  .span-4{
-    grid-column:span 2
-  }
+.stats{grid-template-columns:repeat(2,1fr)}
+.form-grid{grid-template-columns:repeat(2,1fr)}
+.span-4{grid-column:span 2}
 }
-
 @media(max-width:760px){
-  .topbar{
-    height:57px;
-    padding:0 10px
-  }
-
-  .brand{
-    font-size:15px
-  }
-
-  .store{
-    display:none
-  }
-
-  .top-actions{
-    gap:7px;
-    font-size:10px
-  }
-
-  .admin div:last-child{
-    display:none
-  }
-
-  .avatar{
-    width:31px;
-    height:31px
-  }
-
-  .sidebar{
-    top:57px;
-    width:145px;
-    padding:10px 6px
-  }
-
-  .nav a{
-    font-size:11px;
-    padding:10px 7px;
-    gap:6px
-  }
-
-  .main{
-    margin-left:145px;
-    padding-top:57px
-  }
-
-  .content{
-    padding:12px 9px
-  }
-
-  .page-head{
-    align-items:flex-start;
-    flex-direction:column
-  }
-
-  .page-head h1{
-    font-size:21px
-  }
-
-  .stats{
-    gap:7px
-  }
-
-  .stat{
-    padding:11px
-  }
-
-  .stat-value{
-    font-size:17px
-  }
-
-  .form-grid{
-    grid-template-columns:1fr
-  }
-
-  .span-2,
-  .span-4{
-    grid-column:span 1
-  }
+.topbar{height:57px;padding:0 10px}
+.brand{font-size:15px}
+.store{display:none}
+.top-actions{gap:7px;font-size:10px}
+.admin div:last-child{display:none}
+.avatar{width:31px;height:31px}
+.sidebar{top:57px;width:145px;padding:10px 6px}
+.nav a{font-size:11px;padding:10px 7px;gap:6px}
+.main{margin-left:145px;padding-top:57px}
+.content{padding:12px 9px}
+.page-head{align-items:flex-start;flex-direction:column}
+.page-head h1{font-size:21px}
+.stats{gap:7px}
+.stat{padding:11px}
+.stat-value{font-size:17px}
+.form-grid{grid-template-columns:1fr}
+.span-2,.span-4{grid-column:span 1}
 }
-
 @media(max-width:520px){
-  .stats{
-    grid-template-columns:1fr 1fr
-  }
-
-  .content{
-    padding:10px 7px
-  }
-
-  .top-actions>div:first-child{
-    display:none
-  }
+.stats{grid-template-columns:1fr 1fr}
+.content{padding:10px 7px}
+.top-actions>div:first-child{display:none}
 }
 </style>
 </head>
@@ -687,7 +235,7 @@ td{
   <div class="store">Savings Management</div>
 
   <div class="top-actions">
-    <div id="cloudStatus" class="online">Connecting...</div>
+    <div id="cloudStatus" class="online">Starting Firebase...</div>
 
     <div class="admin">
       <div class="avatar" id="avatar">A</div>
@@ -700,344 +248,394 @@ td{
 </header>
 
 <aside class="sidebar">
-  <nav class="nav">
-    <a href="index.html"><span class="nav-icon">⌂</span>Home</a>
-    <a href="pos.html"><span class="nav-icon">▣</span>POS</a>
-    <a href="inventory.html"><span class="nav-icon">▤</span>Inventory</a>
-    <a href="customers.html"><span class="nav-icon">♧</span>Customers</a>
-    <a href="sales.html"><span class="nav-icon">▱</span>Sales</a>
-    <a href="savings.html" class="active"><span class="nav-icon">◈</span>Savings</a>
-    <a href="dashboard.html"><span class="nav-icon">▥</span>Dashboard</a>
-    <a href="reports.html"><span class="nav-icon">▤</span>Reports</a>
-    <a href="users.html"><span class="nav-icon">♙</span>Users</a>
-    <a href="settings.html"><span class="nav-icon">⚙</span>Settings</a>
-    <a href="login.html" class="logout" id="logoutLink"><span class="nav-icon">⇥</span>Logout</a>
-  </nav>
+<nav class="nav">
+<a href="index.html"><span class="nav-icon">⌂</span>Home</a>
+<a href="pos.html"><span class="nav-icon">▣</span>POS</a>
+<a href="inventory.html"><span class="nav-icon">▤</span>Inventory</a>
+<a href="customers.html"><span class="nav-icon">♧</span>Customers</a>
+<a href="sales.html"><span class="nav-icon">▱</span>Sales</a>
+<a href="savings.html" class="active"><span class="nav-icon">◈</span>Savings</a>
+<a href="dashboard.html"><span class="nav-icon">▥</span>Dashboard</a>
+<a href="reports.html"><span class="nav-icon">▤</span>Reports</a>
+<a href="users.html"><span class="nav-icon">♙</span>Users</a>
+<a href="settings.html"><span class="nav-icon">⚙</span>Settings</a>
+<a href="login.html" class="logout" id="logoutLink"><span class="nav-icon">⇥</span>Logout</a>
+</nav>
 </aside>
 
 <main class="main">
-  <div class="content">
+<div class="content">
 
-    <div class="page-head">
-      <div>
-        <h1>Savings</h1>
-        <p>Manage customer savings, deposits, balances and withdrawals.</p>
-      </div>
+<div id="firebaseError" class="firebase-error"></div>
 
-      <div class="head-actions">
-        <button class="btn secondary" id="refreshBtn">↻ Refresh</button>
-        <button class="btn primary" id="newSavingBtn">＋ New Saving</button>
-      </div>
-    </div>
-
-    <section class="stats">
-      <div class="stat">
-        <div class="stat-title">TOTAL SAVINGS</div>
-        <div class="stat-value" id="totalSavings">KSh 0.00</div>
-        <div class="stat-sub">All active customer savings</div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-title">CUSTOMERS</div>
-        <div class="stat-value" id="customerCount">0</div>
-        <div class="stat-sub">Unique saving customers</div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-title">TODAY'S DEPOSITS</div>
-        <div class="stat-value" id="todayDeposits">KSh 0.00</div>
-        <div class="stat-sub">Deposits recorded today</div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-title">ACTIVE ACCOUNTS</div>
-        <div class="stat-value" id="activeAccounts">0</div>
-        <div class="stat-sub">Accounts currently active</div>
-      </div>
-    </section>
-
-    <section class="card" id="addCard">
-      <div class="card-head">
-        <div>
-          <h2>Add Saving</h2>
-          <small>Record a new customer deposit</small>
-        </div>
-        <span id="formMode">New Entry</span>
-      </div>
-
-      <div class="form">
-        <div class="form-grid">
-
-          <div class="field span-2">
-            <label>Customer</label>
-            <div class="customer-row">
-              <input type="text" id="customerName" placeholder="Search or enter customer name" autocomplete="off">
-              <button class="btn secondary" id="newCustomerBtn" type="button">＋ Customer</button>
-            </div>
-            <div class="customer-results" id="customerResults"></div>
-            <div class="note" id="selectedCustomerNote"></div>
-          </div>
-
-          <div class="field">
-            <label>Amount (KSh)</label>
-            <input type="number" id="amount" min="0" step="0.01" placeholder="0.00">
-          </div>
-
-          <div class="field">
-            <label>Date</label>
-            <input type="date" id="savingDate">
-          </div>
-
-          <div class="field">
-            <label>Reference</label>
-            <input type="text" id="reference" placeholder="Receipt / transaction reference">
-          </div>
-
-          <div class="field">
-            <label>Payment Method</label>
-            <select id="paymentMethod">
-              <option value="Cash">Cash</option>
-              <option value="M-Pesa">M-Pesa</option>
-              <option value="Bank">Bank</option>
-              <option value="Card">Card</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Status</label>
-            <select id="status">
-              <option value="ACTIVE">ACTIVE</option>
-              <option value="WITHDRAWN">WITHDRAWN</option>
-              <option value="CANCELLED">CANCELLED</option>
-            </select>
-          </div>
-
-          <div class="field span-2">
-            <label>Note</label>
-            <textarea id="note" placeholder="Optional note"></textarea>
-          </div>
-
-        </div>
-
-        <div class="form-actions">
-          <button class="btn secondary" id="cancelEditBtn" type="button" style="display:none">Cancel Edit</button>
-          <button class="btn secondary" id="clearBtn" type="button">Clear</button>
-          <button class="btn primary" id="saveBtn" type="button">Save Saving</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="card-head">
-        <div>
-          <h2>Savings History</h2>
-          <small id="recordCount">0 records</small>
-        </div>
-      </div>
-
-      <div class="searchbar">
-        <input type="text" id="searchInput" placeholder="Search customer, reference, payment method or note...">
-        <button class="btn secondary" id="clearSearchBtn" type="button">Clear</button>
-      </div>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Customer</th>
-              <th>Amount</th>
-              <th>Payment</th>
-              <th>Reference</th>
-              <th>Status</th>
-              <th>Recorded By</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-
-          <tbody id="savingsBody">
-            <tr>
-              <td colspan="8" class="loading">Loading savings...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-  </div>
-</main>
-
-<!-- EDIT / WITHDRAW MODAL -->
-<div class="modal" id="editModal">
-  <div class="modal-box">
-
-    <div class="modal-head">
-      <h3>Edit Saving</h3>
-      <button class="close" id="closeEditModal" type="button">✕</button>
-    </div>
-
-    <div class="modal-body">
-      <div class="form-grid">
-
-        <div class="field span-2">
-          <label>Customer</label>
-          <input type="text" id="editCustomer">
-        </div>
-
-        <div class="field">
-          <label>Amount (KSh)</label>
-          <input type="number" id="editAmount" min="0" step="0.01">
-        </div>
-
-        <div class="field">
-          <label>Date</label>
-          <input type="date" id="editDate">
-        </div>
-
-        <div class="field">
-          <label>Payment Method</label>
-          <select id="editPaymentMethod">
-            <option value="Cash">Cash</option>
-            <option value="M-Pesa">M-Pesa</option>
-            <option value="Bank">Bank</option>
-            <option value="Card">Card</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label>Status</label>
-          <select id="editStatus">
-            <option value="ACTIVE">ACTIVE</option>
-            <option value="WITHDRAWN">WITHDRAWN</option>
-            <option value="CANCELLED">CANCELLED</option>
-          </select>
-        </div>
-
-        <div class="field span-2">
-          <label>Reference</label>
-          <input type="text" id="editReference">
-        </div>
-
-        <div class="field span-2">
-          <label>Note</label>
-          <textarea id="editNote"></textarea>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="modal-actions">
-      <button class="btn secondary" id="cancelEditModalBtn" type="button">Cancel</button>
-      <button class="btn primary" id="updateSavingBtn" type="button">Update Saving</button>
-    </div>
-
-  </div>
+<div class="page-head">
+<div>
+<h1>Savings</h1>
+<p>Manage customer savings, deposits, balances and withdrawals.</p>
 </div>
 
+<div class="head-actions">
+<button class="btn secondary" id="refreshBtn">↻ Refresh</button>
+<button class="btn primary" id="newSavingBtn">＋ New Saving</button>
+</div>
+</div>
+
+<section class="stats">
+
+<div class="stat">
+<div class="stat-title">TOTAL SAVINGS</div>
+<div class="stat-value" id="totalSavings">KSh 0.00</div>
+<div class="stat-sub">All active customer savings</div>
+</div>
+
+<div class="stat">
+<div class="stat-title">CUSTOMERS</div>
+<div class="stat-value" id="customerCount">0</div>
+<div class="stat-sub">Unique saving customers</div>
+</div>
+
+<div class="stat">
+<div class="stat-title">TODAY'S DEPOSITS</div>
+<div class="stat-value" id="todayDeposits">KSh 0.00</div>
+<div class="stat-sub">Deposits recorded today</div>
+</div>
+
+<div class="stat">
+<div class="stat-title">ACTIVE ACCOUNTS</div>
+<div class="stat-value" id="activeAccounts">0</div>
+<div class="stat-sub">Accounts currently active</div>
+</div>
+
+</section>
+
+<section class="card">
+
+<div class="card-head">
+<div>
+<h2>Add Saving</h2>
+<small>Record a new customer deposit</small>
+</div>
+<span id="formMode">New Entry</span>
+</div>
+
+<div class="form">
+
+<div class="form-grid">
+
+<div class="field span-2">
+<label>Customer</label>
+
+<div class="customer-row">
+<input type="text" id="customerName"
+placeholder="Search or enter customer name"
+autocomplete="off">
+
+<button class="btn secondary" id="newCustomerBtn" type="button">
+＋ Customer
+</button>
+</div>
+
+<div class="customer-results" id="customerResults"></div>
+<div class="note" id="selectedCustomerNote"></div>
+</div>
+
+<div class="field">
+<label>Amount (KSh)</label>
+<input type="number" id="amount" min="0" step="0.01" placeholder="0.00">
+</div>
+
+<div class="field">
+<label>Date</label>
+<input type="date" id="savingDate">
+</div>
+
+<div class="field">
+<label>Reference</label>
+<input type="text" id="reference"
+placeholder="Receipt / transaction reference">
+</div>
+
+<div class="field">
+<label>Payment Method</label>
+<select id="paymentMethod">
+<option value="Cash">Cash</option>
+<option value="M-Pesa">M-Pesa</option>
+<option value="Bank">Bank</option>
+<option value="Card">Card</option>
+<option value="Other">Other</option>
+</select>
+</div>
+
+<div class="field">
+<label>Status</label>
+<select id="status">
+<option value="ACTIVE">ACTIVE</option>
+<option value="WITHDRAWN">WITHDRAWN</option>
+<option value="CANCELLED">CANCELLED</option>
+</select>
+</div>
+
+<div class="field span-2">
+<label>Note</label>
+<textarea id="note" placeholder="Optional note"></textarea>
+</div>
+
+</div>
+
+<div class="form-actions">
+<button class="btn secondary" id="cancelEditBtn" type="button"
+style="display:none">Cancel Edit</button>
+
+<button class="btn secondary" id="clearBtn" type="button">Clear</button>
+
+<button class="btn primary" id="saveBtn" type="button">
+Save Saving
+</button>
+</div>
+
+</div>
+</section>
+
+<section class="card">
+
+<div class="card-head">
+<div>
+<h2>Savings History</h2>
+<small id="recordCount">0 records</small>
+</div>
+</div>
+
+<div class="searchbar">
+<input type="text" id="searchInput"
+placeholder="Search customer, reference, payment method or note...">
+<button class="btn secondary" id="clearSearchBtn">Clear</button>
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>Date</th>
+<th>Customer</th>
+<th>Amount</th>
+<th>Payment</th>
+<th>Reference</th>
+<th>Status</th>
+<th>Recorded By</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="savingsBody">
+
+<tr>
+<td colspan="8" class="loading">Connecting to Firebase...</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+</section>
+
+</div>
+</main>
+
+
+<!-- EDIT MODAL -->
+
+<div class="modal" id="editModal">
+
+<div class="modal-box">
+
+<div class="modal-head">
+<h3>Edit Saving</h3>
+<button class="close" id="closeEditModal">✕</button>
+</div>
+
+<div class="modal-body">
+
+<div class="form-grid">
+
+<div class="field span-2">
+<label>Customer</label>
+<input type="text" id="editCustomer">
+</div>
+
+<div class="field">
+<label>Amount (KSh)</label>
+<input type="number" id="editAmount" min="0" step="0.01">
+</div>
+
+<div class="field">
+<label>Date</label>
+<input type="date" id="editDate">
+</div>
+
+<div class="field">
+<label>Payment Method</label>
+<select id="editPaymentMethod">
+<option>Cash</option>
+<option>M-Pesa</option>
+<option>Bank</option>
+<option>Card</option>
+<option>Other</option>
+</select>
+</div>
+
+<div class="field">
+<label>Status</label>
+<select id="editStatus">
+<option>ACTIVE</option>
+<option>WITHDRAWN</option>
+<option>CANCELLED</option>
+</select>
+</div>
+
+<div class="field span-2">
+<label>Reference</label>
+<input type="text" id="editReference">
+</div>
+
+<div class="field span-2">
+<label>Note</label>
+<textarea id="editNote"></textarea>
+</div>
+
+</div>
+</div>
+
+<div class="modal-actions">
+<button class="btn secondary" id="cancelEditModalBtn">Cancel</button>
+<button class="btn primary" id="updateSavingBtn">Update Saving</button>
+</div>
+
+</div>
+</div>
+
+
 <!-- CUSTOMER MODAL -->
+
 <div class="modal" id="customerModal">
-  <div class="modal-box">
 
-    <div class="modal-head">
-      <h3>New Customer</h3>
-      <button class="close" id="closeCustomerModal" type="button">✕</button>
-    </div>
+<div class="modal-box">
 
-    <div class="modal-body">
-      <div class="form-grid">
+<div class="modal-head">
+<h3>New Customer</h3>
+<button class="close" id="closeCustomerModal">✕</button>
+</div>
 
-        <div class="field span-2">
-          <label>Customer Name</label>
-          <input type="text" id="newCustomerName" placeholder="Customer full name">
-        </div>
+<div class="modal-body">
 
-        <div class="field">
-          <label>Phone</label>
-          <input type="text" id="newCustomerPhone" placeholder="07...">
-        </div>
+<div class="form-grid">
 
-        <div class="field">
-          <label>PIN / ID</label>
-          <input type="text" id="newCustomerPin" placeholder="Optional">
-        </div>
+<div class="field span-2">
+<label>Customer Name</label>
+<input type="text" id="newCustomerName"
+placeholder="Customer full name">
+</div>
 
-      </div>
-    </div>
+<div class="field">
+<label>Phone</label>
+<input type="text" id="newCustomerPhone"
+placeholder="07...">
+</div>
 
-    <div class="modal-actions">
-      <button class="btn secondary" id="cancelCustomerBtn" type="button">Cancel</button>
-      <button class="btn primary" id="saveCustomerBtn" type="button">Save Customer</button>
-    </div>
+<div class="field">
+<label>PIN / ID</label>
+<input type="text" id="newCustomerPin"
+placeholder="Optional">
+</div>
 
-  </div>
+</div>
+</div>
+
+<div class="modal-actions">
+<button class="btn secondary" id="cancelCustomerBtn">Cancel</button>
+<button class="btn primary" id="saveCustomerBtn">Save Customer</button>
+</div>
+
+</div>
 </div>
 
 <div class="toast" id="toast"></div>
 
+
 <script type="module">
 
 /* ============================================================
-   FIREBASE
+   FIREBASE CONFIGURATION
    ============================================================ */
 
-import {
-  initializeApp,
-  getApps,
-  getApp
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
 import {
-  getAuth,
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+getAuth,
+onAuthStateChanged,
+signOut
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
 import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDocs,
-  onSnapshot,
-  updateDoc,
-  deleteDoc,
-  doc,
-  serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+getFirestore,
+collection,
+addDoc,
+getDocs,
+updateDoc,
+deleteDoc,
+doc
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 
 const firebaseConfig = {
-  apiKey:"AIzaSyA8XB6aY45-yHT0uZ6NUhptMoNkYqgwqOs",
-  authDomain:"goldbizna.firebaseapp.com",
-  projectId:"goldbizna",
-  storageBucket:"goldbizna.firebasestorage.app",
-  messagingSenderId:"559981054862",
-  appId:"1:559981054862:web:0635c689607d3baa3272df",
-  measurementId:"G-95XL3BNQJF"
+apiKey:"AIzaSyA8XB6aY45-yHT0uZ6NUhptMoNkYqgwqOs",
+authDomain:"goldbizna.firebaseapp.com",
+projectId:"goldbizna",
+storageBucket:"goldbizna.firebasestorage.app",
+messagingSenderId:"559981054862",
+appId:"1:559981054862:web:0635c689607d3baa3272df"
 };
 
-const app = getApps().length
-  ? getApp()
-  : initializeApp(firebaseConfig);
 
-const db = getFirestore(app);
-const auth = getAuth(app);
+/* ============================================================
+   FIREBASE STARTUP
+   ============================================================ */
 
-const savingsRef = collection(db,"savings");
-const customersRef = collection(db,"customers");
+let app;
+let db;
+let auth;
+
+try{
+
+app = initializeApp(firebaseConfig);
+db = getFirestore(app);
+auth = getAuth(app);
+
+setStatus("Firebase initialized","online");
+
+}catch(error){
+
+showFirebaseError(
+"Firebase initialization failed: " + error.message
+);
+
+}
 
 
 /* ============================================================
    STATE
    ============================================================ */
 
-let savings = [];
-let customers = [];
-let currentUser = null;
-let editingId = null;
-let selectedCustomerId = "";
-let unsubscribeSavings = null;
+let savings=[];
+let customers=[];
+let currentUser=null;
+let editingId=null;
+let selectedCustomerId="";
 
 
 /* ============================================================
@@ -1046,39 +644,253 @@ let unsubscribeSavings = null;
 
 const $ = id => document.getElementById(id);
 
-const money = n => {
-  const v = Number(n || 0);
-  return v.toLocaleString("en-KE",{
-    minimumFractionDigits:2,
-    maximumFractionDigits:2
-  });
-};
+function setStatus(text,type="online"){
+$("cloudStatus").textContent=text;
+$("cloudStatus").className=type;
+}
 
-const escapeHtml = value =>
-  String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+function showFirebaseError(message){
+
+console.error(message);
+
+$("firebaseError").style.display="block";
+$("firebaseError").textContent=message;
+
+setStatus("Firebase error","offline");
+
+$("savingsBody").innerHTML=`
+<tr>
+<td colspan="8" class="error">
+${escapeHtml(message)}
+</td>
+</tr>`;
+}
+
+function hideFirebaseError(){
+$("firebaseError").style.display="none";
+}
+
+function toast(message){
+
+const el=$("toast");
+
+el.textContent=message;
+el.style.display="block";
+
+clearTimeout(window.__toastTimer);
+
+window.__toastTimer=setTimeout(()=>{
+el.style.display="none";
+},3500);
+
+}
+
+function escapeHtml(value){
+
+return String(value ?? "")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
+}
+
+function money(value){
+
+return Number(value||0).toLocaleString("en-KE",{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+});
+
+}
 
 function todayISO(){
-  const d = new Date();
-  const local = new Date(
-    d.getTime() - d.getTimezoneOffset() * 60000
-  );
-  return local.toISOString().slice(0,10);
+
+const d=new Date();
+
+const local=new Date(
+d.getTime()-d.getTimezoneOffset()*60000
+);
+
+return local.toISOString().slice(0,10);
+
+}
+
+function normalizeDate(value){
+
+if(!value)return "";
+
+if(typeof value==="string"){
+
+if(/^\d{4}-\d{2}-\d{2}$/.test(value))
+return value;
+
+const d=new Date(value);
+
+if(!isNaN(d))
+return d.toISOString().slice(0,10);
+
+}
+
+if(value?.toDate){
+
+const d=value.toDate();
+
+return d.toISOString().slice(0,10);
+
+}
+
+return "";
+
 }
 
 function formatDate(value){
 
-  if(!value) return "—";
+const date=normalizeDate(value);
 
-  let d;
+if(!date)return "—";
 
-  if(typeof value === "string"){
-    d = new Date(value + (
-      /^\d{4}-\d{2}-\d{2}$/.test(value)
-        ? "T00:00:00"
-        : ""
-    ))
+const d=new Date(date+"T00:00:00");
+
+return d.toLocaleDateString("en-KE",{
+day:"2-digit",
+month:"short",
+year:"numeric"
+});
+
+}
+
+
+/* ============================================================
+   AUTH
+   ============================================================ */
+
+if(auth){
+
+onAuthStateChanged(auth,async user=>{
+
+if(!user){
+
+currentUser=null;
+
+$("userName").textContent="Not signed in";
+$("userRole").textContent="Authentication required";
+$("avatar").textContent="?";
+
+setStatus("Not signed in","offline");
+
+$("savingsBody").innerHTML=`
+<tr>
+<td colspan="8" class="error">
+You are not signed in. Please login first.
+</td>
+</tr>`;
+
+return;
+}
+
+currentUser=user;
+
+const name=
+user.displayName ||
+user.email?.split("@")[0] ||
+"User";
+
+$("userName").textContent=name;
+$("userRole").textContent=user.email || "Authenticated";
+$("avatar").textContent=name.charAt(0).toUpperCase();
+
+setStatus("Firebase connected","online");
+
+hideFirebaseError();
+
+await loadCustomers();
+await loadSavings();
+
+});
+
+}
+
+
+/* ============================================================
+   LOAD CUSTOMERS
+   ============================================================ */
+
+async function loadCustomers(){
+
+try{
+
+const snapshot=await getDocs(
+collection(db,"customers")
+);
+
+customers=snapshot.docs.map(item=>({
+id:item.id,
+...item.data()
+}));
+
+}catch(error){
+
+console.error(error);
+
+if(error.code==="permission-denied"){
+
+showFirebaseError(
+"Firebase denied access to customers. Check your Firestore security rules."
+);
+
+}else{
+
+toast("Could not load customers.");
+
+}
+
+}
+
+}
+
+
+/* ============================================================
+   LOAD SAVINGS
+   ============================================================ */
+
+async function loadSavings(){
+
+try{
+
+setStatus("Loading savings...","online");
+
+$("savingsBody").innerHTML=`
+<tr>
+<td colspan="8" class="loading">
+Loading savings from Firebase...
+</td>
+</tr>`;
+
+const snapshot=await getDocs(
+collection(db,"savings")
+);
+
+savings=snapshot.docs.map(item=>({
+id:item.id,
+...item.data()
+}));
+
+renderSavings();
+
+setStatus(
+"Firebase connected • "+savings.length+" savings",
+"online"
+);
+
+}catch(error){
+
+console.error("Savings error:",error);
+
+let message="Could not load savings.";
+
+if(error.code==="permission-denied"){
+
+message=
+"Firestore permis

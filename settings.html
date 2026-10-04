@@ -1,1032 +1,370 @@
 <!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Goldbizna Settings</title><style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
-}
-
-body{
-    background:#f4f4f4;
-    color:#333;
-}
-
-header{
-    background:#0b7a0b;
-    color:white;
-    padding:16px 20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
-}
-
-.logo{
-    font-size:25px;
-    font-weight:bold;
-}
-
-.header-buttons{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-}
-
-.header-buttons button{
-    border:none;
-    padding:10px 15px;
-    border-radius:5px;
-    color:white;
-    cursor:pointer;
-}
-
-.dashboard-btn{
-    background:#075c07;
-}
-
-.logout-btn{
-    background:#c62828;
-}
-
-.container{
-    width:95%;
-    max-width:1100px;
-    margin:20px auto;
-}
-
-.title,
-.settings-box,
-.danger-box{
-    background:white;
-    border-radius:10px;
-    box-shadow:0 2px 8px rgba(0,0,0,.1);
-}
-
-.title{
-    padding:20px;
-    margin-bottom:20px;
-}
-
-.title h1{
-    color:#0b7a0b;
-    margin-bottom:5px;
-}
-
-.settings-box{
-    padding:20px;
-    margin-bottom:20px;
-}
-
-.settings-box h2{
-    color:#0b7a0b;
-    margin-bottom:18px;
-}
-
-.form-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:15px;
-}
-
-.field{
-    display:flex;
-    flex-direction:column;
-}
-
-.field label{
-    font-weight:bold;
-    margin-bottom:6px;
-}
-
-input,
-select,
-textarea{
-    width:100%;
-    padding:12px;
-    border:1px solid #ccc;
-    border-radius:5px;
-    font-size:15px;
-}
-
-textarea{
-    min-height:100px;
-    resize:vertical;
-}
-
-.full{
-    grid-column:1/-1;
-}
-
-.save-btn{
-    margin-top:18px;
-    background:#0b7a0b;
-    color:white;
-    border:none;
-    padding:13px 20px;
-    border-radius:5px;
-    cursor:pointer;
-    font-size:16px;
-}
-
-.save-btn:hover{
-    background:#086108;
-}
-
-#message{
-    margin-top:12px;
-    font-weight:bold;
-}
-
-.data-buttons{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-}
-
-.data-buttons button{
-    padding:12px 16px;
-    border:none;
-    border-radius:5px;
-    color:white;
-    cursor:pointer;
-}
-
-.backup-btn{
-    background:#1565c0;
-}
-
-.restore-btn{
-    background:#6a1b9a;
-}
-
-.reset-btn{
-    background:#c62828;
-}
-
-.danger-box{
-    padding:20px;
-    border-left:5px solid #c62828;
-}
-
-.danger-box h2{
-    color:#c62828;
-    margin-bottom:10px;
-}
-
-.danger-box p{
-    margin-bottom:15px;
-    color:#666;
-}
-
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MABROUK TRADER'S - Settings</title><style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#f4f7f4;color:#222}
+header{background:#087a0b;color:#fff;padding:15px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.logo{font-size:21px;font-weight:bold}
+button{border:0;border-radius:6px;padding:10px 14px;cursor:pointer;font-weight:bold}
+.headbtn{background:#075c07;color:#fff}
+.logout{background:#c62828;color:#fff}
+.container{width:95%;max-width:1100px;margin:18px auto}
+.box{background:#fff;border-radius:10px;padding:18px;margin-bottom:18px;box-shadow:0 2px 8px #0001}
+h1,h2{color:#087a0b;margin-bottom:12px}
+h1{font-size:23px}
+h2{font-size:19px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-weight:bold}
+input,select{padding:11px;border:1px solid #ccc;border-radius:6px;font-size:15px}
+.full{grid-column:1/-1}
+.green{background:#087a0b;color:white}
+.blue{background:#1565c0;color:white}
+.red{background:#c62828;color:white}
+.gray{background:#555;color:white}
+.userlist{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.user{display:flex;justify-content:space-between;align-items:center;border:1px solid #ddd;border-radius:7px;padding:11px}
+.user strong{display:block}
+.user small{color:#777}
+.permissions{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}
+.permission{display:flex;justify-content:space-between;align-items:center;background:#f7f7f7;border:1px solid #ddd;border-radius:7px;padding:10px}
+.switch{width:48px;height:25px;border-radius:20px;background:#aaa;position:relative;cursor:pointer;flex-shrink:0}
+.switch:after{content:"";width:21px;height:21px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;transition:.2s}
+.switch.on{background:#087a0b}
+.switch.on:after{left:25px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+#message{text-align:center;font-weight:bold;margin:15px}
+.hidden{display:none}
 @media(max-width:700px){
-
-    .form-grid{
-        grid-template-columns:1fr;
-    }
-
-    .full{
-        grid-column:auto;
-    }
-
-    header{
-        gap:12px;
-    }
-
-    .logo{
-        font-size:21px;
-    }
+.grid,.permissions{grid-template-columns:1fr}
+.full{grid-column:auto}
+.user{gap:8px}
 }
-</style><script type="module" src="auth.js"></script></head><body><!-- LOGIN PROTECTION --><header><div class="logo">
-    Goldbizna Settings
+</style></head><body><header>
+<div class="logo">MABROUK TRADER'S — Settings</div>
+<div>
+<button class="headbtn" onclick="location.href='dashboard.html'">Dashboard</button>
+<button class="logout" onclick="logout()">Logout</button>
 </div>
+</header><div class="container"><div class="box">
+<h1>User & Permission Control</h1>
+<p>Add users and decide exactly what each person can access.</p>
+</div><div class="box">
+<h2>Users</h2><div class="actions">
+<button class="green" onclick="showAddUser()">+ Add User</button>
+</div><div id="userList" class="userlist"></div>
+</div><div id="userEditor" class="box hidden"><h2 id="editorTitle">Add User</h2><div class="grid"><div class="field">
+<label>Full Name</label>
+<input id="userName" placeholder="User name">
+</div><div class="field">
+<label>Username</label>
+<input id="userUsername" placeholder="Username">
+</div><div class="field">
+<label>Email</label>
+<input id="userEmail" type="email" placeholder="Email">
+</div><div class="field">
+<label>Phone</label>
+<input id="userPhone" placeholder="Phone number">
+</div><div class="field">
+<label>Role</label>
+<select id="userRole" onchange="applyRole()">
+<option value="custom">Custom</option>
+<option value="admin">Admin</option>
+<option value="manager">Manager</option>
+<option value="cashier">Cashier</option>
+<option value="inventory">Inventory Staff</option>
+<option value="viewer">Viewer</option>
+</select>
+</div><div class="field">
+<label>Status</label>
+<select id="userStatus">
+<option value="active">Active</option>
+<option value="disabled">Disabled</option>
+</select>
+</div></div><h2 style="margin-top:20px">Access Permissions</h2>
+<p>Use the switches to ENABLE or DISABLE access.</p><div id="permissions" class="permissions"></div><div class="actions">
+<button class="green" onclick="saveUser()">Save User</button>
+<button class="gray" onclick="closeEditor()">Cancel</button>
+</div></div><div class="box">
+<h2>Security</h2>
+<p>Owner access is protected. Normal users cannot give themselves owner permissions.</p>
+<br>
+<p>Permissions should be enforced by Firebase Security Rules, not only by hiding buttons.</p>
+</div><div class="box">
+<h2>Activity Log</h2>
+<p id="activityLog">No activity recorded yet.</p>
+</div><p id="message"></p></div><script>
 
-<div class="header-buttons">
+const permissionNames={
+dashboard:"Dashboard",
+pos:"POS",
+inventory:"Inventory",
+customers:"Customers",
+sales:"Sales History",
+reports:"Reports",
+savings:"Savings",
+payments:"Payments",
+discounts:"Discounts",
+refunds:"Refunds / Voids",
+stock:"Stock Adjustments",
+users:"User Management",
+settings:"Settings",
+backup:"Backup & Restore"
+};
 
-    <button
-        class="dashboard-btn"
-        onclick="window.location.href='dashboard.html'">
-        Dashboard
-    </button>
+const defaultPermissions={
+dashboard:false,pos:false,inventory:false,customers:false,
+sales:false,reports:false,savings:false,payments:false,
+discounts:false,refunds:false,stock:false,users:false,
+settings:false,backup:false
+};
 
-    <button
-        class="logout-btn"
-        onclick="logout()">
-        Logout
-    </button>
+let users=JSON.parse(localStorage.getItem("mabrouk_users")||"[]");
+let editingIndex=-1;
 
+function renderUsers(){
+
+const list=document.getElementById("userList");
+
+if(!users.length){
+list.innerHTML="<p>No users added yet.</p>";
+return;
+}
+
+list.innerHTML=users.map((u,i)=>`
+<div class="user">
+<div>
+<strong>${escapeHTML(u.name||u.username)}</strong>
+<small>${escapeHTML(u.role||"Custom")} • ${u.status==="active"?"Active":"Disabled"}</small>
 </div>
-
-</header><div class="container"><div class="title">
-
-    <h1>System Settings</h1>
-
-    <p>
-        Customize your Goldbizna business system.
-    </p>
-
+<div>
+<button class="blue" onclick="editUser(${i})">Edit</button>
+<button class="red" onclick="deleteUser(${i})">Delete</button>
 </div>
-
-
-<!-- BUSINESS INFORMATION -->
-<div class="settings-box">
-
-    <h2>Business Information</h2>
-
-    <div class="form-grid">
-
-        <div class="field">
-
-            <label>
-                Business Name
-            </label>
-
-            <input
-                type="text"
-                id="businessName"
-                placeholder="Goldbizna"
-            >
-
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                Phone Number
-            </label>
-
-            <input
-                type="text"
-                id="businessPhone"
-                placeholder="Business phone"
-            >
-
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                Email
-            </label>
-
-            <input
-                type="email"
-                id="businessEmail"
-                placeholder="Business email"
-            >
-
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                Currency
-            </label>
-
-            <select id="currency">
-
-                <option value="KSh">
-                    KSh - Kenyan Shilling
-                </option>
-
-                <option value="$">
-                    $ - US Dollar
-                </option>
-
-                <option value="£">
-                    £ - British Pound
-                </option>
-
-                <option value="€">
-                    € - Euro
-                </option>
-
-            </select>
-
-        </div>
-
-
-        <div class="field full">
-
-            <label>
-                Business Address
-            </label>
-
-            <textarea
-                id="businessAddress"
-                placeholder="Business address">
-            </textarea>
-
-        </div>
-
-    </div>
-
-    <button
-        class="save-btn"
-        onclick="saveSettings()">
-        Save Business Settings
-    </button>
-
 </div>
+`).join("");
 
+}
 
-<!-- INVENTORY SETTINGS -->
-<div class="settings-box">
+function renderPermissions(p={}){
 
-    <h2>Inventory Settings</h2>
+const box=document.getElementById("permissions");
 
-    <div class="form-grid">
+box.innerHTML=Object.entries(permissionNames).map(([key,label])=>{
 
-        <div class="field">
+const enabled=!!p[key];
 
-            <label>
-                Default Low Stock Alert
-            </label>
+return `
+<div class="permission">
+<span>${label}</span>
+<div class="switch ${enabled?"on":""}"
+onclick="togglePermission('${key}',this)"></div>
+</div>`;
 
-            <input
-                type="number"
-                id="defaultLowStock"
-                min="0"
-                value="5"
-            >
+}).join("");
 
-        </div>
+}
 
+function getPermissions(){
 
-        <div class="field">
+const result={};
 
-            <label>
-                Allow Negative Stock
-            </label>
+document.querySelectorAll(".permission").forEach((el,i)=>{
 
-            <select id="negativeStock">
+const key=Object.keys(permissionNames)[i];
 
-                <option value="no">
-                    No
-                </option>
+result[key]=el.querySelector(".switch").classList.contains("on");
 
-                <option value="yes">
-                    Yes
-                </option>
+});
 
-            </select>
+return result;
 
-        </div>
+}
 
-    </div>
+function togglePermission(key,el){
+el.classList.toggle("on");
+}
 
-    <button
-        class="save-btn"
-        onclick="saveSettings()">
-        Save Inventory Settings
-    </button>
+function showAddUser(){
 
-</div>
+editingIndex=-1;
 
+document.getElementById("editorTitle").innerText="Add User";
 
-<!-- RECEIPT SETTINGS -->
-<div class="settings-box">
+document.getElementById("userName").value="";
+document.getElementById("userUsername").value="";
+document.getElementById("userEmail").value="";
+document.getElementById("userPhone").value="";
+document.getElementById("userRole").value="custom";
+document.getElementById("userStatus").value="active";
 
-    <h2>Receipt Settings</h2>
+renderPermissions({...defaultPermissions});
 
-    <div class="form-grid">
+document.getElementById("userEditor").classList.remove("hidden");
 
-        <div class="field">
+}
 
-            <label>
-                Receipt Footer
-            </label>
+function editUser(i){
 
-            <input
-                type="text"
-                id="receiptFooter"
-                placeholder="Thank you for your business!"
-            >
+const u=users[i];
 
-        </div>
+editingIndex=i;
 
+document.getElementById("editorTitle").innerText="Edit User";
 
-        <div class="field">
+document.getElementById("userName").value=u.name||"";
+document.getElementById("userUsername").value=u.username||"";
+document.getElementById("userEmail").value=u.email||"";
+document.getElementById("userPhone").value=u.phone||"";
+document.getElementById("userRole").value=u.role||"custom";
+document.getElementById("userStatus").value=u.status||"active";
 
-            <label>
-                Show Business Phone
-            </label>
+renderPermissions({...defaultPermissions,...u.permissions});
 
-            <select id="showPhone">
+document.getElementById("userEditor").classList.remove("hidden");
 
-                <option value="yes">
-                    Yes
-                </option>
+}
 
-                <option value="no">
-                    No
-                </option>
+function saveUser(){
 
-            </select>
+const name=document.getElementById("userName").value.trim();
+const username=document.getElementById("userUsername").value.trim();
 
-        </div>
+if(!name||!username){
+alert("Please enter the user's name and username.");
+return;
+}
 
-    </div>
+const user={
+name,
+username,
+email:document.getElementById("userEmail").value.trim(),
+phone:document.getElementById("userPhone").value.trim(),
+role:document.getElementById("userRole").value,
+status:document.getElementById("userStatus").value,
+permissions:getPermissions(),
+updatedAt:new Date().toISOString()
+};
 
-    <button
-        class="save-btn"
-        onclick="saveSettings()">
-        Save Receipt Settings
-    </button>
+if(editingIndex===-1){
+user.createdAt=new Date().toISOString();
+users.push(user);
+logActivity("Added user: "+username);
+}else{
+users[editingIndex]=user;
+logActivity("Updated user: "+username);
+}
 
-</div>
+localStorage.setItem("mabrouk_users",JSON.stringify(users));
 
+renderUsers();
+closeEditor();
 
-<!-- APPEARANCE -->
-<div class="settings-box">
+showMessage("User saved successfully.","green");
 
-    <h2>Appearance</h2>
+}
 
-    <div class="form-grid">
+function deleteUser(i){
 
-        <div class="field">
+if(!confirm("Delete this user?"))return;
 
-            <label>
-                Theme
-            </label>
+const name=users[i].username;
 
-            <select
-                id="theme"
-                onchange="applyTheme()">
+users.splice(i,1);
 
-                <option value="light">
-                    Light
-                </option>
+localStorage.setItem("mabrouk_users",JSON.stringify(users));
 
-                <option value="dark">
-                    Dark
-                </option>
+logActivity("Deleted user: "+name);
 
-            </select>
+renderUsers();
 
-        </div>
+}
 
-    </div>
+function closeEditor(){
+document.getElementById("userEditor").classList.add("hidden");
+}
 
-    <button
-        class="save-btn"
-        onclick="saveSettings()">
-        Save Appearance
-    </button>
+function applyRole(){
 
-</div>
+const role=document.getElementById("userRole").value;
 
+let p={...defaultPermissions};
 
-<!-- DATA MANAGEMENT -->
-<div class="settings-box">
+if(role==="admin"){
+Object.keys(p).forEach(k=>p[k]=true);
+}
 
-    <h2>Data Management</h2>
+if(role==="manager"){
+["dashboard","pos","inventory","customers","sales","reports","savings","payments","discounts","refunds","stock"].forEach(k=>p[k]=true);
+}
 
-    <p style="margin-bottom:15px;">
-        Create a backup of your Goldbizna browser data or restore a previous backup.
-    </p>
+if(role==="cashier"){
+["dashboard","pos","customers","payments"].forEach(k=>p[k]=true);
+}
 
-    <div class="data-buttons">
+if(role==="inventory"){
+["dashboard","inventory","stock"].forEach(k=>p[k]=true);
+}
 
-        <button
-            class="backup-btn"
-            onclick="backupData()">
-            Download Backup
-        </button>
+if(role==="viewer"){
+["dashboard","sales","reports"].forEach(k=>p[k]=true);
+}
 
-        <button
-            class="restore-btn"
-            onclick="document.getElementById('restoreFile').click()">
-            Restore Backup
-        </button>
+renderPermissions(p);
 
-        <input
-            type="file"
-            id="restoreFile"
-            accept=".json"
-            style="display:none"
-            onchange="restoreData(event)"
-        >
+}
 
-    </div>
+function logActivity(text){
 
-</div>
-
-
-<!-- DANGER ZONE -->
-<div class="danger-box">
-
-    <h2>Danger Zone</h2>
-
-    <p>
-        Resetting the system will remove Goldbizna data stored in this browser.
-        Make a backup first if you need the information later.
-    </p>
-
-    <button
-        class="reset-btn"
-        onclick="resetData()">
-        Reset All Business Data
-    </button>
-
-</div>
-
-
-<p id="message"></p>
-
-</div><script>
-
-/* DEFAULT SETTINGS */
-
-let settings = JSON.parse(
-    localStorage.getItem("goldbizna_settings") || "null"
+localStorage.setItem(
+"mabrouk_last_activity",
+text+" — "+new Date().toLocaleString()
 );
 
-
-if(!settings){
-
-    settings = {
-
-        businessName:"Goldbizna",
-
-        businessPhone:"",
-
-        businessEmail:"",
-
-        currency:"KSh",
-
-        businessAddress:"",
-
-        defaultLowStock:5,
-
-        negativeStock:"no",
-
-        receiptFooter:
-            "Thank you for your business!",
-
-        showPhone:"yes",
-
-        theme:"light"
-
-    };
-
-
-    saveSettingsData();
+document.getElementById("activityLog").innerText=
+localStorage.getItem("mabrouk_last_activity");
 
 }
-
-
-/* LOAD SETTINGS */
-
-function loadSettings(){
-
-    document.getElementById("businessName").value =
-        settings.businessName || "Goldbizna";
-
-    document.getElementById("businessPhone").value =
-        settings.businessPhone || "";
-
-    document.getElementById("businessEmail").value =
-        settings.businessEmail || "";
-
-    document.getElementById("currency").value =
-        settings.currency || "KSh";
-
-    document.getElementById("businessAddress").value =
-        settings.businessAddress || "";
-
-    document.getElementById("defaultLowStock").value =
-        settings.defaultLowStock ?? 5;
-
-    document.getElementById("negativeStock").value =
-        settings.negativeStock || "no";
-
-    document.getElementById("receiptFooter").value =
-        settings.receiptFooter ||
-        "Thank you for your business!";
-
-    document.getElementById("showPhone").value =
-        settings.showPhone || "yes";
-
-    document.getElementById("theme").value =
-        settings.theme || "light";
-
-
-    applyTheme();
-
-}
-
-
-/* SAVE SETTINGS */
-
-function saveSettings(){
-
-    settings = {
-
-        businessName:
-            document.getElementById("businessName").value.trim(),
-
-        businessPhone:
-            document.getElementById("businessPhone").value.trim(),
-
-        businessEmail:
-            document.getElementById("businessEmail").value.trim(),
-
-        currency:
-            document.getElementById("currency").value,
-
-        businessAddress:
-            document.getElementById("businessAddress").value.trim(),
-
-        defaultLowStock:
-            Number(
-                document.getElementById("defaultLowStock").value
-            ),
-
-        negativeStock:
-            document.getElementById("negativeStock").value,
-
-        receiptFooter:
-            document.getElementById("receiptFooter").value.trim(),
-
-        showPhone:
-            document.getElementById("showPhone").value,
-
-        theme:
-            document.getElementById("theme").value
-
-    };
-
-
-    saveSettingsData();
-
-    applyTheme();
-
-    showMessage(
-        "Settings saved successfully.",
-        "green"
-    );
-
-}
-
-
-/* SAVE SETTINGS DATA */
-
-function saveSettingsData(){
-
-    localStorage.setItem(
-        "goldbizna_settings",
-        JSON.stringify(settings)
-    );
-
-}
-
-
-/* THEME */
-
-function applyTheme(){
-
-    const theme =
-        document.getElementById("theme").value;
-
-
-    if(theme === "dark"){
-
-        document.body.style.background="#202124";
-        document.body.style.color="#eee";
-
-        document.querySelectorAll(
-            ".title,.settings-box,.danger-box"
-        ).forEach(function(box){
-
-            box.style.background="#2d2f31";
-            box.style.color="#eee";
-
-        });
-
-    }else{
-
-        document.body.style.background="#f4f4f4";
-        document.body.style.color="#333";
-
-        document.querySelectorAll(
-            ".title,.settings-box,.danger-box"
-        ).forEach(function(box){
-
-            box.style.background="#fff";
-            box.style.color="#333";
-
-        });
-
-    }
-
-}
-
-
-/* BACKUP */
-
-function backupData(){
-
-    const data = {
-
-        version:"Goldbizna Backup 1.0",
-
-        date:
-            new Date().toLocaleString(),
-
-        settings:
-            JSON.parse(
-                localStorage.getItem(
-                    "goldbizna_settings"
-                ) || "{}"
-            ),
-
-        inventory:
-            JSON.parse(
-                localStorage.getItem(
-                    "goldbizna_inventory"
-                ) || "[]"
-            ),
-
-        sales:
-            JSON.parse(
-                localStorage.getItem(
-                    "goldbizna_sales"
-                ) || "[]"
-            ),
-
-        customers:
-            JSON.parse(
-                localStorage.getItem(
-                    "goldbizna_customers"
-                ) || "[]"
-            ),
-
-        savings:
-            JSON.parse(
-                localStorage.getItem(
-                    "goldbizna_savings"
-                ) || "[]"
-            ),
-
-        users:
-            JSON.parse(
-                localStorage.getItem(
-                    "goldbizna_users"
-                ) || "[]"
-            )
-
-    };
-
-
-    const blob =
-        new Blob(
-            [JSON.stringify(data,null,2)],
-            {type:"application/json"}
-        );
-
-
-    const url =
-        URL.createObjectURL(blob);
-
-
-    const link =
-        document.createElement("a");
-
-
-    link.href=url;
-
-    link.download =
-        "goldbizna_backup.json";
-
-
-    document.body.appendChild(link);
-
-    link.click();
-
-    document.body.removeChild(link);
-
-    URL.revokeObjectURL(url);
-
-
-    showMessage(
-        "Backup downloaded successfully.",
-        "green"
-    );
-
-}
-
-
-/* RESTORE */
-
-function restoreData(event){
-
-    const file =
-        event.target.files[0];
-
-
-    if(!file){
-
-        return;
-
-    }
-
-
-    const reader =
-        new FileReader();
-
-
-    reader.onload=function(){
-
-        try{
-
-            const data =
-                JSON.parse(reader.result);
-
-
-            if(data.settings){
-
-                localStorage.setItem(
-                    "goldbizna_settings",
-                    JSON.stringify(data.settings)
-                );
-
-            }
-
-
-            if(Array.isArray(data.inventory)){
-
-                localStorage.setItem(
-                    "goldbizna_inventory",
-                    JSON.stringify(data.inventory)
-                );
-
-            }
-
-
-            if(Array.isArray(data.sales)){
-
-                localStorage.setItem(
-                    "goldbizna_sales",
-                    JSON.stringify(data.sales)
-                );
-
-            }
-
-
-            if(Array.isArray(data.customers)){
-
-                localStorage.setItem(
-                    "goldbizna_customers",
-                    JSON.stringify(data.customers)
-                );
-
-            }
-
-
-            if(Array.isArray(data.savings)){
-
-                localStorage.setItem(
-                    "goldbizna_savings",
-                    JSON.stringify(data.savings)
-                );
-
-            }
-
-
-            if(Array.isArray(data.users)){
-
-                localStorage.setItem(
-                    "goldbizna_users",
-                    JSON.stringify(data.users)
-                );
-
-            }
-
-
-            alert(
-                "Backup restored successfully. The page will now reload."
-            );
-
-
-            location.reload();
-
-
-        }catch(error){
-
-            alert(
-                "Invalid Goldbizna backup file."
-            );
-
-        }
-
-    };
-
-
-    reader.readAsText(file);
-
-}
-
-
-/* RESET */
-
-function resetData(){
-
-    const confirmed =
-        confirm(
-            "WARNING: This will delete your Goldbizna business data from this browser. Continue?"
-        );
-
-
-    if(!confirmed){
-
-        return;
-
-    }
-
-
-    const doubleConfirm =
-        confirm(
-            "Are you absolutely sure? Make a backup first if you need your data."
-        );
-
-
-    if(!doubleConfirm){
-
-        return;
-
-    }
-
-
-    localStorage.removeItem(
-        "goldbizna_inventory"
-    );
-
-    localStorage.removeItem(
-        "goldbizna_sales"
-    );
-
-    localStorage.removeItem(
-        "goldbizna_customers"
-    );
-
-    localStorage.removeItem(
-        "goldbizna_savings"
-    );
-
-    localStorage.removeItem(
-        "goldbizna_settings"
-    );
-
-
-    alert(
-        "Business data has been reset."
-    );
-
-
-    location.reload();
-
-}
-
-
-/* MESSAGE */
 
 function showMessage(text,color){
 
-    const message =
-        document.getElementById("message");
+const m=document.getElementById("message");
 
+m.innerText=text;
+m.style.color=color;
 
-    message.innerText=text;
-
-    message.style.color=color;
-
-    message.style.textAlign="center";
-
-    message.style.margin="15px";
+setTimeout(()=>m.innerText="",3000);
 
 }
 
+function escapeHTML(value){
 
-/* LOGOUT */
+return String(value)
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;")
+.replaceAll("'","&#039;");
+
+}
 
 function logout(){
 
-    localStorage.removeItem("loggedIn");
+localStorage.removeItem("loggedIn");
+localStorage.removeItem("goldbizna_logged_in");
+localStorage.removeItem("gb_login");
 
-    window.location.href="login.html" data-goldbizna-logout="true";
+location.href="login.html";
 
 }
 
+renderUsers();
 
-/* START */
-
-loadSettings();
+document.getElementById("activityLog").innerText=
+localStorage.getItem("mabrouk_last_activity")||
+"No activity recorded yet.";
 
 </script></body>
-    </html>
+</html>

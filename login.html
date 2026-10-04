@@ -2,69 +2,182 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Goldbizna Login</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MABROUK TRADER'S - Login</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f7f6;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:16px}.box{width:min(390px,100%);background:#fff;padding:30px;border-radius:16px;box-shadow:0 10px 30px #0002}.brand{text-align:center;font-size:24px;font-weight:bold;color:#087a0b;margin-bottom:8px}.sub{text-align:center;color:#777;margin-bottom:25px}.field{margin-bottom:15px}.field label{display:block;font-size:13px;color:#666;margin-bottom:6px}.field input{width:100%;padding:12px;border:1px solid #ddd;border-radius:7px}.btn{width:100%;padding:12px;background:#087a0b;color:white;border:0;border-radius:7px;font-weight:bold;cursor:pointer}.btn:disabled{opacity:.65;cursor:not-allowed}.link{display:block;text-align:center;margin-top:14px;color:#087a0b;text-decoration:none;font-size:13px}.error{color:#d92323;text-align:center;font-size:13px;margin-top:12px;display:none}.hint{text-align:center;color:#888;font-size:11px;margin-top:15px;line-height:1.5}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{min-height:100vh;background:linear-gradient(135deg,#087a0b,#0b5d18);display:flex;align-items:center;justify-content:center;padding:20px}
+.card{width:100%;max-width:430px;background:#fff;border-radius:16px;padding:30px;box-shadow:0 15px 45px #0005}
+.logo{text-align:center;color:#087a0b;font-size:27px;font-weight:900;margin-bottom:6px}
+.logo span{color:#d69f00}
+.sub{text-align:center;color:#777;font-size:13px;margin-bottom:25px}
+label{display:block;font-size:12px;font-weight:bold;color:#555;margin:14px 0 6px}
+input{width:100%;padding:13px;border:1px solid #d5ddd5;border-radius:8px;outline:0;font-size:14px}
+input:focus{border-color:#087a0b;box-shadow:0 0 0 3px #087a0b15}
+.btn{width:100%;border:0;background:#087a0b;color:#fff;padding:13px;border-radius:8px;margin-top:20px;font-weight:bold;cursor:pointer;font-size:14px}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.msg{display:none;margin-top:14px;padding:12px;border-radius:8px;font-size:12px;line-height:1.5}
+.error{display:block;background:#ffe8e8;color:#a51d1d}
+.success{display:block;background:#eaf6ed;color:#087a0b}
+.loading{text-align:center;color:#777;font-size:12px;margin-top:15px}
+.small{text-align:center;margin-top:18px;font-size:11px;color:#888}
+.eye{position:relative}
+.eye button{position:absolute;right:8px;top:7px;border:0;background:transparent;padding:8px;cursor:pointer}
+.eye input{padding-right:45px}
 </style>
-<script type="module" src="auth.js"></script>
 </head>
 <body>
-<div class="box">
-  <div class="brand">GOLDBIZNA POS PRO</div>
-  <div class="sub">Secure sign in</div>
-  <form id="loginForm">
-    <div class="field"><label for="email">Email</label><input id="email" type="email" autocomplete="username" placeholder="you@example.com" required></div>
-    <div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" placeholder="Enter your password" required></div>
-    <button id="loginBtn" class="btn" type="submit">Sign in</button>
-    <div id="error" class="error"></div>
-    <a href="#" id="resetLink" class="link">Forgot password?</a>
-  </form>
-  <div class="hint">Goldbizna now uses Firebase Authentication. Passwords are no longer stored in the website or in localStorage.</div>
-</div>
-<script type="module">
-import { login, resetPassword } from './auth.js';
-const form = document.getElementById('loginForm');
-const btn = document.getElementById('loginBtn');
-const error = document.getElementById('error');
-const email = document.getElementById('email');
-const password = document.getElementById('password');
 
-function showError(message) { error.textContent = message; error.style.display = 'block'; }
-form.addEventListener('submit', async (event) => {
-  event.preventDefault();
-  error.style.display = 'none';
-  btn.disabled = true;
-  btn.textContent = 'Signing in…';
-  try {
-    await login(email.value, password.value);
-    window.location.replace('index.html');
-  } catch (e) {
-    const code = e?.code || '';
-    const message = code.includes('invalid-credential') || code.includes('wrong-password') || code.includes('user-not-found')
-      ? 'Incorrect email or password.'
-      : code.includes('too-many-requests')
-        ? 'Too many attempts. Please wait and try again.'
-        : (e?.message || 'Unable to sign in.');
-    showError(message);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Sign in';
-  }
+<div class="card">
+  <div class="logo">MABROUK <span>TRADER'S</span></div>
+  <div class="sub">Secure Business Management System</div>
+
+  <form id="loginForm">
+    <label>Username or Email</label>
+    <input id="loginUser" autocomplete="username" placeholder="Enter username or email" required>
+
+    <label>Password</label>
+    <div class="eye">
+      <input id="loginPass" type="password" autocomplete="current-password" placeholder="Enter password" required>
+      <button type="button" onclick="togglePassword()">👁</button>
+    </div>
+
+    <button class="btn" id="loginBtn">LOGIN</button>
+  </form>
+
+  <div id="msg" class="msg"></div>
+  <div id="loading" class="loading"></div>
+
+  <div class="small">MABROUK TRADER'S • Secure Access</div>
+</div>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import{
+ getAuth,
+ signInWithEmailAndPassword,
+ onAuthStateChanged
+}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import{
+ getFirestore,
+ doc,
+ getDoc
+}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+const firebaseConfig={
+ apiKey:"AIzaSyA8XB6aY45-yHT0uZ6NUhptMoNkYqgwqOs",
+ authDomain:"goldbizna.firebaseapp.com",
+ projectId:"goldbizna",
+ storageBucket:"goldbizna.firebasestorage.app",
+ messagingSenderId:"559981054862",
+ appId:"1:559981054862:web:0635c689607d3baa3272df",
+ measurementId:"G-95XL3BNQJF"
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+const $=id=>document.getElementById(id);
+
+function message(text,type="error"){
+ const m=$("msg");
+ m.textContent=text;
+ m.className="msg "+type;
+}
+
+function clearMessage(){
+ $("msg").className="msg";
+ $("msg").textContent="";
+}
+
+function firebaseError(e){
+ const c=e?.code||"";
+ if(c.includes("invalid-credential")||c.includes("wrong-password")||c.includes("user-not-found"))
+   return "Incorrect username/email or password.";
+ if(c.includes("too-many-requests"))
+   return "Too many login attempts. Please wait and try again.";
+ if(c.includes("network"))
+   return "Network problem. Check your internet connection.";
+ return e?.message||"Login failed.";
+}
+
+window.togglePassword=()=>{
+ const x=$("loginPass");
+ x.type=x.type==="password"?"text":"password";
+};
+
+async function findEmail(username){
+ const key=username.trim().toLowerCase();
+
+ if(key.includes("@"))return key;
+
+ const snap=await getDoc(doc(db,"usernames",key));
+
+ if(!snap.exists())return null;
+
+ return snap.data()?.email||null;
+}
+
+$("loginForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ clearMessage();
+
+ const username=$("loginUser").value.trim();
+ const password=$("loginPass").value;
+
+ if(!username||!password)return message("Enter your username and password.");
+
+ $("loginBtn").disabled=true;
+ $("loading").textContent="Signing in...";
+
+ try{
+   const email=await findEmail(username);
+
+   if(!email){
+     throw new Error("Username not found.");
+   }
+
+   const cred=await signInWithEmailAndPassword(auth,email,password);
+
+   const userSnap=await getDoc(doc(db,"users",cred.user.uid));
+
+   if(!userSnap.exists()){
+     await auth.signOut();
+     throw new Error("Your account profile was not found.");
+   }
+
+   const data=userSnap.data();
+
+   if(data.status==="disabled"){
+     await auth.signOut();
+     throw new Error("Your account has been disabled. Contact the Owner.");
+   }
+
+   localStorage.setItem("goldbizna_username",data.username||username);
+   localStorage.setItem("goldbizna_uid",cred.user.uid);
+
+   message("Login successful. Opening MABROUK TRADER'S...","success");
+
+   setTimeout(()=>{
+     location.href="index.html";
+   },500);
+
+ }catch(e){
+   console.error(e);
+   message(firebaseError(e));
+ }finally{
+   $("loginBtn").disabled=false;
+   $("loading").textContent="";
+ }
 });
 
-document.getElementById('resetLink').addEventListener('click', async (event) => {
-  event.preventDefault();
-  if (!email.value.trim()) { showError('Enter your email first, then tap Forgot password.'); return; }
-  try {
-    await resetPassword(email.value);
-    showError('Password reset email sent. Check your inbox.');
-    error.style.color = '#087a0b';
-  } catch (e) {
-    error.style.color = '#d92323';
-    showError(e?.message || 'Unable to send password reset email.');
-  }
+onAuthStateChanged(auth,user=>{
+ if(user){
+   $("loading").textContent="Checking account...";
+ }
 });
 </script>
+
 </body>
 </html>

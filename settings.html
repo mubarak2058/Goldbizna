@@ -4,32 +4,205 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MABROUK TRADER'S - Settings</title>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial;background:#f3f6f3;color:#222}
-header{background:#087a0b;color:#fff;padding:15px;font-size:20px;font-weight:bold}
-nav{background:#075d08;padding:8px;display:flex;gap:6px;overflow:auto}
-nav button{border:0;background:#fff;color:#075d08;padding:9px 13px;border-radius:6px;font-weight:bold}
-main{max-width:1000px;margin:auto;padding:12px}
-.card{background:#fff;padding:15px;margin-bottom:12px;border-radius:10px;box-shadow:0 1px 5px #bbb}
-h2{margin:0 0 12px;color:#087a0b;font-size:18px}
-input,select,textarea{width:100%;padding:10px;margin:5px 0;border:1px solid #bbb;border-radius:6px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+font-family:Arial,sans-serif;
+background:#f3f6f3;
+color:#222
+}
+header{
+background:#087a0b;
+color:#fff;
+padding:15px;
+font-size:20px;
+font-weight:bold;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px
+}
+.headerBtns{display:flex;gap:6px}
+.headerBtns button{
+border:0;
+padding:8px 11px;
+border-radius:6px;
+font-weight:bold;
+cursor:pointer
+}
+.homeBtn{background:#fff;color:#087a0b}
+.logoutBtn{background:#c62828;color:#fff}
+
+nav{
+background:#075d08;
+padding:8px;
+display:flex;
+gap:6px;
+overflow:auto
+}
+nav button{
+border:0;
+background:#fff;
+color:#075d08;
+padding:9px 13px;
+border-radius:6px;
+font-weight:bold;
+white-space:nowrap;
+cursor:pointer
+}
+
+main{
+max-width:1000px;
+margin:auto;
+padding:12px
+}
+
+.card{
+background:#fff;
+padding:15px;
+margin-bottom:12px;
+border-radius:10px;
+box-shadow:0 1px 5px #bbb
+}
+
+h2{
+margin:0 0 12px;
+color:#087a0b;
+font-size:18px
+}
+
+h3{
+margin:12px 0 8px
+}
+
+input,select,textarea{
+width:100%;
+padding:10px;
+margin:5px 0;
+border:1px solid #bbb;
+border-radius:6px;
+font-size:14px
+}
+
+textarea{
+min-height:80px;
+resize:vertical
+}
+
 button{cursor:pointer}
-.primary{background:#087a0b;color:white;border:0;padding:10px 15px;border-radius:6px;font-weight:bold}
-.danger{background:#c62828;color:white;border:0;padding:7px 10px;border-radius:5px}
-.gray{background:#777;color:#fff;border:0;padding:7px 10px;border-radius:5px}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.perms{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.perms label{background:#f1f4f1;padding:8px;border-radius:5px;font-size:13px}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{padding:8px;border-bottom:1px solid #ddd;text-align:left}
-.status{font-weight:bold}
-@media(max-width:650px){.grid,.perms{grid-template-columns:1fr}table{font-size:11px}}
+
+.primary{
+background:#087a0b;
+color:white;
+border:0;
+padding:10px 15px;
+border-radius:6px;
+font-weight:bold
+}
+
+.danger{
+background:#c62828;
+color:white;
+border:0;
+padding:7px 10px;
+border-radius:5px
+}
+
+.gray{
+background:#777;
+color:#fff;
+border:0;
+padding:7px 10px;
+border-radius:5px
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px
+}
+
+.perms{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:6px
+}
+
+.perms label{
+background:#f1f4f1;
+padding:8px;
+border-radius:5px;
+font-size:13px
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+font-size:13px
+}
+
+th,td{
+padding:8px;
+border-bottom:1px solid #ddd;
+text-align:left
+}
+
+.status{
+font-weight:bold
+}
+
+.message{
+padding:10px;
+border-radius:6px;
+margin-bottom:10px;
+display:none
+}
+
+.success{
+background:#e8f5e9;
+color:#087a0b
+}
+
+.error{
+background:#ffebee;
+color:#c62828
+}
+
+.activityItem{
+padding:10px;
+border-bottom:1px solid #ddd
+}
+
+.small{
+font-size:12px;
+color:#777
+}
+
+@media(max-width:650px){
+.grid,.perms{
+grid-template-columns:1fr
+}
+table{
+font-size:11px
+}
+header{
+font-size:17px
+}
+}
 </style>
 </head>
 
 <body>
-<header>MABROUK TRADER'S — Settings</header>
+
+<header>
+<div>MABROUK TRADER'S — Settings</div>
+
+<div class="headerBtns">
+<button class="homeBtn" onclick="goHome()">Home</button>
+<button class="logoutBtn" onclick="logout()">Logout</button>
+</div>
+</header>
 
 <nav>
 <button onclick="show('users')">Users</button>
@@ -41,15 +214,26 @@ th,td{padding:8px;border-bottom:1px solid #ddd;text-align:left}
 
 <main>
 
+<div id="message" class="message"></div>
+
+<!-- USERS -->
+
 <section id="users" class="card">
+
 <h2>User Management</h2>
 
 <div class="grid">
+
 <input id="fullName" placeholder="Full Name">
+
 <input id="username" placeholder="Username">
+
 <input id="email" type="email" placeholder="Email">
+
 <input id="phone" placeholder="Phone">
+
 <input id="password" type="password" placeholder="Password">
+
 <select id="role">
 <option>Owner/Admin</option>
 <option>Manager</option>
@@ -57,80 +241,192 @@ th,td{padding:8px;border-bottom:1px solid #ddd;text-align:left}
 <option>Inventory Staff</option>
 <option>Viewer</option>
 </select>
+
 </div>
 
 <h3>Permissions</h3>
+
 <div id="permissions" class="perms"></div>
+
+<br>
 
 <button class="primary" onclick="saveUser()">➕ Add User</button>
 <button class="gray" onclick="clearUser()">Clear</button>
 
-<hr>
+<hr style="margin:15px 0">
+
 <h3>Users</h3>
+
 <div id="usersTable">Loading...</div>
+
 </section>
+
+
+<!-- BUSINESS -->
 
 <section id="business" class="card" style="display:none">
+
 <h2>Business Settings</h2>
+
 <div class="grid">
+
 <input id="bizName" placeholder="Business Name">
+
 <input id="bizPhone" placeholder="Phone">
+
 <input id="bizEmail" placeholder="Email">
+
 <input id="bizLocation" placeholder="Location">
+
 </div>
+
 <textarea id="bizAddress" placeholder="Business Address"></textarea>
-<button class="primary" onclick="saveSettings('business')">Save Business</button>
+
+<button class="primary" onclick="saveSettings('business')">
+Save Business
+</button>
+
 </section>
+
+
+<!-- POS -->
 
 <section id="pos" class="card" style="display:none">
+
 <h2>POS & Receipt Settings</h2>
+
 <div class="grid">
+
 <input id="currency" placeholder="Currency e.g. KES">
+
 <input id="till" placeholder="Default Till / Counter">
+
 <input id="receiptTitle" placeholder="Receipt Title">
+
 <input id="footerText" placeholder="Receipt Footer">
+
 </div>
-<label><input id="showLogo" type="checkbox"> Show logo on receipt</label><br><br>
-<label><input id="showCustomer" type="checkbox"> Show customer details</label><br><br>
-<button class="primary" onclick="saveSettings('pos')">Save POS Settings</button>
+
+<label>
+<input id="showLogo" type="checkbox">
+Show logo on receipt
+</label>
+
+<br><br>
+
+<label>
+<input id="showCustomer" type="checkbox">
+Show customer details
+</label>
+
+<br><br>
+
+<button class="primary" onclick="saveSettings('pos')">
+Save POS Settings
+</button>
+
 </section>
 
+
+<!-- SYSTEM -->
+
 <section id="system" class="card" style="display:none">
+
 <h2>System Settings</h2>
+
 <div class="grid">
+
 <select id="theme">
 <option value="green">Green</option>
 <option value="dark">Dark</option>
 </select>
+
 <select id="language">
 <option>English</option>
 <option>Arabic</option>
 </select>
+
 </div>
-<label><input id="autoBackup" type="checkbox"> Enable automatic backup</label><br><br>
-<button class="primary" onclick="saveSettings('system')">Save System</button>
+
+<label>
+<input id="autoBackup" type="checkbox">
+Enable automatic backup
+</label>
+
+<br><br>
+
+<button class="primary" onclick="saveSettings('system')">
+Save System
+</button>
+
 </section>
+
+
+<!-- ACTIVITY -->
 
 <section id="activity" class="card" style="display:none">
+
 <h2>Activity Log</h2>
-<div id="activityLog">Loading...</div>
+
+<div id="activityLog">
+Loading...
+</div>
+
 </section>
 
+
+<!-- FIREBASE -->
+
 <section class="card">
+
 <h2>Firebase Status</h2>
-<div class="status" id="firebaseStatus">Connecting...</div>
+
+<div class="status" id="firebaseStatus">
+Connecting...
+</div>
+
 </section>
 
 </main>
 
+
 <script type="module">
-import{initializeApp,getApps}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
 import{
-getAuth,onAuthStateChanged,createUserWithEmailAndPassword,updateProfile,signOut
-}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+initializeApp,
+getApps
+}
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
 import{
-getFirestore,doc,getDoc,setDoc,updateDoc,collection,getDocs,addDoc,serverTimestamp
-}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+getAuth,
+onAuthStateChanged,
+createUserWithEmailAndPassword,
+updateProfile,
+signOut
+}
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+import{
+getFirestore,
+doc,
+getDoc,
+setDoc,
+updateDoc,
+collection,
+getDocs,
+addDoc,
+serverTimestamp
+}
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+/* =========================
+   FIREBASE
+========================= */
 
 const firebaseConfig={
 apiKey:"AIzaSyA8XB6aY45-yHT0uZ6NU5gYqgwqOs",
@@ -142,261 +438,965 @@ appId:"1:559981054862:web:0635c689607d3baa3272df",
 measurementId:"G-95XL3BNQJF"
 };
 
-const app=getApps().length?getApps()[0]:initializeApp(firebaseConfig);
+const app=getApps().length
+?getApps()[0]
+:initializeApp(firebaseConfig);
+
 const auth=getAuth(app);
+
 const db=getFirestore(app);
 
-const creatorApp=initializeApp(firebaseConfig,"UserCreator");
+
+/*
+This second Firebase app is ONLY used when
+an administrator creates another user.
+
+It does NOT ask the current user for another
+password and does NOT replace the main login.
+*/
+
+const creatorApp=initializeApp(
+firebaseConfig,
+"UserCreator"
+);
+
 const creatorAuth=getAuth(creatorApp);
 
+
+/* =========================
+   VARIABLES
+========================= */
+
 const permissionNames=[
-"Dashboard","POS","Inventory","Customers","Sales History",
-"Reports","Savings","Payments","Discounts","Refunds / Voids",
-"Stock Adjustments","User Management","Settings","Backup & Restore"
+"Dashboard",
+"POS",
+"Inventory",
+"Customers",
+"Sales History",
+"Reports",
+"Savings",
+"Payments",
+"Discounts",
+"Refunds / Voids",
+"Stock Adjustments",
+"User Management",
+"Settings",
+"Backup & Restore"
 ];
 
-let currentUser=null,editId=null;
-let permissions={};
+let currentUser=null;
+let editId=null;
+
+
+/* =========================
+   PERMISSIONS
+========================= */
 
 const pbox=document.getElementById("permissions");
 
 permissionNames.forEach(p=>{
-let id="p_"+p.replace(/[^a-z0-9]/gi,"");
-pbox.innerHTML+=`<label><input type="checkbox" id="${id}" checked> ${p}</label>`;
-permissions[p]=true;
+
+const id="p_"+p.replace(
+/[^a-z0-9]/gi,
+""
+);
+
+pbox.innerHTML+=`
+<label>
+<input type="checkbox" id="${id}" checked>
+${p}
+</label>
+`;
+
 });
 
+
 function getPermissions(){
+
 let x={};
+
 permissionNames.forEach(p=>{
-let id="p_"+p.replace(/[^a-z0-9]/gi,"");
+
+const id="p_"+p.replace(
+/[^a-z0-9]/gi,
+""
+);
+
 x[p]=document.getElementById(id).checked;
+
 });
+
 return x;
 }
 
+
 function setPermissions(x={}){
+
 permissionNames.forEach(p=>{
-let id="p_"+p.replace(/[^a-z0-9]/gi,"");
-document.getElementById(id).checked=x[p]!==false;
+
+const id="p_"+p.replace(
+/[^a-z0-9]/gi,
+""
+);
+
+document.getElementById(id).checked=
+x[p]!==false;
+
 });
+
 }
+
+
+/* =========================
+   MESSAGE
+========================= */
+
+function message(text,type="success"){
+
+const box=document.getElementById("message");
+
+box.className="message "+type;
+box.textContent=text;
+box.style.display="block";
+
+setTimeout(()=>{
+box.style.display="none";
+},3500);
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
 
 window.show=function(id){
-["users","business","pos","system","activity"].forEach(x=>{
-document.getElementById(x).style.display=x===id?"block":"none";
+
+[
+"users",
+"business",
+"pos",
+"system",
+"activity"
+].forEach(x=>{
+
+document.getElementById(x).style.display=
+x===id?"block":"none";
+
 });
-if(id==="activity")loadActivity();
-};
 
-window.clearUser=function(){
-editId=null;
-["fullName","username","email","phone","password"].forEach(x=>document.getElementById(x).value="");
-document.getElementById("role").value="Cashier";
-setPermissions({});
-};
-
-window.saveUser=async function(){
-let name=fullName.value.trim(),
-username=usernameInput(),
-email=emailInput(),
-phone=phoneInput(),
-pass=password.value,
-role=roleInput();
-
-if(!name||!username||!email||(!editId&&!pass)){
-alert(editId?"Name, username and email are required.":"Name, username, email and password are required.");
-return;
+if(id==="activity"){
+loadActivity();
 }
 
+};
+
+
+/* =========================
+   HOME
+========================= */
+
+window.goHome=function(){
+
+location.href="index.html";
+
+};
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+window.logout=async function(){
+
 try{
+await signOut(auth);
+}catch(e){}
+
+localStorage.removeItem("goldbizna_logged_in");
+localStorage.removeItem("loggedIn");
+localStorage.removeItem("gb_login");
+localStorage.removeItem("goldbizna_username");
+
+location.href="login.html";
+
+};
+
+
+/* =========================
+   CLEAR USER
+========================= */
+
+window.clearUser=function(){
+
+editId=null;
+
+[
+"fullName",
+"username",
+"email",
+"phone",
+"password"
+].forEach(x=>{
+document.getElementById(x).value="";
+});
+
+document.getElementById("role").value="Cashier";
+
+setPermissions({});
+
+};
+
+
+/* =========================
+   USER HELPERS
+========================= */
+
+function usernameInput(){
+return document.getElementById("username").value.trim();
+}
+
+function emailInput(){
+return document.getElementById("email").value.trim();
+}
+
+function phoneInput(){
+return document.getElementById("phone").value.trim();
+}
+
+function roleInput(){
+return document.getElementById("role").value;
+}
+
+
+/* =========================
+   SAVE USER
+========================= */
+
+window.saveUser=async function(){
+
+const name=
+document.getElementById("fullName").value.trim();
+
+const username=usernameInput();
+
+const email=emailInput();
+
+const phone=phoneInput();
+
+const pass=
+document.getElementById("password").value;
+
+const role=roleInput();
+
+
+if(
+!name||
+!username||
+!email||
+(!editId&&!pass)
+){
+
+message(
+editId
+?"Name, username and email are required."
+:"Name, username, email and password are required.",
+"error"
+);
+
+return;
+
+}
+
+
+try{
+
+/* EDIT EXISTING USER */
+
 if(editId){
-await updateDoc(doc(db,"users",editId),{
-fullName:name,username,email,phone,role,permissions:getPermissions(),
+
+await updateDoc(
+doc(db,"users",editId),
+{
+fullName:name,
+username,
+email,
+phone,
+role,
+permissions:getPermissions(),
 updatedAt:serverTimestamp()
-});
-await addLog("Updated user: "+username);
-alert("User updated successfully.");
-}else{
-let snap=await getDocs(collection(db,"users"));
-let duplicate=[...snap.docs].some(d=>(d.data().username||"").toLowerCase()===username.toLowerCase());
-if(duplicate){alert("Username already exists.");return}
+}
+);
 
-let cred=await createUserWithEmailAndPassword(creatorAuth,email,pass);
-await updateProfile(cred.user,{displayName:name});
+await addLog(
+"Updated user: "+username
+);
 
-await setDoc(doc(db,"users",cred.user.uid),{
-uid:cred.user.uid,fullName:name,username,email,phone,role,
-permissions:getPermissions(),active:true,createdAt:serverTimestamp()
-});
+message("User updated successfully.");
 
-await setDoc(doc(db,"usernames",username.toLowerCase()),{
-uid:cred.user.uid,email
-});
+}
 
-await addLog("Created user: "+username);
+
+/* CREATE NEW USER */
+
+else{
+
+const snap=
+await getDocs(
+collection(db,"users")
+);
+
+const duplicate=[
+...snap.docs
+].some(d=>
+(d.data().username||"")
+.toLowerCase()===
+username.toLowerCase()
+);
+
+if(duplicate){
+
+message(
+"Username already exists.",
+"error"
+);
+
+return;
+
+}
+
+
+const cred=
+await createUserWithEmailAndPassword(
+creatorAuth,
+email,
+pass
+);
+
+
+await updateProfile(
+cred.user,
+{
+displayName:name
+}
+);
+
+
+await setDoc(
+doc(db,"users",cred.user.uid),
+{
+uid:cred.user.uid,
+fullName:name,
+username,
+email,
+phone,
+role,
+permissions:getPermissions(),
+active:true,
+createdAt:serverTimestamp()
+}
+);
+
+
+await setDoc(
+doc(
+db,
+"usernames",
+username.toLowerCase()
+),
+{
+uid:cred.user.uid,
+email
+}
+);
+
+
+await addLog(
+"Created user: "+username
+);
+
+
+/*
+Important:
+The creator account is signed out immediately.
+The current Settings session remains untouched.
+*/
+
 await signOut(creatorAuth);
-alert("User created successfully.");
+
+message(
+"User created successfully."
+);
+
 }
 
 clearUser();
-loadUsers();
-
-}catch(e){
-alert("Error: "+e.message);
-try{await signOut(creatorAuth)}catch(_){}
-}
-};
-
-function usernameInput(){return document.getElementById("username").value.trim()}
-function emailInput(){return document.getElementById("email").value.trim()}
-function phoneInput(){return document.getElementById("phone").value.trim()}
-function roleInput(){return document.getElementById("role").value}
-
-window.editUser=async function(id){
-let s=await getDoc(doc(db,"users",id));
-if(!s.exists())return;
-let u=s.data();
-editId=id;
-fullName.value=u.fullName||"";
-username.value=u.username||"";
-email.value=u.email||"";
-phone.value=u.phone||"";
-role.value=u.role||"Cashier";
-password.value="";
-setPermissions(u.permissions||{});
-window.show("users");
-scrollTo(0,0);
-};
-
-window.toggleUser=async function(id,active){
-await updateDoc(doc(db,"users",id),{active});
-await addLog((active?"Enabled ":"Disabled ")+id);
-loadUsers();
-};
-
-async function loadUsers(){
-let snap=await getDocs(collection(db,"users"));
-let html="<table><tr><th>Name</th><th>Username</th><th>Role</th><th>Status</th><th>Action</th></tr>";
-
-snap.forEach(d=>{
-let u=d.data();
-html+=`<tr>
-<td>${u.fullName||""}</td>
-<td>${u.username||""}</td>
-<td>${u.role||""}</td>
-<td>${u.active===false?"Disabled":"Active"}</td>
-<td>
-<button class="gray" onclick="editUser('${d.id}')">Edit</button>
-<button class="${u.active===false?'primary':'danger'}"
-onclick="toggleUser('${d.id}',${u.active===false})">
-${u.active===false?"Enable":"Disable"}
-</button>
-</td></tr>`;
-});
-
-document.getElementById("usersTable").innerHTML=html+"</table>";
-}
-
-window.saveSettings=async function(type){
-let data={updatedAt:serverTimestamp()};
-
-if(type==="business")data={
-name:bizName.value,phone:bizPhone.value,email:bizEmail.value,
-location:bizLocation.value,address:bizAddress.value,updatedAt:serverTimestamp()
-};
-
-if(type==="pos")data={
-currency:currency.value,till:till.value,receiptTitle:receiptTitle.value,
-footerText:footerText.value,showLogo:showLogo.checked,
-showCustomer:showCustomer.checked,updatedAt:serverTimestamp()
-};
-
-if(type==="system")data={
-theme:theme.value,language:language.value,
-autoBackup:autoBackup.checked,updatedAt:serverTimestamp()
-};
-
-await setDoc(doc(db,"settings",type),data,{merge:true});
-await addLog("Updated "+type+" settings");
-alert("Settings saved.");
-};
-
-async function loadSettings(){
-for(let type of["business","pos","system"]){
-let s=await getDoc(doc(db,"settings",type));
-if(!s.exists())continue;
-let x=s.data();
-
-if(type==="business"){
-bizName.value=x.name||"";bizPhone.value=x.phone||"";
-bizEmail.value=x.email||"";bizLocation.value=x.location||"";
-bizAddress.value=x.address||"";
-}
-
-if(type==="pos"){
-currency.value=x.currency||"KES";till.value=x.till||"TILL 1";
-receiptTitle.value=x.receiptTitle||"MABROUK TRADER'S";
-footerText.value=x.footerText||"Thank you";
-showLogo.checked=x.showLogo!==false;
-showCustomer.checked=x.showCustomer!==false;
-}
-
-if(type==="system"){
-theme.value=x.theme||"green";language.value=x.language||"English";
-autoBackup.checked=!!x.autoBackup;
-}
-}
-}
-
-async function addLog(action){
-if(!currentUser)return;
-await addDoc(collection(db,"activityLog"),{
-action,user:currentUser.email,createdAt:serverTimestamp()
-});
-}
-
-async function loadActivity(){
-let snap=await getDocs(collection(db,"activityLog"));
-let rows=[];
-snap.forEach(d=>rows.push(d.data()));
-rows.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
-rows=rows.slice(0,30);
-
-document.getElementById("activityLog").innerHTML=rows.map(x=>
-`<p><b>${x.action||""}</b><br><small>${x.user||""}</small></p>`
-).join("")||"No activity yet.";
-}
-
-onAuthStateChanged(auth,async u=>{
-if(!u){
-location.href="login.html";
-return;
-}
-
-currentUser=u;
-
-try{
-let profile=await getDoc(doc(db,"users",u.uid));
-
-if(!profile.exists()){
-alert("Your account profile was not found.");
-location.href="login.html";
-return;
-}
-
-firebaseStatus.textContent="● Firebase Connected";
-firebaseStatus.style.color="green";
 
 await loadUsers();
+
+}catch(e){
+
+console.error(e);
+
+try{
+await signOut(creatorAuth);
+}catch(_){}
+
+message(
+"Error: "+(e.message||"Unable to save user."),
+"error"
+);
+
+}
+
+};
+
+
+/* =========================
+   EDIT USER
+========================= */
+
+window.editUser=async function(id){
+
+try{
+
+const s=
+await getDoc(
+doc(db,"users",id)
+);
+
+if(!s.exists())return;
+
+const u=s.data();
+
+editId=id;
+
+document.getElementById("fullName").value=
+u.fullName||"";
+
+document.getElementById("username").value=
+u.username||"";
+
+document.getElementById("email").value=
+u.email||"";
+
+document.getElementById("phone").value=
+u.phone||"";
+
+document.getElementById("role").value=
+u.role||"Cashier";
+
+document.getElementById("password").value="";
+
+setPermissions(u.permissions||{});
+
+show("users");
+
+scrollTo(0,0);
+
+}catch(e){
+
+message(
+"Unable to load user.",
+"error"
+);
+
+}
+
+};
+
+
+/* =========================
+   ENABLE / DISABLE USER
+========================= */
+
+window.toggleUser=async function(id,active){
+
+try{
+
+await updateDoc(
+doc(db,"users",id),
+{active}
+);
+
+await addLog(
+(active?"Enabled ":"Disabled ")+id
+);
+
+await loadUsers();
+
+}catch(e){
+
+message(
+"Unable to change user status.",
+"error"
+);
+
+}
+
+};
+
+
+/* =========================
+   LOAD USERS
+========================= */
+
+async function loadUsers(){
+
+try{
+
+const snap=
+await getDocs(
+collection(db,"users")
+);
+
+let html=`
+<table>
+<tr>
+<th>Name</th>
+<th>Username</th>
+<th>Role</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+`;
+
+
+snap.forEach(d=>{
+
+const u=d.data();
+
+html+=`
+<tr>
+
+<td>${safe(u.fullName)}</td>
+
+<td>${safe(u.username)}</td>
+
+<td>${safe(u.role)}</td>
+
+<td>
+${u.active===false?"Disabled":"Active"}
+</td>
+
+<td>
+
+<button
+class="gray"
+onclick="editUser('${d.id}')">
+Edit
+</button>
+
+<button
+class="${u.active===false?"primary":"danger"}"
+onclick="toggleUser('${d.id}',${u.active===false})">
+
+${u.active===false?"Enable":"Disable"}
+
+</button>
+
+</td>
+
+</tr>
+`;
+
+});
+
+html+="</table>";
+
+document.getElementById("usersTable").innerHTML=html;
+
+}catch(e){
+
+document.getElementById("usersTable").innerHTML=
+"Unable to load users.";
+
+console.error(e);
+
+}
+
+}
+
+
+/* =========================
+   SAVE SETTINGS
+========================= */
+
+window.saveSettings=async function(type){
+
+try{
+
+let data={
+updatedAt:serverTimestamp()
+};
+
+
+if(type==="business"){
+
+data={
+name:document.getElementById("bizName").value,
+phone:document.getElementById("bizPhone").value,
+email:document.getElementById("bizEmail").value,
+location:document.getElementById("bizLocation").value,
+address:document.getElementById("bizAddress").value,
+updatedAt:serverTimestamp()
+};
+
+}
+
+
+if(type==="pos"){
+
+data={
+currency:document.getElementById("currency").value,
+till:document.getElementById("till").value,
+receiptTitle:document.getElementById("receiptTitle").value,
+footerText:document.getElementById("footerText").value,
+showLogo:document.getElementById("showLogo").checked,
+showCustomer:document.getElementById("showCustomer").checked,
+updatedAt:serverTimestamp()
+};
+
+}
+
+
+if(type==="system"){
+
+data={
+theme:document.getElementById("theme").value,
+language:document.getElementById("language").value,
+autoBackup:document.getElementById("autoBackup").checked,
+updatedAt:serverTimestamp()
+};
+
+}
+
+
+await setDoc(
+doc(db,"settings",type),
+data,
+{merge:true}
+);
+
+await addLog(
+"Updated "+type+" settings"
+);
+
+message(
+type.charAt(0).toUpperCase()+
+type.slice(1)+
+" settings saved."
+);
+
+}catch(e){
+
+console.error(e);
+
+message(
+"Could not save settings: "+
+(e.message||"Unknown error"),
+"error"
+);
+
+}
+
+};
+
+
+/* =========================
+   LOAD SETTINGS
+========================= */
+
+async function loadSettings(){
+
+for(
+const type of
+["business","pos","system"]
+){
+
+try{
+
+const s=
+await getDoc(
+doc(db,"settings",type)
+);
+
+if(!s.exists())continue;
+
+const x=s.data();
+
+
+if(type==="business"){
+
+document.getElementById("bizName").value=
+x.name||"";
+
+document.getElementById("bizPhone").value=
+x.phone||"";
+
+document.getElementById("bizEmail").value=
+x.email||"";
+
+document.getElementById("bizLocation").value=
+x.location||"";
+
+document.getElementById("bizAddress").value=
+x.address||"";
+
+}
+
+
+if(type==="pos"){
+
+document.getElementById("currency").value=
+x.currency||"KES";
+
+document.getElementById("till").value=
+x.till||"TILL 1";
+
+document.getElementById("receiptTitle").value=
+x.receiptTitle||"MABROUK TRADER'S";
+
+document.getElementById("footerText").value=
+x.footerText||"Thank you";
+
+document.getElementById("showLogo").checked=
+x.showLogo!==false;
+
+document.getElementById("showCustomer").checked=
+x.showCustomer!==false;
+
+}
+
+
+if(type==="system"){
+
+document.getElementById("theme").value=
+x.theme||"green";
+
+document.getElementById("language").value=
+x.language||"English";
+
+document.getElementById("autoBackup").checked=
+!!x.autoBackup;
+
+}
+
+}catch(e){
+
+console.error(
+"Settings load error:",
+type,
+e
+);
+
+}
+
+}
+
+}
+
+
+/* =========================
+   ACTIVITY LOG
+========================= */
+
+async function addLog(action){
+
+try{
+
+let userName="System";
+
+if(currentUser){
+
+userName=
+currentUser.email||
+localStorage.getItem(
+"goldbizna_username"
+)||
+"User";
+
+}else{
+
+userName=
+localStorage.getItem(
+"goldbizna_username"
+)||
+"User";
+
+}
+
+
+await addDoc(
+collection(db,"activityLog"),
+{
+action,
+user:userName,
+createdAt:serverTimestamp()
+}
+);
+
+}catch(e){
+
+console.warn(
+"Activity log failed:",
+e
+);
+
+}
+
+}
+
+
+/* =========================
+   LOAD ACTIVITY
+========================= */
+
+async function loadActivity(){
+
+try{
+
+const snap=
+await getDocs(
+collection(db,"activityLog")
+);
+
+let rows=[];
+
+snap.forEach(d=>{
+rows.push(d.data());
+});
+
+
+rows.sort(
+(a,b)=>
+(b.createdAt?.seconds||0)-
+(a.createdAt?.seconds||0)
+);
+
+
+rows=rows.slice(0,50);
+
+
+document.getElementById("activityLog").innerHTML=
+
+rows.map(x=>`
+
+<div class="activityItem">
+
+<b>${safe(x.action||"Activity")}</b>
+
+<br>
+
+<span class="small">
+${safe(x.user||"User")}
+</span>
+
+</div>
+
+`).join("")
+
+||
+
+"No activity yet.";
+
+}catch(e){
+
+document.getElementById("activityLog").innerHTML=
+"Unable to load activity.";
+
+}
+
+}
+
+
+/* =========================
+   SAFE TEXT
+========================= */
+
+function safe(value){
+
+return String(value??"")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================
+   LOGIN / SESSION
+========================= */
+
+/*
+IMPORTANT:
+
+We do NOT force a second password.
+
+If Firebase already has the user,
+we use that session.
+
+If your main MABROUK TRADER'S login
+uses the existing localStorage session,
+we also allow Settings to open without
+asking for another password.
+*/
+
+onAuthStateChanged(auth,async u=>{
+
+currentUser=u||null;
+
+const localSession=
+localStorage.getItem("goldbizna_logged_in")==="true"||
+localStorage.getItem("loggedIn")==="true"||
+localStorage.getItem("gb_login")==="true";
+
+
+if(!u&&!localSession){
+
+location.href="login.html";
+return;
+
+}
+
+
+document.getElementById(
+"firebaseStatus"
+).textContent=
+"● Firebase Connected";
+
+document.getElementById(
+"firebaseStatus"
+).style.color="green";
+
+
+try{
+
+await loadUsers();
+
 await loadSettings();
 
 }catch(e){
-firebaseStatus.textContent="Firebase Error";
-firebaseStatus.style.color="red";
+
 console.error(e);
+
+document.getElementById(
+"firebaseStatus"
+).textContent=
+"● Firebase Connected — Some data could not load";
+
+document.getElementById(
+"firebaseStatus"
+).style.color="#c47b00";
+
 }
+
 });
+
+
 </script>
+
 </body>
-</html>
+  </html>

@@ -4,110 +4,54 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MABROUK TRADER'S - Login</title>
-
 <style>
 *{box-sizing:border-box}
-body{
-margin:0;
-font-family:Arial,sans-serif;
-background:linear-gradient(135deg,#087a0b,#004d07);
-min-height:100vh;
-display:flex;
-align-items:center;
-justify-content:center;
-padding:20px
-}
-.login{
-width:100%;
-max-width:400px;
-background:#fff;
-border-radius:18px;
-padding:28px;
-box-shadow:0 10px 35px #0005;
-text-align:center
-}
-.logo{
-font-size:27px;
-font-weight:bold;
-color:#087a0b;
-margin-bottom:5px
-}
-.sub{
-color:#666;
-margin-bottom:25px
-}
-input{
-width:100%;
-padding:14px;
-margin:8px 0;
-border:1px solid #ccc;
-border-radius:9px;
-font-size:16px;
-outline:none
-}
-input:focus{border-color:#087a0b}
-button{
-width:100%;
-padding:14px;
-margin-top:12px;
-border:0;
-border-radius:9px;
-background:#087a0b;
-color:white;
-font-size:16px;
-font-weight:bold;
-cursor:pointer
-}
+body{margin:0;font-family:Arial;background:linear-gradient(135deg,#087a0b,#003d06);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{width:100%;max-width:400px;background:#fff;padding:28px;border-radius:18px;box-shadow:0 10px 35px #0005;text-align:center}
+h2{color:#087a0b;margin:0 0 6px}
+p{color:#666}
+input{width:100%;padding:14px;margin:7px 0;border:1px solid #ccc;border-radius:9px;font-size:16px}
+button{width:100%;padding:14px;margin-top:12px;border:0;border-radius:9px;background:#087a0b;color:#fff;font-size:16px;font-weight:bold}
 button:disabled{opacity:.6}
-#msg{
-margin-top:15px;
-padding:11px;
-border-radius:8px;
-display:none;
-font-weight:bold
-}
-.ok{background:#e5f7e7;color:#087a0b}
-.err{background:#ffe7e7;color:#b00000}
+#msg{margin-top:15px;padding:12px;border-radius:8px;display:none;word-break:break-word}
 </style>
 </head>
 
 <body>
 
-<div class="login">
+<div class="card">
+<h2>MABROUK TRADER'S</h2>
+<p>Secure Business Login</p>
 
-<div class="logo">MABROUK TRADER'S</div>
-<div class="sub">Secure Business Login</div>
-
-<input id="username" type="text"
-placeholder="Username or Email"
+<input id="email" type="email"
+placeholder="Email"
+value="mubarakjumamasoud@gmail.com"
 autocomplete="username">
 
 <input id="password" type="password"
 placeholder="Password"
 autocomplete="current-password">
 
-<button id="loginBtn">LOGIN</button>
+<button id="login">LOGIN</button>
 
 <div id="msg"></div>
-
 </div>
 
 <script type="module">
 
-import{
-initializeApp
-}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import{initializeApp}from"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
 import{
 getAuth,
-signInWithEmailAndPassword,
-signOut
+signInWithEmailAndPassword
 }from"https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
 import{
 getFirestore,
 doc,
-getDoc
+setDoc,
+getDoc,
+serverTimestamp
 }from"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const firebaseConfig={
@@ -124,38 +68,45 @@ const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
 
-const username=document.getElementById("username");
+const ADMIN_UID="szplJ5HPQWbysc7mkBWN1KPVwC22";
+const ADMIN_EMAIL="mubarakjumamasoud@gmail.com";
+
+const permissions={
+Dashboard:true,
+POS:true,
+Inventory:true,
+Customers:true,
+"Sales History":true,
+Reports:true,
+Savings:true,
+Payments:true,
+Discounts:true,
+"Refunds/Voids":true,
+"Stock Adjustments":true,
+"User Management":true,
+Settings:true,
+"Backup & Restore":true
+};
+
+const email=document.getElementById("email");
 const password=document.getElementById("password");
-const btn=document.getElementById("loginBtn");
+const btn=document.getElementById("login");
 const msg=document.getElementById("msg");
 
-function message(text,type="err"){
+function show(text,good=false){
 msg.textContent=text;
-msg.className=type;
 msg.style.display="block";
+msg.style.background=good?"#e5f7e7":"#ffe7e7";
+msg.style.color=good?"#087a0b":"#b00000";
 }
 
-async function findEmail(value){
+btn.onclick=async()=>{
 
-value=value.trim();
-
-if(value.includes("@")) return value;
-
-const ref=doc(db,"usernames",value.toLowerCase());
-const snap=await getDoc(ref);
-
-if(!snap.exists()) return null;
-
-return snap.data().email||null;
-}
-
-async function login(){
-
-const name=username.value.trim();
+const mail=email.value.trim();
 const pass=password.value;
 
-if(!name||!pass){
-message("Enter your username and password.");
+if(!mail||!pass){
+show("Enter your email and password.");
 return;
 }
 
@@ -165,106 +116,108 @@ msg.style.display="none";
 
 try{
 
-const email=await findEmail(name);
-
-if(!email){
-throw new Error("Username was not found.");
-}
-
 const result=await signInWithEmailAndPassword(
 auth,
-email,
+mail,
 pass
 );
 
 const user=result.user;
 
-const profileRef=doc(db,"users",user.uid);
-const profileSnap=await getDoc(profileRef);
+if(user.uid===ADMIN_UID&&user.email===ADMIN_EMAIL){
 
-if(!profileSnap.exists()){
-
-await signOut(auth);
-
-throw new Error(
-"Your Firebase account exists, but your MABROUK TRADER'S user profile has not been created yet."
-);
-}
-
-const profile=profileSnap.data();
-
-if(profile.status==="disabled"){
-
-await signOut(auth);
-
-throw new Error(
-"Your account has been disabled. Contact the Owner."
-);
-}
-
-localStorage.setItem(
-"goldbizna_username",
-profile.username||name
+await setDoc(
+doc(db,"users",ADMIN_UID),
+{
+uid:ADMIN_UID,
+fullName:"Mubarak",
+username:"admin",
+email:ADMIN_EMAIL,
+phone:"",
+role:"Owner/Admin",
+status:"active",
+permissions:permissions,
+updatedAt:serverTimestamp()
+},
+{merge:true}
 );
 
-localStorage.setItem(
-"goldbizna_uid",
-user.uid
+await setDoc(
+doc(db,"usernames","admin"),
+{
+uid:ADMIN_UID,
+email:ADMIN_EMAIL,
+username:"admin",
+updatedAt:serverTimestamp()
+},
+{merge:true}
 );
 
-localStorage.setItem(
-"goldbizna_role",
-profile.role||""
-);
+localStorage.setItem("goldbizna_logged_in","true");
+localStorage.setItem("goldbizna_uid",ADMIN_UID);
+localStorage.setItem("goldbizna_username","admin");
+localStorage.setItem("goldbizna_role","Owner/Admin");
 
-localStorage.setItem(
-"goldbizna_logged_in",
-"true"
-);
-
-message(
-"Welcome "+(profile.fullName||profile.username||"")+
-" — "+(profile.role||"User"),
-"ok"
-);
+show("✅ Welcome Mubarak — Owner/Admin",true);
 
 setTimeout(()=>{
-window.location.href="index.html";
-},700);
+location.href="index.html";
+},800);
+
+return;
+}
+
+const profile=await getDoc(doc(db,"users",user.uid));
+
+if(!profile.exists()){
+show("❌ Your Firebase account has no user profile yet.");
+btn.disabled=false;
+btn.textContent="LOGIN";
+return;
+}
+
+const data=profile.data();
+
+if(data.status==="disabled"){
+show("❌ This account is disabled.");
+btn.disabled=false;
+btn.textContent="LOGIN";
+return;
+}
+
+localStorage.setItem("goldbizna_logged_in","true");
+localStorage.setItem("goldbizna_uid",user.uid);
+localStorage.setItem("goldbizna_username",data.username||"");
+localStorage.setItem("goldbizna_role",data.role||"");
+
+show("✅ Login successful",true);
+
+setTimeout(()=>{
+location.href="index.html";
+},800);
 
 }catch(error){
 
 console.error(error);
 
-let text=error.message;
-
 if(error.code==="auth/invalid-credential"){
-text="Incorrect username/email or password.";
+show("❌ Incorrect email or password.");
+}else if(error.code==="auth/user-disabled"){
+show("❌ This Firebase account is disabled.");
+}else{
+show("❌ "+error.code+" — "+error.message);
 }
-
-if(error.code==="auth/user-disabled"){
-text="This Firebase account has been disabled.";
-}
-
-message("❌ "+text);
 
 password.value="";
-password.focus();
-
 btn.disabled=false;
 btn.textContent="LOGIN";
-}
 
 }
 
-btn.addEventListener("click",login);
+};
 
 password.addEventListener("keydown",e=>{
-if(e.key==="Enter")login();
-});
-
-username.addEventListener("keydown",e=>{
-if(e.key==="Enter")password.focus();
+if(e.key==="Enter")btn.click();
 });
 
 </script>

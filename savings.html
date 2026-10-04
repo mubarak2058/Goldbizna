@@ -3,24 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-
 <title>MABROUK TRADER'S - Savings</title>
 
 <style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-    font-family:Arial,sans-serif;
-}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
 
 body{
     background:#f5f7f6;
     color:#222;
     overflow-x:hidden;
 }
-
-/* ================= TOP BAR ================= */
 
 .topbar{
     position:fixed;
@@ -29,12 +21,12 @@ body{
     right:0;
     height:64px;
     background:#087a0b;
-    color:#fff;
+    color:white;
     display:flex;
     align-items:center;
     padding:0 22px;
-    z-index:100;
-    box-shadow:0 2px 8px #0002;
+    z-index:1000;
+    box-shadow:0 2px 8px #0003;
 }
 
 .brand{
@@ -43,9 +35,7 @@ body{
     white-space:nowrap;
 }
 
-.brand span{
-    color:#ffd43b;
-}
+.brand span{color:#ffd43b}
 
 .store{
     margin-left:55px;
@@ -56,12 +46,12 @@ body{
     margin-left:auto;
     display:flex;
     align-items:center;
-    gap:24px;
-    font-size:14px;
+    gap:20px;
 }
 
 .top-action{
     cursor:pointer;
+    font-size:14px;
 }
 
 .admin{
@@ -74,7 +64,7 @@ body{
     width:38px;
     height:38px;
     border-radius:50%;
-    background:#fff;
+    background:white;
     color:#087a0b;
     display:flex;
     align-items:center;
@@ -82,25 +72,23 @@ body{
     font-weight:bold;
 }
 
-/* ================= SIDEBAR ================= */
-
 .sidebar{
     position:fixed;
     left:0;
     top:64px;
     bottom:0;
     width:230px;
-    background:#fff;
+    background:white;
     border-right:1px solid #e3e7e5;
     padding:20px 14px;
     overflow-y:auto;
-    z-index:90;
+    z-index:900;
 }
 
 .nav-title{
     font-size:11px;
     color:#888;
-    margin:15px 12px 8px;
+    margin:18px 12px 8px;
     text-transform:uppercase;
 }
 
@@ -144,8 +132,6 @@ body{
     color:#35553c;
 }
 
-/* ================= MAIN ================= */
-
 .main{
     margin-left:230px;
     padding-top:64px;
@@ -158,8 +144,8 @@ body{
 
 .page-head{
     display:flex;
-    align-items:center;
     justify-content:space-between;
+    align-items:center;
     margin-bottom:22px;
 }
 
@@ -173,21 +159,17 @@ body{
     font-size:14px;
 }
 
-/* ================= BUTTONS ================= */
-
 .btn{
     border:0;
     background:#087a0b;
-    color:#fff;
+    color:white;
     border-radius:7px;
     padding:10px 15px;
     cursor:pointer;
     font-weight:600;
 }
 
-.btn:hover{
-    opacity:.9;
-}
+.btn:hover{opacity:.9}
 
 .btn:disabled{
     opacity:.6;
@@ -195,21 +177,17 @@ body{
 }
 
 .btn.secondary{
-    background:#fff;
+    background:white;
     color:#333;
     border:1px solid #ddd;
 }
 
-.btn.danger{
-    background:#d92323;
-}
+.btn.danger{background:#d92323}
 
 .btn.small{
     padding:7px 10px;
     font-size:12px;
 }
-
-/* ================= DASHBOARD CARDS ================= */
 
 .cards{
     display:grid;
@@ -218,7 +196,7 @@ body{
 }
 
 .card{
-    background:#fff;
+    background:white;
     border:1px solid #e3e7e5;
     border-radius:10px;
     padding:19px;
@@ -243,10 +221,8 @@ body{
     margin-top:7px;
 }
 
-/* ================= PANELS ================= */
-
 .panel{
-    background:#fff;
+    background:white;
     border:1px solid #e3e7e5;
     border-radius:10px;
     margin-top:22px;
@@ -262,9 +238,7 @@ body{
     gap:15px;
 }
 
-.panel-head h2{
-    font-size:18px;
-}
+.panel-head h2{font-size:18px}
 
 .form-grid{
     display:grid;
@@ -287,7 +261,7 @@ body{
     padding:11px;
     border:1px solid #dfe4e1;
     border-radius:7px;
-    background:#fff;
+    background:white;
     outline:none;
 }
 
@@ -298,9 +272,7 @@ body{
     box-shadow:0 0 0 2px #087a0b18;
 }
 
-.full{
-    grid-column:1/-1;
-}
+.full{grid-column:1/-1}
 
 .actions{
     padding:0 20px 20px;
@@ -308,16 +280,15 @@ body{
     gap:10px;
 }
 
-.notice{
-    margin:18px 20px;
-    padding:14px;
-    border-radius:8px;
-    background:#f5faf6;
-    color:#35553c;
+.status{
+    padding:12px 20px;
+    color:#666;
     font-size:13px;
+    min-height:18px;
 }
 
-/* ================= TABLE ================= */
+.status.success{color:#087a0b}
+.status.error{color:#d92323}
 
 .table-wrap{
     overflow:auto;
@@ -344,9 +315,15 @@ body{
 }
 
 .empty{
-    text-align:center;
+    text-align:center!important;
     color:#888;
-    padding:25px!important;
+    padding:30px!important;
+}
+
+.loading{
+    text-align:center!important;
+    color:#777;
+    padding:30px!important;
 }
 
 .search{
@@ -361,23 +338,6 @@ body{
     border-color:#087a0b;
 }
 
-/* ================= STATUS ================= */
-
-.status{
-    font-size:13px;
-    margin:10px 20px;
-    color:#666;
-    min-height:18px;
-}
-
-.loading{
-    text-align:center;
-    padding:25px;
-    color:#777;
-}
-
-/* ================= CUSTOMER ================= */
-
 .customer-link{
     color:#087a0b;
     font-weight:bold;
@@ -388,8 +348,44 @@ body{
     font-size:13px;
 }
 
-.customer-link:hover{
-    text-decoration:underline;
+.customer-link:hover{text-decoration:underline}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#0008;
+    z-index:2000;
+    align-items:center;
+    justify-content:center;
+    padding:15px;
+}
+
+.modal.show{display:flex}
+
+.modal-card{
+    background:white;
+    border-radius:12px;
+    width:min(700px,100%);
+    max-height:90vh;
+    overflow:auto;
+}
+
+.modal-head{
+    padding:17px 20px;
+    border-bottom:1px solid #eee;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.modal-body{padding:20px}
+
+.close{
+    border:0;
+    background:none;
+    font-size:25px;
+    cursor:pointer;
 }
 
 .balance-box{
@@ -425,9 +421,7 @@ body{
     padding:14px;
 }
 
-.summary-box small{
-    color:#777;
-}
+.summary-box small{color:#777}
 
 .summary-box b{
     display:block;
@@ -435,62 +429,16 @@ body{
     font-size:18px;
 }
 
-/* ================= MODAL ================= */
-
-.modal{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:#0007;
-    z-index:200;
-    align-items:center;
-    justify-content:center;
-    padding:15px;
-}
-
-.modal.show{
-    display:flex;
-}
-
-.modal-card{
-    background:#fff;
-    border-radius:12px;
-    width:min(700px,100%);
-    max-height:90vh;
-    overflow:auto;
-}
-
-.modal-head{
-    padding:17px 20px;
-    border-bottom:1px solid #eee;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.modal-body{
-    padding:20px;
-}
-
-.close{
-    border:0;
-    background:none;
-    font-size:24px;
-    cursor:pointer;
-}
-
-/* ================= TOAST ================= */
-
 .toast{
     position:fixed;
     right:20px;
     bottom:20px;
     background:#222;
-    color:#fff;
+    color:white;
     padding:13px 17px;
     border-radius:8px;
     font-size:13px;
-    z-index:500;
+    z-index:5000;
     opacity:0;
     transform:translateY(20px);
     pointer-events:none;
@@ -502,17 +450,23 @@ body{
     transform:translateY(0);
 }
 
-/* ================= MOBILE ================= */
+.firebase-error{
+    background:#fff1f1;
+    border:1px solid #f0b4b4;
+    color:#a40000;
+    margin:15px 20px;
+    padding:15px;
+    border-radius:8px;
+    display:none;
+    font-size:13px;
+    line-height:1.5;
+}
+
+.firebase-error.show{display:block}
 
 @media(max-width:1000px){
-
-    .cards{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .store{
-        margin-left:25px;
-    }
+    .cards{grid-template-columns:repeat(2,1fr)}
+    .store{margin-left:25px}
 }
 
 @media(max-width:700px){
@@ -522,22 +476,15 @@ body{
         padding:0 10px;
     }
 
-    .brand{
-        font-size:16px;
-    }
-
-    .store{
-        display:none;
-    }
+    .brand{font-size:16px}
+    .store{display:none}
 
     .top-actions{
         gap:8px;
         font-size:11px;
     }
 
-    .admin div:last-child{
-        display:none;
-    }
+    .admin div:last-child{display:none}
 
     .avatar{
         width:31px;
@@ -571,70 +518,48 @@ body{
         padding-top:58px;
     }
 
-    .content{
-        padding:15px 10px;
-    }
+    .content{padding:15px 10px}
 
     .page-head{
         align-items:flex-start;
         gap:10px;
     }
 
-    .page-head h1{
-        font-size:21px;
-    }
+    .page-head h1{font-size:21px}
 
-    .page-head p{
-        font-size:11px;
-    }
+    .page-head p{font-size:11px}
 
     .btn{
         padding:8px;
         font-size:11px;
     }
 
-    .cards{
-        gap:8px;
-    }
+    .cards{gap:8px}
 
-    .card{
-        padding:12px;
-    }
+    .card{padding:12px}
 
-    .card-value{
-        font-size:19px;
-    }
+    .card-value{font-size:19px}
 
-    .card-title{
-        font-size:11px;
-    }
+    .card-title{font-size:11px}
 
-    .panel{
-        margin-top:12px;
-    }
+    .panel{margin-top:12px}
 
     .panel-head{
         padding:13px;
-        align-items:flex-start;
         flex-direction:column;
+        align-items:flex-start;
     }
 
-    .panel-head h2{
-        font-size:15px;
-    }
+    .panel-head h2{font-size:15px}
 
-    .search{
-        width:100%;
-    }
+    .search{width:100%}
 
     .form-grid{
         grid-template-columns:1fr;
         padding:13px;
     }
 
-    .full{
-        grid-column:auto;
-    }
+    .full{grid-column:auto}
 
     .actions{
         padding:0 13px 13px;
@@ -649,16 +574,11 @@ body{
     .customer-summary{
         grid-template-columns:1fr;
     }
-
 }
 </style>
 </head>
 
 <body>
-
-<!-- =========================================================
-     TOP BAR
-========================================================= -->
 
 <header class="topbar">
 
@@ -667,33 +587,22 @@ body{
     </div>
 
     <div class="store">
-        Mabrouk Trader's Store (KSh)　⌄
+        Mabrouk Trader's Store (KSh)
     </div>
 
     <div class="top-actions">
 
-        <div
-            class="top-action"
-            id="refreshBtn"
-        >
+        <div class="top-action" id="refreshBtn">
             ↻ Refresh
         </div>
 
-        <div
-            class="top-action"
-            id="inventoryBtn"
-        >
+        <div class="top-action" id="inventoryBtn">
             ＋ Add Product
         </div>
 
         <div class="admin">
 
-            <div
-                class="avatar"
-                id="userAvatar"
-            >
-                U
-            </div>
+            <div class="avatar" id="userAvatar">U</div>
 
             <div>
                 <b id="userName">User</b>
@@ -701,18 +610,12 @@ body{
                 <small>Mabrouk Trader's User</small>
             </div>
 
-            <span>⌄</span>
-
         </div>
 
     </div>
 
 </header>
 
-
-<!-- =========================================================
-     SIDEBAR
-========================================================= -->
 
 <aside class="sidebar">
 
@@ -743,10 +646,7 @@ body{
         Sales
     </a>
 
-    <a
-        href="savings.html"
-        class="active"
-    >
+    <a href="savings.html" class="active">
         <span class="nav-icon">◈</span>
         Savings
     </a>
@@ -766,15 +666,9 @@ body{
         Settings
     </a>
 
-    <div class="nav-title">
-        Other
-    </div>
+    <div class="nav-title">Other</div>
 
-    <a
-        href="login.html"
-        class="logout"
-        id="logoutLink"
-    >
+    <a href="login.html" class="logout" id="logoutLink">
         <span class="nav-icon">⇥</span>
         Logout
     </a>
@@ -792,295 +686,117 @@ body{
 </aside>
 
 
-<!-- =========================================================
-     MAIN
-========================================================= -->
-
 <main class="main">
 
 <section class="content">
 
-
-<!-- PAGE HEADER -->
-
 <div class="page-head">
 
     <div>
-
-        <h1>
-            Savings
-        </h1>
-
-        <p>
-            Track, edit and manage your customers' savings
-        </p>
-
+        <h1>Savings</h1>
+        <p>Track and manage your customers' savings</p>
     </div>
 
-    <button
-        class="btn"
-        id="addSavingBtn"
-        type="button"
-    >
+    <button class="btn" id="addSavingBtn">
         ＋ Add Saving
     </button>
 
 </div>
 
 
-<!-- =========================================================
-     STATISTICS
-========================================================= -->
-
 <div class="cards">
 
     <div class="card">
-
-        <div class="card-title">
-            Total Savings
-        </div>
-
-        <div
-            class="card-value"
-            id="total"
-        >
-            KSh 0
-        </div>
-
-        <div class="card-note">
-            All saved entries
-        </div>
-
+        <div class="card-title">Total Savings</div>
+        <div class="card-value" id="total">KSh 0</div>
+        <div class="card-note">All saved entries</div>
     </div>
 
-
     <div class="card">
-
-        <div class="card-title">
-            This Month
-        </div>
-
-        <div
-            class="card-value"
-            id="monthTotal"
-        >
-            KSh 0
-        </div>
-
-        <div class="card-note">
-            Current month
-        </div>
-
+        <div class="card-title">This Month</div>
+        <div class="card-value" id="monthTotal">KSh 0</div>
+        <div class="card-note">Current month</div>
     </div>
 
-
     <div class="card">
-
-        <div class="card-title">
-            Entries
-        </div>
-
-        <div
-            class="card-value"
-            id="entryCount"
-        >
-            0
-        </div>
-
-        <div class="card-note">
-            Savings transactions
-        </div>
-
+        <div class="card-title">Entries</div>
+        <div class="card-value" id="entryCount">0</div>
+        <div class="card-note">Savings transactions</div>
     </div>
 
-
     <div class="card">
-
-        <div class="card-title">
-            Customers
-        </div>
-
-        <div
-            class="card-value"
-            id="customerCount"
-        >
-            0
-        </div>
-
-        <div class="card-note">
-            Unique savers
-        </div>
-
+        <div class="card-title">Customers</div>
+        <div class="card-value" id="customerCount">0</div>
+        <div class="card-note">Unique savers</div>
     </div>
 
 </div>
 
 
-<!-- =========================================================
-     ADD SAVING
-========================================================= -->
-
-<div
-    class="panel"
-    id="addPanel"
->
+<div class="panel" id="addPanel">
 
     <div class="panel-head">
 
-        <h2>
-            Add Saving
-        </h2>
+        <h2>Add Saving</h2>
 
-        <span
-            style="font-size:12px;color:#777"
-        >
+        <span style="font-size:12px;color:#777">
             Required fields marked *
         </span>
 
     </div>
 
-
     <div class="form-grid">
 
         <div class="field">
-
-            <label>
-                Customer Name *
-            </label>
-
-            <input
-                id="customer"
-                autocomplete="off"
-                placeholder="Customer name"
-            >
-
+            <label>Customer Name *</label>
+            <input id="customer" autocomplete="off" placeholder="Customer name">
         </div>
 
-
         <div class="field">
-
-            <label>
-                Phone Number
-            </label>
-
-            <input
-                id="phone"
-                type="tel"
-                autocomplete="off"
-                placeholder="07xx xxx xxx"
-            >
-
+            <label>Phone Number</label>
+            <input id="phone" type="tel" autocomplete="off" placeholder="07xx xxx xxx">
         </div>
 
-
         <div class="field">
-
-            <label>
-                Amount (KSh) *
-            </label>
-
-            <input
-                id="amount"
-                type="number"
-                min="1"
-                step="0.01"
-                inputmode="decimal"
-                placeholder="0"
-            >
-
+            <label>Amount (KSh) *</label>
+            <input id="amount" type="number" min="1" step="0.01" inputmode="decimal" placeholder="0">
         </div>
 
-
         <div class="field">
-
-            <label>
-                Payment Method *
-            </label>
+            <label>Payment Method *</label>
 
             <select id="method">
-
-                <option value="M-Pesa">
-                    M-Pesa
-                </option>
-
-                <option value="Cash">
-                    Cash
-                </option>
-
-                <option value="Bank">
-                    Bank
-                </option>
-
-                <option value="Card">
-                    Card
-                </option>
-
+                <option value="M-Pesa">M-Pesa</option>
+                <option value="Cash">Cash</option>
+                <option value="Bank">Bank</option>
+                <option value="Card">Card</option>
             </select>
-
         </div>
-
 
         <div class="field">
-
-            <label>
-                Date *
-            </label>
-
-            <input
-                id="date"
-                type="date"
-            >
-
+            <label>Date *</label>
+            <input id="date" type="date">
         </div>
-
 
         <div class="field">
-
-            <label>
-                Reference / Receipt No.
-            </label>
-
-            <input
-                id="reference"
-                autocomplete="off"
-                placeholder="Optional"
-            >
-
+            <label>Reference / Receipt No.</label>
+            <input id="reference" autocomplete="off" placeholder="Optional">
         </div>
-
 
         <div class="field full">
-
-            <label>
-                Description
-            </label>
-
-            <textarea
-                id="desc"
-                rows="2"
-                placeholder="Optional note"
-            ></textarea>
-
+            <label>Description</label>
+            <textarea id="desc" rows="2" placeholder="Optional note"></textarea>
         </div>
 
     </div>
 
-
     <div class="actions">
 
-        <button
-            class="btn"
-            id="saveEntryBtn"
-            type="button"
-        >
+        <button class="btn" id="saveEntryBtn">
             Save Entry
         </button>
 
-        <button
-            class="btn secondary"
-            id="clearFormBtn"
-            type="button"
-        >
+        <button class="btn secondary" id="clearFormBtn">
             Clear
         </button>
 
@@ -1089,17 +805,11 @@ body{
 </div>
 
 
-<!-- =========================================================
-     SAVINGS HISTORY
-========================================================= -->
-
 <div class="panel">
 
     <div class="panel-head">
 
-        <h2>
-            Savings History
-        </h2>
+        <h2>Savings History</h2>
 
         <input
             class="search"
@@ -1110,19 +820,17 @@ body{
 
     </div>
 
+    <div id="status" class="status">
+        Connecting to Firebase...
+    </div>
 
-    <div
-        id="status"
-        class="status"
-    ></div>
-
+    <div id="firebaseError" class="firebase-error"></div>
 
     <div class="table-wrap">
 
         <table class="activity">
 
             <thead>
-
                 <tr>
                     <th>Date</th>
                     <th>Customer</th>
@@ -1133,17 +841,13 @@ body{
                     <th>Amount</th>
                     <th>Actions</th>
                 </tr>
-
             </thead>
 
             <tbody id="rows">
 
                 <tr>
-                    <td
-                        colspan="8"
-                        class="loading"
-                    >
-                        Loading savings...
+                    <td colspan="8" class="loading">
+                        Connecting to Firebase...
                     </td>
                 </tr>
 
@@ -1155,122 +859,269 @@ body{
 
 </div>
 
-
 </section>
+
 </main>
 
 
-<!-- =========================================================
-     EDIT MODAL
-========================================================= -->
+<!-- EDIT MODAL -->
 
-<div
-    class="modal"
-    id="editModal"
->
+<div class="modal" id="editModal">
 
 <div class="modal-card">
 
     <div class="modal-head">
 
-        <h2>
-            Edit Saving
-        </h2>
+        <h2>Edit Saving</h2>
 
-        <button
-            class="close"
-            id="closeModalBtn"
-            type="button"
-        >
-            ×
+        <button class="close" id="closeModalBtn">×</button>
+
+    </div>
+
+    <div class="modal-body">
+
+        <div class="form-grid" style="padding:0">
+
+            <div class="field">
+                <label>Customer Name *</label>
+                <input id="eCustomer">
+            </div>
+
+            <div class="field">
+                <label>Phone Number</label>
+                <input id="ePhone">
+            </div>
+
+            <div class="field">
+                <label>Amount (KSh) *</label>
+                <input id="eAmount" type="number" min="1" step="0.01">
+            </div>
+
+            <div class="field">
+                <label>Payment Method *</label>
+
+                <select id="eMethod">
+                    <option value="M-Pesa">M-Pesa</option>
+                    <option value="Cash">Cash</option>
+                    <option value="Bank">Bank</option>
+                    <option value="Card">Card</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>Date *</label>
+                <input id="eDate" type="date">
+            </div>
+
+            <div class="field">
+                <label>Reference / Receipt No.</label>
+                <input id="eReference">
+            </div>
+
+            <div class="field full">
+                <label>Description</label>
+                <textarea id="eDesc" rows="2"></textarea>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="actions">
+
+        <button class="btn" id="updateEntryBtn">
+            Update Entry
+        </button>
+
+        <button class="btn secondary" id="cancelEditBtn">
+            Cancel
         </button>
 
     </div>
 
+</div>
+
+</div>
+
+
+<!-- CUSTOMER MODAL -->
+
+<div class="modal" id="customerModal">
+
+<div class="modal-card">
+
+    <div class="modal-head">
+
+        <h2 id="customerModalTitle">
+            Customer Savings
+        </h2>
+
+        <button class="close" id="closeCustomerModal">×</button>
+
+    </div>
 
     <div class="modal-body">
 
-        <div
-            class="form-grid"
-            style="padding:0"
-        >
+        <div class="balance-box">
 
-            <div class="field">
-
-                <label>
-                    Customer Name *
-                </label>
-
-                <input id="eCustomer">
-
+            <div class="balance-label">
+                Current Savings Balance
             </div>
 
-
-            <div class="field">
-
-                <label>
-                    Phone Number
-                </label>
-
-                <input id="ePhone">
-
+            <div class="balance-value" id="customerBalance">
+                KSh 0
             </div>
 
+        </div>
 
-            <div class="field">
+        <div class="customer-summary">
 
-                <label>
-                    Amount (KSh) *
-                </label>
-
-                <input
-                    id="eAmount"
-                    type="number"
-                    min="1"
-                    step="0.01"
-                >
-
+            <div class="summary-box">
+                <small>Customer</small>
+                <b id="customerAccountName">—</b>
             </div>
 
-
-            <div class="field">
-
-                <label>
-                    Payment Method *
-                </label>
-
-                <select id="eMethod">
-
-                    <option value="M-Pesa">
-                        M-Pesa
-                    </option>
-
-                    <option value="Cash">
-                        Cash
-                    </option>
-
-                    <option value="Bank">
-                        Bank
-                    </option>
-
-                    <option value="Card">
-                        Card
-                    </option>
-
-                </select>
-
+            <div class="summary-box">
+                <small>Phone</small>
+                <b id="customerAccountPhone">—</b>
             </div>
 
+        </div>
 
-            <div class="field">
+        <h3 style="margin-bottom:12px">
+            Savings Transactions
+        </h3>
 
-                <label>
-                    Date *
-                </label>
+        <div class="table-wrap">
 
-                <input
-                    id="eDate"
-                    type="date"
-                >
+            <table class="activity">
 
-   
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Method</th>
+                        <th>Reference</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+
+                <tbody id="customerRows"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+
+<script type="module">
+
+/*
+============================================================
+MABROUK TRADER'S
+SAVINGS MODULE
+============================================================
+
+IMPORTANT:
+
+This page ONLY works with:
+
+Firestore collection:
+    savings
+
+It does NOT load products.
+It does NOT import inventory.js.
+It does NOT call POS product functions.
+
+It uses the existing:
+    ./firebase-config.js
+
+That file must export:
+    export const db = getFirestore(app);
+
+============================================================
+*/
+
+
+/* =========================================================
+   FIREBASE
+========================================================= */
+
+import { db } from "./firebase-config.js";
+
+import {
+    collection,
+    addDoc,
+    getDocs,
+    updateDoc,
+    deleteDoc,
+    doc
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+/* =========================================================
+   DATABASE
+========================================================= */
+
+const savingsCollection = collection(db, "savings");
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let savings = [];
+let editingId = null;
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+const $ = id => document.getElementById(id);
+
+
+function money(value){
+
+    return "KSh " +
+        Number(value || 0).toLocaleString(
+            "en-KE",
+            {
+                minimumFractionDigits:0,
+                maximumFractionDigits:2
+            }
+        );
+
+}
+
+
+function today(){
+
+    const d = new Date();
+
+    return (
+        d.getFullYear() +
+        "-" +
+        String(d.getMonth()+1).padStart(2,"0") +
+        "-" +
+        String(d.getDate()).padStart(2,"0")
+    );
+
+}
+
+
+function esc(value){
+
+    return String(value ?? "")
+        .replace(
+            /[&<>"']/g,
+            char => ({
+              

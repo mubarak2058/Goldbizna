@@ -1,174 +1,169 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#087a0b">
+
 <title>MABROUK TRADER'S - Login</title>
 
 <style>
-*{
-box-sizing:border-box;
-margin:0;
-padding:0;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-html,body{
-width:100%;
-height:100%;
+html, body {
+  width: 100%;
+  min-height: 100%;
 }
 
-body{
-font-family:Arial,sans-serif;
-background:linear-gradient(135deg,#064f08,#087a0b,#0b9910);
-display:flex;
-align-items:center;
-justify-content:center;
-overflow:hidden;
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg,#064f08,#087a0b,#0b9910);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
 }
 
-.login-wrapper{
-width:100%;
-height:100%;
-display:flex;
-align-items:center;
-justify-content:center;
-padding:18px;
+.login-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
 }
 
-.login-card{
-width:min(410px,100%);
-background:#fff;
-border-radius:18px;
-padding:30px 25px;
-box-shadow:0 12px 40px rgba(0,0,0,.30);
-text-align:center;
-position:relative;
+.login-card {
+  width: min(410px,100%);
+  background: #fff;
+  border-radius: 18px;
+  padding: 30px 25px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.30);
+  text-align: center;
 }
 
-.logo{
-width:72px;
-height:72px;
-margin:0 auto 14px;
-border-radius:50%;
-background:#087a0b;
-color:#fff;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:30px;
-font-weight:bold;
-box-shadow:0 4px 12px rgba(0,0,0,.2);
+.logo {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  background: #087a0b;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0,0,0,.2);
 }
 
-h1{
-color:#087a0b;
-font-size:24px;
-margin-bottom:5px;
+h1 {
+  color: #087a0b;
+  font-size: 24px;
+  margin-bottom: 5px;
 }
 
-.subtitle{
-color:#777;
-font-size:13px;
-margin-bottom:24px;
+.subtitle {
+  color: #777;
+  font-size: 13px;
+  margin-bottom: 24px;
 }
 
-.field{
-text-align:left;
-margin-bottom:13px;
+.field {
+  text-align: left;
+  margin-bottom: 15px;
 }
 
-.field label{
-display:block;
-font-size:13px;
-font-weight:bold;
-margin-bottom:5px;
-color:#333;
+.field label {
+  display: block;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #333;
 }
 
-.field input{
-width:100%;
-padding:13px;
-border:1px solid #bbb;
-border-radius:8px;
-font-size:15px;
-outline:none;
+.field input {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
 }
 
-.field input:focus{
-border-color:#087a0b;
-box-shadow:0 0 0 2px rgba(8,122,11,.12);
+.field input:focus {
+  border-color: #087a0b;
+  box-shadow: 0 0 0 2px rgba(8,122,11,.12);
 }
 
-.login-btn{
-width:100%;
-border:0;
-background:#087a0b;
-color:#fff;
-padding:13px;
-border-radius:8px;
-font-size:16px;
-font-weight:bold;
-cursor:pointer;
-margin-top:5px;
+.login-btn {
+  width: 100%;
+  border: 0;
+  background: #087a0b;
+  color: #fff;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 5px;
 }
 
-.login-btn:active{
-transform:scale(.98);
+.login-btn:active {
+  transform: scale(.98);
 }
 
-.login-btn:disabled{
-opacity:.6;
-cursor:not-allowed;
+.login-btn:disabled {
+  opacity: .6;
+  cursor: not-allowed;
 }
 
-.error{
-display:none;
-background:#ffebee;
-color:#c62828;
-padding:10px;
-border-radius:7px;
-font-size:13px;
-margin-bottom:12px;
+.error {
+  display: none;
+  background: #ffebee;
+  color: #c62828;
+  padding: 11px;
+  border-radius: 7px;
+  font-size: 13px;
+  margin-bottom: 14px;
 }
 
-.loading{
-display:none;
-color:#087a0b;
-font-size:13px;
-margin-top:10px;
+.footer {
+  margin-top: 20px;
+  font-size: 11px;
+  color: #888;
 }
 
-.footer{
-margin-top:20px;
-font-size:11px;
-color:#888;
+.shield {
+  margin-top: 15px;
+  font-size: 11px;
+  color: #087a0b;
+  font-weight: bold;
 }
 
-.shield{
-margin-top:13px;
-font-size:11px;
-color:#087a0b;
-font-weight:bold;
-}
+@media(max-height:600px) {
+  .login-card {
+    padding: 20px;
+  }
 
-@media(max-height:600px){
-.login-card{
-padding:20px;
-}
+  .logo {
+    width: 55px;
+    height: 55px;
+    font-size: 23px;
+  }
 
-.logo{
-width:55px;
-height:55px;
-font-size:23px;
-}
+  h1 {
+    font-size: 20px;
+  }
 
-h1{
-font-size:20px;
-}
-
-.subtitle{
-margin-bottom:15px;
-}
+  .subtitle {
+    margin-bottom: 15px;
+  }
 }
 </style>
 </head>
@@ -177,359 +172,73 @@ margin-bottom:15px;
 
 <div class="login-wrapper">
 
-<div class="login-card">
+  <main class="login-card">
 
-<div class="logo">M</div>
+    <div class="logo">M</div>
 
-<h1>MABROUK TRADER'S</h1>
+    <h1>MABROUK TRADER'S</h1>
 
-<div class="subtitle">
-Secure Business Management System
+    <div class="subtitle">
+      Secure Business Management System
+    </div>
+
+    <div
+      id="loginError"
+      class="error"
+      role="alert"
+      aria-live="polite">
+    </div>
+
+    <form id="loginForm">
+
+      <div class="field">
+        <label for="email">Email Address</label>
+
+        <input
+          id="email"
+          name="email"
+          type="email"
+          placeholder="Enter your email address"
+          autocomplete="username"
+          required>
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+
+        <input
+          id="password"
+          name="password"
+          type="password"
+          placeholder="Enter your password"
+          autocomplete="current-password"
+          required>
+      </div>
+
+      <button
+        id="loginBtn"
+        class="login-btn"
+        type="submit">
+        LOGIN
+      </button>
+
+    </form>
+
+    <div class="shield">
+      🔒 AUTHORIZED ACCESS ONLY
+    </div>
+
+    <div class="footer">
+      MABROUK TRADER'S POS Pro
+      <br>
+      Digital • Fast • Organized
+    </div>
+
+  </main>
+
 </div>
 
-<div id="error" class="error"></div>
-
-<form id="loginForm">
-
-<div class="field">
-<label>Username</label>
-<input
-id="username"
-type="text"
-placeholder="Enter username"
-autocomplete="username"
-required
->
-</div>
-
-<div class="field">
-<label>Password</label>
-<input
-id="password"
-type="password"
-placeholder="Enter password"
-autocomplete="current-password"
-required
->
-</div>
-
-<button
-id="loginBtn"
-class="login-btn"
-type="submit"
->
-LOGIN
-</button>
-
-<div id="loading" class="loading">
-Signing in securely...
-</div>
-
-</form>
-
-<div class="shield">
-🔒 Authorized access only
-</div>
-
-<div class="footer">
-MABROUK TRADER'S POS Pro
-</div>
-
-</div>
-
-</div>
-
-
-<script type="module">
-
-import{
-initializeApp,
-getApps
-}
-from
-"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-
-import{
-getAuth,
-signInWithEmailAndPassword,
-onAuthStateChanged,
-signOut
-}
-from
-"https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-
-import{
-getFirestore,
-doc,
-getDoc,
-collection,
-getDocs,
-query,
-where
-}
-from
-"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-
-
-const firebaseConfig={
-apiKey:"AIzaSyA8XB6aY45-yHT0uZ6NU5gYqgwqOs",
-authDomain:"goldbizna.firebaseapp.com",
-projectId:"goldbizna",
-storageBucket:"goldbizna.firebasestorage.app",
-messagingSenderId:"559981054862",
-appId:"1:559981054862:web:0635c689607d3baa3272df",
-measurementId:"G-95XL3BNQJF"
-};
-
-
-const app=
-getApps().length
-?getApps()[0]
-:initializeApp(firebaseConfig);
-
-const auth=getAuth(app);
-const db=getFirestore(app);
-
-
-const form=document.getElementById("loginForm");
-const usernameInput=document.getElementById("username");
-const passwordInput=document.getElementById("password");
-const loginBtn=document.getElementById("loginBtn");
-const errorBox=document.getElementById("error");
-const loading=document.getElementById("loading");
-
-
-function showError(text){
-
-errorBox.textContent=text;
-errorBox.style.display="block";
-
-}
-
-
-function hideError(){
-
-errorBox.style.display="none";
-
-}
-
-
-/* Already logged in? */
-
-onAuthStateChanged(auth,(user)=>{
-
-if(user){
-
-location.replace("index.html");
-
-}
-
-});
-
-
-/* LOGIN */
-
-form.addEventListener("submit",async e=>{
-
-e.preventDefault();
-
-hideError();
-
-const username=
-usernameInput.value.trim();
-
-const password=
-passwordInput.value;
-
-
-if(!username||!password){
-
-showError(
-"Please enter your username and password."
-);
-
-return;
-
-}
-
-
-loginBtn.disabled=true;
-loading.style.display="block";
-
-
-try{
-
-let email="";
-
-
-/*
-First try the usernames collection.
-*/
-
-const usernameDoc=
-await getDoc(
-doc(
-db,
-"usernames",
-username.toLowerCase()
-)
-);
-
-
-if(usernameDoc.exists()){
-
-email=usernameDoc.data().email||"";
-
-}
-
-
-/*
-Fallback: search users collection.
-*/
-
-if(!email){
-
-const q=
-query(
-collection(db,"users"),
-where("username","==",username)
-);
-
-const result=
-await getDocs(q);
-
-if(!result.empty){
-
-email=
-result.docs[0].data().email||"";
-
-}
-
-}
-
-
-/*
-Allow email directly too.
-*/
-
-if(!email&&username.includes("@")){
-
-email=username;
-
-}
-
-
-if(!email){
-
-showError(
-"Username or password is incorrect."
-);
-
-loginBtn.disabled=false;
-loading.style.display="none";
-return;
-
-}
-
-
-/*
-Firebase verifies the password.
-*/
-
-const credential=
-await signInWithEmailAndPassword(
-auth,
-email,
-password
-);
-
-
-const user=credential.user;
-
-
-/*
-Check whether the user has been disabled
-inside the MABROUK TRADER'S system.
-*/
-
-const profile=
-await getDoc(
-doc(db,"users",user.uid)
-);
-
-
-if(
-profile.exists() &&
-profile.data().active===false
-){
-
-await signOut(auth);
-
-showError(
-"This account has been disabled."
-);
-
-loginBtn.disabled=false;
-loading.style.display="none";
-return;
-
-}
-
-
-/*
-Session markers for the existing pages.
-These are NOT the security mechanism.
-Firebase Authentication is.
-*/
-
-localStorage.setItem(
-"goldbizna_logged_in",
-"true"
-);
-
-localStorage.setItem(
-"loggedIn",
-"true"
-);
-
-localStorage.setItem(
-"gb_login",
-"true"
-);
-
-localStorage.setItem(
-"goldbizna_username",
-username
-);
-
-
-/*
-Successful login.
-*/
-
-location.replace("index.html");
-
-
-}catch(e){
-
-console.error(e);
-
-showError(
-"Username or password is incorrect."
-);
-
-passwordInput.value="";
-
-passwordInput.focus();
-
-loginBtn.disabled=false;
-loading.style.display="none";
-
-}
-
-});
-
-</script>
+<script type="module" src="./auth.js"></script>
 
 </body>
 </html>

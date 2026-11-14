@@ -15,15 +15,25 @@ import {
 const LOGIN_PAGE = "login.html";
 const HOME_PAGE = "index.html";
 
+let processingLogin = false;
+let processingLogout = false;
+let authReady = false;
+let redirecting = false;
+
+// PAGE INFORMATION
+function getCurrentPage() {
+  return location.pathname.split("/").pop().toLowerCase() || "index.html";
+}
+
+const currentPage = getCurrentPage();
+const publicPages = ["login.html"];
+
 // LOGIN ELEMENTS
 const form = document.getElementById("loginForm");
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
 const loginBtn = document.getElementById("loginBtn");
 const errorBox = document.getElementById("loginError");
-
-let processingLogin = false;
-let authReady = false;
 
 // ERROR DISPLAY
 function showError(message) {
@@ -38,11 +48,6 @@ function hideError() {
     errorBox.textContent = "";
     errorBox.style.display = "none";
   }
-}
-
-// CURRENT PAGE
-function getCurrentPage() {
-  return location.pathname.split("/").pop().toLowerCase();
 }
 
 // PAGE PERMISSIONS
@@ -62,7 +67,7 @@ function getRequiredPermission() {
     "users.html": "User Management"
   };
 
-  return permissions[getCurrentPage()] || "Dashboard";
+  return permissions[currentPage] || "Dashboard";
 }
 
 // ADMIN CHECK
@@ -77,7 +82,7 @@ async function checkAccount(user) {
 
   if (!profileSnap.exists()) {
     throw new Error(
-      "Your user account has not been registered by the administrator."
+      "Your account has not been registered by the administrator."
     );
   }
 
@@ -92,20 +97,25 @@ async function checkAccount(user) {
   return profile;
 }
 
-// CHECK PAGE ACCESS
+// PAGE ACCESS
 function hasPageAccess(profile) {
   if (isAdmin(profile)) return true;
 
-  const required = getRequiredPermission();
-
-  return profile.permissions?.[required] === true;
+  return profile.permissions?.[getRequiredPermission()] === true;
 }
 
-// DASHBOARD ACCESS
 function hasDashboardAccess(profile) {
   if (isAdmin(profile)) return true;
 
   return profile.permissions?.Dashboard === true;
+}
+
+// SAFE REDIRECT
+function redirectTo(page) {
+  if (redirecting) return;
+
+  redirecting = true;
+  window.location.replace(page);
 }
 
 // LOGIN FORM
@@ -113,7 +123,7 @@ if (form) {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    if (processingLogin) return;
+    if (processingLogin || processingLogout) return;
 
     hideError();
 
@@ -143,13 +153,13 @@ if (form) {
 
       if (!hasDashboardAccess(profile)) {
         throw new Error(
-          "Your account does not have Dashboard access. Contact your administrator."
+          "Your account does not have Dashboard access."
         );
       }
 
-      passwordInput.value = "";
+      if (passwordInput) passwordInput.value = "";
 
-      window.location.replace(HOME_PAGE);
+      redirectTo(HOME_PAGE);
 
     } catch (error) {
       console.error("Login error:", error);
@@ -166,8 +176,10 @@ if (form) {
         error.code === "auth/wrong-password"
       ) {
         message = "Incorrect email address or password.";
-      } else if (error.code === "auth/too-many-requests") {
-        message = "Too many attempts. Please try again later.";
+      }
+
+      if (error.code === "auth/too-many-requests") {
+        message = "Too many attempts. Try again later.";
       }
 
       showError(message || "Unable to sign in.");
@@ -183,21 +195,63 @@ if (form) {
   });
 }
 
-// PUBLIC PAGES
-const currentPage = getCurrentPage();
-const publicPages = ["login.html"];
+// LOGOUT FUNCTION
+async function logout(event, button) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  if (processingLogout) return;
+
+  processingLogout = true;
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = "LOGGING OUT...";
+  }
+
+  try {
+    await signOut(auth);
+
+    // Directly return to login.
+    redirectTo(LOGIN_PAGE);
+
+  } catch (error) {
+    console.error("Logout error:", error);
+
+    alert("Unable to log out. Please try again.");
+
+    processingLogout = false;
+
+    if (button) {
+      button.disabled = false;
+      button.textContent = "LOGOUT";
+    }
+  }
+}
+
+// SUPPORT ALL LOGOUT BUTTONS
+document.querySelectorAll("[data-logout]").forEach((button) => {
+  button.addEventListener("click", (event) => {
+    logout(event, button);
+  });
+});
 
 // AUTHENTICATION STATE
 onAuthStateChanged(auth, async (user) => {
 
+  if (processingLogout || redirecting) return;
+
   if (processingLogin) return;
 
   if (!user) {
+    authReady = true;
+
     if (!publicPages.includes(currentPage)) {
-      window.location.replace(LOGIN_PAGE);
+      redirectTo(LOGIN_PAGE);
     }
 
-    authReady = true;
     return;
   }
 
@@ -205,7 +259,13 @@ onAuthStateChanged(auth, async (user) => {
     const profile = await checkAccount(user);
 
     if (publicPages.includes(currentPage)) {
-      window.location.replace(HOME_PAGE);
+      if (hasDashboardAccess(profile)) {
+        redirectTo(HOME_PAGE);
+      } else {
+        await signOut(auth);
+        showError("Your account does not have Dashboard access.");
+      }
+
       return;
     }
 
@@ -213,51 +273,23 @@ onAuthStateChanged(auth, async (user) => {
       alert("You do not have permission to access this page.");
 
       await signOut(auth);
+      redirectTo(LOGIN_PAGE);
 
-      window.location.replace(LOGIN_PAGE);
       return;
     }
 
     authReady = true;
 
   } catch (error) {
-    console.error("Account verification error:", error);
+    console.error("Authentication verification error:", error);
 
     await signOut(auth);
 
     if (!publicPages.includes(currentPage)) {
-      window.location.replace(LOGIN_PAGE);
+      redirectTo(LOGIN_PAGE);
     } else {
       showError(error.message || "Account verification failed.");
     }
   }
 });
-
-// LOGOUT BUTTONS
-document.querySelectorAll("[data-logout]").forEach((button) => {
-
-  button.addEventListener("click", async (event) => {
-
-    event.preventDefault();
-    event.stopPropagation();
-
-    if (button.disabled) return;
-
-    button.disabled = true;
-
-    try {
-      await signOut(auth);
-
-      window.location.replace(LOGIN_PAGE);
-
-    } catch (error) {
-      console.error("Logout error:", error);
-
-      alert("Unable to log out. Please try again.");
-
-      button.disabled = false;
-    }
-
-  });
-
-});
+  

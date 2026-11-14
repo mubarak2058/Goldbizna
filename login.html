@@ -1,312 +1,463 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#087a0b">
-  <title>MABROUK TRADER'S - Login</title>
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{min-height:100%;width:100%}
-    body{
-      min-height:100vh;
-      font-family:Arial,sans-serif;
-      background:linear-gradient(135deg,#064f08,#087a0b,#0b9910);
-      display:flex;align-items:center;justify-content:center;
-      padding:18px;
-    }
-    .login-card{
-      width:min(420px,100%);
-      background:#fff;border-radius:18px;
-      padding:30px 25px;
-      box-shadow:0 12px 40px rgba(0,0,0,.30);
-      text-align:center;
-    }
-    .logo{
-      width:72px;height:72px;margin:0 auto 14px;
-      border-radius:50%;background:#087a0b;color:#fff;
-      display:flex;align-items:center;justify-content:center;
-      font-size:30px;font-weight:bold;
-      box-shadow:0 4px 12px rgba(0,0,0,.2);
-    }
-    h1{color:#087a0b;font-size:24px;margin-bottom:5px}
-    .subtitle{color:#777;font-size:13px;margin-bottom:24px}
-    .field{text-align:left;margin-bottom:15px}
-    .field label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px;color:#333}
-    .field input{
-      width:100%;padding:13px;border:1px solid #bbb;
-      border-radius:8px;font-size:16px;outline:none;
-    }
-    .field input:focus{border-color:#087a0b;box-shadow:0 0 0 2px rgba(8,122,11,.12)}
-    .login-btn{
-      width:100%;border:0;background:#087a0b;color:#fff;
-      padding:14px;border-radius:8px;font-size:16px;
-      font-weight:bold;cursor:pointer;margin-top:5px;
-    }
-    .login-btn:active{transform:scale(.98)}
-    .login-btn:disabled{opacity:.6;cursor:not-allowed}
-    .error{
-      display:none;background:#ffebee;color:#b71c1c;
-      padding:11px;border-radius:7px;font-size:13px;
-      margin-bottom:13px;text-align:left;line-height:1.45;
-    }
-    .loading{display:none;color:#087a0b;font-size:13px;margin-top:12px}
-    .footer{margin-top:20px;font-size:11px;color:#888}
-    .shield{margin-top:13px;font-size:11px;color:#087a0b;font-weight:bold}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#087a0b">
+<title>MABROUK TRADER'S - Login</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;width:100%}
+body{
+  min-height:100vh;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(135deg,#064f08,#087a0b,#0b9910);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+.login-card{
+  width:min(420px,100%);
+  background:white;
+  border-radius:18px;
+  padding:30px 25px;
+  box-shadow:0 12px 40px rgba(0,0,0,.30);
+  text-align:center;
+}
+.logo{
+  width:72px;height:72px;
+  margin:0 auto 14px;
+  border-radius:50%;
+  background:#087a0b;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
+  font-weight:bold;
+}
+h1{color:#087a0b;font-size:24px;margin-bottom:5px}
+.subtitle{color:#777;font-size:13px;margin-bottom:24px}
+.field{text-align:left;margin-bottom:15px}
+.field label{
+  display:block;
+  font-size:13px;
+  font-weight:bold;
+  margin-bottom:6px;
+  color:#333;
+}
+.field input{
+  width:100%;
+  padding:13px;
+  border:1px solid #bbb;
+  border-radius:8px;
+  font-size:16px;
+  outline:none;
+}
+.field input:focus{
+  border-color:#087a0b;
+  box-shadow:0 0 0 2px rgba(8,122,11,.12);
+}
+.login-btn{
+  width:100%;
+  border:0;
+  background:#087a0b;
+  color:white;
+  padding:14px;
+  border-radius:8px;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+  margin-top:5px;
+}
+.login-btn:disabled{opacity:.6;cursor:not-allowed}
+.error{
+  display:none;
+  background:#ffebee;
+  color:#b71c1c;
+  padding:11px;
+  border-radius:7px;
+  font-size:13px;
+  margin-bottom:13px;
+  text-align:left;
+  line-height:1.45;
+}
+.loading{
+  display:none;
+  color:#087a0b;
+  font-size:13px;
+  margin-top:12px;
+}
+.footer{margin-top:20px;font-size:11px;color:#888}
+.shield{margin-top:13px;font-size:11px;color:#087a0b;font-weight:bold}
+</style>
 </head>
+
 <body>
-  <main class="login-card">
-    <div class="logo">M</div>
-    <h1>MABROUK TRADER'S</h1>
-    <div class="subtitle">Secure Business Management System</div>
 
-    <div id="error" class="error" role="alert" aria-live="polite"></div>
+<main class="login-card">
 
-    <form id="loginForm">
-      <div class="field">
-        <label for="username">Username or Email</label>
-        <input
-          id="username"
-          name="username"
-          type="text"
-          placeholder="Enter username or email"
-          autocomplete="username"
-          autocapitalize="none"
-          spellcheck="false"
-          required
-        >
-      </div>
+<div class="logo">M</div>
 
-      <div class="field">
-        <label for="password">Password</label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          placeholder="Enter password"
-          autocomplete="current-password"
-          required
-        >
-      </div>
+<h1>MABROUK TRADER'S</h1>
+<div class="subtitle">Secure Business Management System</div>
 
-      <button id="loginBtn" class="login-btn" type="submit">LOGIN</button>
-      <div id="loading" class="loading" aria-live="polite">Signing in securely...</div>
-    </form>
+<div id="error" class="error" role="alert"></div>
 
-    <div class="shield">🔒 Authorized access only</div>
-    <div class="footer">MABROUK TRADER'S POS Pro</div>
-  </main>
+<form id="loginForm">
 
-  <script type="module">
-    import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-    import {
-      getAuth,
-      signInWithEmailAndPassword,
-      onAuthStateChanged,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-    import {
-      getFirestore,
-      doc,
-      getDoc,
-      collection,
-      getDocs,
-      query,
-      where
-    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+<div class="field">
+<label for="username">Username or Email</label>
+<input
+id="username"
+type="text"
+placeholder="Enter your username or email"
+autocomplete="username"
+autocapitalize="none"
+spellcheck="false"
+required>
+</div>
 
-    // MABROUK TRADER'S / Goldbizna Firebase web app configuration.
-    const firebaseConfig = {
-      apiKey: "AIzaSyA8XB6aY45-yHT0uZ6NUhptMoNkYqgwqOs",
-      authDomain: "goldbizna.firebaseapp.com",
-      projectId: "goldbizna",
-      storageBucket: "goldbizna.firebasestorage.app",
-      messagingSenderId: "559981054862",
-      appId: "1:559981054862:web:0635c689607d3baa3272df",
-      measurementId: "G-95XL3BNQJF"
-    };
+<div class="field">
+<label for="password">Shared Login Password</label>
+<input
+id="password"
+type="password"
+placeholder="Enter your password"
+autocomplete="current-password"
+required>
+</div>
 
-    const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+<button id="loginBtn" class="login-btn" type="submit">
+LOGIN
+</button>
 
-    const form = document.getElementById("loginForm");
-    const usernameInput = document.getElementById("username");
-    const passwordInput = document.getElementById("password");
-    const loginBtn = document.getElementById("loginBtn");
-    const errorBox = document.getElementById("error");
-    const loading = document.getElementById("loading");
+<div id="loading" class="loading">
+Verifying your account and permissions...
+</div>
 
-    function showError(message) {
-      errorBox.textContent = message;
-      errorBox.style.display = "block";
-    }
+</form>
 
-    function hideError() {
-      errorBox.textContent = "";
-      errorBox.style.display = "none";
-    }
+<div class="shield">🔒 One Login • Personal Access Permissions</div>
+<div class="footer">MABROUK TRADER'S POS Pro</div>
 
-    function setBusy(busy) {
-      loginBtn.disabled = busy;
-      loginBtn.textContent = busy ? "PLEASE WAIT..." : "LOGIN";
-      loading.style.display = busy ? "block" : "none";
-    }
+</main>
 
-    // If the user already has a valid Firebase session, open the dashboard.
-    onAuthStateChanged(auth, user => {
-      if (user) {
-        window.location.replace("index.html");
-      }
-    });
+<script type="module">
 
-    async function findEmailFromUsername(username) {
-      const normalized = username.trim().toLowerCase();
+import { auth, db } from "./firebase.js";
 
-      // Preferred lookup: usernames/{username} => { uid, email, username }.
-      try {
-        const usernameDoc = await getDoc(doc(db, "usernames", normalized));
-        if (usernameDoc.exists()) {
-          const email = usernameDoc.data().email;
-          if (typeof email === "string" && email.includes("@")) return email.trim();
-        }
-      } catch (error) {
-        console.warn("Username index lookup failed:", error.code || error.message);
-      }
+import {
+signInWithEmailAndPassword,
+onAuthStateChanged,
+signOut
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
-      // Compatibility lookup for user records created before the username index.
-      try {
-        const usersQuery = query(
-          collection(db, "users"),
-          where("username", "==", normalized)
-        );
-        const result = await getDocs(usersQuery);
-        if (!result.empty) {
-          const data = result.docs[0].data();
-          if (typeof data.email === "string" && data.email.includes("@")) {
-            return data.email.trim();
-          }
-        }
-      } catch (error) {
-        console.warn("Users collection lookup failed:", error.code || error.message);
-      }
+import {
+doc,
+getDoc,
+collection,
+getDocs,
+query,
+where
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-      return "";
-    }
+const form = document.getElementById("loginForm");
+const usernameInput = document.getElementById("username");
+const passwordInput = document.getElementById("password");
+const loginBtn = document.getElementById("loginBtn");
+const errorBox = document.getElementById("error");
+const loading = document.getElementById("loading");
 
-    async function verifyAccountIsEnabled(user) {
-      const profileRef = doc(db, "users", user.uid);
-      const profileSnap = await getDoc(profileRef);
+let busy = false;
+let redirecting = false;
 
-      // A staff account must have a matching Settings-created user profile.
-      if (!profileSnap.exists()) {
-        throw new Error("NO_USER_PROFILE");
-      }
+const PAGE_PERMISSIONS = {
+"index.html":"Dashboard",
+"dashboard.html":"Dashboard",
+"pos.html":"POS",
+"inventory.html":"Inventory",
+"customers.html":"Customers",
+"sales.html":"Sales History",
+"sales-history.html":"Sales History",
+"reports.html":"Reports",
+"savings.html":"Savings",
+"payments.html":"Payments",
+"settings.html":"Settings",
+"users.html":"User Management"
+};
 
-      const profile = profileSnap.data();
-      const isEnabled = profile.status === "active" || profile.active === true;
+function showError(message){
+errorBox.textContent = message;
+errorBox.style.display = "block";
+}
 
-      if (!isEnabled || profile.status === "disabled" || profile.active === false) {
-        throw new Error("ACCOUNT_DISABLED");
-      }
+function hideError(){
+errorBox.textContent = "";
+errorBox.style.display = "none";
+}
 
-      return profile;
-    }
+function setBusy(value){
+busy = value;
+loginBtn.disabled = value;
+loginBtn.textContent = value ? "PLEASE WAIT..." : "LOGIN";
+loading.style.display = value ? "block" : "none";
+}
 
-    form.addEventListener("submit", async event => {
-      event.preventDefault();
-      hideError();
+function isAdmin(profile){
+return ["Owner/Admin","Owner","Admin"].includes(profile.role);
+}
 
-      const enteredUsername = usernameInput.value.trim();
-      const password = passwordInput.value;
+async function findEmail(username){
 
-      if (!enteredUsername || !password) {
-        showError("Enter your username/email and password.");
-        return;
-      }
+const normalized = username.trim().toLowerCase();
 
-      setBusy(true);
+if(normalized.includes("@")){
+return normalized;
+}
 
-      try {
-        let email = "";
+// Username index
+try{
 
-        if (enteredUsername.includes("@")) {
-          email = enteredUsername;
-        } else {
-          email = await findEmailFromUsername(enteredUsername);
-        }
+const usernameSnap = await getDoc(
+doc(db,"usernames",normalized)
+);
 
-        if (!email) {
-          showError("Username not found. Check the spelling or sign in using your email address.");
-          setBusy(false);
-          return;
-        }
+if(usernameSnap.exists()){
 
-        const credential = await signInWithEmailAndPassword(auth, email, password);
+const data = usernameSnap.data();
 
-        try {
-          const profile = await verifyAccountIsEnabled(credential.user);
+if(data.email){
+return data.email.trim().toLowerCase();
+}
+}
 
-          // Keep compatibility with the existing website's login checks.
-          localStorage.setItem("goldbizna_logged_in", "true");
-          localStorage.setItem("loggedIn", "true");
-          localStorage.setItem("gb_login", "true");
-          localStorage.setItem(
-            "goldbizna_username",
-            profile.username || enteredUsername
-          );
+}catch(error){
+console.warn("Username index:",error);
+}
 
-          window.location.replace("index.html");
-        } catch (profileError) {
-          await signOut(auth);
+// Existing users collection
+try{
 
-          if (profileError.message === "ACCOUNT_DISABLED") {
-            showError("This account is disabled. Contact the administrator.");
-          } else if (profileError.message === "NO_USER_PROFILE") {
-            showError("This account has no staff profile in Settings. Ask the administrator to check the user account.");
-          } else {
-            throw profileError;
-          }
+const usersQuery = query(
+collection(db,"users"),
+where("username","==",normalized)
+);
 
-          passwordInput.value = "";
-          passwordInput.focus();
-          setBusy(false);
-        }
-      } catch (error) {
-        console.error("Login error:", error);
+const result = await getDocs(usersQuery);
 
-        const code = error.code || "";
-        let message = "Login failed. Please try again.";
+if(!result.empty){
 
-        if (
-          ["auth/invalid-credential", "auth/wrong-password", "auth/user-not-found", "auth/invalid-email"].includes(code)
-        ) {
-          message = "Username/email or password is incorrect.";
-        } else if (code === "auth/too-many-requests") {
-          message = "Too many attempts. Wait a few minutes, then try again.";
-        } else if (code === "auth/network-request-failed") {
-          message = "Network error. Check your internet connection.";
-        } else if (code === "auth/operation-not-allowed") {
-          message = "Email/Password sign-in is not enabled in Firebase Authentication.";
-        } else if (code === "auth/unauthorized-domain") {
-          message = "This website domain is not authorized. Add your GitHub Pages domain in Firebase Authentication settings.";
-        } else if (
-          code === "auth/api-key-not-valid" ||
-          code === "auth/invalid-api-key" ||
-          (error.message || "").toLowerCase().includes("api-key")
-        ) {
-          message = "Firebase rejected the API key. Check the web app configuration in Firebase Project Settings.";
-        } else if (code === "permission-denied" || code === "firestore/permission-denied") {
-          message = "Firebase blocked the username/profile lookup. Check the Firestore rules for the usernames and users records.";
-        }
+const data = result.docs[0].data();
 
-        showError(message);
-        passwordInput.value = "";
-        passwordInput.focus();
-        setBusy(false);
-      }
-    });
-  </script>
+if(data.email){
+return data.email.trim().toLowerCase();
+}
+}
+
+}catch(error){
+console.warn("Username search:",error);
+}
+
+return "";
+}
+
+async function verifyAccount(user){
+
+const profileSnap = await getDoc(
+doc(db,"users",user.uid)
+);
+
+if(!profileSnap.exists()){
+throw new Error("STAFF_PROFILE_MISSING");
+}
+
+const profile = profileSnap.data();
+
+if(
+profile.active !== true &&
+profile.status !== "active"
+){
+throw new Error("ACCOUNT_DISABLED");
+}
+
+return profile;
+}
+
+function hasAccess(profile,permission){
+
+if(isAdmin(profile)) return true;
+
+return profile.permissions?.[permission] === true;
+}
+
+function getFirstAllowedPage(profile){
+
+if(isAdmin(profile)){
+return "index.html";
+}
+
+if(hasAccess(profile,"Dashboard")){
+return "index.html";
+}
+
+for(const [page,permission] of Object.entries(PAGE_PERMISSIONS)){
+
+if(hasAccess(profile,permission)){
+return page;
+}
+
+}
+
+return null;
+}
+
+function redirect(page){
+
+if(redirecting) return;
+
+redirecting = true;
+window.location.replace(page);
+
+}
+
+// ALREADY LOGGED IN
+onAuthStateChanged(auth,async user=>{
+
+if(busy || redirecting) return;
+
+if(!user) return;
+
+try{
+
+const profile = await verifyAccount(user);
+const destination = getFirstAllowedPage(profile);
+
+if(destination){
+redirect(destination);
+}else{
+await signOut(auth);
+showError("No page permissions assigned. Contact the owner.");
+}
+
+}catch(error){
+
+console.error(error);
+await signOut(auth);
+
+if(error.message === "ACCOUNT_DISABLED"){
+showError("Your account is disabled.");
+}else{
+showError("Account verification failed. Contact the owner.");
+}
+
+}
+
+});
+
+// LOGIN
+form.addEventListener("submit",async event=>{
+
+event.preventDefault();
+
+if(busy || redirecting) return;
+
+hideError();
+
+const username = usernameInput.value.trim();
+const password = passwordInput.value;
+
+if(!username || !password){
+showError("Enter your username and password.");
+return;
+}
+
+setBusy(true);
+
+try{
+
+const email = await findEmail(username);
+
+if(!email){
+throw new Error("USERNAME_NOT_FOUND");
+}
+
+const credential = await signInWithEmailAndPassword(
+auth,
+email,
+password
+);
+
+const profile = await verifyAccount(credential.user);
+
+const destination = getFirstAllowedPage(profile);
+
+if(!destination){
+throw new Error("NO_PERMISSION");
+}
+
+// Save display information only.
+// Firebase Authentication remains the actual login authority.
+localStorage.setItem(
+"goldbizna_username",
+profile.username || username
+);
+
+passwordInput.value = "";
+
+redirect(destination);
+
+}catch(error){
+
+console.error("Login failed:",error);
+
+if(auth.currentUser){
+await signOut(auth);
+}
+
+let message = "Unable to log in. Please try again.";
+
+if(error.message === "USERNAME_NOT_FOUND"){
+message = "Username not found. Check your username or use your email.";
+}
+
+if(error.message === "ACCOUNT_DISABLED"){
+message = "Your account is disabled. Contact the owner.";
+}
+
+if(error.message === "STAFF_PROFILE_MISSING"){
+message = "Your staff profile is missing. Contact the owner.";
+}
+
+if(error.message === "NO_PERMISSION"){
+message = "You have no assigned page permissions.";
+}
+
+if(error.code === "auth/invalid-credential"){
+message = "Incorrect username or password.";
+}
+
+if(error.code === "auth/too-many-requests"){
+message = "Too many attempts. Try again later.";
+}
+
+if(error.code === "auth/network-request-failed"){
+message = "Internet connection problem.";
+}
+
+showError(message);
+
+passwordInput.value = "";
+setBusy(false);
+
+}
+
+});
+
+</script>
+
 </body>
 </html>

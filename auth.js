@@ -15,6 +15,7 @@ import {
 const LOGIN_PAGE = "login.html";
 const HOME_PAGE = "index.html";
 
+// LOGIN ELEMENTS
 const form = document.getElementById("loginForm");
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
@@ -22,7 +23,9 @@ const loginBtn = document.getElementById("loginBtn");
 const errorBox = document.getElementById("loginError");
 
 let processingLogin = false;
+let authReady = false;
 
+// ERROR DISPLAY
 function showError(message) {
   if (errorBox) {
     errorBox.textContent = message;
@@ -37,9 +40,13 @@ function hideError() {
   }
 }
 
-function getRequiredPermission() {
-  const page = location.pathname.split("/").pop().toLowerCase();
+// CURRENT PAGE
+function getCurrentPage() {
+  return location.pathname.split("/").pop().toLowerCase();
+}
 
+// PAGE PERMISSIONS
+function getRequiredPermission() {
   const permissions = {
     "index.html": "Dashboard",
     "dashboard.html": "Dashboard",
@@ -55,30 +62,37 @@ function getRequiredPermission() {
     "users.html": "User Management"
   };
 
-  return permissions[page] || "Dashboard";
+  return permissions[getCurrentPage()] || "Dashboard";
 }
 
+// ADMIN CHECK
 function isAdmin(profile) {
   return ["Owner/Admin", "Owner", "Admin"].includes(profile.role);
 }
 
+// VERIFY FIREBASE ACCOUNT
 async function checkAccount(user) {
   const profileRef = doc(db, "users", user.uid);
   const profileSnap = await getDoc(profileRef);
 
   if (!profileSnap.exists()) {
-    throw new Error("Your user account has not been registered by the administrator.");
+    throw new Error(
+      "Your user account has not been registered by the administrator."
+    );
   }
 
   const profile = profileSnap.data();
 
   if (profile.active !== true) {
-    throw new Error("Your account is disabled. Contact your administrator.");
+    throw new Error(
+      "Your account is disabled. Contact your administrator."
+    );
   }
 
   return profile;
 }
 
+// CHECK PAGE ACCESS
 function hasPageAccess(profile) {
   if (isAdmin(profile)) return true;
 
@@ -87,15 +101,24 @@ function hasPageAccess(profile) {
   return profile.permissions?.[required] === true;
 }
 
+// DASHBOARD ACCESS
+function hasDashboardAccess(profile) {
+  if (isAdmin(profile)) return true;
+
+  return profile.permissions?.Dashboard === true;
+}
+
 // LOGIN FORM
 if (form) {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
+    if (processingLogin) return;
+
     hideError();
 
-    const email = emailInput.value.trim();
-    const password = passwordInput.value;
+    const email = emailInput?.value.trim();
+    const password = passwordInput?.value;
 
     if (!email || !password) {
       showError("Enter your email and password.");
@@ -103,8 +126,11 @@ if (form) {
     }
 
     processingLogin = true;
-    loginBtn.disabled = true;
-    loginBtn.textContent = "VERIFYING...";
+
+    if (loginBtn) {
+      loginBtn.disabled = true;
+      loginBtn.textContent = "VERIFYING...";
+    }
 
     try {
       const credential = await signInWithEmailAndPassword(
@@ -115,7 +141,7 @@ if (form) {
 
       const profile = await checkAccount(credential.user);
 
-      if (!hasPageAccessForDashboard(profile)) {
+      if (!hasDashboardAccess(profile)) {
         throw new Error(
           "Your account does not have Dashboard access. Contact your administrator."
         );
@@ -146,8 +172,10 @@ if (form) {
 
       showError(message || "Unable to sign in.");
 
-      loginBtn.disabled = false;
-      loginBtn.textContent = "LOGIN";
+      if (loginBtn) {
+        loginBtn.disabled = false;
+        loginBtn.textContent = "LOGIN";
+      }
 
     } finally {
       processingLogin = false;
@@ -155,23 +183,21 @@ if (form) {
   });
 }
 
-function hasPageAccessForDashboard(profile) {
-  if (isAdmin(profile)) return true;
-  return profile.permissions?.Dashboard === true;
-}
-
-// PROTECT ALL BUSINESS PAGES
-const currentPage = location.pathname.split("/").pop().toLowerCase();
-
+// PUBLIC PAGES
+const currentPage = getCurrentPage();
 const publicPages = ["login.html"];
 
+// AUTHENTICATION STATE
 onAuthStateChanged(auth, async (user) => {
+
   if (processingLogin) return;
 
   if (!user) {
     if (!publicPages.includes(currentPage)) {
-      location.replace(LOGIN_PAGE);
+      window.location.replace(LOGIN_PAGE);
     }
+
+    authReady = true;
     return;
   }
 
@@ -179,23 +205,28 @@ onAuthStateChanged(auth, async (user) => {
     const profile = await checkAccount(user);
 
     if (publicPages.includes(currentPage)) {
-      location.replace(HOME_PAGE);
+      window.location.replace(HOME_PAGE);
       return;
     }
 
     if (!hasPageAccess(profile)) {
-      await signOut(auth);
       alert("You do not have permission to access this page.");
-      location.replace(LOGIN_PAGE);
+
+      await signOut(auth);
+
+      window.location.replace(LOGIN_PAGE);
+      return;
     }
 
+    authReady = true;
+
   } catch (error) {
-    console.error("Account verification:", error);
+    console.error("Account verification error:", error);
 
     await signOut(auth);
 
     if (!publicPages.includes(currentPage)) {
-      location.replace(LOGIN_PAGE);
+      window.location.replace(LOGIN_PAGE);
     } else {
       showError(error.message || "Account verification failed.");
     }
@@ -204,14 +235,29 @@ onAuthStateChanged(auth, async (user) => {
 
 // LOGOUT BUTTONS
 document.querySelectorAll("[data-logout]").forEach((button) => {
-  button.addEventListener("click", async () => {
+
+  button.addEventListener("click", async (event) => {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (button.disabled) return;
+
+    button.disabled = true;
+
     try {
       await signOut(auth);
-      location.replace(LOGIN_PAGE);
+
+      window.location.replace(LOGIN_PAGE);
+
     } catch (error) {
-      console.error(error);
-      alert("Unable to log out.");
+      console.error("Logout error:", error);
+
+      alert("Unable to log out. Please try again.");
+
+      button.disabled = false;
     }
+
   });
+
 });
-        

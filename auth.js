@@ -17,16 +17,30 @@ const HOME_PAGE = "index.html";
 
 let processingLogin = false;
 let processingLogout = false;
-let authReady = false;
 let redirecting = false;
 
-// PAGE INFORMATION
+// PAGE PERMISSIONS
+const PAGE_PERMISSIONS = {
+  "index.html": "Dashboard",
+  "dashboard.html": "Dashboard",
+  "pos.html": "POS",
+  "inventory.html": "Inventory",
+  "customers.html": "Customers",
+  "sales.html": "Sales History",
+  "sales-history.html": "Sales History",
+  "reports.html": "Reports",
+  "savings.html": "Savings",
+  "payments.html": "Payments",
+  "settings.html": "Settings",
+  "users.html": "User Management"
+};
+
 function getCurrentPage() {
-  return location.pathname.split("/").pop().toLowerCase() || "index.html";
+  return location.pathname.split("/").pop().toLowerCase() || HOME_PAGE;
 }
 
 const currentPage = getCurrentPage();
-const publicPages = ["login.html"];
+const isLoginPage = currentPage === LOGIN_PAGE;
 
 // LOGIN ELEMENTS
 const form = document.getElementById("loginForm");
@@ -50,26 +64,6 @@ function hideError() {
   }
 }
 
-// PAGE PERMISSIONS
-function getRequiredPermission() {
-  const permissions = {
-    "index.html": "Dashboard",
-    "dashboard.html": "Dashboard",
-    "pos.html": "POS",
-    "inventory.html": "Inventory",
-    "customers.html": "Customers",
-    "sales.html": "Sales History",
-    "sales-history.html": "Sales History",
-    "reports.html": "Reports",
-    "savings.html": "Savings",
-    "payments.html": "Payments",
-    "settings.html": "Settings",
-    "users.html": "User Management"
-  };
-
-  return permissions[currentPage] || "Dashboard";
-}
-
 // ADMIN CHECK
 function isAdmin(profile) {
   return ["Owner/Admin", "Owner", "Admin"].includes(profile.role);
@@ -81,36 +75,47 @@ async function checkAccount(user) {
   const profileSnap = await getDoc(profileRef);
 
   if (!profileSnap.exists()) {
-    throw new Error(
-      "Your account has not been registered by the administrator."
-    );
+    throw new Error("Your account has not been registered.");
   }
 
   const profile = profileSnap.data();
 
   if (profile.active !== true) {
-    throw new Error(
-      "Your account is disabled. Contact your administrator."
-    );
+    throw new Error("Your account is disabled. Contact the owner.");
   }
 
   return profile;
 }
 
 // PAGE ACCESS
-function hasPageAccess(profile) {
+function hasPageAccess(profile, page = currentPage) {
   if (isAdmin(profile)) return true;
 
-  return profile.permissions?.[getRequiredPermission()] === true;
+  const requiredPermission = PAGE_PERMISSIONS[page];
+
+  if (!requiredPermission) return false;
+
+  return profile.permissions?.[requiredPermission] === true;
 }
 
-function hasDashboardAccess(profile) {
-  if (isAdmin(profile)) return true;
+// FIND FIRST PAGE STAFF CAN ACCESS
+function getFirstAllowedPage(profile) {
+  if (isAdmin(profile)) return HOME_PAGE;
 
-  return profile.permissions?.Dashboard === true;
+  if (hasPageAccess(profile, HOME_PAGE)) {
+    return HOME_PAGE;
+  }
+
+  for (const [page, permission] of Object.entries(PAGE_PERMISSIONS)) {
+    if (profile.permissions?.[permission] === true) {
+      return page;
+    }
+  }
+
+  return null;
 }
 
-// SAFE REDIRECT
+// REDIRECT
 function redirectTo(page) {
   if (redirecting) return;
 
@@ -118,7 +123,7 @@ function redirectTo(page) {
   window.location.replace(page);
 }
 
-// LOGIN FORM
+// LOGIN
 if (form) {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -131,7 +136,7 @@ if (form) {
     const password = passwordInput?.value;
 
     if (!email || !password) {
-      showError("Enter your email and password.");
+      showError("Enter your username/email and password.");
       return;
     }
 
@@ -151,15 +156,17 @@ if (form) {
 
       const profile = await checkAccount(credential.user);
 
-      if (!hasDashboardAccess(profile)) {
+      const destination = getFirstAllowedPage(profile);
+
+      if (!destination) {
         throw new Error(
-          "Your account does not have Dashboard access."
+          "Your account has no page permissions. Contact the owner."
         );
       }
 
       if (passwordInput) passwordInput.value = "";
 
-      redirectTo(HOME_PAGE);
+      redirectTo(destination);
 
     } catch (error) {
       console.error("Login error:", error);
@@ -170,12 +177,8 @@ if (form) {
 
       let message = error.message;
 
-      if (
-        error.code === "auth/invalid-credential" ||
-        error.code === "auth/user-not-found" ||
-        error.code === "auth/wrong-password"
-      ) {
-        message = "Incorrect email address or password.";
+      if (error.code === "auth/invalid-credential") {
+        message = "Incorrect username/email or password.";
       }
 
       if (error.code === "auth/too-many-requests") {
@@ -195,7 +198,7 @@ if (form) {
   });
 }
 
-// LOGOUT FUNCTION
+// LOGOUT
 async function logout(event, button) {
   if (event) {
     event.preventDefault();
@@ -214,7 +217,6 @@ async function logout(event, button) {
   try {
     await signOut(auth);
 
-    // Directly return to login.
     redirectTo(LOGIN_PAGE);
 
   } catch (error) {
@@ -231,7 +233,9 @@ async function logout(event, button) {
   }
 }
 
-// SUPPORT ALL LOGOUT BUTTONS
+// MAKE LOGOUT AVAILABLE TO ALL PAGES
+window.logout = logout;
+
 document.querySelectorAll("[data-logout]").forEach((button) => {
   button.addEventListener("click", (event) => {
     logout(event, button);
@@ -240,56 +244,61 @@ document.querySelectorAll("[data-logout]").forEach((button) => {
 
 // AUTHENTICATION STATE
 onAuthStateChanged(auth, async (user) => {
+  if (processingLogout || redirecting || processingLogin) return;
 
-  if (processingLogout || redirecting) return;
-
-  if (processingLogin) return;
-
+  // NOT LOGGED IN
   if (!user) {
-    authReady = true;
-
-    if (!publicPages.includes(currentPage)) {
+    if (!isLoginPage) {
       redirectTo(LOGIN_PAGE);
     }
-
     return;
   }
 
   try {
     const profile = await checkAccount(user);
 
-    if (publicPages.includes(currentPage)) {
-      if (hasDashboardAccess(profile)) {
-        redirectTo(HOME_PAGE);
+    // ALREADY LOGGED IN: LEAVE LOGIN PAGE
+    if (isLoginPage) {
+      const destination = getFirstAllowedPage(profile);
+
+      if (destination) {
+        redirectTo(destination);
       } else {
         await signOut(auth);
-        showError("Your account does not have Dashboard access.");
+        showError("Your account has no assigned permissions.");
       }
 
       return;
     }
 
+    // ALLOW OR DENY CURRENT PAGE
     if (!hasPageAccess(profile)) {
-      alert("You do not have permission to access this page.");
+      alert("You are not allowed to access this section.");
 
-      await signOut(auth);
-      redirectTo(LOGIN_PAGE);
+      const destination = getFirstAllowedPage(profile);
+
+      if (destination) {
+        redirectTo(destination);
+      } else {
+        await signOut(auth);
+        redirectTo(LOGIN_PAGE);
+      }
 
       return;
     }
 
-    authReady = true;
+    // USER IS AUTHENTICATED AND AUTHORIZED.
+    // NO EXTRA LOGIN REQUIRED WHEN CHANGING PAGES.
 
   } catch (error) {
-    console.error("Authentication verification error:", error);
+    console.error("Authentication error:", error);
 
     await signOut(auth);
 
-    if (!publicPages.includes(currentPage)) {
+    if (!isLoginPage) {
       redirectTo(LOGIN_PAGE);
     } else {
       showError(error.message || "Account verification failed.");
     }
   }
 });
-  

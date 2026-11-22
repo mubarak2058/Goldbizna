@@ -105,83 +105,104 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px 13p
 </main>
 
 <script>
+'use strict';
 const SK='goldbizna_sales',IK='goldbizna_inventory',UK='goldbizna_username';
 const $=id=>document.getElementById(id);
 const money=n=>'KSh '+Number(n||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-function sales(){try{let x=JSON.parse(localStorage.getItem(SK)||'[]');return Array.isArray(x)?x:[]}catch(e){return[]}}
-function inventory(){try{let x=JSON.parse(localStorage.getItem(IK)||'[]');return Array.isArray(x)?x:[]}catch(e){return[]}}
+let salesCache=[],inventoryCache=[],productByName=new Map(),refreshTimer=null;
+function readArray(key){
+ try{const value=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(value)?value:[]}
+ catch(error){console.warn('Dashboard data read failed:',key,error);return[]}
+}
+function loadDashboardData(){
+ salesCache=readArray(SK);
+ inventoryCache=readArray(IK);
+ productByName=new Map(inventoryCache.map(p=>[pname(p),p]));
+}
+function sales(){return salesCache}
+function inventory(){return inventoryCache}
 function pname(p){return p?.name||p?.productName||p?.title||'Unnamed Product'}
 function pstock(p){return Number(p?.stock??p?.quantity??p?.qty??0)}
 function pprice(p){return Number(p?.price??p?.sellingPrice??p?.salePrice??0)}
-function dateKey(d){const x=new Date(d);return isNaN(x)?'':x.toISOString().slice(0,10)}
 function localKey(d){const x=new Date(d);return isNaN(x)?'':x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')}
 function todayKey(){return localKey(new Date())}
-function allSales(){return sales().sort((a,b)=>new Date(b.date)-new Date(a.date))}
-function todaySales(){return allSales().filter(s=>localKey(s.date)===todayKey())}
+function allSales(){return sales().slice().sort((a,b)=>new Date(b.date)-new Date(a.date))}
+function todaySales(){return sales().filter(s=>localKey(s.date)===todayKey())}
 function stockValue(){return inventory().reduce((n,p)=>n+pstock(p)*pprice(p),0)}
 function costPrice(p){return Number(p?.costPrice??p?.cost??p?.buyingPrice??p?.purchasePrice??NaN)}
 function saleProfit(s){
  return (s.items||[]).reduce((n,i)=>{
-   const p=inventory().find(x=>pname(x)===String(i.name||''));
-   const cost=costPrice(p);
-   return n+(Number.isFinite(cost)?(Number(i.price||0)-cost)*Number(i.qty||0):0);
+  const p=productByName.get(String(i.name||''));
+  const cost=costPrice(p);
+  return n+(Number.isFinite(cost)?(Number(i.price||0)-cost)*Number(i.qty||0):0);
  },0);
 }
+function lowProducts(){return inventory().filter(p=>pstock(p)<=Number(p.low??5))}
 function renderCards(){
- const ts=todaySales(), total=ts.reduce((n,s)=>n+Number(s.total||0),0), inv=inventory();
- const profits=ts.reduce((n,s)=>n+saleProfit(s),0);
+ const ts=todaySales(),total=ts.reduce((n,s)=>n+Number(s.total||0),0),inv=inventory();
+ const profits=ts.reduce((n,s)=>n+saleProfit(s),0),low=lowProducts();
  const hasCosts=inv.some(p=>Number.isFinite(costPrice(p)));
  $('todaySales').textContent=money(total);$('todayCount').textContent=ts.length;
  $('todaySalesNote').textContent=ts.length+' transaction'+(ts.length===1?'':'s');
  $('todayProfit').textContent=money(profits);
  $('profitNote').textContent=hasCosts?'Estimated gross profit':'Add cost prices in Inventory';
  $('stockValue').textContent=money(stockValue());$('stockCount').textContent=inv.length+' product'+(inv.length===1?'':'s');
- $('lowCount').textContent=lowProducts().length;
+ $('lowCount').textContent=low.length;
  $('userName').textContent=localStorage.getItem(UK)||'Admin';
 }
 function renderChart(){
- const days=Number($('period').value||7), arr=[];
- for(let i=days-1;i>=0;i--){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-i);const key=localKey(d);const amount=sales().filter(s=>localKey(s.date)===key).reduce((n,s)=>n+Number(s.total||0),0);arr.push({d,amount})}
+ const days=Math.min(90,Math.max(1,Number($('period').value||7))),arr=[],totals=new Map();
+ sales().forEach(s=>{const key=localKey(s.date);if(key)totals.set(key,(totals.get(key)||0)+Number(s.total||0))});
+ for(let i=days-1;i>=0;i--){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-i);arr.push({d,amount:totals.get(localKey(d))||0})}
  const max=Math.max(1,...arr.map(x=>x.amount));
- $('chart').innerHTML=arr.map(x=>`<div class="barwrap"><div class="barvalue">${x.amount?Math.round(x.amount):''}</div><div class="bar" style="height:${Math.max(2,x.amount/max*180)}px" title="${money(x.amount)}"></div><div class="barlabel">${x.d.toLocaleDateString(undefined,{day:'2-digit',month:'short'})}</div></div>`).join('');
+ $('chart').innerHTML=arr.map(x=>'<div class="barwrap"><div class="barvalue">'+(x.amount?Math.round(x.amount):'')+'</div><div class="bar" style="height:'+Math.max(2,x.amount/max*180)+'px" title="'+money(x.amount)+'"></div><div class="barlabel">'+x.d.toLocaleDateString(undefined,{day:'2-digit',month:'short'})+'</div></div>').join('');
 }
 function renderPayments(){
  const map={};sales().forEach(s=>{const m=s.paymentMethod||'Unknown';if(!map[m])map[m]={amount:0,count:0};map[m].amount+=Number(s.total||0);map[m].count++});
  const keys=Object.keys(map).sort((a,b)=>map[b].amount-map[a].amount);
- $('payments').innerHTML=keys.length?keys.map(k=>`<tr><td><span class="badge">${k}</span></td><td class="right">${money(map[k].amount)}</td><td class="right">${map[k].count}</td></tr>`).join(''):'<tr><td colspan="3" class="empty">No completed sales yet.</td></tr>';
+ $('payments').innerHTML=keys.length?keys.map(k=>'<tr><td><span class="badge">'+escapeHTML(k)+'</span></td><td class="right">'+money(map[k].amount)+'</td><td class="right">'+map[k].count+'</td></tr>').join(''):'<tr><td colspan="3" class="empty">No completed sales yet.</td></tr>';
 }
 function renderProducts(){
  const map={};sales().forEach(s=>(s.items||[]).forEach(i=>{const n=i.name||'Unnamed Product';if(!map[n])map[n]={qty:0,sales:0};map[n].qty+=Number(i.qty||0);map[n].sales+=Number(i.qty||0)*Number(i.price||0)}));
  const rows=Object.entries(map).sort((a,b)=>b[1].sales-a[1].sales).slice(0,15);
- $('products').innerHTML=rows.length?rows.map(([n,v])=>`<tr><td>${escapeHTML(n)}</td><td class="right">${v.qty}</td><td class="right">${money(v.sales)}</td></tr>`).join(''):'<tr><td colspan="3" class="empty">No product sales yet.</td></tr>';
+ $('products').innerHTML=rows.length?rows.map(([n,v])=>'<tr><td>'+escapeHTML(n)+'</td><td class="right">'+v.qty+'</td><td class="right">'+money(v.sales)+'</td></tr>').join(''):'<tr><td colspan="3" class="empty">No product sales yet.</td></tr>';
 }
 function renderLow(){
  const rows=lowProducts().sort((a,b)=>pstock(a)-pstock(b));
- $('lowStock').innerHTML=rows.length?rows.map(p=>{const st=pstock(p),lim=Number(p.low??5);return `<div class="lowrow"><div><div class="lowname">${escapeHTML(pname(p))}</div><div class="lowstock">Stock: <b>${st}</b> / Alert level: ${lim}</div></div><span class="badge ${st<=0?'danger':'warn'}">${st<=0?'OUT OF STOCK':'LOW STOCK'}</span></div>`}).join(''):'<div class="empty">✓ Stock levels look good.</div>';
+ $('lowStock').innerHTML=rows.length?rows.map(p=>{const st=pstock(p),lim=Number(p.low??5);return '<div class="lowrow"><div><div class="lowname">'+escapeHTML(pname(p))+'</div><div class="lowstock">Stock: <b>'+st+'</b> / Alert level: '+lim+'</div></div><span class="badge '+(st<=0?'danger':'warn')+'">'+(st<=0?'OUT OF STOCK':'LOW STOCK')+'</span></div>'}).join(''):'<div class="empty">✓ Stock levels look good.</div>';
 }
 function escapeHTML(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
 function filteredSales(){
  const from=$('fromDate').value,to=$('toDate').value;
- return allSales().filter(s=>{const k=localKey(s.date);return (!from||k>=from)&&(!to||k<=to)})
+ return allSales().filter(s=>{const k=localKey(s.date);return(!from||k>=from)&&(!to||k<=to)});
 }
 function renderReport(){
- const a=filteredSales(), total=a.reduce((n,s)=>n+Number(s.total||0),0), items=a.reduce((n,s)=>n+(s.items||[]).reduce((x,i)=>x+Number(i.qty||0),0),0), profit=a.reduce((n,s)=>n+saleProfit(s),0);
+ const a=filteredSales(),total=a.reduce((n,s)=>n+Number(s.total||0),0),items=a.reduce((n,s)=>n+(s.items||[]).reduce((x,i)=>x+Number(i.qty||0),0),0),profit=a.reduce((n,s)=>n+saleProfit(s),0);
  $('rSales').textContent=money(total);$('rTransactions').textContent=a.length;$('rItems').textContent=items;$('rAverage').textContent=money(a.length?total/a.length:0);$('rProfit').textContent=money(profit);
- $('reportRows').innerHTML=a.length?a.map(s=>`<tr><td>${escapeHTML(s.id||'—')}</td><td>${new Date(s.date).toLocaleString()}</td><td>${escapeHTML(s.customerName||'Walk-in Customer')}</td><td>${escapeHTML(s.servedBy||'User')}</td><td>${escapeHTML(s.paymentMethod||'—')}</td><td class="right">${money(s.total)}</td></tr>`).join(''):'<tr><td colspan="6" class="empty">No sales found for the selected dates.</td></tr>';
+ $('reportRows').innerHTML=a.length?a.map(s=>'<tr><td>'+escapeHTML(s.id||'—')+'</td><td>'+escapeHTML(new Date(s.date).toLocaleString())+'</td><td>'+escapeHTML(s.customerName||'Walk-in Customer')+'</td><td>'+escapeHTML(s.servedBy||'User')+'</td><td>'+escapeHTML(s.paymentMethod||'—')+'</td><td class="right">'+money(s.total)+'</td></tr>').join(''):'<tr><td colspan="6" class="empty">No sales found for the selected dates.</td></tr>';
 }
 function clearDates(){$('fromDate').value='';$('toDate').value='';renderReport()}
 function csvCell(v){return '"'+String(v??'').replace(/"/g,'""')+'"'}
 function exportCSV(){
- const a=filteredSales();
- if(!a.length)return alert('No sales to export.');
+ const a=filteredSales();if(!a.length)return alert('No sales to export.');
  const rows=[['Receipt','Date','Customer','Served By','Payment Method','Total']];
  a.forEach(s=>rows.push([s.id,new Date(s.date).toLocaleString(),s.customerName||'Walk-in Customer',s.servedBy||'User',s.paymentMethod||'',Number(s.total||0).toFixed(2)]));
  const blob=new Blob([rows.map(r=>r.map(csvCell).join(',')).join('\n')],{type:'text/csv;charset=utf-8'});
- const url=URL.createObjectURL(blob),aEl=document.createElement('a');aEl.href=url;aEl.download='mabrouk_traders_sales_report.csv';aEl.click();URL.revokeObjectURL(url);
+ const url=URL.createObjectURL(blob),aEl=document.createElement('a');aEl.href=url;aEl.download='mabrouk_traders_sales_report.csv';aEl.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
-function renderAll(){renderCards();renderChart();renderPayments();renderProducts();renderLow();renderReport()}
+function renderAll(){
+ if(document.hidden)return;
+ try{loadDashboardData();renderCards();renderChart();renderPayments();renderProducts();renderLow();renderReport()}
+ catch(error){console.error('Dashboard refresh error:',error)}
+}
+function scheduleRefresh(){if(refreshTimer)clearTimeout(refreshTimer);refreshTimer=setTimeout(()=>{renderAll();refreshTimer=null},250)}
 renderAll();
-setInterval(renderAll,5000);
+window.addEventListener('storage',event=>{if(!event.key||event.key===SK||event.key===IK||event.key===UK)scheduleRefresh()});
+window.addEventListener('focus',scheduleRefresh);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleRefresh()});
+$('period').addEventListener('change',()=>{try{loadDashboardData();renderChart()}catch(e){console.error(e)}});
+$('fromDate').addEventListener('change',()=>{try{loadDashboardData();renderReport()}catch(e){console.error(e)}});
+$('toDate').addEventListener('change',()=>{try{loadDashboardData();renderReport()}catch(e){console.error(e)}});
 </script>
 <script type="module" src="auth.js"></script>
 </body>

@@ -419,35 +419,19 @@ if(auth.currentUser){
 await signOut(auth);
 }
 
-let message = "Login failed. " + (error.code || error.name || "Unknown error") + (error.message ? ": " + error.message : "");
+let message = "Login failed: " + (error.code || error.name || "Unknown error") + (error.message ? " — " + error.message : "");
 
-if(error.message === "USERNAME_NOT_FOUND"){
-message = "Username not found. Check your username or use your email.";
-}
-
-if(error.message === "ACCOUNT_DISABLED"){
-message = "Your account is disabled. Contact the owner.";
-}
-
-if(error.message === "STAFF_PROFILE_MISSING"){
-message = "Your staff profile is missing. Contact the owner.";
-}
-
-if(error.message === "NO_PERMISSION"){
-message = "You have no assigned page permissions.";
-}
-
-if(error.code === "auth/invalid-credential"){
-message = "Incorrect username or password.";
-}
-
-if(error.code === "auth/too-many-requests"){
-message = "Too many attempts. Try again later.";
-}
-
-if(error.code === "auth/network-request-failed"){
-message = "Internet connection problem.";
-}
+if(error.message === "USERNAME_NOT_FOUND") message = "Username not found. Use your Firebase email address.";
+if(error.message === "ACCOUNT_DISABLED") message = "Your account is disabled. Contact the owner.";
+if(error.message === "STAFF_PROFILE_MISSING") message = "Firebase accepted the password, but the staff profile is missing at users/" + (auth.currentUser?.uid || "your UID") + ".";
+if(error.message === "NO_PERMISSION") message = "You have no assigned page permissions.";
+if(["auth/invalid-credential","auth/wrong-password","auth/user-not-found"].includes(error.code)) message = "Incorrect Firebase email or password.";
+if(error.code === "auth/unauthorized-domain") message = "Firebase blocked this website domain. Add mubarak2058.github.io in Firebase Authentication → Settings → Authorized domains.";
+if(error.code === "auth/operation-not-allowed") message = "Email/password sign-in is disabled in Firebase Authentication → Sign-in method.";
+if(error.code === "auth/invalid-api-key") message = "Firebase API key is invalid. Check the web app configuration.";
+if(error.code === "auth/network-request-failed") message = "Connection problem. Check internet and retry.";
+if(error.code === "auth/too-many-requests") message = "Too many attempts. Wait before trying again.";
+if(error.code === "permission-denied" || error.code === "firestore/permission-denied") message = "Firebase sign-in worked, but Firestore denied access to the staff profile users/{uid}. Check Firestore rules.";
 
 showError(message);
 

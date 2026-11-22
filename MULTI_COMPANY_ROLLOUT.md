@@ -34,9 +34,11 @@ Do not bulk-move the existing MABROUK POS collections into a tenant path until e
 9. Back up and restore-test the legacy MABROUK collections before any migration.
 
 ## Included backend
-- `functions/index.js`: owner-claim-gated callable functions to create a company registry entry, list companies, and change company status. Company creation is pending by default and records an audit event.
+- `functions/index.js`: owner-claim-gated callable functions to create a company registry entry, list companies, and change company status. Company creation is pending by default and records an audit event. It also includes `acceptCompanyInvitation`, which allows a verified invited email to accept an invitation only after the company is active.
 - `functions/set-platform-owner.mjs`: trusted-environment helper to add the owner custom claim while preserving existing claims.
-- The functions deliberately do not create Firebase Auth users, send invitations, alter existing records, or migrate data. Those require a separately verified invitation and migration workflow.
+- `accept-company.html`: signed-in invitee page for accepting a company invitation using the invited verified email and company ID.
+- `firestore.multitenant.rules.draft`: an un-deployed example of tenant membership isolation. It is intentionally not connected to `firebase.json`; deploying it as-is would deny access to the existing legacy POS collections.
+- The functions deliberately do not create Firebase Auth users, send invitation emails, alter existing legacy records, or migrate data. The platform owner must securely share the company ID with the invited administrator. A production email invitation workflow and full role-specific permissions remain future work.
 
 ## Not yet live
 The callable backend is source code only until deployed to Firebase. Tenant security rules, App Check enforcement configuration, owner custom claim, company invitation flow, migration tooling, backup/restore, subscription billing and monitoring still require setup and testing. Do not advertise multi-tenant isolation as active until the two-company isolation tests pass.

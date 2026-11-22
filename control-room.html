@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MABROUK | Master Control Room</title>
+<style>
+:root{color-scheme:dark;--bg:#090b10;--panel:#121722;--line:#252e3d;--gold:#d7ad55;--muted:#93a0b3;--green:#42c58a;--red:#ef6b70}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% -10%,#342817 0,transparent 38%),var(--bg);color:#f4f1e9;font:15px system-ui,Arial,sans-serif}
+header{display:flex;align-items:center;justify-content:space-between;padding:17px 22px;border-bottom:1px solid var(--line);background:#0b0e14eF;position:sticky;top:0;z-index:5}
+.brand{font-weight:900;letter-spacing:.08em}.brand span{color:var(--gold)}.sub{color:var(--muted);font-size:12px;margin-top:3px}
+.wrap{max-width:1450px;margin:auto;padding:24px}.topline{display:flex;justify-content:space-between;gap:15px;align-items:center;flex-wrap:wrap}.eyebrow{color:var(--gold);font-size:11px;font-weight:800;letter-spacing:.18em}.topline h1{margin:5px 0;font-size:clamp(25px,4vw,36px)}.topline p{margin:0;color:var(--muted)}
+.actions{display:flex;gap:9px;flex-wrap:wrap}.btn{border:1px solid var(--line);border-radius:10px;padding:11px 14px;background:#1a2230;color:#fff;font-weight:700;cursor:pointer}.btn.gold{background:linear-gradient(135deg,#f0cf82,#b98732);color:#17120a;border:0}.btn:disabled{opacity:.45;cursor:not-allowed}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:22px 0}.card,.panel{background:linear-gradient(145deg,#151c28,#10151e);border:1px solid var(--line);border-radius:15px;padding:17px;min-width:0}.metric{font-size:25px;font-weight:850;margin:9px 0 3px}.muted{color:var(--muted);font-size:12px}.status{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--muted)}.dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block}.dot.warn{background:var(--gold)}.dot.bad{background:var(--red)}
+.layout{display:grid;grid-template-columns:1.35fr .85fr;gap:14px}.panel h2{font-size:16px;margin:0 0 5px}.panelhead{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:15px}.rows{display:grid;gap:9px}.item{display:flex;justify-content:space-between;gap:12px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:12px}.item b{font-size:13px}.tag{font-size:10px;border:1px solid #6b542b;color:var(--gold);border-radius:30px;padding:4px 8px;white-space:nowrap}
+.controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.control{border:1px solid var(--line);background:#0e141e;border-radius:12px;padding:14px;text-align:left;color:#fff;cursor:pointer}.control b{display:block;margin:7px 0 4px}.control small{color:var(--muted);line-height:1.4}.notice{border:1px solid #6b542b;background:#241d12;color:#e8d4a6;border-radius:12px;padding:13px;margin:17px 0;font-size:13px;line-height:1.5}
+footer{padding:25px 0;color:var(--muted);font-size:11px;text-align:center}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}}
+@media(max-width:520px){header{padding:13px}.wrap{padding:15px}.grid{gap:8px}.card,.panel{padding:13px}.metric{font-size:21px}.controls{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div><div class="brand">MABROUK <span>MASTER CONTROL</span></div><div class="sub">Multi-company platform command centre</div></div><div class="status"><i class="dot" id="netDot"></i><span id="netText">Checking connection…</span></div></header>
+<main class="wrap">
+<section class="topline"><div><div class="eyebrow">PLATFORM OWNER CONSOLE</div><h1>Master Control Room</h1><p>One central platform · Independent company workspaces · Optional white-label branding</p></div><div class="actions"><button class="btn" id="refreshBtn">↻ Refresh status</button><button class="btn gold" id="reloadBtn">Reload application</button></div></section>
+<div class="notice"><b>Safe rollout:</b> This control room is added alongside your existing MABROUK TRADER’S POS. Your current sales, stock, customers, staff and settings are not migrated, rewritten or deleted. Company provisioning and cross-company controls remain locked until the server-side tenant security and Firestore rules are installed and verified.</div>
+<section class="grid">
+<div class="card"><div class="muted">Platform connection</div><div class="metric" id="connection">Checking</div><div class="status"><i class="dot" id="connectionDot"></i><span id="connectionNote">Browser network status</span></div></div>
+<div class="card"><div class="muted">Signed-in owner</div><div class="metric" id="ownerName">Verifying</div><div class="muted" id="ownerEmail">Checking Firebase Authentication</div></div>
+<div class="card"><div class="muted">Company workspaces</div><div class="metric">Not connected</div><div class="muted">Tenant registry requires secure backend</div></div>
+<div class="card"><div class="muted">System recovery</div><div class="metric">Local tools</div><div class="muted">Refresh, reload and connectivity checks</div></div>
+</section>
+<section class="layout">
+<div class="panel"><div class="panelhead"><div><h2>Company workspace control</h2><div class="muted">Central access with separate company data and branding</div></div><span class="tag">SETUP REQUIRED</span></div>
+<div class="rows">
+<div class="item"><div><b>MABROUK TRADER’S</b><div class="muted">Existing business · current Firebase data remains untouched</div></div><span class="tag">EXISTING</span></div>
+<div class="item"><div><b>New company onboarding</b><div class="muted">Create tenant, company admin, plan and isolated data scope</div></div><span class="tag">LOCKED</span></div>
+<div class="item"><div><b>White-label identity</b><div class="muted">Company logo, colors, display name and branded login</div></div><span class="tag">PLANNED</span></div>
+<div class="item"><div><b>Subscription & licence control</b><div class="muted">Plans, renewals, expiry notices and suspension workflow</div></div><span class="tag">PLANNED</span></div>
+</div></div>
+<div class="panel"><div class="panelhead"><div><h2>Recovery & diagnostics</h2><div class="muted">Safe actions for this browser session</div></div></div>
+<div class="controls">
+<button class="control" id="softRefresh"><span>↻</span><b>Refresh current page</b><small>Reload current view from the server.</small></button>
+<button class="control" id="hardRefresh"><span>⟳</span><b>Full application reload</b><small>Reload app resources. Does not erase business data.</small></button>
+<button class="control" id="checkNetwork"><span>◉</span><b>Check connection</b><small>Recheck browser network availability.</small></button>
+<button class="control" id="clearNotice"><span>✳</span><b>Clear local warning</b><small>Dismiss this page’s temporary status message only.</small></button>
+</div><div id="diagnostic" class="notice" role="status">Waiting for diagnostics…</div></div>
+</section>
+<section class="panel" style="margin-top:14px"><div class="panelhead"><div><h2>Platform readiness checklist</h2><div class="muted">Required before onboarding paying companies</div></div><span class="tag">NOT YET LIVE</span></div>
+<div class="rows" id="checklist">
+<div class="item"><b>Existing MABROUK POS preserved</b><span class="status"><i class="dot"></i>Kept separate</span></div>
+<div class="item"><b>Tenant ID on every company-owned record</b><span class="tag">REQUIRED</span></div>
+<div class="item"><b>Server-enforced tenant isolation & owner claims</b><span class="tag">REQUIRED</span></div>
+<div class="item"><b>Company onboarding and subscription backend</b><span class="tag">REQUIRED</span></div>
+<div class="item"><b>Backup, restore testing and audit trail</b><span class="tag">REQUIRED</span></div>
+<div class="item"><b>Monitoring, error reporting and release rollback</b><span class="tag">REQUIRED</span></div>
+</div></section>
+<footer>MABROUK MASTER CONTROL · Owner access only · Never place Firebase service-account keys or private secrets in browser code.</footer>
+</main>
+<script type="module">
+import {auth,db} from "./firebase.js";
+import {onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import {doc,getDoc} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+const $=id=>document.getElementById(id);
+function network(){const ok=navigator.onLine;$("netText").textContent=ok?"Browser online":"Browser offline";$("netDot").className="dot"+(ok?"":" bad");$("connection").textContent=ok?"Online":"Offline";$("connectionDot").className="dot"+(ok?"":" bad");$("connectionNote").textContent=ok?"Network available; cloud access still needs verification":"Reconnect to the internet";}
+function report(s){$("diagnostic").textContent=s;}
+async function verify(){network();const u=auth.currentUser;if(!u){$("ownerName").textContent="Not signed in";$("ownerEmail").textContent="Sign in with the existing owner account";report("No Firebase session found. Sign in through the existing login page.");return;}
+$("ownerEmail").textContent=u.email||u.uid;
+try{const snap=await getDoc(doc(db,"users",u.uid));if(!snap.exists())throw new Error("No user profile document found.");const p=snap.data();const owner=["Owner","Owner/Admin","Admin"].includes(p.role)||p.isOwner===true;if(!owner)throw new Error("This account is not marked as a platform owner.");if(p.active===false||p.status==="disabled")throw new Error("This account is disabled.");$("ownerName").textContent=p.fullName||p.username||"Owner";report("Owner profile verified. Company provisioning is intentionally disabled until tenant-aware security rules and backend services are deployed.");}catch(e){$("ownerName").textContent="Verification failed";report("Owner verification failed: "+(e.message||"Check Firestore access and account role."));}}
+onAuthStateChanged(auth,u=>{if(!u){location.replace("login.html");return;}verify();});
+$("refreshBtn").onclick=verify;$("reloadBtn").onclick=()=>location.reload();$("softRefresh").onclick=()=>location.reload();$("hardRefresh").onclick=()=>location.reload();$("checkNetwork").onclick=()=>{network();report(navigator.onLine?"Network is available. Firebase authentication and Firestore are checked separately.":"Device is offline. Reconnect, then retry.");};$("clearNotice").onclick=()=>report("Temporary message cleared. No company data or browser storage was changed.");window.addEventListener("online",network);window.addEventListener("offline",network);
+</script>
+</body></html>

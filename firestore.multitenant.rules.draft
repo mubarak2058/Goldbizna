@@ -1,0 +1,58 @@
+// DRAFT ONLY — NOT WIRED INTO firebase.json AND NOT DEPLOYED.
+// Do not replace the live rules until legacy POS collections have been audited,
+// backed up, and tested. These rules demonstrate tenant isolation for the NEW
+// companies/{companyId}/... data model only.
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function platformOwner() {
+      return signedIn() && request.auth.token.platformOwner == true;
+    }
+
+    function activeMember(companyId) {
+      let membershipPath = /databases/$(database)/documents/companyMemberships/$(request.auth.uid + '_' + companyId);
+      let companyPath = /databases/$(database)/documents/companies/$(companyId);
+      return signedIn()
+        && exists(membershipPath)
+        && get(membershipPath).data.uid == request.auth.uid
+        && get(membershipPath).data.companyId == companyId
+        && get(membershipPath).data.status == 'active'
+        && exists(companyPath)
+        && get(companyPath).data.status == 'active';
+    }
+
+    match /companies/{companyId} {
+      allow read: if platformOwner() || activeMember(companyId);
+      // Company lifecycle and billing state are controlled by trusted backend.
+      allow write: if platformOwner();
+
+      match /{tenantCollection}/{recordId} {
+        // Membership is checked against the authenticated UID, not a client-supplied role.
+        allow read, create, update, delete: if platformOwner() || activeMember(companyId);
+      }
+    }
+
+    match /companyMemberships/{membershipId} {
+      // Memberships and invitations are written only by trusted Cloud Functions.
+      allow read: if platformOwner()
+        || (signedIn() && resource.data.uid == request.auth.uid);
+      allow create, update, delete: if false;
+    }
+
+    match /platformAuditLogs/{eventId} {
+      allow read: if platformOwner();
+      allow write: if false;
+    }
+
+    // All other paths are denied by default in this draft. This is why it must
+    // NOT be deployed until every existing POS collection has been mapped.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

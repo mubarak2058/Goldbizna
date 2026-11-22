@@ -16,7 +16,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA8XB6aY45-yHT0uZ6NU5gYqgwqOs",
+  apiKey: "AIzaSyA8XB6aY45-yHT0uZ6NUhptMoNkYqgwqOs",
   authDomain: "goldbizna.firebaseapp.com",
   projectId: "goldbizna",
   storageBucket: "goldbizna.firebasestorage.app",

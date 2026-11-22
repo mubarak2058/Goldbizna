@@ -53,7 +53,21 @@ body{background:#f5f7f6;color:#222;overflow-x:hidden}
 <a class="card" style="text-decoration:none;color:#222" href="pos.html">🛒<br><b>New Sale</b><br><small>Open POS</small></a><a class="card" style="text-decoration:none;color:#222" href="inventory.html">📦<br><b>Add Product</b><br><small>Manage inventory</small></a><a class="card" style="text-decoration:none;color:#222" href="customers.html">👥<br><b>Add Customer</b><br><small>Customer records</small></a><a class="card" style="text-decoration:none;color:#222" href="reports.html">📊<br><b>View Reports</b><br><small>Business reports</small></a></div></div>
 <div class="panel"><div class="panel-head"><h2>Recent Sales</h2><a href="sales.html" style="color:#087a0b">View all</a></div><div class="table-wrap"><table class="activity"><thead><tr><th>Sale</th><th>Customer</th><th>Amount</th><th>Status</th></tr></thead><tbody id="recentSales"><tr><td>No sales yet</td><td>—</td><td>KSh 0</td><td>Ready</td></tr></tbody></table></div></div>
 <script>
-const inv=JSON.parse(localStorage.getItem('goldbizna_inventory')||'[]'), cus=JSON.parse(localStorage.getItem('goldbizna_customers')||'[]'), sales=JSON.parse(localStorage.getItem('goldbizna_sales')||'[]');
+// Read dashboard cache defensively: malformed browser storage must not crash the page.
+function readDashboardArray(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    console.warn("Dashboard cache could not be read:", key, error);
+    return [];
+  }
+}
+const inv = readDashboardArray('goldbizna_inventory');
+const cus = readDashboardArray('goldbizna_customers');
+const sales = readDashboardArray('goldbizna_sales');
 document.getElementById('productCount').textContent=inv.length;document.getElementById('customerCount').textContent=cus.length;
 document.getElementById('salesTotal').textContent='KSh '+sales.filter(s=>s.date===new Date().toISOString().slice(0,10)).reduce((a,s)=>a+Number(s.total||0),0).toLocaleString();
 document.getElementById('lowStock').textContent=inv.filter(p=>Number(p.stock||0)<=Number(p.low||5)).length;

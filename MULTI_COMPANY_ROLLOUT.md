@@ -26,14 +26,16 @@ Do not bulk-move the existing MABROUK POS collections into a tenant path until e
 1. Confirm the correct Firebase project is `goldbizna`.
 2. Install Firebase CLI in a trusted development environment and authenticate as the project owner.
 3. Configure Firebase App Check for the web app before enabling callable functions.
-4. Set the `platformOwner: true` custom claim using a trusted Admin SDK script; never expose service-account credentials in this repository or browser.
+4. Set up Application Default Credentials in a trusted environment and run the owner-claim bootstrap script with the verified Firebase Auth UID: `PLATFORM_OWNER_UID=YOUR_VERIFIED_UID node functions/set-platform-owner.mjs`. The script merges the claim with existing custom claims. Never commit service-account credentials or expose them in browser code. The signed-in owner must sign out and back in to refresh the token.
 5. Review and deploy tenant-aware Firestore rules before enabling tenant data access.
 6. Deploy Functions from this directory with `firebase deploy --only functions`.
-7. Test with two separate test companies and verify cross-tenant reads/writes are denied.
-8. Back up and restore-test the legacy MABROUK collections before any migration.
+7. Configure Firebase App Check for the web app and deploy its provider settings; the callable functions enforce App Check.
+8. Test with two separate test companies and verify cross-tenant reads/writes are denied.
+9. Back up and restore-test the legacy MABROUK collections before any migration.
 
 ## Included backend
 - `functions/index.js`: owner-claim-gated callable functions to create a company registry entry, list companies, and change company status. Company creation is pending by default and records an audit event.
+- `functions/set-platform-owner.mjs`: trusted-environment helper to add the owner custom claim while preserving existing claims.
 - The functions deliberately do not create Firebase Auth users, send invitations, alter existing records, or migrate data. Those require a separately verified invitation and migration workflow.
 
 ## Not yet live

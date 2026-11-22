@@ -62,4 +62,5 @@ document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelect
 $('search').oninput=render;$('refresh').onclick=render;$('close').onclick=()=>$('profileModal').style.display='none';$('newBtn').onclick=()=>$('newModal').style.display='flex';$('newClose').onclick=()=>$('newModal').style.display='none';
 $('saveCustomer').onclick=()=>{let n=$('newName').value.trim(),p=$('newPhone').value.trim();if(!n)return alert('Enter customer name');build();if(customers.some(c=>key(c)===key({name:n,phone:p})))return alert('Customer already exists');customers.push({id:'CUS-'+Date.now(),name:n,phone:p,notes:$('newNotes').value.trim()});saveCustomers();$('newName').value='';$('newPhone').value='';$('newNotes').value='';$('newModal').style.display='none';render()};
 render();
-</script></body></html>
+</script><script type="module" src="auth.js"></script>
+</body></html>

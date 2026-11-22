@@ -80,7 +80,8 @@ async function checkAccount(user) {
 
   const profile = profileSnap.data();
 
-  if (profile.active !== true) {
+  // Accept both profile formats used by the Admin Setup and login page.
+  if (profile.active !== true && profile.status !== "active") {
     throw new Error("Your account is disabled. Contact the owner.");
   }
 

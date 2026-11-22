@@ -33,6 +33,9 @@ Do not bulk-move the existing MABROUK POS collections into a tenant path until e
 8. Test with two separate test companies and verify cross-tenant reads/writes are denied.
 9. Back up and restore-test the legacy MABROUK collections before any migration.
 
+## GitHub Actions deployment option
+A manual/automatic Functions-only deployment workflow is available at `.github/workflows/deploy-firebase-functions.yml`. Before using it, add a GitHub Actions repository secret named `FIREBASE_SERVICE_ACCOUNT_GOLDBIZNA` containing a dedicated Google service-account JSON key with the required Firebase deployment IAM permissions. The workflow deploys Cloud Functions only; it does not deploy Firestore rules or migrate data. Run it manually from the repository Actions tab after verifying the Firebase project and App Check setup. Never commit the service-account JSON key.
+
 ## Included backend
 - `functions/index.js`: owner-claim-gated callable functions to create a company registry entry, list companies, and change company status. Company creation is pending by default and records an audit event. It also includes `acceptCompanyInvitation`, which allows a verified invited email to accept an invitation only after the company is active.
 - `functions/set-platform-owner.mjs`: trusted-environment helper to add the owner custom claim while preserving existing claims.

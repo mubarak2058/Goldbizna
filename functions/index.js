@@ -91,3 +91,47 @@ export const setCompanyStatus = onCall({ enforceAppCheck: true }, async (request
   });
   return { companyId, status };
 });
+
+// A company administrator accepts an invitation only when signed in with
+// the exact invited, verified email address. The browser cannot assign roles.
+export const acceptCompanyInvitation = onCall({ enforceAppCheck: true }, async (request) => {
+  if (!request.auth) throw new HttpsError("unauthenticated", "Sign in with the invited account first.");
+  const uid = request.auth.uid;
+  const email = cleanText(request.auth.token.email, 160).toLowerCase();
+  if (!email || request.auth.token.email_verified !== true) {
+    throw new HttpsError("failed-precondition", "Verify the invited email address before accepting.");
+  }
+  const companyId = cleanText(request.data?.companyId, 128);
+  if (!companyId) throw new HttpsError("invalid-argument", "Company ID is required.");
+  const companyRef = db.collection("companies").doc(companyId);
+  const invitationQuery = db.collection("companyMemberships")
+    .where("companyId", "==", companyId)
+    .where("email", "==", email)
+    .where("status", "==", "invitation_pending")
+    .limit(1);
+  const invitationSnap = await invitationQuery.get();
+  if (invitationSnap.empty) throw new HttpsError("not-found", "No pending invitation matches this verified email and company.");
+  const invitationRef = invitationSnap.docs[0].ref;
+  const membershipRef = db.collection("companyMemberships").doc(uid + "_" + companyId);
+  await db.runTransaction(async (tx) => {
+    const [companySnap, inviteSnap, memberSnap] = await Promise.all([
+      tx.get(companyRef), tx.get(invitationRef), tx.get(membershipRef)
+    ]);
+    if (!companySnap.exists) throw new HttpsError("not-found", "Company not found.");
+    if (companySnap.data().status !== "active") throw new HttpsError("failed-precondition", "This company is not active yet.");
+    if (!inviteSnap.exists || inviteSnap.data().status !== "invitation_pending" || inviteSnap.data().email !== email) {
+      throw new HttpsError("failed-precondition", "This invitation is no longer available.");
+    }
+    if (memberSnap.exists && memberSnap.data().status === "active") return;
+    tx.set(membershipRef, {
+      uid, companyId, email, role: inviteSnap.data().role || "company_admin",
+      status: "active", acceptedAt: FieldValue.serverTimestamp()
+    });
+    tx.update(invitationRef, { status: "accepted", acceptedBy: uid, acceptedAt: FieldValue.serverTimestamp() });
+    tx.create(db.collection("platformAuditLogs").doc(), {
+      action: "company.invitation_accepted", companyId, actorUid: uid, email,
+      createdAt: FieldValue.serverTimestamp()
+    });
+  });
+  return { companyId, status: "active" };
+});

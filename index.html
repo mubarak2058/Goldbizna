@@ -55,4 +55,5 @@ const inv=JSON.parse(localStorage.getItem('goldbizna_inventory')||'[]'), cus=JSO
 document.getElementById('productCount').textContent=inv.length;document.getElementById('customerCount').textContent=cus.length;
 document.getElementById('salesTotal').textContent='KSh '+sales.filter(s=>s.date===new Date().toISOString().slice(0,10)).reduce((a,s)=>a+Number(s.total||0),0).toLocaleString();
 document.getElementById('lowStock').textContent=inv.filter(p=>Number(p.stock||0)<=Number(p.low||5)).length;
-</script></section></main></body></html>
+</script></section></main><script type="module" src="auth.js"></script>
+</body></html>

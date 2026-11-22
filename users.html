@@ -1,900 +1,178 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Goldbizna Users</title><style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
-}
-
-body{
-    background:#f4f4f4;
-    color:#333;
-}
-
-header{
-    background:#0b7a0b;
-    color:white;
-    padding:16px 20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
-}
-
-.logo{
-    font-size:25px;
-    font-weight:bold;
-}
-
-.header-buttons{
-    display:flex;
-    gap:8px;
-}
-
-.header-buttons button{
-    border:none;
-    padding:10px 15px;
-    border-radius:5px;
-    color:white;
-    cursor:pointer;
-}
-
-.dashboard-btn{
-    background:#075c07;
-}
-
-.logout-btn{
-    background:#c62828;
-}
-
-.container{
-    width:95%;
-    max-width:1100px;
-    margin:20px auto;
-}
-
-.title,
-.form-box,
-.summary-card,
-.table-box{
-    background:white;
-    border-radius:10px;
-    box-shadow:0 2px 8px rgba(0,0,0,.1);
-}
-
-.title{
-    padding:20px;
-    margin-bottom:20px;
-}
-
-.title h1{
-    color:#0b7a0b;
-    margin-bottom:5px;
-}
-
-.form-box{
-    padding:20px;
-    margin-bottom:20px;
-}
-
-.form-box h2{
-    color:#0b7a0b;
-    margin-bottom:15px;
-}
-
-.form-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:12px;
-}
-
-input,
-select{
-    width:100%;
-    padding:12px;
-    border:1px solid #ccc;
-    border-radius:5px;
-    font-size:15px;
-    background:white;
-}
-
-.full{
-    grid-column:1/-1;
-}
-
-.buttons{
-    display:flex;
-    gap:10px;
-    margin-top:15px;
-}
-
-button{
-    border:none;
-    padding:11px 17px;
-    border-radius:5px;
-    cursor:pointer;
-}
-
-.save-btn{
-    background:#0b7a0b;
-    color:white;
-}
-
-.cancel-btn{
-    background:#777;
-    color:white;
-    display:none;
-}
-
-#message{
-    margin-top:12px;
-    font-weight:bold;
-}
-
-.summary{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:15px;
-    margin-bottom:20px;
-}
-
-.summary-card{
-    padding:20px;
-    text-align:center;
-}
-
-.summary-card h3{
-    color:#0b7a0b;
-    margin-bottom:8px;
-}
-
-.summary-card p{
-    font-size:25px;
-    font-weight:bold;
-}
-
-.table-box{
-    padding:20px;
-    overflow-x:auto;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-    min-width:750px;
-}
-
-th{
-    background:#0b7a0b;
-    color:white;
-    padding:11px;
-}
-
-td{
-    padding:10px;
-    border:1px solid #ddd;
-    text-align:center;
-}
-
-.edit-btn{
-    background:#1976d2;
-    color:white;
-    padding:7px 10px;
-}
-
-.delete-btn{
-    background:#c62828;
-    color:white;
-    padding:7px 10px;
-    margin-left:5px;
-}
-
-.admin{
-    color:#0b7a0b;
-    font-weight:bold;
-}
-
-.staff{
-    color:#555;
-    font-weight:bold;
-}
-
-@media(max-width:700px){
-
-    .form-grid{
-        grid-template-columns:1fr;
-    }
-
-    .full{
-        grid-column:auto;
-    }
-
-    .summary{
-        grid-template-columns:1fr;
-    }
-
-    header{
-        gap:12px;
-    }
-
-    .logo{
-        font-size:21px;
-    }
-}
-</style><script type="module" src="auth.js"></script>  <link rel="stylesheet" href="premium.css?v=2026-11-22">
-</head><body><!-- LOGIN PROTECTION --><header><div class="logo">
-    Goldbizna Users
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#087a0b">
+<title>MABROUK TRADER'S - Staff Management</title>
+<link rel="stylesheet" href="premium.css?v=2026-11-22">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f7f4;color:#202820;font-family:Arial,sans-serif}
+header{background:#075f0a;color:#fff;padding:15px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{font-weight:900;font-size:20px}.head-actions{display:flex;gap:8px}.head-actions a{background:#fff;color:#075f0a;padding:10px 14px;border-radius:7px;text-decoration:none;font-size:13px;font-weight:bold}
+main{max-width:1180px;margin:22px auto;padding:0 14px}.intro,.panel,.stat{background:#fff;border:1px solid #e1e9e1;border-radius:12px;box-shadow:0 3px 12px #173b1710}
+.intro{padding:20px;margin-bottom:16px}.intro h1{margin:0 0 7px;color:#075f0a;font-size:25px}.intro p{margin:0;color:#667266;font-size:13px;line-height:1.5}
+.warning{padding:12px;border-radius:8px;background:#fff8e5;color:#805800;font-size:12px;line-height:1.5;margin-bottom:15px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.stat{padding:17px}.stat span{font-size:12px;color:#6b766b}.stat strong{display:block;font-size:26px;color:#087a0b;margin-top:7px}
+.panel{padding:18px;margin-bottom:16px}.panel h2{margin:0 0 15px;font-size:18px;color:#155d19}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field label{display:block;font-size:12px;font-weight:700;margin:0 0 6px;color:#455145}
+input,select{width:100%;padding:12px;border:1px solid #ccd6cc;border-radius:7px;background:#fff;font-size:14px;min-width:0}.full{grid-column:1/-1}
+.permissions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:12px;background:#f6faf6;border:1px solid #e2ebe2;border-radius:8px}
+.permissions label{font-size:12px;display:flex;align-items:center;gap:7px}.permissions input{width:auto}
+.hint{font-size:11px;color:#778277;line-height:1.5;margin:6px 0 0}.buttons,.row-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+button{border:0;border-radius:7px;padding:10px 14px;cursor:pointer;font-weight:700;font-size:12px}.primary{background:#087a0b;color:#fff}.secondary{background:#e9eee9;color:#263326}.danger{background:#ffe9e9;color:#a11}
+#message{font-size:13px;font-weight:700;margin-top:12px;white-space:pre-wrap}
+.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;min-width:850px}th,td{text-align:left;padding:11px 10px;border-bottom:1px solid #e8eee8;font-size:12px}th{background:#f3f8f3;color:#526052}
+.pill{display:inline-block;padding:5px 8px;border-radius:30px;background:#e8f5e9;color:#176b20;font-weight:700;font-size:10px}.inactive{background:#ffe9e9;color:#a11}.empty{text-align:center;color:#778277;padding:25px}
+@media(max-width:750px){.stats{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.permissions{grid-template-columns:repeat(2,1fr)}main{margin-top:12px}.intro h1{font-size:21px}}
+</style>
+</head>
+<body>
+<header><div class="brand">MABROUK TRADER'S · STAFF CENTRE</div><div class="head-actions"><a href="index.html">Dashboard</a></div></header>
+<main>
+<section class="intro"><h1>Multi-User Management</h1><p>Manage staff profiles, roles, access permissions and account status from one place. Staff profiles are stored in Firebase Firestore.</p></section>
+<div class="warning"><b>Development notice:</b> This page manages Firestore staff profiles for Firebase Authentication accounts that already exist. It does not create Firebase login accounts. Login is currently paused as requested, so the public website is not protected. Before using real business data, secure Firestore rules and restore individual Firebase sign-in.</div>
+<section class="stats">
+<div class="stat"><span>Total profiles</span><strong id="totalCount">—</strong></div>
+<div class="stat"><span>Active profiles</span><strong id="activeCount">—</strong></div>
+<div class="stat"><span>Administrators</span><strong id="adminCount">—</strong></div>
+<div class="stat"><span>Disabled profiles</span><strong id="disabledCount">—</strong></div>
+</section>
+<section class="panel">
+<h2 id="formHeading">Register staff profile</h2>
+<div class="form-grid">
+<div class="field"><label for="uid">Firebase Authentication UID *</label><input id="uid" autocomplete="off" placeholder="Paste the staff member's Firebase UID"></div>
+<div class="field"><label for="fullName">Full name *</label><input id="fullName" placeholder="Staff member's full name"></div>
+<div class="field"><label for="email">Firebase email *</label><input id="email" type="email" placeholder="staff@example.com"></div>
+<div class="field"><label for="username">Username</label><input id="username" placeholder="e.g. cashier01"></div>
+<div class="field"><label for="phone">Phone number</label><input id="phone" type="tel" placeholder="e.g. 07..."></div>
+<div class="field"><label for="role">Staff role *</label><select id="role"><option>Cashier</option><option>Storekeeper</option><option>Accountant</option><option>Manager</option><option>Owner/Admin</option></select></div>
+<div class="field"><label for="status">Account status</label><select id="status"><option value="active">Active</option><option value="disabled">Disabled</option></select></div>
+<div class="field"><label for="department">Department</label><input id="department" placeholder="e.g. Sales, Stores, Finance"></div>
+<div class="field full"><label>Page permissions</label><div class="permissions" id="permissionChoices">
+<label><input type="checkbox" value="Dashboard"> Dashboard</label><label><input type="checkbox" value="POS"> POS</label>
+<label><input type="checkbox" value="Inventory"> Inventory</label><label><input type="checkbox" value="Customers"> Customers</label>
+<label><input type="checkbox" value="Sales History"> Sales History</label><label><input type="checkbox" value="Reports"> Reports</label>
+<label><input type="checkbox" value="Savings"> Savings</label><label><input type="checkbox" value="Payments"> Payments</label>
+<label><input type="checkbox" value="Settings"> Settings</label><label><input type="checkbox" value="User Management"> User Management</label>
+</div><p class="hint">Choose only the pages this staff member needs. Owner/Admin is treated as a full-access role by the app.</p></div>
 </div>
-
-<div class="header-buttons">
-
-    <button
-        class="dashboard-btn"
-        onclick="window.location.href='dashboard.html'">
-        Dashboard
-    </button>
-
-    <button
-        class="logout-btn"
-        onclick="logout()">
-        Logout
-    </button>
-
-</div>
-
-</header><div class="container"><div class="title">
-
-    <h1>User Management</h1>
-
-    <p>
-        Manage Goldbizna system users and roles.
-    </p>
-
-</div>
-
-
-<!-- USER FORM -->
-<div class="form-box">
-
-    <h2 id="formTitle">
-        Add New User
-    </h2>
-
-    <div class="form-grid">
-
-        <input
-            type="text"
-            id="fullName"
-            placeholder="Full Name"
-        >
-
-        <input
-            type="text"
-            id="username"
-            placeholder="Username"
-        >
-
-        <input
-            type="password"
-            id="password"
-            placeholder="Password"
-        >
-
-        <select id="role">
-
-            <option value="Staff">
-                Staff
-            </option>
-
-            <option value="Manager">
-                Manager
-            </option>
-
-            <option value="Admin">
-                Admin
-            </option>
-
-        </select>
-
-        <input
-            class="full"
-            type="text"
-            id="phone"
-            placeholder="Phone Number (optional)"
-        >
-
-    </div>
-
-    <div class="buttons">
-
-        <button
-            class="save-btn"
-            id="saveButton"
-            onclick="saveUser()">
-            Add User
-        </button>
-
-        <button
-            class="cancel-btn"
-            id="cancelButton"
-            onclick="cancelEdit()">
-            Cancel
-        </button>
-
-    </div>
-
-    <p id="message"></p>
-
-</div>
-
-
-<!-- SUMMARY -->
-<div class="summary">
-
-    <div class="summary-card">
-
-        <h3>Total Users</h3>
-
-        <p id="userCount">
-            0
-        </p>
-
-    </div>
-
-    <div class="summary-card">
-
-        <h3>Administrators</h3>
-
-        <p id="adminCount">
-            0
-        </p>
-
-    </div>
-
-</div>
-
-
-<!-- USERS TABLE -->
-<div class="table-box">
-
-    <table>
-
-        <thead>
-
-            <tr>
-
-                <th>#</th>
-                <th>Name</th>
-                <th>Username</th>
-                <th>Role</th>
-                <th>Phone</th>
-                <th>Created</th>
-                <th>Actions</th>
-
-            </tr>
-
-        </thead>
-
-        <tbody id="usersBody"></tbody>
-
-    </table>
-
-</div>
-
-</div><script>
-
-/*
-INITIAL USER
-
-This creates the original Goldbizna admin account
-only if no users have been saved yet.
-*/
-
-let users =
-    JSON.parse(
-        localStorage.getItem("goldbizna_users") || "null"
-    );
-
-
-if(!Array.isArray(users)){
-
-    users = [
-
-        {
-            id:Date.now(),
-
-            fullName:"Goldbizna Administrator",
-
-            username:"admin",
-
-                role:"Admin",
-
-            phone:"",
-
-            created:
-                new Date().toLocaleString()
-
-        }
-
-    ];
-
-
-    saveUsers();
-
+<div class="buttons"><button class="primary" id="saveBtn" type="button">Save staff profile</button><button class="secondary" id="clearBtn" type="button">Clear form</button><button class="secondary" id="refreshBtn" type="button">Refresh profiles</button></div>
+<div id="message" role="status"></div>
+</section>
+<section class="panel">
+<h2>Staff directory</h2>
+<div class="field" style="max-width:420px;margin-bottom:12px"><label for="search">Search staff</label><input id="search" placeholder="Search name, email, username or role"></div>
+<div class="table-wrap"><table><thead><tr><th>#</th><th>Staff member</th><th>Email / Username</th><th>Role</th><th>Status</th><th>Department</th><th>Actions</th></tr></thead><tbody id="staffRows"><tr><td colspan="7" class="empty">Connecting to Firebase...</td></tr></tbody></table></div>
+</section>
+</main>
+<script type="module">
+import { db } from "./firebase.js";
+import { collection, doc, getDocs, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+const $ = id => document.getElementById(id);
+let profiles = [];
+let editingUid = null;
+const roles = ["Cashier","Storekeeper","Accountant","Manager","Owner/Admin"];
+
+function say(message, ok=false) {
+  $("message").textContent = message;
+  $("message").style.color = ok ? "#087a0b" : "#b42323";
 }
-
-
-
-// Remove legacy plaintext passwords from any old localStorage user records.
-if(Array.isArray(users)){
-    users = users.map(function(user){
-        const safeUser = {...user};
-        delete safeUser.password;
-        return safeUser;
-    });
-    localStorage.setItem("goldbizna_users", JSON.stringify(users));
+function permissionsFromForm() {
+  return [...document.querySelectorAll("#permissionChoices input:checked")].reduce((out, input) => {
+    out[input.value] = true; return out;
+  }, {});
 }
-
-let editingIndex=-1;
-
-
-/* SAVE USERS */
-
-function saveUsers(){
-
-    localStorage.setItem(
-        "goldbizna_users",
-        JSON.stringify(users)
-    );
-
+function setPermissions(values={}) {
+  document.querySelectorAll("#permissionChoices input").forEach(input => input.checked = values[input.value] === true);
 }
-
-
-/* ADD / UPDATE USER */
-
-function saveUser(){
-
-    const fullName =
-        document.getElementById("fullName")
-        .value
-        .trim();
-
-    const username =
-        document.getElementById("username")
-        .value
-        .trim();
-
-    const password =
-        document.getElementById("password")
-        .value;
-
-    const role =
-        document.getElementById("role")
-        .value;
-
-    const phone =
-        document.getElementById("phone")
-        .value
-        .trim();
-
-
-    if(fullName===""){
-
-        alert("Please enter the full name.");
-
-        return;
-
-    }
-
-
-    if(username===""){
-
-        alert("Please enter a username.");
-
-        return;
-
-    }
-
-
-    /*
-    PASSWORD IS REQUIRED WHEN CREATING
-    A NEW USER.
-    */
-
-    if(editingIndex===-1){
-        alert("User accounts are now managed by Firebase Authentication. Create the Firebase account first, then add the user profile here in a later update.");
-        return;
-    }
-
-
-    /*
-    CHECK DUPLICATE USERNAME
-    */
-
-    const duplicate =
-        users.some(function(user,index){
-
-            return (
-                user.username.toLowerCase() ===
-                username.toLowerCase()
-                &&
-                index !== editingIndex
-            );
-
-        });
-
-
-    if(duplicate){
-
-        alert("That username already exists.");
-
-        return;
-
-    }
-
-
-    if(editingIndex===-1){
-
-        const newUser={
-
-            id:Date.now(),
-
-            fullName:fullName,
-
-            username:username,
-
-            role:role,
-
-            phone:phone,
-
-            created:
-                new Date().toLocaleString()
-
-        };
-
-
-        users.push(newUser);
-
-
-        showMessage(
-            "User added successfully.",
-            "green"
-        );
-
-    }else{
-
-        const oldUser =
-            users[editingIndex];
-
-
-        users[editingIndex]={
-
-            id:oldUser.id,
-
-            fullName:fullName,
-
-            username:username,
-
-            role:role,
-
-            phone:phone,
-
-            created:oldUser.created
-
-        };
-
-
-        editingIndex=-1;
-
-
-        showMessage(
-            "User updated successfully.",
-            "green"
-        );
-
-    }
-
-
-    saveUsers();
-
-    clearForm();
-
-    displayUsers();
-
+function clearForm() {
+  editingUid = null;
+  ["uid","fullName","email","username","phone","department"].forEach(id => $(id).value = "");
+  $("role").value = "Cashier"; $("status").value = "active"; $("uid").disabled = false;
+  setPermissions({}); $("formHeading").textContent = "Register staff profile";
+  $("saveBtn").textContent = "Save staff profile"; say("");
 }
-
-
-/* DISPLAY USERS */
-
-function displayUsers(){
-
-    const body =
-        document.getElementById("usersBody");
-
-
-    body.innerHTML="";
-
-
-    users.forEach(function(user,index){
-
-        const row =
-            document.createElement("tr");
-
-
-        const roleClass =
-            user.role === "Admin"
-            ? "admin"
-            : "staff";
-
-
-        row.innerHTML=`
-
-            <td>${index + 1}</td>
-
-            <td>
-                ${escapeHTML(user.fullName)}
-            </td>
-
-            <td>
-                ${escapeHTML(user.username)}
-            </td>
-
-            <td class="${roleClass}">
-                ${escapeHTML(user.role)}
-            </td>
-
-            <td>
-                ${escapeHTML(user.phone || "-")}
-            </td>
-
-            <td>
-                ${escapeHTML(user.created)}
-            </td>
-
-            <td>
-
-                <button
-                    class="edit-btn"
-                    onclick="editUser(${index})">
-                    Edit
-                </button>
-
-                <button
-                    class="delete-btn"
-                    onclick="deleteUser(${index})">
-                    Delete
-                </button>
-
-            </td>
-
-        `;
-
-
-        body.appendChild(row);
-
-    });
-
-
-    document.getElementById("userCount").innerText =
-        users.length;
-
-
-    const admins =
-        users.filter(function(user){
-
-            return user.role === "Admin";
-
-        });
-
-
-    document.getElementById("adminCount").innerText =
-        admins.length;
-
+function render() {
+  const term = $("search").value.trim().toLowerCase();
+  const shown = profiles.filter(p => [p.fullName,p.email,p.username,p.role,p.department,p.phone].some(v => String(v||"").toLowerCase().includes(term)));
+  $("totalCount").textContent = profiles.length;
+  $("activeCount").textContent = profiles.filter(p => p.status === "active" || p.active === true).length;
+  $("disabledCount").textContent = profiles.filter(p => p.status === "disabled" || p.active === false).length;
+  $("adminCount").textContent = profiles.filter(p => ["Owner/Admin","Owner","Admin"].includes(p.role)).length;
+  const body = $("staffRows"); body.replaceChildren();
+  if (!shown.length) {
+    const tr=document.createElement("tr"), td=document.createElement("td");
+    td.colSpan=7; td.className="empty"; td.textContent="No staff profiles found. Add a profile above."; tr.append(td); body.append(tr); return;
+  }
+  shown.forEach((p,index) => {
+    const tr=document.createElement("tr");
+    [String(index+1),p.fullName||"—",(p.email||"—")+(p.username?" / "+p.username:""),p.role||"Staff"].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.append(td);});
+    const statusTd=document.createElement("td"), pill=document.createElement("span");
+    const disabled=p.status==="disabled"||p.active===false;
+    pill.className="pill"+(disabled?" inactive":""); pill.textContent=disabled?"Disabled":"Active";statusTd.append(pill);tr.append(statusTd);
+    const dept=document.createElement("td");dept.textContent=p.department||"—";tr.append(dept);
+    const actionsTd=document.createElement("td"), actions=document.createElement("div");actions.className="row-actions";
+    const edit=document.createElement("button");edit.className="secondary";edit.textContent="Edit";edit.addEventListener("click",()=>loadForEdit(p));
+    const toggle=document.createElement("button");toggle.className=disabled?"primary":"danger";toggle.textContent=disabled?"Enable":"Disable";
+    toggle.addEventListener("click",()=>changeStatus(p,disabled?"active":"disabled"));
+    actions.append(edit,toggle);actionsTd.append(actions);tr.append(actionsTd);body.append(tr);
+  });
 }
-
-
-/* EDIT USER */
-
-function editUser(index){
-
-    const user =
-        users[index];
-
-
-    document.getElementById("fullName").value =
-        user.fullName;
-
-    document.getElementById("username").value =
-        user.username;
-
-    document.getElementById("password").value =
-        "";
-
-    document.getElementById("role").value =
-        user.role;
-
-    document.getElementById("phone").value =
-        user.phone || "";
-
-
-    editingIndex=index;
-
-
-    document.getElementById("formTitle").innerText =
-        "Edit User";
-
-
-    document.getElementById("saveButton").innerText =
-        "Update User";
-
-
-    document.getElementById("cancelButton").style.display =
-        "block";
-
-
-    window.scrollTo({
-        top:0,
-        behavior:"smooth"
-    });
-
+async function loadProfiles() {
+  $("staffRows").innerHTML='<tr><td colspan="7" class="empty">Loading Firebase profiles...</td></tr>';
+  try {
+    const snap=await getDocs(collection(db,"users"));
+    profiles=snap.docs.map(d=>({uid:d.id,...d.data()}));
+    render(); say("Loaded "+profiles.length+" staff profile(s) from Firebase.",true);
+  } catch(error) {
+    console.error(error); profiles=[]; render();
+    say("Could not read users collection: "+(error.code||error.message)+". Check Firestore access rules.");
+  }
 }
-
-
-/* CANCEL EDIT */
-
-function cancelEdit(){
-
-    editingIndex=-1;
-
-    clearForm();
-
+function loadForEdit(p) {
+  editingUid=p.uid; $("uid").value=p.uid; $("uid").disabled=true;
+  $("fullName").value=p.fullName||p.name||""; $("email").value=p.email||"";
+  $("username").value=p.username||""; $("phone").value=p.phone||"";
+  $("department").value=p.department||""; $("role").value=roles.includes(p.role)?p.role:"Cashier";
+  $("status").value=(p.status==="disabled"||p.active===false)?"disabled":"active";
+  setPermissions(p.permissions||{}); $("formHeading").textContent="Edit staff profile";
+  $("saveBtn").textContent="Update staff profile"; say("Editing "+p.uid,true);
+  window.scrollTo({top:0,behavior:"smooth"});
 }
-
-
-/* DELETE USER */
-
-function deleteUser(index){
-
-    const user =
-        users[index];
-
-
-    /*
-    Don't allow deleting the last admin.
-    */
-
-    const adminCount =
-        users.filter(function(item){
-
-            return item.role==="Admin";
-
-        }).length;
-
-
-    if(
-        user.role==="Admin"
-        &&
-        adminCount<=1
-    ){
-
-        alert(
-            "You cannot delete the last administrator."
-        );
-
-        return;
-
-    }
-
-
-    if(!confirm(
-        "Delete user " +
-        user.username +
-        "?"
-    )){
-
-        return;
-
-    }
-
-
-    users.splice(index,1);
-
-    saveUsers();
-
-    displayUsers();
-
-
-    showMessage(
-        "User deleted.",
-        "red"
-    );
-
+async function saveProfile() {
+  const uid=$("uid").value.trim(), fullName=$("fullName").value.trim(), email=$("email").value.trim();
+  if(!uid||!fullName||!email){say("UID, full name and Firebase email are required.");return;}
+  if(!/^[A-Za-z0-9_-]{10,150}$/.test(uid)){say("That UID format looks incorrect. Copy the exact UID from Firebase Authentication.");return;}
+  const role=$("role").value, status=$("status").value;
+  const data={
+    uid,fullName,name:fullName,email,username:$("username").value.trim(),
+    phone:$("phone").value.trim(),department:$("department").value.trim(),
+    role,status,active:status==="active",
+    permissions: role==="Owner/Admin" ? Object.fromEntries(["Dashboard","POS","Inventory","Customers","Sales History","Reports","Savings","Payments","Settings","User Management"].map(k=>[k,true])) : permissionsFromForm(),
+    updatedAt:serverTimestamp()
+  };
+  try {
+    const ref=doc(db,"users",uid);
+    const existing=await getDoc(ref);
+    if(!existing.exists()) data.createdAt=serverTimestamp();
+    await setDoc(ref,data,{merge:true});
+    say("Staff profile "+(existing.exists()?"updated":"created")+" successfully in Firestore.",true);
+    clearForm(); await loadProfiles();
+  } catch(error) {
+    console.error(error); say("Save failed: "+(error.code||error.message)+". Check Firestore rules and try again.");
+  }
 }
-
-
-/* CLEAR FORM */
-
-function clearForm(){
-
-    document.getElementById("fullName").value="";
-    document.getElementById("username").value="";
-    document.getElementById("password").value="";
-    document.getElementById("role").value="Staff";
-    document.getElementById("phone").value="";
-
-
-    document.getElementById("formTitle").innerText =
-        "Add New User";
-
-
-    document.getElementById("saveButton").innerText =
-        "Add User";
-
-
-    document.getElementById("cancelButton").style.display =
-        "none";
-
+async function changeStatus(p,status) {
+  if(!confirm((status==="disabled"?"Disable ":"Enable ")+(p.fullName||p.email)+"?"))return;
+  try {
+    await setDoc(doc(db,"users",p.uid),{status,active:status==="active",updatedAt:serverTimestamp()},{merge:true});
+    say("Profile status updated.",true); await loadProfiles();
+  } catch(error) {console.error(error);say("Could not update status: "+(error.code||error.message));}
 }
-
-
-/* MESSAGE */
-
-function showMessage(text,color){
-
-    const message =
-        document.getElementById("message");
-
-
-    message.innerText=text;
-
-    message.style.color=color;
-
-
-    setTimeout(function(){
-
-        message.innerText="";
-
-    },3000);
-
-}
-
-
-/* LOGOUT */
-
-function logout(){
-
-    localStorage.removeItem("loggedIn");
-
-    window.location.href="login.html" data-goldbizna-logout="true";
-
-}
-
-
-/* HTML ESCAPE */
-
-function escapeHTML(text){
-
-    return String(text)
-
-        .replace(/&/g,"&amp;")
-
-        .replace(/</g,"&lt;")
-
-        .replace(/>/g,"&gt;")
-
-        .replace(/"/g,"&quot;")
-
-        .replace(/'/g,"&#039;");
-
-}
-
-
-/* START */
-
-displayUsers();
-
-</script></body>
-    </html>
+$("saveBtn").addEventListener("click",saveProfile);
+$("clearBtn").addEventListener("click",clearForm);
+$("refreshBtn").addEventListener("click",loadProfiles);
+$("search").addEventListener("input",render);
+loadProfiles();
+</script>
+</body></html>

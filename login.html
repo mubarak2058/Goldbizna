@@ -123,7 +123,7 @@ required>
 </div>
 
 <div class="field">
-<label for="password">Shared Login Password</label>
+<label for="password">Firebase Account Password</label>
 <input
 id="password"
 type="password"
@@ -419,7 +419,7 @@ if(auth.currentUser){
 await signOut(auth);
 }
 
-let message = "Unable to log in. Please try again.";
+let message = "Login failed. " + (error.code || error.name || "Unknown error") + (error.message ? ": " + error.message : "");
 
 if(error.message === "USERNAME_NOT_FOUND"){
 message = "Username not found. Check your username or use your email.";

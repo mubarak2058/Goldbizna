@@ -172,6 +172,7 @@ export const listPlatformAuditLogs = onCall(async (request) => {
         companyId: cleanText(data.companyId, 128),
         actorUid: cleanText(data.actorUid, 128),
         status: cleanText(data.status, 20),
+        plan: cleanText(data.plan, 24),
         email: cleanText(data.email, 160),
         createdAt: data.createdAt?.toDate?.()?.toISOString?.() || null
       };

@@ -8,6 +8,11 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
 import {
+  initializeAppCheck,
+  ReCaptchaV3Provider
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app-check.js";
+
+import {
   getFirestore
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
@@ -15,14 +20,9 @@ import {
   getAuth
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
-import {
-  initializeAppCheck,
-  ReCaptchaV3Provider
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app-check.js";
-
 // Firebase project configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyA8XB6aY45-yHT0uZ6NUhptMoNkYqgwqOs",
+  apiKey: "AIzaSyA8XB6aY45-yHT0uZ6NUYqgwqOs",
   authDomain: "goldbizna.firebaseapp.com",
   projectId: "goldbizna",
   storageBucket: "goldbizna.firebasestorage.app",
@@ -36,33 +36,20 @@ const app = getApps().length
   ? getApp()
   : initializeApp(firebaseConfig);
 
+// Initialize App Check BEFORE accessing Firebase services.
+const APP_CHECK_SITE_KEY = "6Ldn4iOuAAAAALZI8nAnLZskDGBbjTmRjDCgDhTW";
+
+const appCheck = initializeAppCheck(app, {
+  provider: new ReCaptchaV3Provider(APP_CHECK_SITE_KEY),
+  isTokenAutoRefreshEnabled: true
+});
+
 // Firebase services
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// App Check configuration
-// Add your PUBLIC reCAPTCHA v3 site key here to activate App Check.
-const APP_CHECK_SITE_KEY = "6Ldn4iOuAAAAALZI8nAnLZskDGBbjTmRjDCgDhTW";
+console.log("Firebase App Check initialized.");
 
-let appCheck = null;
-
-if (
-  APP_CHECK_SITE_KEY &&
-  APP_CHECK_SITE_KEY !== "PASTE_YOUR_PUBLIC_SITE_KEY_HERE"
-) {
-  appCheck = initializeAppCheck(app, {
-    provider: new ReCaptchaV3Provider(APP_CHECK_SITE_KEY),
-    isTokenAutoRefreshEnabled: true
-  });
-
-  console.log("Firebase App Check initialized.");
-} else {
-  console.warn(
-    "Firebase App Check is not active: add your reCAPTCHA v3 public site key."
-  );
-}
-
-// Export Firebase services
 export {
   app,
   auth,

@@ -130,6 +130,17 @@ body{background:linear-gradient(180deg,#f1faf2 0%,#f7f9f7 48%,#eef6ef 100%)!impo
 </section>
 </div>
 
+<div class="grid">
+<section class="panel">
+<div class="ph"><h2>Sales by Salesperson</h2><span class="badge">Performance</span></div>
+<div class="scroll"><table><thead><tr><th>Salesperson</th><th class="right">Transactions</th><th class="right">Sales</th><th class="right">Gross Profit</th></tr></thead><tbody id="salespeople"></tbody></table></div>
+</section>
+<section class="panel">
+<div class="ph"><h2>Business Highlights</h2></div>
+<div class="body" id="highlights"></div>
+</section>
+</div>
+
 <section class="panel reportTools">
 <div class="ph"><h2>Sales Report</h2><div class="filters">
 <input type="date" id="fromDate"><input type="date" id="toDate"><button class="btn" onclick="renderReport()">Apply</button><button class="btn light" onclick="clearDates()">Clear</button>
@@ -214,6 +225,23 @@ function renderLow(){
  const rows=lowProducts().sort((a,b)=>pstock(a)-pstock(b));
  $('lowStock').innerHTML=rows.length?rows.map(p=>{const st=pstock(p),lim=Number(p.low??5);return '<div class="lowrow"><div><div class="lowname">'+escapeHTML(pname(p))+'</div><div class="lowstock">Stock: <b>'+st+'</b> / Alert level: '+lim+'</div></div><span class="badge '+(st<=0?'danger':'warn')+'">'+(st<=0?'OUT OF STOCK':'LOW STOCK')+'</span></div>'}).join(''):'<div class="empty">✓ Stock levels look good.</div>';
 }
+
+function renderSalespeople(){
+ const map=new Map();
+ sales().forEach(s=>{
+  const name=String(s.servedBy||s.salesperson||s.cashier||'Unassigned').trim()||'Unassigned';
+  if(!map.has(name))map.set(name,{count:0,total:0,profit:0});
+  const row=map.get(name);row.count++;row.total+=Number(s.total||0);row.profit+=saleProfit(s);
+ });
+ const rows=[...map.entries()].sort((a,b)=>b[1].total-a[1].total);
+ $('salespeople').innerHTML=rows.length?rows.map(([name,v])=>'<tr><td><b>'+escapeHTML(name)+'</b></td><td class="right">'+v.count+'</td><td class="right">'+money(v.total)+'</td><td class="right">'+money(v.profit)+'</td></tr>').join(''):'<tr><td colspan="4" class="empty">Salesperson details will appear when sales are recorded.</td></tr>';
+ const today=todaySales(),todayTotal=today.reduce((n,s)=>n+Number(s.total||0),0);
+ const best=rows[0],all=sales().length;
+ $('highlights').innerHTML='<div class="lowrow"><div><div class="lowname">Sales recorded</div><div class="lowstock">All available sales history</div></div><b>'+all+'</b></div>'+
+ '<div class="lowrow"><div><div class="lowname">Average sale today</div><div class="lowstock">Based on today\'s transactions</div></div><b>'+money(today.length?todayTotal/today.length:0)+'</b></div>'+
+ '<div class="lowrow"><div><div class="lowname">Top salesperson</div><div class="lowstock">Ranked by recorded sales value</div></div><b>'+escapeHTML(best?best[0]:'—')+'</b></div>'+
+ '<div class="lowrow"><div><div class="lowname">Stock health</div><div class="lowstock">Products at or below alert level</div></div><b>'+lowProducts().length+'</b></div>';
+}
 function escapeHTML(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
 function filteredSales(){
  const from=$('fromDate').value,to=$('toDate').value;
@@ -235,7 +263,7 @@ function exportCSV(){
 }
 function renderAll(){
  if(document.hidden)return;
- try{loadDashboardData();renderCards();renderChart();renderPayments();renderProducts();renderLow();renderReport()}
+ try{loadDashboardData();renderCards();renderChart();renderPayments();renderProducts();renderLow();renderSalespeople();renderReport()}
  catch(error){console.error('Dashboard refresh error:',error)}
 }
 function scheduleRefresh(){if(refreshTimer)clearTimeout(refreshTimer);refreshTimer=setTimeout(()=>{renderAll();refreshTimer=null},250)}

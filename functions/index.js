@@ -89,6 +89,29 @@ export const setCompanyStatus = onCall(async (request) => {
   return { companyId, status };
 });
 
+// Returns the latest platform audit events for signed-in control-room users.
+export const listPlatformAuditLogs = onCall(async (request) => {
+  requireSignedIn(request);
+  const snap = await db.collection("platformAuditLogs")
+    .orderBy("createdAt", "desc")
+    .limit(50)
+    .get();
+  return {
+    logs: snap.docs.map((d) => {
+      const data = d.data();
+      return {
+        id: d.id,
+        action: cleanText(data.action, 80),
+        companyId: cleanText(data.companyId, 128),
+        actorUid: cleanText(data.actorUid, 128),
+        status: cleanText(data.status, 20),
+        email: cleanText(data.email, 160),
+        createdAt: data.createdAt?.toDate?.()?.toISOString?.() || null
+      };
+    })
+  };
+});
+
 // A company administrator accepts an invitation only when signed in with
 // the exact invited, verified email address. The browser cannot assign roles.
 export const acceptCompanyInvitation = onCall(async (request) => {

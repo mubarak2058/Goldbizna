@@ -69,6 +69,50 @@ export const listCompanies = onCall(async (request) => {
   return { companies: snap.docs.map((d) => ({ id: d.id, ...d.data() })) };
 });
 
+// Updates a company's profile and visual branding. Only its active company admin can edit it.
+export const updateCompanyWorkspace = onCall(async (request) => {
+  requireSignedIn(request);
+  const companyId = cleanText(request.data?.companyId, 128);
+  const name = cleanText(request.data?.name, 80);
+  const legalName = cleanText(request.data?.legalName, 120);
+  const phone = cleanText(request.data?.phone, 40);
+  const country = cleanText(request.data?.country, 60);
+  const currency = cleanText(request.data?.currency, 8).toUpperCase();
+  const displayName = cleanText(request.data?.displayName || name, 80);
+  const logoUrl = cleanText(request.data?.logoUrl, 500);
+  const primaryColor = cleanText(request.data?.primaryColor || "#087a0b", 7);
+  if (!companyId || name.length < 2 || !/^[A-Z]{3}$/.test(currency)) {
+    throw new HttpsError("invalid-argument", "A valid company, name and three-letter currency are required.");
+  }
+  if (!/^#[0-9a-fA-F]{6}$/.test(primaryColor)) {
+    throw new HttpsError("invalid-argument", "Brand color must be a six-digit hex color.");
+  }
+  if (logoUrl && !/^https:\/\//i.test(logoUrl)) {
+    throw new HttpsError("invalid-argument", "Logo URL must use HTTPS.");
+  }
+  const actorUid = request.auth.uid;
+  const memberRef = db.collection("companyMemberships").doc(actorUid + "_" + companyId);
+  const companyRef = db.collection("companies").doc(companyId);
+  await db.runTransaction(async (tx) => {
+    const [memberSnap, companySnap] = await Promise.all([tx.get(memberRef), tx.get(companyRef)]);
+    if (!memberSnap.exists || memberSnap.data().status !== "active" || memberSnap.data().role !== "company_admin") {
+      throw new HttpsError("permission-denied", "Only an active company administrator can edit this workspace.");
+    }
+    if (!companySnap.exists) throw new HttpsError("not-found", "Company workspace not found.");
+    tx.update(companyRef, {
+      name, legalName, phone, country, currency,
+      branding: { ...(companySnap.data().branding || {}), mode: "company", displayName, logoUrl, primaryColor },
+      updatedAt: FieldValue.serverTimestamp(),
+      updatedBy: actorUid
+    });
+    tx.create(db.collection("platformAuditLogs").doc(), {
+      action: "company.workspace_updated", companyId, actorUid,
+      createdAt: FieldValue.serverTimestamp()
+    });
+  });
+  return { companyId, status: "updated" };
+});
+
 export const setCompanyStatus = onCall(async (request) => {
   requireSignedIn(request);
   const companyId = cleanText(request.data?.companyId, 128);

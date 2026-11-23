@@ -37,7 +37,8 @@ export const createCompany = onCall(async (request) => {
     tx.create(companyRef, {
       name, legalName, adminEmail: email, phone, country, currency,
       status: "pending",
-      plan: "trial",
+      plan: "free",
+      subscription: { plan: "free", status: "trial", billingCycle: "none", renewalAt: null },
       branding: { mode: "company", displayName: name, logoUrl: "", primaryColor: "#087a0b" },
       dataModelVersion: 1,
       dataMode: "tenant_scoped",
@@ -61,6 +62,28 @@ export const createCompany = onCall(async (request) => {
   });
 
   return { companyId: companyRef.id, status: "pending" };
+});
+
+
+export const updateCompanySubscription = onCall(async (request) => {
+  requireSignedIn(request);
+  const PLATFORM_OWNER_UID = "ZW5pqCx3FvSzxtXBiZMMC6fP5ro2";
+  if (request.auth.uid !== PLATFORM_OWNER_UID) throw new HttpsError("permission-denied", "Only the platform owner can manage subscription plans.");
+  const companyId = cleanText(request.data?.companyId, 128);
+  const plan = cleanText(request.data?.plan, 24);
+  const status = cleanText(request.data?.status, 24);
+  const billingCycle = cleanText(request.data?.billingCycle || "monthly", 16);
+  const renewalAt = cleanText(request.data?.renewalAt, 30);
+  if (!companyId || !["free","basic","professional","enterprise"].includes(plan) || !["trial","active","past_due","cancelled"].includes(status) || !["monthly","yearly","none"].includes(billingCycle)) throw new HttpsError("invalid-argument", "Choose valid subscription settings.");
+  if (renewalAt && !/^\d{4}-\d{2}-\d{2}$/.test(renewalAt)) throw new HttpsError("invalid-argument", "Renewal date must use YYYY-MM-DD.");
+  const ref = db.collection("companies").doc(companyId);
+  await db.runTransaction(async (tx) => {
+    const snap = await tx.get(ref);
+    if (!snap.exists) throw new HttpsError("not-found", "Company not found.");
+    tx.update(ref, { plan, subscription: { plan, status, billingCycle, renewalAt: renewalAt || null, updatedAt: FieldValue.serverTimestamp(), updatedBy: request.auth.uid }, updatedAt: FieldValue.serverTimestamp(), updatedBy: request.auth.uid });
+    tx.create(db.collection("platformAuditLogs").doc(), { action: "company.subscription_updated", companyId, plan, status, actorUid: request.auth.uid, createdAt: FieldValue.serverTimestamp() });
+  });
+  return { companyId, plan, status, billingCycle, renewalAt: renewalAt || null };
 });
 
 export const listCompanies = onCall(async (request) => {

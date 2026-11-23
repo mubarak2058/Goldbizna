@@ -27,6 +27,49 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px 13p
 @media(max-width:1050px){.cards{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.summary{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:700px){.top{height:56px;padding:0 10px}.brand{font-size:15px}.store{display:none}.sidebar{top:56px;width:145px;padding:10px 6px}.nav a{font-size:11px;padding:10px 7px;gap:6px}.main{margin-left:145px;padding:14px 9px}.head h1{font-size:21px}.cards{gap:8px}.card{padding:12px}.value{font-size:18px}.grid{gap:10px}.ph{padding:12px}.body{padding:11px}.summary{gap:7px;grid-template-columns:repeat(2,1fr)}.mini{padding:9px}th,td{padding:9px 7px;font-size:10px}}
 @media print{.top,.sidebar,.actions,.filters,.reportTools{display:none!important}.main{margin:0;padding:0}.panel{box-shadow:none}.grid{grid-template-columns:1fr}.cards{grid-template-columns:repeat(4,1fr)}}
+
+/* Dashboard upgrade: larger, clearer and more positive */
+body{background:linear-gradient(180deg,#f1faf2 0%,#f7f9f7 48%,#eef6ef 100%)!important}
+.main{padding:32px!important}
+.head{padding:24px 26px!important;border-radius:22px;background:linear-gradient(120deg,#e4f7e8,#fff 72%);border:1px solid #d9ecdd;margin-bottom:22px!important}
+.head h1{font-size:clamp(30px,3vw,40px)!important;color:#123d20}
+.head p{font-size:15px!important}
+.cards{gap:18px!important}
+.cards .card{min-height:142px;padding:23px!important;border-radius:20px!important;border:1px solid #dceade!important;box-shadow:0 12px 28px rgba(16,90,37,.07)!important;position:relative}
+.cards .card:after{content:"";position:absolute;right:-22px;top:-28px;width:92px;height:92px;border-radius:50%;background:#eaf8ed}
+.cards .label{font-size:14px!important;font-weight:800;color:#637568}
+.cards .value{position:relative;z-index:1;font-size:clamp(25px,2.3vw,35px)!important;margin-top:15px!important;color:#087a0b}
+.cards .note{font-size:12px!important}
+.grid{gap:18px!important;margin-top:20px!important}
+.panel{border-radius:20px!important;box-shadow:0 12px 28px rgba(16,90,37,.06)!important}
+.ph{padding:20px 22px!important}
+.ph h2{font-size:19px!important;font-weight:850;color:#193c25}
+.body{padding:20px!important}
+.chart{height:280px!important}
+.bar{background:linear-gradient(180deg,#16a34a,#087a0b)!important;max-width:44px!important;border-radius:9px 9px 0 0!important}
+.summary{gap:12px!important}
+.mini{padding:17px!important;border-radius:15px!important}
+.mini b{font-size:21px!important}
+.reportTools{margin-top:20px!important}
+@media(max-width:1050px){.main{padding:20px!important}.cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:700px){
+ .top{height:58px!important}.sidebar{top:58px!important}
+ .main{margin-left:0!important;padding:14px!important}
+ .head{padding:18px!important;align-items:flex-start!important;flex-direction:column!important}
+ .head h1{font-size:28px!important}
+ .cards{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+ .cards .card{min-height:125px;padding:15px!important}
+ .cards .value{font-size:21px!important;overflow-wrap:anywhere}
+ .grid{grid-template-columns:1fr!important;gap:12px!important;margin-top:13px!important}
+ .ph{padding:15px!important;align-items:flex-start;gap:10px;flex-wrap:wrap}
+ .body{padding:14px!important}
+ .chart{height:230px!important;gap:4px!important}
+ .barlabel{font-size:8px!important}
+ .summary{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .mini{padding:12px!important}.mini b{font-size:17px!important}
+ .filters input,.filters select{max-width:100%;min-width:0}
+}
+@media(max-width:380px){.cards{grid-template-columns:1fr!important}.cards .card{min-height:110px}}
 </style>
   <link rel="stylesheet" href="premium.css?v=2026-11-22">
 </head>

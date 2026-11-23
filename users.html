@@ -2,177 +2,161 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#087a0b">
-<title>MABROUK TRADER'S - Staff Management</title>
-<link rel="stylesheet" href="premium.css?v=2026-11-22">
+<meta name="theme-color" content="#081b14">
+<title>MABROUK TRADER'S - Control Room</title>
+<link rel="stylesheet" href="premium.css?v=2026-11-23">
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f4f7f4;color:#202820;font-family:Arial,sans-serif}
-header{background:#075f0a;color:#fff;padding:15px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.brand{font-weight:900;font-size:20px}.head-actions{display:flex;gap:8px}.head-actions a{background:#fff;color:#075f0a;padding:10px 14px;border-radius:7px;text-decoration:none;font-size:13px;font-weight:bold}
-main{max-width:1180px;margin:22px auto;padding:0 14px}.intro,.panel,.stat{background:#fff;border:1px solid #e1e9e1;border-radius:12px;box-shadow:0 3px 12px #173b1710}
-.intro{padding:20px;margin-bottom:16px}.intro h1{margin:0 0 7px;color:#075f0a;font-size:25px}.intro p{margin:0;color:#667266;font-size:13px;line-height:1.5}
-.warning{padding:12px;border-radius:8px;background:#fff8e5;color:#805800;font-size:12px;line-height:1.5;margin-bottom:15px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.stat{padding:17px}.stat span{font-size:12px;color:#6b766b}.stat strong{display:block;font-size:26px;color:#087a0b;margin-top:7px}
-.panel{padding:18px;margin-bottom:16px}.panel h2{margin:0 0 15px;font-size:18px;color:#155d19}
-.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field label{display:block;font-size:12px;font-weight:700;margin:0 0 6px;color:#455145}
-input,select{width:100%;padding:12px;border:1px solid #ccd6cc;border-radius:7px;background:#fff;font-size:14px;min-width:0}.full{grid-column:1/-1}
-.permissions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:12px;background:#f6faf6;border:1px solid #e2ebe2;border-radius:8px}
-.permissions label{font-size:12px;display:flex;align-items:center;gap:7px}.permissions input{width:auto}
-.hint{font-size:11px;color:#778277;line-height:1.5;margin:6px 0 0}.buttons,.row-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-button{border:0;border-radius:7px;padding:10px 14px;cursor:pointer;font-weight:700;font-size:12px}.primary{background:#087a0b;color:#fff}.secondary{background:#e9eee9;color:#263326}.danger{background:#ffe9e9;color:#a11}
-#message{font-size:13px;font-weight:700;margin-top:12px;white-space:pre-wrap}
-.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;min-width:850px}th,td{text-align:left;padding:11px 10px;border-bottom:1px solid #e8eee8;font-size:12px}th{background:#f3f8f3;color:#526052}
-.pill{display:inline-block;padding:5px 8px;border-radius:30px;background:#e8f5e9;color:#176b20;font-weight:700;font-size:10px}.inactive{background:#ffe9e9;color:#a11}.empty{text-align:center;color:#778277;padding:25px}
-@media(max-width:750px){.stats{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.permissions{grid-template-columns:repeat(2,1fr)}main{margin-top:12px}.intro h1{font-size:21px}}
+:root{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#f3f6f3;color:#1c2a20;font-family:Arial,sans-serif}
+header{background:#081b14;color:#fff;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{font-weight:900;letter-spacing:.4px}.head-actions a{color:#10251a;background:#fff;border-radius:8px;padding:10px 14px;text-decoration:none;font-weight:700;font-size:13px}
+main{max-width:1160px;margin:22px auto;padding:0 14px}.hero,.panel,.stat{background:#fff;border:1px solid #e1e8e1;border-radius:14px;box-shadow:0 4px 16px #102b1710}
+.hero{padding:21px;margin-bottom:15px}.eyebrow{color:#8a6a24;font-size:11px;font-weight:800;letter-spacing:1.4px}.hero h1{margin:7px 0;color:#12351f;font-size:27px}.hero p{margin:0;color:#667268;font-size:13px;line-height:1.6}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin:15px 0}.stat{padding:16px}.stat span{font-size:12px;color:#6b766e}.stat strong{display:block;font-size:26px;margin-top:7px;color:#12612d}
+.panel{padding:18px;margin:15px 0}.panel h2{margin:0 0 15px;font-size:18px;color:#153d23}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field label{display:block;font-size:12px;font-weight:700;color:#4d5b50;margin-bottom:6px}
+input,select{width:100%;padding:12px;border:1px solid #ccd7cd;border-radius:8px;background:#fff;font-size:14px;min-width:0}input:focus,select:focus{outline:2px solid #b4d7bd;border-color:#238347}
+.full{grid-column:1/-1}.permissions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;background:#f5f8f5;padding:13px;border-radius:9px;border:1px solid #e3ebe3}
+.permissions label{display:flex;gap:7px;align-items:center;font-size:12px}.permissions input{width:auto;accent-color:#12612d}
+.hint{font-size:11px;color:#788279;line-height:1.5;margin:7px 0 0}.buttons{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}
+button{border:0;border-radius:8px;padding:11px 15px;font-weight:800;font-size:12px;cursor:pointer}.primary{background:#12612d;color:#fff}.secondary{background:#eaf0ea;color:#26372a}.danger{background:#ffebeb;color:#a51e1e}.primary:disabled,button:disabled{opacity:.55;cursor:not-allowed}
+#message{font-size:13px;font-weight:700;line-height:1.5;white-space:pre-wrap;margin-top:12px}.invite{display:none;margin-top:14px;padding:13px;background:#f2f8f2;border:1px solid #cfe3d1;border-radius:9px;overflow-wrap:anywhere}.invite a{color:#11652b;word-break:break-all}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:720px}th,td{text-align:left;padding:12px 9px;border-bottom:1px solid #e8eee8;font-size:12px}th{background:#f5f8f5;color:#657067}.pill{display:inline-block;padding:5px 9px;border-radius:30px;background:#e7f5e9;color:#17652b;font-size:10px;font-weight:800}.pending{background:#fff3d9;color:#805900}.off{background:#ffe8e8;color:#a21d1d}.empty{text-align:center;padding:25px;color:#7a857b}.actions{display:flex;gap:6px;flex-wrap:wrap}.actions button{padding:8px 10px}
+@media(max-width:700px){main{margin:12px auto}.stats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.full{grid-column:auto}.permissions{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:22px}.panel{padding:14px}}
 </style>
 </head>
 <body>
-<header><div class="brand">MABROUK TRADER'S · STAFF CENTRE</div><div class="head-actions"><a href="index.html">Dashboard</a></div></header>
+<header><div class="brand">MABROUK TRADER'S · CONTROL ROOM</div><div class="head-actions"><a href="index.html">← Dashboard</a></div></header>
 <main>
-<section class="intro"><h1>Multi-User Management</h1><p>Manage staff profiles, roles, access permissions and account status from one place. Staff profiles are stored in Firebase Firestore.</p></section>
-<div class="warning"><b>Development notice:</b> This page manages Firestore staff profiles for Firebase Authentication accounts that already exist. It does not create Firebase login accounts. Login is currently paused as requested, so the public website is not protected. Before using real business data, secure Firestore rules and restore individual Firebase sign-in.</div>
+<section class="hero"><div class="eyebrow">OWNER ACCESS</div><h1>Staff Control Room</h1><p>Add staff without manually creating Firebase profiles. Choose their role and page permissions here. Firebase's secure backend handles account creation and profile management.</p></section>
 <section class="stats">
-<div class="stat"><span>Total profiles</span><strong id="totalCount">—</strong></div>
-<div class="stat"><span>Active profiles</span><strong id="activeCount">—</strong></div>
-<div class="stat"><span>Administrators</span><strong id="adminCount">—</strong></div>
-<div class="stat"><span>Disabled profiles</span><strong id="disabledCount">—</strong></div>
+<div class="stat"><span>Total staff profiles</span><strong id="total">—</strong></div>
+<div class="stat"><span>Active</span><strong id="active">—</strong></div>
+<div class="stat"><span>Invitations pending</span><strong id="pending">—</strong></div>
+<div class="stat"><span>Disabled</span><strong id="disabled">—</strong></div>
 </section>
 <section class="panel">
-<h2 id="formHeading">Register staff profile</h2>
-<div class="form-grid">
-<div class="field"><label for="uid">Firebase Authentication UID *</label><input id="uid" autocomplete="off" placeholder="Paste the staff member's Firebase UID"></div>
-<div class="field"><label for="fullName">Full name *</label><input id="fullName" placeholder="Staff member's full name"></div>
-<div class="field"><label for="email">Firebase email *</label><input id="email" type="email" placeholder="staff@example.com"></div>
-<div class="field"><label for="username">Username</label><input id="username" placeholder="e.g. cashier01"></div>
-<div class="field"><label for="phone">Phone number</label><input id="phone" type="tel" placeholder="e.g. 07..."></div>
-<div class="field"><label for="role">Staff role *</label><select id="role"><option>Cashier</option><option>Storekeeper</option><option>Accountant</option><option>Manager</option><option>Owner/Admin</option></select></div>
-<div class="field"><label for="status">Account status</label><select id="status"><option value="active">Active</option><option value="disabled">Disabled</option></select></div>
-<div class="field"><label for="department">Department</label><input id="department" placeholder="e.g. Sales, Stores, Finance"></div>
-<div class="field full"><label>Page permissions</label><div class="permissions" id="permissionChoices">
-<label><input type="checkbox" value="Dashboard"> Dashboard</label><label><input type="checkbox" value="POS"> POS</label>
-<label><input type="checkbox" value="Inventory"> Inventory</label><label><input type="checkbox" value="Customers"> Customers</label>
-<label><input type="checkbox" value="Sales History"> Sales History</label><label><input type="checkbox" value="Reports"> Reports</label>
-<label><input type="checkbox" value="Savings"> Savings</label><label><input type="checkbox" value="Payments"> Payments</label>
-<label><input type="checkbox" value="Settings"> Settings</label><label><input type="checkbox" value="User Management"> User Management</label>
-</div><p class="hint">Choose only the pages this staff member needs. Owner/Admin is treated as a full-access role by the app.</p></div>
+<h2 id="formTitle">Add a staff member</h2>
+<div class="grid">
+<div class="field"><label for="fullName">Staff full name</label><input id="fullName" placeholder="Enter full name" autocomplete="name"></div>
+<div class="field"><label for="email">Email address (required for account setup)</label><input id="email" type="email" placeholder="staff@example.com" autocomplete="email"></div>
+<div class="field"><label for="phone">Phone number</label><input id="phone" type="tel" placeholder="+2547XXXXXXXX" autocomplete="tel"></div>
+<div class="field"><label for="role">Staff role</label><select id="role"><option>Cashier</option><option>Storekeeper</option><option>Accountant</option><option>Manager</option></select></div>
+<div class="field full"><label for="delivery">Invitation method</label><select id="delivery"><option value="email">Email – share password setup link</option><option value="sms">SMS – prepare link for manual sending (SMS provider not connected yet)</option></select><p class="hint">The staff member sets their own password using a secure Firebase link. This page never sends or displays a password.</p></div>
+<div class="field full"><label>Allow access to these pages</label><div class="permissions" id="permissionChoices">
+<label><input type="checkbox" value="Dashboard" checked> Dashboard</label>
+<label><input type="checkbox" value="POS"> POS</label>
+<label><input type="checkbox" value="Inventory"> Inventory</label>
+<label><input type="checkbox" value="Customers"> Customers</label>
+<label><input type="checkbox" value="Sales History"> Sales History</label>
+<label><input type="checkbox" value="Reports"> Reports</label>
+<label><input type="checkbox" value="Savings"> Savings</label>
+<label><input type="checkbox" value="Payments"> Payments</label>
+<label><input type="checkbox" value="Settings"> Settings</label>
+<label><input type="checkbox" value="User Management"> User Management</label>
+</div><p class="hint">Only selected pages will be granted by the Firestore permission rules. Never give User Management to ordinary staff unless you intend to.</p></div>
 </div>
-<div class="buttons"><button class="primary" id="saveBtn" type="button">Save staff profile</button><button class="secondary" id="clearBtn" type="button">Clear form</button><button class="secondary" id="refreshBtn" type="button">Refresh profiles</button></div>
+<div class="buttons"><button class="primary" id="save">Create staff account</button><button class="secondary" id="clear">Clear</button><button class="secondary" id="refresh">Refresh directory</button></div>
 <div id="message" role="status"></div>
+<div class="invite" id="inviteBox"><b>Password setup link</b><p id="inviteNote"></p><a id="inviteLink" href="#" target="_blank" rel="noopener"></a><div class="buttons"><button class="primary" id="copyLink">Copy invitation link</button></div></div>
 </section>
 <section class="panel">
 <h2>Staff directory</h2>
-<div class="field" style="max-width:420px;margin-bottom:12px"><label for="search">Search staff</label><input id="search" placeholder="Search name, email, username or role"></div>
-<div class="table-wrap"><table><thead><tr><th>#</th><th>Staff member</th><th>Email / Username</th><th>Role</th><th>Status</th><th>Department</th><th>Actions</th></tr></thead><tbody id="staffRows"><tr><td colspan="7" class="empty">Connecting to Firebase...</td></tr></tbody></table></div>
+<div class="field" style="max-width:420px;margin-bottom:12px"><label for="search">Search staff</label><input id="search" placeholder="Name, email, role or phone"></div>
+<div class="table-wrap"><table><thead><tr><th>Staff member</th><th>Email / Phone</th><th>Role</th><th>Status</th><th>Page access</th><th>Actions</th></tr></thead><tbody id="rows"><tr><td colspan="6" class="empty">Waiting for secure connection…</td></tr></tbody></table></div>
 </section>
 </main>
 <script type="module">
-import { db } from "./firebase.js";
-import { collection, doc, getDocs, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-const $ = id => document.getElementById(id);
-let profiles = [];
-let editingUid = null;
-const roles = ["Cashier","Storekeeper","Accountant","Manager","Owner/Admin"];
+import { auth, app } from "./firebase.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-functions.js";
+import { getAppCheck, initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app-check.js";
 
-function say(message, ok=false) {
-  $("message").textContent = message;
-  $("message").style.color = ok ? "#087a0b" : "#b42323";
-}
-function permissionsFromForm() {
-  return [...document.querySelectorAll("#permissionChoices input:checked")].reduce((out, input) => {
-    out[input.value] = true; return out;
-  }, {});
-}
-function setPermissions(values={}) {
-  document.querySelectorAll("#permissionChoices input").forEach(input => input.checked = values[input.value] === true);
-}
-function clearForm() {
-  editingUid = null;
-  ["uid","fullName","email","username","phone","department"].forEach(id => $(id).value = "");
-  $("role").value = "Cashier"; $("status").value = "active"; $("uid").disabled = false;
-  setPermissions({}); $("formHeading").textContent = "Register staff profile";
-  $("saveBtn").textContent = "Save staff profile"; say("");
-}
-function render() {
-  const term = $("search").value.trim().toLowerCase();
-  const shown = profiles.filter(p => [p.fullName,p.email,p.username,p.role,p.department,p.phone].some(v => String(v||"").toLowerCase().includes(term)));
-  $("totalCount").textContent = profiles.length;
-  $("activeCount").textContent = profiles.filter(p => p.status === "active" || p.active === true).length;
-  $("disabledCount").textContent = profiles.filter(p => p.status === "disabled" || p.active === false).length;
-  $("adminCount").textContent = profiles.filter(p => ["Owner/Admin","Owner","Admin"].includes(p.role)).length;
-  const body = $("staffRows"); body.replaceChildren();
-  if (!shown.length) {
-    const tr=document.createElement("tr"), td=document.createElement("td");
-    td.colSpan=7; td.className="empty"; td.textContent="No staff profiles found. Add a profile above."; tr.append(td); body.append(tr); return;
+const $ = id => document.getElementById(id);
+const functions = getFunctions(app);
+const API = {
+  create: httpsCallable(functions,"createStaffUser"),
+  list: httpsCallable(functions,"listStaffUsers"),
+  permissions: httpsCallable(functions,"updateStaffPermissions"),
+  status: httpsCallable(functions,"setStaffUserStatus")
+};
+const APP_CHECK_SITE_KEY = "ADD_YOUR_FIREBASE_APP_CHECK_RECAPTCHA_V3_SITE_KEY";
+let staff = [], editing = null, latestInvite = "";
+const pages = ["Dashboard","POS","Inventory","Customers","Sales History","Reports","Savings","Payments","Settings","User Management"];
+const allPermissions = Object.fromEntries(pages.map(p=>[p,true]));
+function show(message,good=false){$("message").textContent=message;$("message").style.color=good?"#12612d":"#a51e1e";}
+function checkedPermissions(){return [...document.querySelectorAll("#permissionChoices input:checked")].reduce((o,e)=>(o[e.value]=true,o),{});}
+function applyPermissions(obj={}){document.querySelectorAll("#permissionChoices input").forEach(e=>e.checked=obj[e.value]===true);}
+function resetForm(){editing=null;$("fullName").value="";$("email").value="";$("phone").value="";$("role").value="Cashier";$("delivery").value="email";applyPermissions({Dashboard:true});$("formTitle").textContent="Add a staff member";$("save").textContent="Create staff account";$("save").disabled=false;$("inviteBox").style.display="none";show("");}
+function statusOf(p){if(p.status==="pending"||p.active===false&&p.status!=="disabled")return "pending";return p.status==="disabled"||p.active===false?"disabled":"active";}
+function render(){
+ const q=$("search").value.trim().toLowerCase();
+ const list=staff.filter(p=>[p.fullName,p.name,p.email,p.phone,p.role].some(v=>String(v||"").toLowerCase().includes(q)));
+ $("total").textContent=staff.length;$("active").textContent=staff.filter(p=>statusOf(p)==="active").length;
+ $("pending").textContent=staff.filter(p=>statusOf(p)==="pending").length;$("disabled").textContent=staff.filter(p=>statusOf(p)==="disabled").length;
+ const body=$("rows");body.replaceChildren();
+ if(!list.length){const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=6;td.className="empty";td.textContent="No matching staff profiles.";tr.append(td);body.append(tr);return;}
+ list.forEach(p=>{
+  const tr=document.createElement("tr");
+  const name=document.createElement("td");name.textContent=p.fullName||p.name||"Unnamed";tr.append(name);
+  const contact=document.createElement("td");contact.textContent=(p.email||"—")+(p.phone?" / "+p.phone:"");tr.append(contact);
+  const role=document.createElement("td");role.textContent=p.role||"Staff";tr.append(role);
+  const st=document.createElement("td"),pill=document.createElement("span");const state=statusOf(p);pill.className="pill "+(state==="pending"?"pending":state==="disabled"?"off":"");pill.textContent=state.toUpperCase();st.append(pill);tr.append(st);
+  const access=document.createElement("td");access.textContent=pages.filter(k=>p.permissions?.[k]===true).join(", ")||"None";tr.append(access);
+  const actions=document.createElement("td"),wrap=document.createElement("div");wrap.className="actions";
+  const editBtn=document.createElement("button");editBtn.className="secondary";editBtn.textContent="Permissions";editBtn.onclick=()=>editStaff(p);wrap.append(editBtn);
+  if(state!=="pending"){
+   const toggle=document.createElement("button");toggle.className=state==="active"?"danger":"primary";toggle.textContent=state==="active"?"Disable":"Enable";toggle.onclick=()=>changeStatus(p,state==="active"?"disabled":"active");wrap.append(toggle);
   }
-  shown.forEach((p,index) => {
-    const tr=document.createElement("tr");
-    [String(index+1),p.fullName||"—",(p.email||"—")+(p.username?" / "+p.username:""),p.role||"Staff"].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.append(td);});
-    const statusTd=document.createElement("td"), pill=document.createElement("span");
-    const disabled=p.status==="disabled"||p.active===false;
-    pill.className="pill"+(disabled?" inactive":""); pill.textContent=disabled?"Disabled":"Active";statusTd.append(pill);tr.append(statusTd);
-    const dept=document.createElement("td");dept.textContent=p.department||"—";tr.append(dept);
-    const actionsTd=document.createElement("td"), actions=document.createElement("div");actions.className="row-actions";
-    const edit=document.createElement("button");edit.className="secondary";edit.textContent="Edit";edit.addEventListener("click",()=>loadForEdit(p));
-    const toggle=document.createElement("button");toggle.className=disabled?"primary":"danger";toggle.textContent=disabled?"Enable":"Disable";
-    toggle.addEventListener("click",()=>changeStatus(p,disabled?"active":"disabled"));
-    actions.append(edit,toggle);actionsTd.append(actions);tr.append(actionsTd);body.append(tr);
-  });
+  actions.append(wrap);tr.append(actions);body.append(tr);
+ });
 }
-async function loadProfiles() {
-  $("staffRows").innerHTML='<tr><td colspan="7" class="empty">Loading Firebase profiles...</td></tr>';
-  try {
-    const snap=await getDocs(collection(db,"users"));
-    profiles=snap.docs.map(d=>({uid:d.id,...d.data()}));
-    render(); say("Loaded "+profiles.length+" staff profile(s) from Firebase.",true);
-  } catch(error) {
-    console.error(error); profiles=[]; render();
-    say("Could not read users collection: "+(error.code||error.message)+". Check Firestore access rules.");
+async function setupAppCheck(){
+ if(APP_CHECK_SITE_KEY.startsWith("ADD_"))throw new Error("App Check site key has not been configured yet. The Control Room is prepared, but secure calls are not enabled.");
+ try{getAppCheck(app);}catch(_){initializeAppCheck(app,{provider:new ReCaptchaV3Provider(APP_CHECK_SITE_KEY),isTokenAutoRefreshEnabled:true});}
+}
+async function refresh(){
+ $("rows").innerHTML='<tr><td colspan="6" class="empty">Loading staff directory…</td></tr>';
+ try{const result=await API.list();staff=result.data.staff||[];render();show("Secure staff directory loaded.",true);}
+ catch(e){staff=[];render();show("Could not load staff: "+(e.message||e.code)+". Confirm owner sign-in, App Check and deployed Functions.");}
+}
+function editStaff(p){
+ editing=p;$("formTitle").textContent="Update staff permissions";$("save").textContent="Save permissions";
+ $("fullName").value=p.fullName||p.name||"";$("email").value=p.email||"";$("phone").value=p.phone||"";
+ $("role").value=["Cashier","Storekeeper","Accountant","Manager"].includes(p.role)?p.role:"Cashier";
+ applyPermissions(p.permissions||{});$("inviteBox").style.display="none";
+ show("Editing access for "+(p.fullName||p.email)+". Name and contact details are shown for reference; this action changes role and permissions only.",true);
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+async function save(){
+ const fullName=$("fullName").value.trim(),email=$("email").value.trim(),phone=$("phone").value.trim();
+ const role=$("role").value,permissions=checkedPermissions();
+ if(!editing&&(!fullName||!email)){show("Enter the staff member's full name and email address.");return;}
+ if(!Object.values(permissions).some(Boolean)){show("Select at least one page permission.");return;}
+ $("save").disabled=true;
+ try{
+  await setupAppCheck();
+  if(editing){
+   const result=await API.permissions({uid:editing.uid,role,permissions});
+   show("Permissions updated successfully.",true);resetForm();await refresh();
+  }else{
+   const result=await API.create({fullName,email,phone,role,permissions,delivery:$("delivery").value});
+   const data=result.data;latestInvite=data.inviteLink||"";
+   $("inviteBox").style.display="block";$("inviteNote").textContent=data.note||"Share this secure password setup link with the staff member.";
+   $("inviteLink").href=latestInvite;$("inviteLink").textContent=latestInvite;
+   show("Staff account created. The profile is pending until you activate it. Save and share the setup link securely.",true);
+   $("fullName").value="";$("email").value="";$("phone").value="";await refresh();
   }
+ }catch(e){console.error(e);show("Action not completed: "+(e.message||e.code));}
+ finally{$("save").disabled=false;}
 }
-function loadForEdit(p) {
-  editingUid=p.uid; $("uid").value=p.uid; $("uid").disabled=true;
-  $("fullName").value=p.fullName||p.name||""; $("email").value=p.email||"";
-  $("username").value=p.username||""; $("phone").value=p.phone||"";
-  $("department").value=p.department||""; $("role").value=roles.includes(p.role)?p.role:"Cashier";
-  $("status").value=(p.status==="disabled"||p.active===false)?"disabled":"active";
-  setPermissions(p.permissions||{}); $("formHeading").textContent="Edit staff profile";
-  $("saveBtn").textContent="Update staff profile"; say("Editing "+p.uid,true);
-  window.scrollTo({top:0,behavior:"smooth"});
+async function changeStatus(p,status){
+ if(!confirm((status==="disabled"?"Disable ":"Enable ")+(p.fullName||p.email)+"?"))return;
+ try{await setupAppCheck();await API.status({uid:p.uid,status});show("Staff status updated.",true);await refresh();}
+ catch(e){show("Could not update status: "+(e.message||e.code));}
 }
-async function saveProfile() {
-  const uid=$("uid").value.trim(), fullName=$("fullName").value.trim(), email=$("email").value.trim();
-  if(!uid||!fullName||!email){say("UID, full name and Firebase email are required.");return;}
-  if(!/^[A-Za-z0-9_-]{10,150}$/.test(uid)){say("That UID format looks incorrect. Copy the exact UID from Firebase Authentication.");return;}
-  const role=$("role").value, status=$("status").value;
-  const data={
-    uid,fullName,name:fullName,email,username:$("username").value.trim(),
-    phone:$("phone").value.trim(),department:$("department").value.trim(),
-    role,status,active:status==="active",
-    permissions: role==="Owner/Admin" ? Object.fromEntries(["Dashboard","POS","Inventory","Customers","Sales History","Reports","Savings","Payments","Settings","User Management"].map(k=>[k,true])) : permissionsFromForm(),
-    updatedAt:serverTimestamp()
-  };
-  try {
-    const ref=doc(db,"users",uid);
-    const existing=await getDoc(ref);
-    if(!existing.exists()) data.createdAt=serverTimestamp();
-    await setDoc(ref,data,{merge:true});
-    say("Staff profile "+(existing.exists()?"updated":"created")+" successfully in Firestore.",true);
-    clearForm(); await loadProfiles();
-  } catch(error) {
-    console.error(error); say("Save failed: "+(error.code||error.message)+". Check Firestore rules and try again.");
-  }
-}
-async function changeStatus(p,status) {
-  if(!confirm((status==="disabled"?"Disable ":"Enable ")+(p.fullName||p.email)+"?"))return;
-  try {
-    await setDoc(doc(db,"users",p.uid),{status,active:status==="active",updatedAt:serverTimestamp()},{merge:true});
-    say("Profile status updated.",true); await loadProfiles();
-  } catch(error) {console.error(error);say("Could not update status: "+(error.code||error.message));}
-}
-$("saveBtn").addEventListener("click",saveProfile);
-$("clearBtn").addEventListener("click",clearForm);
-$("refreshBtn").addEventListener("click",loadProfiles);
+$("save").addEventListener("click",save);$("clear").addEventListener("click",resetForm);
+$("refresh").addEventListener("click",async()=>{try{await setupAppCheck();await refresh();}catch(e){show(e.message);}});
 $("search").addEventListener("input",render);
-loadProfiles();
+$("copyLink").addEventListener("click",async()=>{if(!latestInvite)return;try{await navigator.clipboard.writeText(latestInvite);show("Invitation link copied.",true);}catch(_){show("Copy was blocked. Select and copy the link above.");}});
+if(!auth.currentUser){show("Sign in with the verified owner account first. The current temporary development login cannot authorize staff management.");}
+else{try{await setupAppCheck();await refresh();}catch(e){show(e.message);}}
 </script>
-</body></html>
+</body>
+</html>

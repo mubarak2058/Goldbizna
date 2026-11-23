@@ -69,3 +69,52 @@ tr:hover td{background:#f8fbf9}
 }
 /* Keep POS cart column headings in their original grid layout on small screens. */
 @media(max-width:640px){.pos-page .head{flex-direction:initial!important}}
+
+
+/* BIG & POSITIVE UPGRADE — presentation only; existing page logic stays untouched. */
+:root{
+ --mt-green:#087a0b;
+ --mt-green-2:#10a34a;
+ --mt-gold:#e4bd62;
+ --mt-bg:#f2f7f3;
+ --mt-line:#dce9df;
+ --mt-radius:20px;
+ --mt-shadow:0 14px 36px rgba(18,72,35,.09);
+}
+body{font-size:16px!important;background:linear-gradient(180deg,#f3faf4 0%,#f5f7f5 55%,#eef6ef 100%)!important}
+.topbar,.top,header{
+ background:linear-gradient(110deg,#073b1b 0%,#087a0b 58%,#119447 100%)!important;
+ min-height:68px;
+}
+.brand{font-size:clamp(19px,2vw,25px)!important;font-weight:900!important;letter-spacing:.35px!important}
+.sidebar{padding-top:22px!important}
+.nav a,nav a{font-size:15px!important;padding:14px 15px!important;margin:5px 0!important;border-radius:13px!important}
+.nav a.active,.nav a:hover{background:#e5f7e9!important;color:#087a0b!important;box-shadow:inset 3px 0 #0b9635}
+.card,.panel,.mini,.stat,.summary-card,.form-box,.table-box,.customer{
+ border-radius:20px!important;
+ box-shadow:0 12px 30px rgba(18,72,35,.07)!important;
+}
+.card{padding:22px!important}
+.value,.card-value,.stat b,.balance{font-size:clamp(25px,2.2vw,34px)!important;font-weight:900!important;color:#087a0b!important}
+.card-title,.card-title,.label,.card-title{font-size:14px!important;font-weight:700!important;color:#627568!important}
+.card-note,.note{font-size:12px!important}
+.panel{margin-top:22px!important}
+.panel-head,.ph{padding:20px 22px!important}
+.panel-head h2,.ph h2{font-size:19px!important;font-weight:850!important}
+.btn,button,.save-btn,.login-btn{min-height:44px;border-radius:12px!important;font-size:14px!important}
+input,select,textarea{min-height:43px!important;font-size:14px!important}
+table th{font-size:13px!important;font-weight:800!important}
+table td{font-size:13px!important;padding-top:14px!important;padding-bottom:14px!important}
+.footer-card{background:linear-gradient(145deg,#effaf1,#fff)!important}
+@media(min-width:1200px){
+ .content,.main{padding-left:30px!important;padding-right:30px!important}
+ .cards{gap:18px!important}
+}
+@media(max-width:640px){
+ .brand{font-size:16px!important}
+ .nav a,nav a{font-size:13px!important;padding:11px 13px!important}
+ .card{padding:17px!important}
+ .value,.card-value,.stat b,.balance{font-size:25px!important}
+ .panel-head,.ph{padding:15px!important}
+ table th,table td{font-size:12px!important}
+}

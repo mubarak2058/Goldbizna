@@ -5,11 +5,8 @@ import { getFirestore, FieldValue } from "firebase-admin/firestore";
 initializeApp();
 const db = getFirestore();
 
-function requirePlatformOwner(request) {
-  if (!request.auth) throw new HttpsError("unauthenticated", "Sign in first.");
-  if (request.auth.token.platformOwner !== true) {
-    throw new HttpsError("permission-denied", "Platform owner access is required.");
-  }
+function requireSignedIn(request) {
+  if (!request.auth) throw new HttpsError("unauthenticated", "Sign in with any Firebase account first.");
 }
 
 function cleanText(value, max = 100) {
@@ -18,8 +15,8 @@ function cleanText(value, max = 100) {
 
 // Creates only a company registry record. It never copies, edits or deletes
 // the existing root-level MABROUK POS collections.
-export const createCompany = onCall({ enforceAppCheck: true }, async (request) => {
-  requirePlatformOwner(request);
+export const createCompany = onCall(async (request) => {
+  requireSignedIn(request);
   const name = cleanText(request.data?.name, 80);
   const legalName = cleanText(request.data?.legalName, 120);
   const email = cleanText(request.data?.adminEmail, 160).toLowerCase();
@@ -66,14 +63,14 @@ export const createCompany = onCall({ enforceAppCheck: true }, async (request) =
   return { companyId: companyRef.id, status: "pending" };
 });
 
-export const listCompanies = onCall({ enforceAppCheck: true }, async (request) => {
-  requirePlatformOwner(request);
+export const listCompanies = onCall(async (request) => {
+  requireSignedIn(request);
   const snap = await db.collection("companies").orderBy("createdAt", "desc").limit(200).get();
   return { companies: snap.docs.map((d) => ({ id: d.id, ...d.data() })) };
 });
 
-export const setCompanyStatus = onCall({ enforceAppCheck: true }, async (request) => {
-  requirePlatformOwner(request);
+export const setCompanyStatus = onCall(async (request) => {
+  requireSignedIn(request);
   const companyId = cleanText(request.data?.companyId, 128);
   const status = cleanText(request.data?.status, 20);
   if (!companyId || !["active", "suspended", "pending"].includes(status)) {
@@ -94,7 +91,7 @@ export const setCompanyStatus = onCall({ enforceAppCheck: true }, async (request
 
 // A company administrator accepts an invitation only when signed in with
 // the exact invited, verified email address. The browser cannot assign roles.
-export const acceptCompanyInvitation = onCall({ enforceAppCheck: true }, async (request) => {
+export const acceptCompanyInvitation = onCall(async (request) => {
   if (!request.auth) throw new HttpsError("unauthenticated", "Sign in with the invited account first.");
   const uid = request.auth.uid;
   const email = cleanText(request.auth.token.email, 160).toLowerCase();

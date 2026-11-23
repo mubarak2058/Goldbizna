@@ -22,7 +22,7 @@ import {
 
 // Firebase project configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyA8XB6aY45-yHT0uZ6NUYqgwqOs",
+  apiKey: "AIzaSyA8XB6aY45-yHT0uZ6NUhptMoNkYqgwqOs",
   authDomain: "goldbizna.firebaseapp.com",
   projectId: "goldbizna",
   storageBucket: "goldbizna.firebasestorage.app",

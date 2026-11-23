@@ -1,8 +1,10 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { getAuth } from "firebase-admin/auth";
+import { initializeApp, getApps } from "firebase-admin/app";
 import { randomBytes } from "node:crypto";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 
+if (!getApps().length) initializeApp();
 const db = getFirestore();
 const auth = getAuth();
 

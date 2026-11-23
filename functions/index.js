@@ -112,6 +112,29 @@ export const listPlatformAuditLogs = onCall(async (request) => {
   };
 });
 
+// Lists recent company memberships for the signed-in platform console.
+export const listPlatformUsers = onCall(async (request) => {
+  requireSignedIn(request);
+  const snap = await db.collection("companyMemberships")
+    .orderBy("createdAt", "desc")
+    .limit(100)
+    .get();
+  return {
+    users: snap.docs.map((d) => {
+      const data = d.data();
+      return {
+        id: d.id,
+        uid: cleanText(data.uid, 128),
+        companyId: cleanText(data.companyId, 128),
+        email: cleanText(data.email, 160),
+        role: cleanText(data.role, 40),
+        status: cleanText(data.status, 40),
+        createdAt: data.createdAt?.toDate?.()?.toISOString?.() || null
+      };
+    })
+  };
+});
+
 // A company administrator accepts an invitation only when signed in with
 // the exact invited, verified email address. The browser cannot assign roles.
 export const acceptCompanyInvitation = onCall(async (request) => {

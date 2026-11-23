@@ -42,7 +42,7 @@ const db = getFirestore(app);
 
 // App Check configuration
 // Add your PUBLIC reCAPTCHA v3 site key here to activate App Check.
-const APP_CHECK_SITE_KEY = "PASTE_YOUR_PUBLIC_SITE_KEY_HERE";
+const APP_CHECK_SITE_KEY = "6Ldn4iOuAAAAALZI8nAnLZskDGBbjTmRjDCgDhTW";
 
 let appCheck = null;
 

@@ -65,6 +65,30 @@
 <div class="muted" style="margin-top:12px">Creates a company registry entry and pending admin invitation record. It does not copy or move your existing MABROUK POS data.</div>
 </div>
 </section>
+<section class="panel" style="margin-top:13px">
+ <div class="panelhead"><div><h2>Subscription & plans centre</h2><div class="muted">Track company plans and manually manage subscription status</div></div><span class="tag">OWNER CONTROLLED</span></div>
+ <div class="grid" style="margin:0 0 12px">
+  <div class="tile"><div class="muted">Free plan</div><div class="metric" id="planFree">0</div></div>
+  <div class="tile"><div class="muted">Basic plan</div><div class="metric" id="planBasic">0</div></div>
+  <div class="tile"><div class="muted">Professional plan</div><div class="metric" id="planProfessional">0</div></div>
+  <div class="tile"><div class="muted">Enterprise plan</div><div class="metric" id="planEnterprise">0</div></div>
+ </div>
+ <div id="subscriptionEditor" class="workspace-editor hidden">
+  <h3>Manage company subscription</h3>
+  <form id="subscriptionForm"><input id="subscriptionCompanyId" type="hidden">
+   <div class="formgrid">
+    <div class="field"><label for="subscriptionCompanyName">Company</label><input id="subscriptionCompanyName" readonly></div>
+    <div class="field"><label for="subscriptionPlan">Plan</label><select id="subscriptionPlan"><option value="free">Free</option><option value="basic">Basic</option><option value="professional">Professional</option><option value="enterprise">Enterprise</option></select></div>
+    <div class="field"><label for="subscriptionStatus">Billing status</label><select id="subscriptionStatus"><option value="trial">Trial</option><option value="active">Active</option><option value="past_due">Past due</option><option value="cancelled">Cancelled</option></select></div>
+    <div class="field"><label for="subscriptionCycle">Billing cycle</label><select id="subscriptionCycle"><option value="none">No billing</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option></select></div>
+    <div class="field"><label for="subscriptionRenewal">Renewal date</label><input id="subscriptionRenewal" type="date"></div>
+   </div>
+   <div class="editor-actions"><button class="btn gold" id="saveSubscription" type="submit">Save subscription</button><button class="btn" id="closeSubscription" type="button">Close</button></div>
+  </form>
+  <div class="muted" style="margin-top:9px">Manual plan tracking only. This does not charge customers or process payments.</div>
+ </div>
+ <div class="muted">Plan changes are restricted to the platform owner account. Existing POS data remains untouched.</div>
+</section>
 <section class="layout" style="margin-top:13px">
 <div class="panel"><div class="panelhead"><div><h2>System recovery & diagnostics</h2><div class="muted">Safe browser-level recovery actions</div></div></div><div class="tiles">
 <button class="tile btn" id="softRefresh"><b>↻ Refresh current page</b><small>Reload this view from GitHub Pages.</small></button>
@@ -107,6 +131,9 @@ function safe(value){return String(value??"");}
 function withTimeout(promise,ms,label){let timer;return Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error(label)),ms);})]).finally(()=>clearTimeout(timer));}
 function renderCompanies(companies){
  companyCache=Array.isArray(companies)?companies:[];
+ const planCounts={free:0,basic:0,professional:0,enterprise:0};
+ companyCache.forEach(c=>{const p=c.subscription?.plan||c.plan||"free";if(Object.prototype.hasOwnProperty.call(planCounts,p))planCounts[p]++;});
+ $("planFree").textContent=planCounts.free;$("planBasic").textContent=planCounts.basic;$("planProfessional").textContent=planCounts.professional;$("planEnterprise").textContent=planCounts.enterprise;
  $("companyCount").textContent=companyCache.length;
  $("activeCount").textContent=companyCache.filter(c=>c.status==="active").length;
  $("pendingCount").textContent=companyCache.filter(c=>c.status==="pending").length;
@@ -130,6 +157,7 @@ function drawCompanyList(){
   const detail=document.createElement("small");detail.textContent=safe(c.adminEmail)+" · "+safe(c.phone)+" · "+safe(c.currency||"KES")+" · "+safe(c.plan||"trial");info.append(name,detail);
   const actions=document.createElement("div");actions.className="company-actions";
   const edit=document.createElement("button");edit.className="btn";edit.textContent="Workspace & branding";edit.onclick=()=>openWorkspaceEditor(c);actions.append(edit);
+  const subscription=document.createElement("button");subscription.className="btn";subscription.textContent="Subscription";subscription.onclick=()=>openSubscriptionEditor(c);actions.append(subscription);
   const statusTag=document.createElement("span");statusTag.className="tag";statusTag.textContent=safe(c.status||"unknown").toUpperCase();actions.append(statusTag);
   if(c.status!=="active"){const activate=document.createElement("button");activate.className="btn gold";activate.textContent="Activate";activate.onclick=()=>changeStatus(c.id,"active");actions.append(activate);}
   if(c.status!=="suspended"){const suspend=document.createElement("button");suspend.className="btn";suspend.textContent="Suspend";suspend.onclick=()=>changeStatus(c.id,"suspended");actions.append(suspend);}
@@ -175,6 +203,28 @@ $("workspaceForm").addEventListener("submit",async event=>{
  }catch(error){message("Workspace update failed: "+(error.message||error.code||"Only an active company administrator can edit this workspace."),"bad");}
  finally{busy=false;$("saveWorkspace").disabled=false;$("saveWorkspace").textContent="Save workspace";}
 });
+
+function openSubscriptionEditor(company){
+ const sub=company.subscription||{};
+ $("subscriptionCompanyId").value=company.id||"";$("subscriptionCompanyName").value=company.name||"";
+ $("subscriptionPlan").value=["free","basic","professional","enterprise"].includes(sub.plan||company.plan)?(sub.plan||company.plan):"free";
+ $("subscriptionStatus").value=["trial","active","past_due","cancelled"].includes(sub.status)?sub.status:"trial";
+ $("subscriptionCycle").value=["none","monthly","yearly"].includes(sub.billingCycle)?sub.billingCycle:"none";
+ $("subscriptionRenewal").value=/^\d{4}-\d{2}-\d{2}$/.test(sub.renewalAt||"")?sub.renewalAt:"";
+ $("subscriptionEditor").classList.remove("hidden");$("subscriptionEditor").scrollIntoView({behavior:"smooth",block:"center"});
+}
+$("closeSubscription").onclick=()=>{$("subscriptionEditor").classList.add("hidden");};
+$("subscriptionForm").addEventListener("submit",async event=>{
+ event.preventDefault();if(!ownerReady||busy)return;
+ const payload={companyId:$("subscriptionCompanyId").value,plan:$("subscriptionPlan").value,status:$("subscriptionStatus").value,billingCycle:$("subscriptionCycle").value,renewalAt:$("subscriptionRenewal").value};
+ if(!payload.companyId){message("Choose a company first.","bad");return;}
+ if(!confirm("Save subscription settings for "+$("subscriptionCompanyName").value+"?"))return;
+ busy=true;$("saveSubscription").disabled=true;$("saveSubscription").textContent="Saving…";
+ try{await withTimeout(httpsCallable(functions,"updateCompanySubscription")(payload),15000,"Subscription update timed out.");message("Subscription settings saved.","good");$("subscriptionEditor").classList.add("hidden");await loadCompanies();await loadAuditLogs();}
+ catch(error){message("Subscription update failed: "+(error.message||error.code||"Only the platform owner can manage plans."),"bad");}
+ finally{busy=false;$("saveSubscription").disabled=false;$("saveSubscription").textContent="Save subscription";}
+});
+
 async function loadCompanies(){if(!ownerReady)return;const call=httpsCallable(functions,"listCompanies");$("companyList").textContent="Loading company records…";try{const result=await withTimeout(call({}),12000,"Company registry took too long to respond.");renderCompanies(result.data?.companies||[]);}catch(e){$("companyList").textContent="Company records are temporarily unavailable. Tap Refresh data to try again.";$("companyCount").textContent="—";$("activeCount").textContent="—";$("pendingCount").textContent="—";$("suspendedCount").textContent="—";throw e;}}
 function formatAuditDate(value){if(!value)return "Time unavailable";const d=new Date(value);return Number.isNaN(d.getTime())?"Time unavailable":d.toLocaleString();}
 let userCache=[];
@@ -248,10 +298,10 @@ async function loadAuditLogs(){
   for(const log of logs){
    const item=document.createElement("div");item.className="audit-item";
    const info=document.createElement("div");const title=document.createElement("b");
-   const labels={"company.created":"Company registered","company.status_changed":"Company status changed","company.invitation_accepted":"Company invitation accepted","membership.updated":"Company membership updated","company.workspace_updated":"Company workspace and branding updated"};
+   const labels={"company.created":"Company registered","company.status_changed":"Company status changed","company.invitation_accepted":"Company invitation accepted","membership.updated":"Company membership updated","company.workspace_updated":"Company workspace and branding updated","company.subscription_updated":"Company subscription updated"};
    title.textContent=labels[log.action]||log.action||"Platform activity";
    const detail=document.createElement("small");
-   detail.textContent=[log.companyId?"Company ID: "+log.companyId:"",log.status?"Status: "+log.status:"",log.role?"Role: "+log.role:"",log.email||"",log.actorUid?"By: "+log.actorUid:""].filter(Boolean).join(" · ");
+   detail.textContent=[log.companyId?"Company ID: "+log.companyId:"",log.status?"Status: "+log.status:"",log.plan?"Plan: "+log.plan:"",log.role?"Role: "+log.role:"",log.email||"",log.actorUid?"By: "+log.actorUid:""].filter(Boolean).join(" · ");
    const time=document.createElement("span");time.className="audit-time";time.textContent=formatAuditDate(log.createdAt);
    info.append(title,detail);item.append(info,time);target.append(item);
   }

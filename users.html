@@ -64,9 +64,8 @@ button{border:0;border-radius:8px;padding:11px 15px;font-weight:800;font-size:12
 </section>
 </main>
 <script type="module">
-import { auth, app } from "./firebase.js";
+import { auth, app, appCheck } from "./firebase.js";
 import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-functions.js";
-import { getAppCheck, initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app-check.js";
 
 const $ = id => document.getElementById(id);
 const functions = getFunctions(app);
@@ -76,7 +75,6 @@ const API = {
   permissions: httpsCallable(functions,"updateStaffPermissions"),
   status: httpsCallable(functions,"setStaffUserStatus")
 };
-const APP_CHECK_SITE_KEY = "ADD_YOUR_FIREBASE_APP_CHECK_RECAPTCHA_V3_SITE_KEY";
 let staff = [], editing = null, latestInvite = "";
 const pages = ["Dashboard","POS","Inventory","Customers","Sales History","Reports","Savings","Payments","Settings","User Management"];
 const allPermissions = Object.fromEntries(pages.map(p=>[p,true]));
@@ -108,8 +106,9 @@ function render(){
  });
 }
 async function setupAppCheck(){
- if(APP_CHECK_SITE_KEY.startsWith("ADD_"))throw new Error("App Check site key has not been configured yet. The Control Room is prepared, but secure calls are not enabled.");
- try{getAppCheck(app);}catch(_){initializeAppCheck(app,{provider:new ReCaptchaV3Provider(APP_CHECK_SITE_KEY),isTokenAutoRefreshEnabled:true});}
+ if(!appCheck) {
+  throw new Error("Firebase App Check is not initialized. Confirm the reCAPTCHA v3 site key in firebase.js and register this web app in Firebase Console > App Check before using the Control Room.");
+ }
 }
 async function refresh(){
  $("rows").innerHTML='<tr><td colspan="6" class="empty">Loading staff directory…</td></tr>';

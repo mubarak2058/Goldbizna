@@ -144,7 +144,7 @@ function drawUsers(){
   }
   roleSelect.value=["company_admin","manager","staff","viewer"].includes(u.role)?u.role:"staff";
   const save=document.createElement("button");save.className="btn gold";save.textContent="Save role";
-  save.onclick=()=>changeMembership(u,roleSelect.value,u.status==="invitation_pending"?"active":(u.status==="cancelled"?"active":u.status));
+  save.onclick=()=>changeMembership(u,roleSelect.value,u.status||"invitation_pending");
   controls.append(roleSelect,save);
   const state=document.createElement("span");state.className="tag";state.textContent=(u.status||"unknown").replaceAll("_"," ").toUpperCase();
   if(u.status==="active"||u.status==="invitation_pending"){
@@ -152,7 +152,7 @@ function drawUsers(){
    stop.onclick=()=>changeMembership(u,u.role||"staff",u.status==="active"?"suspended":"cancelled");controls.append(stop);
   }else if(u.status==="suspended"||u.status==="cancelled"){
    const restore=document.createElement("button");restore.className="btn";restore.textContent=u.status==="suspended"?"Reactivate":"Reopen invite";
-   restore.onclick=()=>changeMembership(u,u.role||"staff","active");controls.append(restore);
+   restore.onclick=()=>changeMembership(u,u.role||"staff",u.status==="cancelled"?"invitation_pending":"active");controls.append(restore);
   }
   info.append(name,details,controls);
   const meta=document.createElement("div");meta.className="user-meta";meta.append(state);
@@ -194,7 +194,7 @@ async function loadAuditLogs(){
    const labels={"company.created":"Company registered","company.status_changed":"Company status changed","company.invitation_accepted":"Company invitation accepted","membership.updated":"Company membership updated"};
    title.textContent=labels[log.action]||log.action||"Platform activity";
    const detail=document.createElement("small");
-   detail.textContent=[log.companyId?"Company ID: "+log.companyId:"",log.status?"Status: "+log.status:"",log.email||"",log.actorUid?"By: "+log.actorUid:""].filter(Boolean).join(" · ");
+   detail.textContent=[log.companyId?"Company ID: "+log.companyId:"",log.status?"Status: "+log.status:"",log.role?"Role: "+log.role:"",log.email||"",log.actorUid?"By: "+log.actorUid:""].filter(Boolean).join(" · ");
    const time=document.createElement("span");time.className="audit-time";time.textContent=formatAuditDate(log.createdAt);
    info.append(title,detail);item.append(info,time);target.append(item);
   }

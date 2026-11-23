@@ -135,3 +135,6 @@ export const acceptCompanyInvitation = onCall({ enforceAppCheck: true }, async (
   });
   return { companyId, status: "active" };
 });
+
+// Staff management callable functions
+export { createStaffUser, listStaffUsers, updateStaffPermissions, setStaffUserStatus } from "./staff.js";

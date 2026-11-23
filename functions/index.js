@@ -144,7 +144,7 @@ export const updateCompanyMembership = onCall(async (request) => {
   const role = cleanText(request.data?.role, 40);
   const status = cleanText(request.data?.status, 40);
   const allowedRoles = ["company_admin", "manager", "staff", "viewer"];
-  const allowedStatuses = ["active", "suspended", "cancelled"];
+  const allowedStatuses = ["active", "suspended", "cancelled", "invitation_pending"];
   if (!companyId || !membershipId || !allowedRoles.includes(role) || !allowedStatuses.includes(status)) {
     throw new HttpsError("invalid-argument", "Company, membership, role and status are required.");
   }

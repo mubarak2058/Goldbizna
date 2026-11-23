@@ -135,6 +135,52 @@ export const listPlatformUsers = onCall(async (request) => {
   };
 });
 
+// Company admins may manage memberships only inside their own company.
+// A user cannot change their own membership or promote themselves.
+export const updateCompanyMembership = onCall(async (request) => {
+  requireSignedIn(request);
+  const companyId = cleanText(request.data?.companyId, 128);
+  const membershipId = cleanText(request.data?.membershipId, 180);
+  const role = cleanText(request.data?.role, 40);
+  const status = cleanText(request.data?.status, 40);
+  const allowedRoles = ["company_admin", "manager", "staff", "viewer"];
+  const allowedStatuses = ["active", "suspended", "cancelled"];
+  if (!companyId || !membershipId || !allowedRoles.includes(role) || !allowedStatuses.includes(status)) {
+    throw new HttpsError("invalid-argument", "Company, membership, role and status are required.");
+  }
+  const actorUid = request.auth.uid;
+  const actorRef = db.collection("companyMemberships").doc(actorUid + "_" + companyId);
+  const targetRef = db.collection("companyMemberships").doc(membershipId);
+  await db.runTransaction(async (tx) => {
+    const [actorSnap, targetSnap] = await Promise.all([tx.get(actorRef), tx.get(targetRef)]);
+    if (!actorSnap.exists || actorSnap.data().status !== "active" || actorSnap.data().role !== "company_admin") {
+      throw new HttpsError("permission-denied", "Only an active company administrator can manage memberships for this company.");
+    }
+    if (!targetSnap.exists || targetSnap.data().companyId !== companyId) {
+      throw new HttpsError("not-found", "Membership not found in this company.");
+    }
+    if (targetSnap.id === actorRef.id) {
+      throw new HttpsError("failed-precondition", "You cannot change your own membership from this screen.");
+    }
+    tx.update(targetRef, {
+      role,
+      status,
+      updatedAt: FieldValue.serverTimestamp(),
+      updatedBy: actorUid
+    });
+    tx.create(db.collection("platformAuditLogs").doc(), {
+      action: "membership.updated",
+      companyId,
+      email: cleanText(targetSnap.data().email, 160),
+      role,
+      status,
+      actorUid,
+      createdAt: FieldValue.serverTimestamp()
+    });
+  });
+  return { companyId, membershipId, role, status };
+});
+
 // A company administrator accepts an invitation only when signed in with
 // the exact invited, verified email address. The browser cannot assign roles.
 export const acceptCompanyInvitation = onCall(async (request) => {

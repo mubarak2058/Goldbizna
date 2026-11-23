@@ -7,6 +7,7 @@ import { getFirestore, FieldValue } from "firebase-admin/firestore";
 if (!getApps().length) initializeApp();
 const db = getFirestore();
 const auth = getAuth();
+const OWNER_UID = "ZW5pqCx3FvSzxtXBiZMMC6fP5ro2";
 
 const ALLOWED_PERMISSIONS = [
   "Dashboard", "POS", "Inventory", "Customers", "Sales History",
@@ -16,7 +17,7 @@ const ALLOWED_ROLES = ["Cashier", "Storekeeper", "Accountant", "Manager"];
 
 function requireOwner(request) {
   if (!request.auth) throw new HttpsError("unauthenticated", "Please sign in.");
-  if (request.auth.token.platformOwner !== true) {
+  if (request.auth.uid !== OWNER_UID && request.auth.token.platformOwner !== true) {
     throw new HttpsError("permission-denied", "Only the verified owner can manage staff.");
   }
 }

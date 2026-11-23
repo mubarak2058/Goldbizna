@@ -1,5 +1,6 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { getAuth } from "firebase-admin/auth";
+import { randomBytes } from "node:crypto";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 
 const db = getFirestore();
@@ -57,7 +58,7 @@ export const createStaffUser = onCall({ enforceAppCheck: true }, async (request)
   try {
     userRecord = await auth.createUser({
       email, displayName: fullName, phoneNumber: phone || undefined,
-      password: require("crypto").randomBytes(32).toString("base64url"),
+      password: randomBytes(32).toString("base64url"),
       emailVerified: false, disabled: false
     });
     const profile = {

@@ -1,0 +1,83 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Owner UID retained from the existing Firebase rules shared earlier.
+    // Confirm this is still the correct owner account before deployment.
+    function isOwner() {
+      return request.auth != null
+        && request.auth.uid == "ZW5pqCx3FvSzxtXBiZMMC6fP5ro2";
+    }
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function profilePath(uid) {
+      return /databases/$(database)/documents/users/$(uid);
+    }
+
+    function hasActiveProfile() {
+      return signedIn()
+        && exists(profilePath(request.auth.uid))
+        && get(profilePath(request.auth.uid)).data.active == true;
+    }
+
+    function can(permission) {
+      return isOwner()
+        || (hasActiveProfile()
+          && get(profilePath(request.auth.uid)).data.permissions[permission] == true);
+    }
+
+    // Staff can read only their own profile. Only the owner can manage profiles.
+    match /users/{uid} {
+      allow read: if isOwner() || (signedIn() && request.auth.uid == uid);
+      allow create, update, delete: if isOwner();
+    }
+
+    // Inventory management.
+    match /inventory/{itemId} {
+      allow read, create, update, delete: if can("Inventory");
+    }
+
+    // Customer records, if/when the app stores them in Firestore.
+    match /customers/{customerId} {
+      allow read, create, update, delete: if can("Customers");
+    }
+
+    // Sales and reports. POS staff may create sales; Sales History or Reports
+    // permission is required to read the full sales collection.
+    match /sales/{saleId} {
+      allow create: if can("POS");
+      allow read: if can("Sales History") || can("Reports");
+      allow update, delete: if isOwner() || can("Settings");
+    }
+
+    match /savings/{recordId} {
+      allow read, create, update, delete: if can("Savings");
+    }
+
+    match /debts/{recordId} {
+      allow read, create, update, delete: if can("Customers");
+    }
+
+    match /settings/{settingId} {
+      allow read, write: if can("Settings");
+    }
+
+    // Username lookup documents may contain login identifiers; keep them owner-only
+    // until the actual username-login flow is reviewed and redesigned.
+    match /usernames/{username} {
+      allow read, write: if isOwner();
+    }
+
+    match /activityLog/{logId} {
+      allow read: if isOwner() || can("Reports");
+      allow write: if isOwner();
+    }
+
+    // Default deny for every collection not explicitly listed above.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

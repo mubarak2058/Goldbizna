@@ -154,7 +154,7 @@ function drawCompanyList(){
  for(const c of filtered){
   const row=document.createElement("div");row.className="company";
   const info=document.createElement("div");const name=document.createElement("b");name.textContent=safe(c.name)||"Unnamed company";
-  const detail=document.createElement("small");detail.textContent=safe(c.adminEmail)+" · "+safe(c.phone)+" · "+safe(c.currency||"KES")+" · "+safe(c.plan||"trial");info.append(name,detail);
+  const detail=document.createElement("small");const sub=c.subscription||{};const plan=(sub.plan||c.plan||"free").toUpperCase();const billing=(sub.status||"trial").replaceAll("_"," ");const cycle=(sub.billingCycle||"none").replaceAll("_"," ");const renewal=sub.renewalAt?" · renews "+sub.renewalAt:"";detail.textContent=safe(c.adminEmail)+" · "+safe(c.phone)+" · "+safe(c.currency||"KES")+" · PLAN: "+plan+" · "+billing.toUpperCase()+" · "+cycle.toUpperCase()+renewal;info.append(name,detail);
   const actions=document.createElement("div");actions.className="company-actions";
   const edit=document.createElement("button");edit.className="btn";edit.textContent="Workspace & branding";edit.onclick=()=>openWorkspaceEditor(c);actions.append(edit);
   const subscription=document.createElement("button");subscription.className="btn";subscription.textContent="Subscription";subscription.onclick=()=>openSubscriptionEditor(c);actions.append(subscription);

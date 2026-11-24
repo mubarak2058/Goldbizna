@@ -116,7 +116,7 @@ table{max-width:100%}
 .toolbar>*{min-width:0;max-width:100%}
 .card,.panel,.stat,.mini,.intro,.form-box,.table-box{min-width:0;overflow-wrap:anywhere}
 .modal{padding:clamp(8px,2vw,20px)}
-.modalCard,.modal-card,.modal-content{width:min(100%,900px);max-width:100%;max-height:calc(100dvh - 24px);overflow:auto}
+.modalCard,.modal-card,.modal-content{width:min(100%,900px);max-width:100%;max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);overflow:auto}
 button,a{touch-action:manipulation}
 @media(min-width:1400px){
  .page,.content,.wrap{max-width:1600px;margin-left:auto;margin-right:auto}
@@ -149,7 +149,7 @@ button,a{touch-action:manipulation}
  .toolbar>*{flex:1 1 145px;min-width:0}
  .field,.field input,.field select,.field textarea{width:100%;min-width:0}
  .table-wrap,.tableWrap,.scroll,.items{max-width:100%;overflow-x:auto}
- .modalCard,.modal-card,.modal-content{width:100%;max-height:calc(100dvh - 16px);padding:14px}
+ .modalCard,.modal-card,.modal-content{width:100%;max-height:calc(100vh - 16px);max-height:calc(100dvh - 16px);padding:14px}
  .form .full,.field.full{grid-column:1/-1}
 }
 @media(max-width:380px){
@@ -172,6 +172,6 @@ button,a{touch-action:manipulation}
  .totalBox{margin-left:0;flex:1 1 100%;text-align:left}
 }
 @media(orientation:landscape) and (max-height:520px){
- .modalCard,.modal-card,.modal-content{max-height:calc(100dvh - 12px)}
- .sidebar{max-height:calc(100dvh - 64px)}
+ .modalCard,.modal-card,.modal-content{max-height:calc(100vh - 12px);max-height:calc(100dvh - 12px)}
+ .sidebar{max-height:calc(100vh - 64px);max-height:calc(100dvh - 64px)}
 }

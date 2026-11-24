@@ -75,3 +75,24 @@ tr:hover td{background:#f7f9ff}
 }
 /* Keep POS cart column headings in their original grid layout on small screens. */
 @media(max-width:640px){.pos-page .head{flex-direction:initial!important}}
+
+
+/* Final cross-page brand normalization: red, blue and white only. */
+:root{color-scheme:light;--bg:#f4f7ff;--panel:#fff;--line:#dbe5f7;--gold:#155eef;--green:#155eef;--red:#e32636}
+body{background:#f4f7ff!important;color:#10234b!important}
+header,header.top,.top, .topbar{background:linear-gradient(110deg,#123b8a,#155eef)!important;color:#fff!important}
+nav:not(.nav){background:#155eef!important;color:#fff!important}
+nav:not(.nav) a,nav:not(.nav) button{color:#123b8a!important;background:#fff!important}
+nav:not(.nav) a:hover,nav:not(.nav) button:hover{background:#eaf1ff!important;color:#155eef!important}
+h1,h2,h3,.brand,.value,.stat b,.card-value{color:#155eef!important}
+.brand span,.eyebrow{color:#e32636!important}
+button,.btn,.primary,.save-btn,.login-btn{background:#155eef!important;color:#fff!important;border-color:#155eef!important}
+button.secondary,.btn.secondary,.btn.light,.gray{background:#fff!important;color:#123b8a!important;border:1px solid #dbe5f7!important}
+button.danger,.delete,.logoutBtn,.btn-danger{background:#e32636!important;color:#fff!important;border-color:#e32636!important}
+input,select,textarea{background:#fff!important;color:#10234b!important;border-color:#dbe5f7!important}
+th{background:#eaf1ff!important;color:#123b8a!important}
+.card,.panel,.stat,.intro,.filters,.form-box,.table-box{background:#fff!important;border-color:#dbe5f7!important}
+.sidebar{background:#fff!important}
+.nav a.active,.nav a:hover{background:#eaf1ff!important;color:#155eef!important}
+footer,.footer-card,.notice{background:#eaf1ff!important;color:#123b8a!important}
+@media(max-width:640px){nav:not(.nav){background:#155eef!important}}

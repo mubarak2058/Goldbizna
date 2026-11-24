@@ -1,0 +1,16 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // TEMPORARY DEVELOPMENT ACCESS FOR THE LEGACY MABROUK TRADER'S INVENTORY.
+    // Anyone who knows this Firebase project can read, create, edit, or delete
+    // inventory documents while these rules are deployed.
+    match /inventory/{productId} {
+      allow read, create, update, delete: if true;
+    }
+
+    // Keep every other collection closed during the inventory-only test.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

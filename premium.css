@@ -1,45 +1,51 @@
-/* MABROUK TRADER'S POS Pro — Premium 2026 visual system
+/* MABROUK TRADER'S POS Pro — Red / Blue / White visual system
    Presentation-only layer: preserves existing page logic and Firebase integrations. */
 :root{
- --mt-ink:#17231d;--mt-ink-2:#22352a;--mt-green:#087a0b;--mt-green-2:#0b9a38;
- --mt-gold:#d6ad55;--mt-bg:#f3f6f4;--mt-surface:#fff;--mt-line:#e3eae5;
- --mt-muted:#718078;--mt-danger:#c62828;--mt-radius:16px;
- --mt-shadow:0 12px 32px rgba(21,42,29,.07);
+ --mt-blue:#155eef;--mt-blue-dark:#123b8a;--mt-blue-soft:#eaf1ff;
+ --mt-red:#e32636;--mt-red-dark:#b91c2c;--mt-red-soft:#fff0f1;
+ --mt-white:#ffffff;--mt-bg:#f4f7ff;--mt-surface:#ffffff;
+ --mt-line:#dbe5f7;--mt-muted:#52658a;--mt-ink:#10234b;
+ --mt-radius:16px;--mt-shadow:0 12px 32px rgba(21,62,140,.09);
 }
-*{scrollbar-color:#c8d5cc transparent}
-body{background:var(--mt-bg)!important;color:var(--mt-ink)!important}
+*{scrollbar-color:#9bb7ee #f4f7ff}
+html,body{background:var(--mt-bg)!important;color:var(--mt-ink)!important}
 button,a,input,select,textarea{transition:background .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
 button{font-weight:700}
 button:hover{filter:brightness(1.04)}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--mt-green-2)!important;box-shadow:0 0 0 3px rgba(11,154,56,.12)!important}
-.topbar,.top,header{background:linear-gradient(110deg,#14251b,#20392a)!important;color:#fff!important;box-shadow:0 5px 20px rgba(12,28,18,.13)!important}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--mt-blue)!important;box-shadow:0 0 0 3px rgba(21,94,239,.14)!important}
+.topbar,.top,header{background:linear-gradient(110deg,var(--mt-blue-dark),var(--mt-blue))!important;color:var(--mt-white)!important;box-shadow:0 5px 20px rgba(18,59,138,.16)!important}
 .brand{letter-spacing:.2px}
-.brand span{color:var(--mt-gold)!important}
-.sidebar{background:#fff!important;border-right:1px solid var(--mt-line)!important;box-shadow:5px 0 24px rgba(20,45,28,.025)}
+.brand span{color:var(--mt-red)!important}
+.sidebar{background:var(--mt-white)!important;border-right:1px solid var(--mt-line)!important;box-shadow:5px 0 24px rgba(18,59,138,.04)}
 .nav a,nav a{border-radius:10px!important;transition:all .18s ease}
-.nav a:hover,.nav a.active{background:#edf7ef!important;color:#087a0b!important}
+.nav a:hover,.nav a.active{background:var(--mt-blue-soft)!important;color:var(--mt-blue-dark)!important}
 .main,.page,.content,.container{color:var(--mt-ink)}
 .card,.panel,.mini,.stat,.summary-card,.form-box,.table-box,.filters,.customers,.title,.customer{
  background:var(--mt-surface)!important;border:1px solid var(--mt-line)!important;
  border-radius:var(--mt-radius)!important;box-shadow:var(--mt-shadow)!important;
 }
 .card,.panel,.mini,.stat{overflow:hidden}
-h1,h2,h3{letter-spacing:-.35px}
+h1,h2,h3{letter-spacing:-.35px;color:var(--mt-ink)}
 h1{font-weight:850!important}
 .sub,.subtitle,.page-head p,.head p{color:var(--mt-muted)!important}
-.btn,.green,.primary,.save-btn,.login-btn,button.green{
- background:linear-gradient(135deg,#087a0b,#0b9635)!important;color:#fff!important;
- border:0!important;border-radius:10px!important;box-shadow:0 5px 12px rgba(8,122,11,.14)
+.btn,.green,.primary,.save-btn,.login-btn,button.green,button[type=submit]{
+ background:var(--mt-blue)!important;color:var(--mt-white)!important;
+ border:1px solid var(--mt-blue)!important;border-radius:10px!important;
+ box-shadow:0 5px 12px rgba(21,94,239,.16)
 }
-.btn.light,.secondary,.gray{border-radius:10px!important}
-input,select,textarea{border-radius:10px!important;border-color:#dce5de!important}
+.btn.secondary,.btn.light,.secondary,.gray{background:var(--mt-white)!important;color:var(--mt-blue-dark)!important;border:1px solid var(--mt-line)!important;border-radius:10px!important}
+.danger,.delete,.logout,.logout-btn,.btn-danger{color:var(--mt-red)!important}
+button.danger,button.delete,button.btn-danger{background:var(--mt-red)!important;color:var(--mt-white)!important;border-color:var(--mt-red)!important}
+input,select,textarea{border-radius:10px!important;border-color:var(--mt-line)!important;background:var(--mt-white)!important;color:var(--mt-ink)!important}
 table{border-collapse:separate!important;border-spacing:0}
-th{background:#f4f8f5!important;color:#53645a!important}
-td,th{border-bottom:1px solid #eaf0ec!important}
-tr:hover td{background:#f8fbf9}
-.value,.stat b,.balance{color:#087a0b!important}
-.footer-card{border:1px solid var(--mt-line);background:#f7faf8!important;border-radius:12px!important}
-.logout,.logout-btn{color:#fff!important}
+th{background:var(--mt-blue-soft)!important;color:var(--mt-blue-dark)!important}
+td,th{border-bottom:1px solid var(--mt-line)!important}
+tr:hover td{background:#f7f9ff}
+.value,.stat b,.balance,.card-value{color:var(--mt-blue)!important}
+.footer-card,.notice{border:1px solid var(--mt-line)!important;background:var(--mt-blue-soft)!important;color:var(--mt-blue-dark)!important;border-radius:12px!important}
+.badge-danger,.status-danger,.out-of-stock{background:var(--mt-red-soft)!important;color:var(--mt-red-dark)!important}
+.badge-success,.status-success,.in-stock{background:var(--mt-blue-soft)!important;color:var(--mt-blue-dark)!important}
+[style*="#087a0b"],[style*="#0b9635"],[style*="#0b9a38"],[style*="green"]{color:var(--mt-blue)!important}
 @media(max-width:900px){
  .sidebar{width:205px!important}
  .main{margin-left:205px!important}
@@ -59,10 +65,10 @@ tr:hover td{background:#f8fbf9}
  .page-head{align-items:flex-start!important;flex-direction:column!important}
  .toolbar{display:flex!important;flex-wrap:wrap!important}
  .toolbar>*{min-width:0!important;flex:1 1 145px!important}
- .login-card{border-radius:22px!important;box-shadow:0 18px 48px rgba(0,0,0,.22)!important}
+ .login-card{border-radius:22px!important;box-shadow:0 18px 48px rgba(18,59,138,.18)!important}
 }
 @media print{
- body{background:#fff!important}
+ body{background:var(--mt-white)!important}
  .top,.topbar,.sidebar,nav,.actions,.toolbar,button{display:none!important}
  .main{margin:0!important;padding:0!important}
  .card,.panel{box-shadow:none!important;break-inside:avoid}

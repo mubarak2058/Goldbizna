@@ -62,7 +62,6 @@ body{background:#f5f7f6;color:#222;overflow-x:hidden}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
 const firebaseConfig={
   apiKey:"AIzaSyA8XB6aY45-yHT0uZ6NUhptMoNkYqgwqOs",
@@ -76,13 +75,11 @@ const firebaseConfig={
 
 const app=initializeApp(firebaseConfig);
 const db=getFirestore(app);
-const auth=getAuth(app);
 const inventoryRef=collection(db,"inventory");
 const $=id=>document.getElementById(id);
 
 let products=[];
 let unsubscribeInventory=null;
-let currentUser=null;
 
 const money=n=>'KSh '+Number(n||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
 function nameOf(p){return p?.name||p?.productName||p?.title||'Unnamed Product'}
@@ -109,7 +106,7 @@ function render(){
   $('units').textContent=products.reduce((n,p)=>n+stockOf(p),0);
   $('costValue').textContent=money(products.reduce((n,p)=>n+stockOf(p)*costOf(p),0));
   $('salesValue').textContent=money(products.reduce((n,p)=>n+stockOf(p)*priceOf(p),0));
-  $('userName').textContent=currentUser?.displayName||currentUser?.email||localStorage.getItem('goldbizna_username')||'User';
+  $('userName').textContent=localStorage.getItem('goldbizna_username')||'User';
 }
 
 function stopInventoryListener(){
@@ -145,8 +142,6 @@ function startInventoryListener(){
 }
 
 async function addProduct(){
-  if(!currentUser)return alert('You must be signed in before saving a product.');
-
   const name=$('name').value.trim(),stock=Number($('stock').value),cost=Number($('cost').value),price=Number($('price').value),low=Number($('low').value),sku=$('sku').value.trim();
 
   if(!name)return alert('Enter product name.');
@@ -177,7 +172,6 @@ async function addProduct(){
 }
 
 async function editProduct(id){
-  if(!currentUser)return alert('You must be signed in before editing a product.');
   const p=products.find(x=>x.id===id);if(!p)return;
 
   const nc=prompt('Buying / cost price:',costOf(p));if(nc===null)return;
@@ -197,7 +191,6 @@ async function editProduct(id){
 }
 
 async function delProduct(id){
-  if(!currentUser)return alert('You must be signed in before deleting a product.');
   if(!confirm('Delete this product from inventory?'))return;
 
   try{
@@ -217,26 +210,10 @@ function focusName(){
   setTimeout(()=>$('name').focus(),250);
 }
 
-onAuthStateChanged(auth,user=>{
-  currentUser=user;
-
-  if(!user){
-    stopInventoryListener();
-    products=[];
-    render();
-    $('userName').textContent='Not signed in';
-    $('userRole').textContent='Authentication required';
-    setCloudStatus('Sign in required',false);
-    $('authNote').textContent='You are not signed in. Please sign in through login.html before accessing Firebase inventory.';
-    $('authNote').style.display='block';
-    return;
-  }
-
-  $('userName').textContent=user.displayName||user.email||'User';
-  $('userRole').textContent='Signed in';
-  $('authNote').style.display='none';
-  startInventoryListener();
-});
+$('userName').textContent=localStorage.getItem('goldbizna_username')||'User';
+$('userRole').textContent='Inventory';
+$('authNote').style.display='none';
+startInventoryListener();
 
 window.addProduct=addProduct;
 window.editProduct=editProduct;

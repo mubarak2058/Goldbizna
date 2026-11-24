@@ -29,7 +29,7 @@ body{background:#f5f7f6;color:#222;overflow-x:hidden}
 <body>
 <header class="topbar">
 <div class="brand">MABROUK <span>TRADER'S</span></div><div class="store">Inventory Management</div>
-<div class="top-actions"><div onclick="location.reload()" style="cursor:pointer">↻ Refresh</div><div class="admin"><div class="avatar">A</div><div><b id="userName">Checking...</b><br><small id="userRole">Checking access...</small></div></div></div>
+<div class="top-actions"><div onclick="location.reload()" style="cursor:pointer">↻ Refresh</div><div class="admin"><div class="avatar">A</div><div><b id="userName">Checking...</b><br><small id="userRole">Inventory connection...</small></div></div></div>
 </header>
 <aside class="sidebar"><nav class="nav">
 <a href="index.html"><span class="nav-icon">⌂</span>Home</a>
@@ -52,7 +52,7 @@ body{background:#f5f7f6;color:#222;overflow-x:hidden}
 
 <div class="stats"><div class="stat"><small>Products</small><b id="productCount">0</b></div><div class="stat"><small>Units in Stock</small><b id="units">0</b></div><div class="stat"><small>Stock Cost Value</small><b id="costValue">KSh 0.00</b></div><div class="stat"><small>Potential Sales Value</small><b id="salesValue">KSh 0.00</b></div></div>
 
-<div class="panel" id="addPanel"><div class="panel-head"><h2>Add Product</h2><span id="cloudStatus" class="online">Checking authentication...</span></div>
+<div class="panel" id="addPanel"><div class="panel-head"><h2>Add Product</h2><span id="cloudStatus" class="online">Connecting to Firebase...</span></div>
 <div class="form-grid"><div class="field"><label>Product Name *</label><input id="name" placeholder="e.g. Sugar 1kg"></div><div class="field"><label>Stock *</label><input id="stock" type="number" min="0" step="0.01" placeholder="e.g. 20"></div><div class="field"><label>Buying / Cost Price *</label><input id="cost" type="number" min="0" step="0.01" placeholder="e.g. 90"></div><div class="field"><label>Selling Price *</label><input id="price" type="number" min="0" step="0.01" placeholder="e.g. 120"></div><div class="field"><label>Low Stock Level</label><input id="low" type="number" min="0" step="0.01" value="5"></div><div class="field"><label>SKU / Barcode (optional)</label><input id="sku" placeholder="Optional code"></div></div>
 <div class="actions2"><button class="btn" onclick="addProduct()">Save Product</button><button class="btn secondary" onclick="resetForm()">Clear</button></div></div>
 
@@ -132,7 +132,7 @@ function startInventoryListener(){
     let message='Firebase inventory error: '+(err?.message||code);
 
     if(code==='permission-denied'){
-      message='Firebase denied access to the inventory. Your Firestore Rules must allow this signed-in user to read the inventory collection.';
+      message='Firebase denied access to inventory. The live Firestore Rules must allow public read access to the inventory collection for this temporary no-login mode. Deploy the inventory-only rules from firestore.rules.';
     }
 
     setCloudStatus('☁ Firebase access failed',false);

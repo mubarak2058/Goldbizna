@@ -96,3 +96,82 @@ th{background:#eaf1ff!important;color:#123b8a!important}
 .nav a.active,.nav a:hover{background:#eaf1ff!important;color:#155eef!important}
 footer,.footer-card,.notice{background:#eaf1ff!important;color:#123b8a!important}
 @media(max-width:640px){nav:not(.nav){background:#155eef!important}}
+
+
+/* RESPONSIVE FIT — phones, tablets, laptops and wide desktop screens.
+   Layout-only overrides; no application logic or stored data is changed. */
+html{width:100%;min-width:0;overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{width:100%;min-width:0;max-width:100%;overflow-x:hidden}
+*,*::before,*::after{box-sizing:border-box;min-width:0}
+img,video,canvas,svg{max-width:100%;height:auto}
+input,select,textarea,button{max-width:100%;font:inherit}
+input,select,textarea{min-width:0}
+.page,.content,.main,.wrap,main,.container{width:auto;max-width:100%;min-width:0}
+.table-wrap,.tableWrap,.table-wrap,.table,.wrap,.scroll,.body,.items{max-width:100%}
+.table-wrap,.tableWrap,.table-wrap,.table,.scroll,.items{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{max-width:100%}
+.cards,.stats,.summaryStrip,.grid,.layout,.work,.customers,.saleTools,.form-grid,.formgrid,.permissions,.perms,.detail,.detailGrid,.launch-grid,.tiles,.summary{min-width:0}
+.cards,.stats,.summaryStrip,.grid,.layout,.work,.customers,.saleTools,.form-grid,.formgrid,.permissions,.perms,.detail,.detailGrid,.launch-grid,.tiles,.summary{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+.toolbar,.actions,.buttons,.row-actions,.modalActions,.top-actions,.head-actions{min-width:0;flex-wrap:wrap}
+.toolbar>*{min-width:0;max-width:100%}
+.card,.panel,.stat,.mini,.intro,.form-box,.table-box{min-width:0;overflow-wrap:anywhere}
+.modal{padding:clamp(8px,2vw,20px)}
+.modalCard,.modal-card,.modal-content{width:min(100%,900px);max-width:100%;max-height:calc(100dvh - 24px);overflow:auto}
+button,a{touch-action:manipulation}
+@media(min-width:1400px){
+ .page,.content,.wrap{max-width:1600px;margin-left:auto;margin-right:auto}
+}
+@media(max-width:900px){
+ .work{grid-template-columns:minmax(0,1fr)}
+ .side{max-height:360px}
+ .toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .main{min-width:0}
+}
+@media(max-width:640px){
+ html,body{width:100%;overflow-x:hidden}
+ .top,.topbar,header{max-width:100%;gap:8px}
+ .top{height:auto;min-height:56px;flex-wrap:wrap;padding:8px 10px}
+ .top .searchWrap{flex:1 1 180px;max-width:none;min-width:0}
+ .top .search{min-width:0;width:100%}
+ .topBtns{flex:0 0 auto}
+ .topbar{height:auto;min-height:56px;flex-wrap:wrap;padding:8px 10px}
+ .top-actions{gap:6px;flex-wrap:wrap}
+ .sidebar{width:100%!important;max-width:100%;height:auto;max-height:none;overflow:visible}
+ .nav{width:100%;max-width:100%;overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap!important;-webkit-overflow-scrolling:touch}
+ .nav a{flex:0 0 auto}
+ .main{width:100%;max-width:100%;margin:0!important;padding-top:0!important}
+ .content,.page,.wrap,main{padding:12px!important}
+ .page-head{flex-wrap:wrap;gap:10px}
+ .page-head>*{max-width:100%}
+ .cards,.stats,.summaryStrip,.customers,.grid,.form-grid,.formgrid,.permissions,.perms,.detail,.detailGrid,.launch-grid,.tiles,.summary{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .saleTools,.layout{grid-template-columns:minmax(0,1fr)!important}
+ .toolbar{display:flex;flex-wrap:wrap}
+ .toolbar>*{flex:1 1 145px;min-width:0}
+ .field,.field input,.field select,.field textarea{width:100%;min-width:0}
+ .table-wrap,.tableWrap,.scroll,.items{max-width:100%;overflow-x:auto}
+ .modalCard,.modal-card,.modal-content{width:100%;max-height:calc(100dvh - 16px);padding:14px}
+ .form .full,.field.full{grid-column:1/-1}
+}
+@media(max-width:380px){
+ .cards,.stats,.summaryStrip,.customers,.grid,.form-grid,.formgrid,.permissions,.perms,.detail,.detailGrid,.launch-grid,.tiles,.summary{grid-template-columns:minmax(0,1fr)!important}
+ .brand{font-size:14px!important}
+ .topBtns{gap:4px}
+ .topBtn{width:38px;height:38px}
+ .head,.row{font-size:10px}
+ .content,.page,.wrap,main{padding:9px!important}
+}
+/* POS cart stays usable on narrow screens without shrinking its columns to unreadable sizes. */
+@media(max-width:640px){
+ .pos-page .work,.work{grid-template-columns:minmax(0,1fr)!important}
+ .cart{min-width:0;min-height:420px}
+ .cart .body{overflow-x:auto}
+ .cart .head,.cart .row{min-width:590px}
+ .side{display:block;max-height:330px;overflow:auto}
+ .actions{gap:6px}
+ .actions .act{flex:1 1 105px}
+ .totalBox{margin-left:0;flex:1 1 100%;text-align:left}
+}
+@media(orientation:landscape) and (max-height:520px){
+ .modalCard,.modal-card,.modal-content{max-height:calc(100dvh - 12px)}
+ .sidebar{max-height:calc(100dvh - 64px)}
+}

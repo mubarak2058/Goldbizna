@@ -6,7 +6,15 @@ initializeApp();
 const db = getFirestore();
 
 function requireSignedIn(request) {
-  if (!request.auth) throw new HttpsError("unauthenticated", "Sign in with any Firebase account first.");
+  if (!request.auth) throw new HttpsError("unauthenticated", "Sign in with a Firebase account first.");
+}
+
+const PLATFORM_OWNER_UID = "ZW5pqCx3FvSzxtXBiZMMC6fP5ro2";
+function requirePlatformOwner(request) {
+  requireSignedIn(request);
+  if (request.auth.uid !== PLATFORM_OWNER_UID) {
+    throw new HttpsError("permission-denied", "Only the platform owner can use this control-room action.");
+  }
 }
 
 function cleanText(value, max = 100) {
@@ -16,7 +24,7 @@ function cleanText(value, max = 100) {
 // Creates only a company registry record. It never copies, edits or deletes
 // the existing root-level MABROUK POS collections.
 export const createCompany = onCall(async (request) => {
-  requireSignedIn(request);
+  requirePlatformOwner(request);
   const name = cleanText(request.data?.name, 80);
   const legalName = cleanText(request.data?.legalName, 120);
   const email = cleanText(request.data?.adminEmail, 160).toLowerCase();
@@ -69,8 +77,7 @@ export const createCompany = onCall(async (request) => {
 
 export const updateCompanySubscription = onCall(async (request) => {
   requireSignedIn(request);
-  const PLATFORM_OWNER_UID = "ZW5pqCx3FvSzxtXBiZMMC6fP5ro2";
-  if (request.auth.uid !== PLATFORM_OWNER_UID) throw new HttpsError("permission-denied", "Only the platform owner can manage subscription plans.");
+  requirePlatformOwner(request);
   const companyId = cleanText(request.data?.companyId, 128);
   const plan = cleanText(request.data?.plan, 24);
   const status = cleanText(request.data?.status, 24);
@@ -89,7 +96,7 @@ export const updateCompanySubscription = onCall(async (request) => {
 });
 
 export const listCompanies = onCall(async (request) => {
-  requireSignedIn(request);
+  requirePlatformOwner(request);
   const snap = await db.collection("companies").orderBy("createdAt", "desc").limit(200).get();
   return { companies: snap.docs.map((d) => ({ id: d.id, ...d.data() })) };
 });
@@ -124,8 +131,10 @@ export const updateCompanyWorkspace = onCall(async (request) => {
   const companyRef = db.collection("companies").doc(companyId);
   await db.runTransaction(async (tx) => {
     const [memberSnap, companySnap] = await Promise.all([tx.get(memberRef), tx.get(companyRef)]);
-    if (!memberSnap.exists || memberSnap.data().status !== "active" || memberSnap.data().role !== "company_admin") {
-      throw new HttpsError("permission-denied", "Only an active company administrator can edit this workspace.");
+    const isPlatformOwner = actorUid === PLATFORM_OWNER_UID;
+    const isCompanyAdmin = memberSnap.exists && memberSnap.data().status === "active" && memberSnap.data().role === "company_admin";
+    if (!isPlatformOwner && !isCompanyAdmin) {
+      throw new HttpsError("permission-denied", "Only the platform owner or an active company administrator can edit this workspace.");
     }
     if (!companySnap.exists) throw new HttpsError("not-found", "Company workspace not found.");
     tx.update(companyRef, {
@@ -143,7 +152,7 @@ export const updateCompanyWorkspace = onCall(async (request) => {
 });
 
 export const setCompanyStatus = onCall(async (request) => {
-  requireSignedIn(request);
+  requirePlatformOwner(request);
   const companyId = cleanText(request.data?.companyId, 128);
   const status = cleanText(request.data?.status, 20);
   if (!companyId || !["active", "suspended", "pending"].includes(status)) {
@@ -164,7 +173,7 @@ export const setCompanyStatus = onCall(async (request) => {
 
 // Returns the latest platform audit events for signed-in control-room users.
 export const listPlatformAuditLogs = onCall(async (request) => {
-  requireSignedIn(request);
+  requirePlatformOwner(request);
   const snap = await db.collection("platformAuditLogs")
     .orderBy("createdAt", "desc")
     .limit(50)
@@ -188,7 +197,7 @@ export const listPlatformAuditLogs = onCall(async (request) => {
 
 // Lists recent company memberships for the signed-in platform console.
 export const listPlatformUsers = onCall(async (request) => {
-  requireSignedIn(request);
+  requirePlatformOwner(request);
   const snap = await db.collection("companyMemberships")
     .orderBy("createdAt", "desc")
     .limit(100)

@@ -375,10 +375,10 @@ async function loadAuditLogs(){
   for(const log of logs){
    const item=document.createElement("div");item.className="audit-item";
    const info=document.createElement("div");const title=document.createElement("b");
-   const labels={"company.created":"Company registered","company.status_changed":"Company status changed","company.invitation_accepted":"Company invitation accepted","membership.updated":"Company membership updated","company.workspace_updated":"Company workspace and branding updated","company.subscription_updated":"Company subscription updated"};
+   const labels={"company.created":"Company registered","company.status_changed":"Company status changed","company.invitation_accepted":"Company invitation accepted","membership.updated":"Company membership updated","company.workspace_updated":"Company workspace and branding updated","company.subscription_updated":"Company subscription updated","room.created":"Room created","room.updated":"Room updated"};
    title.textContent=labels[log.action]||log.action||"Platform activity";
    const detail=document.createElement("small");
-   detail.textContent=[log.companyId?"Company ID: "+log.companyId:"",log.status?"Status: "+log.status:"",log.plan?"Plan: "+log.plan:"",log.role?"Role: "+log.role:"",log.email||"",log.actorUid?"By: "+log.actorUid:""].filter(Boolean).join(" · ");
+   detail.textContent=[log.companyId?"Company ID: "+log.companyId:"",log.roomName?"Room: "+log.roomName:"",log.status?"Status: "+log.status:"",log.plan?"Plan: "+log.plan:"",log.role?"Role: "+log.role:"",log.email||"",log.actorUid?"By: "+log.actorUid:""].filter(Boolean).join(" · ");
    const time=document.createElement("span");time.className="audit-time";time.textContent=formatAuditDate(log.createdAt);
    info.append(title,detail);item.append(info,time);target.append(item);
   }

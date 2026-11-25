@@ -320,7 +320,7 @@ export const createCompanyRoom = onCall(async (request) => {
   const notes = cleanText(request.data?.notes, 300);
   if (!companyId || roomName.length < 2) throw new HttpsError("invalid-argument", "Choose a company and enter a room name.");
   if (!/^https:\/\//i.test(roomUrl)) throw new HttpsError("invalid-argument", "Room link must use HTTPS.");
-  if (managerEmail && !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(managerEmail)) {
+  if (managerEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(managerEmail)) {
     throw new HttpsError("invalid-argument", "Enter a valid manager email address.");
   }
   const companyRef = db.collection("companies").doc(companyId);

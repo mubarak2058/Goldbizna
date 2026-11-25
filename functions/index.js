@@ -307,3 +307,83 @@ export const acceptCompanyInvitation = onCall(async (request) => {
   });
   return { companyId, status: "active" };
 });
+
+
+// Multi-room registry. Rooms are separate workspace entry points and do not
+// move or rewrite legacy POS collections.
+export const createCompanyRoom = onCall(async (request) => {
+  requirePlatformOwner(request);
+  const companyId = cleanText(request.data?.companyId, 128);
+  const roomName = cleanText(request.data?.roomName, 80);
+  const roomUrl = cleanText(request.data?.roomUrl, 500);
+  const managerEmail = cleanText(request.data?.managerEmail, 160).toLowerCase();
+  const notes = cleanText(request.data?.notes, 300);
+  if (!companyId || roomName.length < 2) throw new HttpsError("invalid-argument", "Choose a company and enter a room name.");
+  if (!/^https:\/\//i.test(roomUrl)) throw new HttpsError("invalid-argument", "Room link must use HTTPS.");
+  if (managerEmail && !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(managerEmail)) {
+    throw new HttpsError("invalid-argument", "Enter a valid manager email address.");
+  }
+  const companyRef = db.collection("companies").doc(companyId);
+  const companySnap = await companyRef.get();
+  if (!companySnap.exists) throw new HttpsError("not-found", "Company not found.");
+  if (managerEmail) {
+    const memberSnap = await db.collection("companyMemberships")
+      .where("companyId", "==", companyId).where("email", "==", managerEmail).limit(1).get();
+    if (memberSnap.empty || memberSnap.docs[0].data().status !== "active" ||
+        !["manager", "company_admin"].includes(memberSnap.docs[0].data().role)) {
+      throw new HttpsError("failed-precondition", "The room manager must be an active manager or company administrator in this company.");
+    }
+  }
+  const ref = db.collection("companyRooms").doc();
+  await ref.create({
+    companyId, companyName: cleanText(companySnap.data().name, 80),
+    roomName, roomUrl, managerEmail, notes, status: "active",
+    createdAt: FieldValue.serverTimestamp(), createdBy: request.auth.uid,
+    updatedAt: FieldValue.serverTimestamp()
+  });
+  await db.collection("platformAuditLogs").add({
+    action: "room.created", companyId, roomId: ref.id, roomName,
+    actorUid: request.auth.uid, createdAt: FieldValue.serverTimestamp()
+  });
+  return { roomId: ref.id, status: "active" };
+});
+
+export const listCompanyRooms = onCall(async (request) => {
+  requirePlatformOwner(request);
+  const snap = await db.collection("companyRooms").orderBy("createdAt", "desc").limit(300).get();
+  return { rooms: snap.docs.map(d => ({ id: d.id, ...d.data(),
+    createdAt: d.data().createdAt?.toDate?.()?.toISOString?.() || null
+  })) };
+});
+
+export const updateCompanyRoom = onCall(async (request) => {
+  requirePlatformOwner(request);
+  const roomId = cleanText(request.data?.roomId, 128);
+  const roomName = cleanText(request.data?.roomName, 80);
+  const roomUrl = cleanText(request.data?.roomUrl, 500);
+  const managerEmail = cleanText(request.data?.managerEmail, 160).toLowerCase();
+  const notes = cleanText(request.data?.notes, 300);
+  const status = cleanText(request.data?.status, 20);
+  if (!roomId || roomName.length < 2 || !/^https:\/\//i.test(roomUrl) ||
+      !["active", "suspended"].includes(status)) {
+    throw new HttpsError("invalid-argument", "Room details, HTTPS link and valid status are required.");
+  }
+  const ref = db.collection("companyRooms").doc(roomId);
+  const snap = await ref.get();
+  if (!snap.exists) throw new HttpsError("not-found", "Room not found.");
+  if (managerEmail) {
+    const memberSnap = await db.collection("companyMemberships")
+      .where("companyId", "==", snap.data().companyId).where("email", "==", managerEmail).limit(1).get();
+    if (memberSnap.empty || memberSnap.docs[0].data().status !== "active" ||
+        !["manager", "company_admin"].includes(memberSnap.docs[0].data().role)) {
+      throw new HttpsError("failed-precondition", "The room manager must be an active manager or company administrator in this company.");
+    }
+  }
+  await ref.update({ roomName, roomUrl, managerEmail, notes, status,
+    updatedAt: FieldValue.serverTimestamp(), updatedBy: request.auth.uid });
+  await db.collection("platformAuditLogs").add({
+    action: "room.updated", companyId: snap.data().companyId, roomId, roomName, status,
+    actorUid: request.auth.uid, createdAt: FieldValue.serverTimestamp()
+  });
+  return { roomId, status };
+});

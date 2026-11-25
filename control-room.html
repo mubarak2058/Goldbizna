@@ -126,6 +126,18 @@
 </section>
 <section class="panel" style="margin-top:13px">
  <div class="panelhead"><div><h2>Platform user management</h2><div class="muted">Recent company memberships, roles and invitation status</div></div><button class="btn" id="refreshUsers">↻ Refresh users</button></div>
+ <div class="workspace-editor" style="margin:0 0 13px">
+  <h3>Add user to a company</h3>
+  <form id="addUserForm">
+   <div class="formgrid">
+    <div class="field"><label for="newUserCompany">Company *</label><select id="newUserCompany" required><option value="">Load companies first…</option></select></div>
+    <div class="field"><label for="newUserEmail">User email *</label><input id="newUserEmail" type="email" required maxlength="160" placeholder="staff@example.com"></div>
+    <div class="field"><label for="newUserRole">Role *</label><select id="newUserRole" required><option value="staff">Staff</option><option value="manager">Manager</option><option value="viewer">Viewer (read only)</option><option value="company_admin">Company administrator</option></select></div>
+   </div>
+   <div class="formactions"><button class="btn gold" id="addUserBtn" type="submit">Add user / create invitation</button><button class="btn" type="reset">Clear</button></div>
+  </form>
+  <div class="muted" style="margin-top:9px">Creates a pending invitation for the selected company and role. The user must sign in using this email and complete the invitation acceptance flow. This does not create a password or send an email automatically.</div>
+ </div>
  <div class="user-tools"><input id="userSearch" type="search" placeholder="Search email, user ID or company ID…"><select id="userFilter"><option value="all">All membership statuses</option><option value="active">Active</option><option value="invitation_pending">Invitation pending</option><option value="suspended">Suspended</option></select></div>
  <div class="muted" id="userCount" style="margin-bottom:9px">User directory</div>
  <div id="userList" class="audit-list"><div class="muted">Sign in to load users.</div></div>
@@ -152,6 +164,7 @@ function withTimeout(promise,ms,label){let timer;return Promise.race([promise,ne
 function renderCompanies(companies){
  companyCache=Array.isArray(companies)?companies:[];
  renderRoomCompanyOptions();
+ renderNewUserCompanyOptions();
  const planCounts={free:0,basic:0,professional:0,enterprise:0};
  companyCache.forEach(c=>{const p=c.subscription?.plan||c.plan||"free";if(Object.prototype.hasOwnProperty.call(planCounts,p))planCounts[p]++;});
  $("planFree").textContent=planCounts.free;$("planBasic").textContent=planCounts.basic;$("planProfessional").textContent=planCounts.professional;$("planEnterprise").textContent=planCounts.enterprise;
@@ -304,6 +317,25 @@ $("roomForm").addEventListener("submit",async event=>{
  finally{busy=false;$("createRoomBtn").disabled=false;$("createRoomBtn").textContent="Create room";}
 });
 function formatAuditDate(value){if(!value)return "Time unavailable";const d=new Date(value);return Number.isNaN(d.getTime())?"Time unavailable":d.toLocaleString();}
+function renderNewUserCompanyOptions(){
+ const select=$("newUserCompany");if(!select)return;
+ const current=select.value;select.replaceChildren();
+ const first=document.createElement("option");first.value="";first.textContent="Choose a company";select.append(first);
+ companyCache.forEach(c=>{const option=document.createElement("option");option.value=c.id;option.textContent=(c.name||"Company")+" · "+String(c.status||"").toUpperCase();select.append(option);});
+ if(companyCache.some(c=>c.id===current))select.value=current;
+}
+$("addUserForm").addEventListener("submit",async event=>{
+ event.preventDefault();if(!ownerReady||busy)return;
+ const payload={companyId:$("newUserCompany").value,email:$("newUserEmail").value.trim().toLowerCase(),role:$("newUserRole").value};
+ if(!payload.companyId||!payload.email){message("Choose a company and enter the user email.","bad");return;}
+ busy=true;$("addUserBtn").disabled=true;$("addUserBtn").textContent="Adding user…";
+ try{
+  const result=await withTimeout(httpsCallable(functions,"createCompanyInvitation")(payload),15000,"Adding user timed out.");
+  message("User invitation created for "+result.data.email+". Status: pending. Ask them to sign in with that verified email and accept the company invitation.","good");
+  $("addUserForm").reset();renderNewUserCompanyOptions();await loadUsers();await loadAuditLogs();
+ }catch(error){message("Could not add user: "+(error.message||error.code||"Check the company and email."),"bad");}
+ finally{busy=false;$("addUserBtn").disabled=false;$("addUserBtn").textContent="Add user / create invitation";}
+});
 let userCache=[];
 function drawUsers(){
  const term=($("userSearch").value||"").trim().toLowerCase();

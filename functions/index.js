@@ -389,3 +389,24 @@ export const updateCompanyRoom = onCall(async (request) => {
   });
   return { roomId, status };
 });
+
+// Adds a pending company membership from the platform owner control room.
+export const createCompanyInvitation = onCall(async (request) => {
+  requirePlatformOwner(request);
+  const companyId = cleanText(request.data?.companyId, 128);
+  const email = cleanText(request.data?.email, 160).toLowerCase();
+  const role = cleanText(request.data?.role, 40);
+  if (!companyId || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !["company_admin", "manager", "staff", "viewer"].includes(role)) {
+    throw new HttpsError("invalid-argument", "Choose a company, enter a valid email and select a role.");
+  }
+  const company = await db.collection("companies").doc(companyId).get();
+  if (!company.exists) throw new HttpsError("not-found", "Company not found.");
+  const found = await db.collection("companyMemberships").where("companyId", "==", companyId).where("email", "==", email).limit(1).get();
+  if (!found.empty && ["active", "invitation_pending"].includes(found.docs[0].data().status)) {
+    throw new HttpsError("already-exists", "This email already has an active membership or pending invitation.");
+  }
+  const ref = db.collection("companyMemberships").doc(email + "_" + companyId);
+  await ref.set({ companyId, companyName: cleanText(company.data().name, 80), email, role, status: "invitation_pending", createdAt: FieldValue.serverTimestamp(), invitedBy: request.auth.uid, updatedAt: FieldValue.serverTimestamp() });
+  await db.collection("platformAuditLogs").add({ action: "membership.invited", companyId, email, role, actorUid: request.auth.uid, createdAt: FieldValue.serverTimestamp() });
+  return { companyId, email, role, status: "invitation_pending" };
+});

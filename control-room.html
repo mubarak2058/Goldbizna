@@ -69,6 +69,22 @@
 </div>
 </section>
 <section class="panel" style="margin-top:13px">
+ <div class="panelhead"><div><h2>Multi-room management</h2><div class="muted">Create room links, assign company managers and control workspace access</div></div><span class="tag">OWNER CONTROLLED</span></div>
+ <form id="roomForm">
+  <div class="formgrid">
+   <div class="field"><label for="roomCompany">Company *</label><select id="roomCompany" required><option value="">Load companies first…</option></select></div>
+   <div class="field"><label for="roomName">Room name *</label><input id="roomName" required maxlength="80" placeholder="e.g. Main Branch / Store 2"></div>
+   <div class="field full"><label for="roomUrl">Company / room link *</label><input id="roomUrl" type="url" required maxlength="500" placeholder="https://your-company-site.com/room"><small class="muted">Paste the direct HTTPS link staff should open for this room.</small></div>
+   <div class="field"><label for="roomManager">Room manager email</label><input id="roomManager" type="email" maxlength="160" placeholder="manager@company.com"></div>
+   <div class="field"><label for="roomNotes">Room notes</label><input id="roomNotes" maxlength="300" placeholder="Branch, department or purpose"></div>
+  </div>
+  <div class="formactions"><button class="btn gold" id="createRoomBtn" type="submit">Create room</button><button class="btn" type="reset">Clear</button></div>
+ </form>
+ <div class="muted" style="margin:14px 0 8px">Registered rooms</div>
+ <div id="roomList" class="list"><div class="muted">Loading room directory…</div></div>
+ <div class="muted" style="margin-top:10px">Managers must already be active company managers or administrators. Room records store links and access status; they do not copy or move POS data.</div>
+</section>
+<section class="panel" style="margin-top:13px">
  <div class="panelhead"><div><h2>Subscription & plans centre</h2><div class="muted">Track company plans and manually manage subscription status</div></div><span class="tag">OWNER CONTROLLED</span></div>
  <div class="grid" style="margin:0 0 12px">
   <div class="tile"><div class="muted">Free plan</div><div class="metric" id="planFree">0</div></div>
@@ -128,13 +144,14 @@ import {getFunctions,httpsCallable} from "https://www.gstatic.com/firebasejs/12.
 const $=id=>document.getElementById(id);
 const functions=getFunctions(undefined,"us-central1");
 const PLATFORM_OWNER_UID="ZW5pqCx3FvSzxtXBiZMMC6fP5ro2";
-let ownerReady=false, busy=false, companyCache=[], verificationRun=0;
+let ownerReady=false, busy=false, companyCache=[], roomCache=[], verificationRun=0;
 function message(text,type=""){const el=$("mainNotice");el.textContent=text;el.className="notice"+(type?" "+type:"");}
 function network(){const ok=navigator.onLine;$("network").textContent=ok?"● Device online":"● Device offline";$("network").style.color=ok?"#45ce91":"#f07878";$("platformStatus").textContent=ok?"Online":"Offline";$("platformNote").textContent="Device network status";}
 function safe(value){return String(value??"");}
 function withTimeout(promise,ms,label){let timer;return Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error(label)),ms);})]).finally(()=>clearTimeout(timer));}
 function renderCompanies(companies){
  companyCache=Array.isArray(companies)?companies:[];
+ renderRoomCompanyOptions();
  const planCounts={free:0,basic:0,professional:0,enterprise:0};
  companyCache.forEach(c=>{const p=c.subscription?.plan||c.plan||"free";if(Object.prototype.hasOwnProperty.call(planCounts,p))planCounts[p]++;});
  $("planFree").textContent=planCounts.free;$("planBasic").textContent=planCounts.basic;$("planProfessional").textContent=planCounts.professional;$("planEnterprise").textContent=planCounts.enterprise;
@@ -234,6 +251,58 @@ $("subscriptionForm").addEventListener("submit",async event=>{
 });
 
 async function loadCompanies(){if(!ownerReady)return;const call=httpsCallable(functions,"listCompanies");$("companyList").textContent="Loading company records…";try{const result=await withTimeout(call({}),12000,"Company registry took too long to respond.");renderCompanies(result.data?.companies||[]);}catch(e){$("companyList").textContent="Company records are temporarily unavailable. Tap Refresh data to try again.";$("companyCount").textContent="—";$("activeCount").textContent="—";$("pendingCount").textContent="—";$("suspendedCount").textContent="—";throw e;}}
+function renderRoomCompanyOptions(){
+ const select=$("roomCompany");if(!select)return;
+ const current=select.value;select.replaceChildren();
+ const first=document.createElement("option");first.value="";first.textContent="Choose a company";select.append(first);
+ companyCache.forEach(c=>{const o=document.createElement("option");o.value=c.id;o.textContent=c.name||c.id;select.append(o);});
+ if(companyCache.some(c=>c.id===current))select.value=current;
+}
+function drawRooms(){
+ const target=$("roomList");if(!target)return;target.replaceChildren();
+ if(!roomCache.length){target.textContent="No rooms registered yet. Create the first room above.";return;}
+ for(const room of roomCache){
+  const row=document.createElement("div");row.className="company";
+  const info=document.createElement("div");info.style.flex="1";
+  const name=document.createElement("b");name.textContent=room.roomName||"Unnamed room";
+  const detail=document.createElement("small");detail.textContent=(room.companyName||room.companyId||"Company")+" · Manager: "+(room.managerEmail||"Not assigned")+" · "+(room.notes||"No notes")+" · "+String(room.status||"unknown").toUpperCase();
+  const link=document.createElement("a");link.href=room.roomUrl;link.target="_blank";link.rel="noopener noreferrer";link.textContent="Open room link ↗";link.style.cssText="display:inline-block;margin-top:6px;color:#c90024;font-weight:800;font-size:12px;overflow-wrap:anywhere";
+  info.append(name,detail,link);
+  const actions=document.createElement("div");actions.className="company-actions";
+  const edit=document.createElement("button");edit.className="btn";edit.textContent="Edit";edit.onclick=()=>editRoom(room);
+  const state=document.createElement("button");state.className="btn";state.textContent=room.status==="active"?"Suspend":"Activate";state.onclick=()=>saveRoom(room,{status:room.status==="active"?"suspended":"active"});
+  actions.append(edit,state);row.append(info,actions);target.append(row);
+ }
+}
+async function loadRooms(){
+ if(!ownerReady)return;
+ $("roomList").textContent="Loading rooms…";
+ try{const result=await withTimeout(httpsCallable(functions,"listCompanyRooms")({}),12000,"Room directory took too long to respond.");roomCache=result.data?.rooms||[];drawRooms();}
+ catch(e){$("roomList").textContent="Room directory unavailable. Deploy the updated Firebase Functions, then refresh.";}
+}
+async function saveRoom(room,changes){
+ if(!ownerReady||busy)return;
+ const payload={roomId:room.id,roomName:changes.roomName??room.roomName,roomUrl:changes.roomUrl??room.roomUrl,managerEmail:changes.managerEmail??room.managerEmail??"",notes:changes.notes??room.notes??"",status:changes.status??room.status};
+ busy=true;try{await httpsCallable(functions,"updateCompanyRoom")(payload);message("Room details updated.","good");await loadRooms();await loadAuditLogs();}
+ catch(e){message("Room update failed: "+(e.message||e.code||"Check the room manager's company membership."),"bad");}
+ finally{busy=false;}
+}
+function editRoom(room){
+ const roomName=prompt("Room name:",room.roomName||"");if(roomName===null)return;
+ const roomUrl=prompt("Direct HTTPS room link:",room.roomUrl||"");if(roomUrl===null)return;
+ const managerEmail=prompt("Active company manager email (leave blank for none):",room.managerEmail||"");if(managerEmail===null)return;
+ const notes=prompt("Room notes:",room.notes||"");if(notes===null)return;
+ saveRoom(room,{roomName,roomUrl,managerEmail,notes});
+}
+$("roomForm").addEventListener("submit",async event=>{
+ event.preventDefault();if(!ownerReady||busy)return;
+ const payload={companyId:$("roomCompany").value,roomName:$("roomName").value.trim(),roomUrl:$("roomUrl").value.trim(),managerEmail:$("roomManager").value.trim(),notes:$("roomNotes").value.trim()};
+ if(!payload.companyId||payload.roomName.length<2||!/^https:\/\//i.test(payload.roomUrl)){message("Choose a company, enter a room name and use a full HTTPS link.","bad");return;}
+ busy=true;$("createRoomBtn").disabled=true;$("createRoomBtn").textContent="Creating…";
+ try{const result=await httpsCallable(functions,"createCompanyRoom")(payload);message("Room created successfully. Room ID: "+result.data.roomId,"good");$("roomForm").reset();renderRoomCompanyOptions();await loadRooms();await loadAuditLogs();}
+ catch(e){message("Room creation failed: "+(e.message||e.code||"Check company and manager details."),"bad");}
+ finally{busy=false;$("createRoomBtn").disabled=false;$("createRoomBtn").textContent="Create room";}
+});
 function formatAuditDate(value){if(!value)return "Time unavailable";const d=new Date(value);return Number.isNaN(d.getTime())?"Time unavailable":d.toLocaleString();}
 let userCache=[];
 function drawUsers(){
@@ -346,10 +415,10 @@ async function verify(user){
   }
   $("ownerEmail").textContent=user.email||user.uid;$("ownerName").textContent="Verifying…";message("Checking your signed-in account…");try{await withTimeout(Promise.resolve(user),10000,"Account verification timed out.");
 if(run!==verificationRun)return;
-ownerReady=true;$("ownerName").textContent="Signed-in user";$("platformStatus").textContent="Ready";$("platformNote").textContent="Signed-in access verified";message("Access ready. Loading company records…","good");await loadCompanies();await loadUsers();await loadAuditLogs();if(run!==verificationRun)return;$("diagnostic").textContent="Signed-in access verified. Company registry is responding.";}catch(e){if(run!==verificationRun)return;ownerReady=false;$("ownerName").textContent="Check connection";$("platformStatus").textContent="Limited";$("platformNote").textContent="Verification or server response delayed";message("Master Control is still open, but verification did not finish: "+(e.message||e.code||"Unknown error"),"bad");$("diagnostic").textContent="Try Refresh data when your connection is stable.";}}
+ownerReady=true;$("ownerName").textContent="Signed-in user";$("platformStatus").textContent="Ready";$("platformNote").textContent="Signed-in access verified";message("Access ready. Loading company records…","good");await loadCompanies();await loadUsers();await loadAuditLogs();await loadRooms();if(run!==verificationRun)return;$("diagnostic").textContent="Signed-in access verified. Company registry is responding.";}catch(e){if(run!==verificationRun)return;ownerReady=false;$("ownerName").textContent="Check connection";$("platformStatus").textContent="Limited";$("platformNote").textContent="Verification or server response delayed";message("Master Control is still open, but verification did not finish: "+(e.message||e.code||"Unknown error"),"bad");$("diagnostic").textContent="Try Refresh data when your connection is stable.";}}
 $("companyForm").addEventListener("submit",async e=>{e.preventDefault();if(!ownerReady||busy)return;const payload={name:$("companyName").value.trim(),legalName:$("legalName").value.trim(),adminEmail:$("adminEmail").value.trim(),phone:$("phone").value.trim(),companyUrl:$("companyUrl").value.trim(),country:$("country").value.trim()||"Kenya",currency:$("currency").value};if(!payload.name||!payload.adminEmail){message("Company name and admin email are required.","bad");return;}if(payload.companyUrl&&!/^https:\/\//i.test(payload.companyUrl)){message("Company link must start with https://","bad");return;}busy=true;$("createBtn").disabled=true;$("createBtn").textContent="Creating…";try{const result=await httpsCallable(functions,"createCompany")(payload);message("Company created in pending status. ID: "+result.data.companyId,"good");$("companyForm").reset();$("country").value="Kenya";await loadCompanies();await loadUsers();await loadAuditLogs();}catch(e){message("Company creation failed: "+(e.message||e.code||"Check that the updated Firebase Functions have been deployed."),"bad");}finally{busy=false;$("createBtn").disabled=false;$("createBtn").textContent="Create pending company";}});
 $("refreshUsers").onclick=loadUsers;$("userSearch").addEventListener("input",drawUsers);$("userFilter").addEventListener("change",drawUsers);$("refreshAudit").onclick=loadAuditLogs;$("companySearch").addEventListener("input",drawCompanyList);$("companyFilter").addEventListener("change",drawCompanyList);
-$("refresh").onclick=async()=>{network();if(ownerReady){try{await loadCompanies();await loadUsers();await loadAuditLogs();message("Company, user and activity data refreshed.","good");}catch(e){message("Refresh failed: "+(e.message||e.code),"bad");}}else if(auth.currentUser){await verify(auth.currentUser);}};
+$("refresh").onclick=async()=>{network();if(ownerReady){try{await loadCompanies();await loadUsers();await loadAuditLogs();await loadRooms();message("Company, user, room and activity data refreshed.","good");}catch(e){message("Refresh failed: "+(e.message||e.code),"bad");}}else if(auth.currentUser){await verify(auth.currentUser);}};
 $("reload").onclick=()=>location.reload();$("softRefresh").onclick=()=>location.reload();$("hardReload").onclick=()=>location.reload();$("checkNetwork").onclick=()=>{network();$("diagnostic").textContent=navigator.onLine?"Network available. Firebase and backend status are verified separately.":"Device is offline; reconnect and retry.";};$("backHome").onclick=()=>location.href="index.html";window.addEventListener("online",network);window.addEventListener("offline",network);
 onAuthStateChanged(auth,user=>{verify(user);});
 window.addEventListener("error",event=>{

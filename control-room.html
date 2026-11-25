@@ -13,7 +13,7 @@
 <body>
 <header><div><div class="brand">MABROUK <span>MASTER CONTROL</span></div><div class="sub">Multi-company platform command centre</div></div><div class="sub" id="network">Checking network…</div></header>
 <main class="wrap">
-<section class="top"><div><div class="eyebrow">OPEN ACCESS CONSOLE</div><h1>Master Control Room</h1><p>Open platform console — all signed-in users can manage companies and platform tools.</p></div><div class="actions"><button class="btn" id="refresh">↻ Refresh data</button><button class="btn gold" id="reload">Reload app</button></div></section>
+<section class="top"><div><div class="eyebrow">OWNER-ONLY PLATFORM CONSOLE</div><h1>Master Control Room</h1><p>Manage company workspaces, room links and staff access from one protected owner console.</p></div><div class="actions"><button class="btn" id="refresh">↻ Refresh data</button><button class="btn gold" id="reload">Reload app</button></div></section>
 <div class="notice" id="mainNotice">Connecting to your secure owner session…</div>
 <section class="grid">
 <div class="card"><div class="muted">Platform status</div><div class="metric" id="platformStatus">Checking</div><div class="muted" id="platformNote">Firebase connection</div></div>
@@ -31,7 +31,7 @@
 <a class="launch" href="savings.html"><span class="glyph">◈</span><strong>Savings</strong><small>Customer savings management</small></a>
 <a class="launch" href="settings.html"><span class="glyph">⚙</span><strong>Settings</strong><small>Application preferences</small></a>
 </div></section><section class="layout">
-<div class="panel"><div class="panelhead"><div><h2>Company management</h2><div class="muted">Create, view and control company workspaces</div></div><span class="tag">OPEN ACCESS</span></div>
+<div class="panel"><div class="panelhead"><div><h2>Company management</h2><div class="muted">Create, view and control company workspaces</div></div><span class="tag">OWNER CONTROLLED</span></div>
 <div class="company-tools"><input id="companySearch" type="search" placeholder="Search company, admin email or phone…"><select id="companyFilter"><option value="all">All statuses</option><option value="active">Active</option><option value="pending">Pending</option><option value="suspended">Suspended</option></select></div><div class="muted" id="companyResultCount" style="margin-bottom:9px">Company list</div><div id="companyList" class="list"><div class="muted">Waiting for company registry…</div></div>
 <div id="workspaceEditor" class="workspace-editor hidden">
  <h3>Company workspace & branding</h3>
@@ -119,7 +119,7 @@
  <div class="panelhead"><div><h2>Platform activity log</h2><div class="muted">Latest company registrations, status changes and invitations</div></div><button class="btn" id="refreshAudit">↻ Refresh log</button></div>
  <div id="auditList" class="audit-list"><div class="muted">Sign in to load platform activity.</div></div>
 </section>
-<footer>MABROUK MASTER CONTROL · Open access for signed-in users · Never place service-account keys in browser code.</footer>
+<footer>MABROUK MASTER CONTROL · Owner-only platform access · Never place service-account keys in browser code.</footer>
 </main>
 <script type="module">
 import {auth,db} from "./firebase.js";
@@ -127,6 +127,7 @@ import {onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.1.0/fire
 import {getFunctions,httpsCallable} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-functions.js";
 const $=id=>document.getElementById(id);
 const functions=getFunctions(undefined,"us-central1");
+const PLATFORM_OWNER_UID="ZW5pqCx3FvSzxtXBiZMMC6fP5ro2";
 let ownerReady=false, busy=false, companyCache=[], verificationRun=0;
 function message(text,type=""){const el=$("mainNotice");el.textContent=text;el.className="notice"+(type?" "+type:"");}
 function network(){const ok=navigator.onLine;$("network").textContent=ok?"● Device online":"● Device offline";$("network").style.color=ok?"#45ce91":"#f07878";$("platformStatus").textContent=ok?"Online":"Offline";$("platformNote").textContent="Device network status";}
@@ -326,11 +327,24 @@ async function verify(user){
     $("platformNote").textContent="Sign-in required to connect Firebase";
     $("companyCount").textContent="—";
     $("activeCount").textContent="—";$("pendingCount").textContent="—";$("suspendedCount").textContent="—";
-    $("companyList").textContent="Sign in with any Firebase account to load company records.";
-    message("Master Control is ready. Sign in with any Firebase account to use all controls.","bad");
-    $("diagnostic").textContent="The page is responsive. Sign in with any Firebase account, then return here and refresh.";
+    $("companyList").textContent="Sign in with the authorized platform owner account to load company records.";
+    message("Master Control is locked. Sign in with the authorized platform owner account.","bad");
+    $("diagnostic").textContent="Sign in with the authorized platform owner account, then refresh this page.";
     return;
-  }$("ownerEmail").textContent=user.email||user.uid;$("ownerName").textContent="Verifying…";message("Checking your signed-in account…");try{await withTimeout(Promise.resolve(user),10000,"Account verification timed out.");
+  }
+  if(user.uid!==PLATFORM_OWNER_UID){
+    ownerReady=false;
+    $("ownerName").textContent="Access restricted";
+    $("ownerEmail").textContent=user.email||user.uid;
+    $("platformStatus").textContent="Locked";
+    $("platformNote").textContent="This account is not the platform owner";
+    $("companyCount").textContent="—";$("activeCount").textContent="—";$("pendingCount").textContent="—";$("suspendedCount").textContent="—";
+    $("companyList").textContent="This control room is reserved for the platform owner account.";
+    message("Access denied. Sign in with the authorized platform owner account to manage companies and rooms.","bad");
+    $("diagnostic").textContent="Your Firebase session is valid, but it does not have platform-owner permission.";
+    return;
+  }
+  $("ownerEmail").textContent=user.email||user.uid;$("ownerName").textContent="Verifying…";message("Checking your signed-in account…");try{await withTimeout(Promise.resolve(user),10000,"Account verification timed out.");
 if(run!==verificationRun)return;
 ownerReady=true;$("ownerName").textContent="Signed-in user";$("platformStatus").textContent="Ready";$("platformNote").textContent="Signed-in access verified";message("Access ready. Loading company records…","good");await loadCompanies();await loadUsers();await loadAuditLogs();if(run!==verificationRun)return;$("diagnostic").textContent="Signed-in access verified. Company registry is responding.";}catch(e){if(run!==verificationRun)return;ownerReady=false;$("ownerName").textContent="Check connection";$("platformStatus").textContent="Limited";$("platformNote").textContent="Verification or server response delayed";message("Master Control is still open, but verification did not finish: "+(e.message||e.code||"Unknown error"),"bad");$("diagnostic").textContent="Try Refresh data when your connection is stable.";}}
 $("companyForm").addEventListener("submit",async e=>{e.preventDefault();if(!ownerReady||busy)return;const payload={name:$("companyName").value.trim(),legalName:$("legalName").value.trim(),adminEmail:$("adminEmail").value.trim(),phone:$("phone").value.trim(),companyUrl:$("companyUrl").value.trim(),country:$("country").value.trim()||"Kenya",currency:$("currency").value};if(!payload.name||!payload.adminEmail){message("Company name and admin email are required.","bad");return;}if(payload.companyUrl&&!/^https:\/\//i.test(payload.companyUrl)){message("Company link must start with https://","bad");return;}busy=true;$("createBtn").disabled=true;$("createBtn").textContent="Creating…";try{const result=await httpsCallable(functions,"createCompany")(payload);message("Company created in pending status. ID: "+result.data.companyId,"good");$("companyForm").reset();$("country").value="Kenya";await loadCompanies();await loadUsers();await loadAuditLogs();}catch(e){message("Company creation failed: "+(e.message||e.code||"Check that the updated Firebase Functions have been deployed."),"bad");}finally{busy=false;$("createBtn").disabled=false;$("createBtn").textContent="Create pending company";}});

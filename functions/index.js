@@ -21,6 +21,7 @@ export const createCompany = onCall(async (request) => {
   const legalName = cleanText(request.data?.legalName, 120);
   const email = cleanText(request.data?.adminEmail, 160).toLowerCase();
   const phone = cleanText(request.data?.phone, 40);
+  const companyUrl = cleanText(request.data?.companyUrl, 500);
   const country = cleanText(request.data?.country || "Kenya", 60);
   const currency = cleanText(request.data?.currency || "KES", 8).toUpperCase();
 
@@ -29,13 +30,14 @@ export const createCompany = onCall(async (request) => {
     throw new HttpsError("invalid-argument", "A valid company administrator email is required.");
   }
   if (!/^[A-Z]{3}$/.test(currency)) throw new HttpsError("invalid-argument", "Currency must be a 3-letter code.");
+  if (companyUrl && !/^https:\/\//i.test(companyUrl)) throw new HttpsError("invalid-argument", "Company link must use HTTPS.");
 
   const companyRef = db.collection("companies").doc();
   const membershipRef = db.collection("companyMemberships").doc(email + "_" + companyRef.id);
 
   await db.runTransaction(async (tx) => {
     tx.create(companyRef, {
-      name, legalName, adminEmail: email, phone, country, currency,
+      name, legalName, adminEmail: email, phone, companyUrl, country, currency,
       status: "pending",
       plan: "free",
       subscription: { plan: "free", status: "trial", billingCycle: "none", renewalAt: null },
@@ -99,6 +101,7 @@ export const updateCompanyWorkspace = onCall(async (request) => {
   const name = cleanText(request.data?.name, 80);
   const legalName = cleanText(request.data?.legalName, 120);
   const phone = cleanText(request.data?.phone, 40);
+  const companyUrl = cleanText(request.data?.companyUrl, 500);
   const country = cleanText(request.data?.country, 60);
   const currency = cleanText(request.data?.currency, 8).toUpperCase();
   const displayName = cleanText(request.data?.displayName || name, 80);
@@ -109,6 +112,9 @@ export const updateCompanyWorkspace = onCall(async (request) => {
   }
   if (!/^#[0-9a-fA-F]{6}$/.test(primaryColor)) {
     throw new HttpsError("invalid-argument", "Brand color must be a six-digit hex color.");
+  }
+  if (companyUrl && !/^https:\/\//i.test(companyUrl)) {
+    throw new HttpsError("invalid-argument", "Company link must use HTTPS.");
   }
   if (logoUrl && !/^https:\/\//i.test(logoUrl)) {
     throw new HttpsError("invalid-argument", "Logo URL must use HTTPS.");
@@ -123,7 +129,7 @@ export const updateCompanyWorkspace = onCall(async (request) => {
     }
     if (!companySnap.exists) throw new HttpsError("not-found", "Company workspace not found.");
     tx.update(companyRef, {
-      name, legalName, phone, country, currency,
+      name, legalName, phone, companyUrl, country, currency,
       branding: { ...(companySnap.data().branding || {}), mode: "company", displayName, logoUrl, primaryColor },
       updatedAt: FieldValue.serverTimestamp(),
       updatedBy: actorUid

@@ -1,22 +1,22 @@
-/* MABROUK TRADER'S POS Pro — Red / Blue / White visual system
+/* MABROUK TRADER'S POS Pro — Bold Red / White / Black visual system
    Presentation-only layer: preserves existing page logic and Firebase integrations. */
 :root{
- --mt-blue:#155eef;--mt-blue-dark:#123b8a;--mt-blue-soft:#eaf1ff;
+ --mt-blue:#c90024;--mt-blue-dark:#780018;--mt-blue-soft:#ffe5e9;
  --mt-red:#e32636;--mt-red-dark:#b91c2c;--mt-red-soft:#fff0f1;
- --mt-white:#ffffff;--mt-bg:#f4f7ff;--mt-surface:#ffffff;
- --mt-line:#dbe5f7;--mt-muted:#52658a;--mt-ink:#10234b;
- --mt-radius:16px;--mt-shadow:0 12px 32px rgba(21,62,140,.09);
+ --mt-white:#ffffff;--mt-bg:#fff7f8;--mt-surface:#ffffff;
+ --mt-line:#e6b8c0;--mt-muted:#4b3035;--mt-ink:#201316;
+ --mt-radius:16px;--mt-shadow:0 12px 32px rgba(100,0,20,.12);
 }
-*{scrollbar-color:#9bb7ee #f4f7ff}
+*{scrollbar-color:#d88a96 #fff7f8}
 html,body{background:var(--mt-bg)!important;color:var(--mt-ink)!important}
 button,a,input,select,textarea{transition:background .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
 button{font-weight:700}
 button:hover{filter:brightness(1.04)}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--mt-blue)!important;box-shadow:0 0 0 3px rgba(21,94,239,.14)!important}
-.topbar,.top,header{background:linear-gradient(110deg,var(--mt-blue-dark),var(--mt-blue))!important;color:var(--mt-white)!important;box-shadow:0 5px 20px rgba(18,59,138,.16)!important}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--mt-blue)!important;box-shadow:0 0 0 3px rgba(201,0,36,.20)!important}
+.topbar,.top,header{background:linear-gradient(110deg,var(--mt-blue-dark),var(--mt-blue))!important;color:var(--mt-white)!important;box-shadow:0 5px 20px rgba(160,0,30,.22)!important}
 .brand{letter-spacing:.2px}
 .brand span{color:var(--mt-red)!important}
-.sidebar{background:var(--mt-white)!important;border-right:1px solid var(--mt-line)!important;box-shadow:5px 0 24px rgba(18,59,138,.04)}
+.sidebar{background:var(--mt-white)!important;border-right:1px solid var(--mt-line)!important;box-shadow:5px 0 24px rgba(100,0,20,.05)}
 .nav a,nav a{border-radius:10px!important;transition:all .18s ease}
 .nav a:hover,.nav a.active{background:var(--mt-blue-soft)!important;color:var(--mt-blue-dark)!important}
 .main,.page,.content,.container{color:var(--mt-ink)}
@@ -31,7 +31,7 @@ h1{font-weight:850!important}
 .btn,.green,.primary,.save-btn,.login-btn,button.green,button[type=submit]{
  background:var(--mt-blue)!important;color:var(--mt-white)!important;
  border:1px solid var(--mt-blue)!important;border-radius:10px!important;
- box-shadow:0 5px 12px rgba(21,94,239,.16)
+ box-shadow:0 5px 12px rgba(201,0,36,.22)
 }
 .btn.secondary,.btn.light,.secondary,.gray{background:var(--mt-white)!important;color:var(--mt-blue-dark)!important;border:1px solid var(--mt-line)!important;border-radius:10px!important}
 .danger,.delete,.logout,.logout-btn,.btn-danger{color:var(--mt-red)!important}
@@ -40,7 +40,7 @@ input,select,textarea{border-radius:10px!important;border-color:var(--mt-line)!i
 table{border-collapse:separate!important;border-spacing:0}
 th{background:var(--mt-blue-soft)!important;color:var(--mt-blue-dark)!important}
 td,th{border-bottom:1px solid var(--mt-line)!important}
-tr:hover td{background:#f7f9ff}
+tr:hover td{background:#fff4f5}
 .value,.stat b,.balance,.card-value{color:var(--mt-blue)!important}
 .footer-card,.notice{border:1px solid var(--mt-line)!important;background:var(--mt-blue-soft)!important;color:var(--mt-blue-dark)!important;border-radius:12px!important}
 .badge-danger,.status-danger,.out-of-stock{background:var(--mt-red-soft)!important;color:var(--mt-red-dark)!important}
@@ -65,7 +65,7 @@ tr:hover td{background:#f7f9ff}
  .page-head{align-items:flex-start!important;flex-direction:column!important}
  .toolbar{display:flex!important;flex-wrap:wrap!important}
  .toolbar>*{min-width:0!important;flex:1 1 145px!important}
- .login-card{border-radius:22px!important;box-shadow:0 18px 48px rgba(18,59,138,.18)!important}
+ .login-card{border-radius:22px!important;box-shadow:0 18px 48px rgba(100,0,20,.20)!important}
 }
 @media print{
  body{background:var(--mt-white)!important}
@@ -78,24 +78,24 @@ tr:hover td{background:#f7f9ff}
 
 
 /* Final cross-page brand normalization: red, blue and white only. */
-:root{color-scheme:light;--bg:#f4f7ff;--panel:#fff;--line:#dbe5f7;--gold:#155eef;--green:#155eef;--red:#e32636}
-body{background:#f4f7ff!important;color:#10234b!important}
-header,header.top,.top, .topbar{background:linear-gradient(110deg,#123b8a,#155eef)!important;color:#fff!important}
-nav:not(.nav){background:#155eef!important;color:#fff!important}
-nav:not(.nav) a,nav:not(.nav) button{color:#123b8a!important;background:#fff!important}
-nav:not(.nav) a:hover,nav:not(.nav) button:hover{background:#eaf1ff!important;color:#155eef!important}
-h1,h2,h3,.brand,.value,.stat b,.card-value{color:#155eef!important}
+:root{color-scheme:light;--bg:#fff7f8;--panel:#fff;--line:#e6b8c0;--gold:#c90024;--green:#c90024;--red:#e32636}
+body{background:#fff7f8!important;color:#201316!important}
+header,header.top,.top, .topbar{background:linear-gradient(110deg,#780018,#c90024)!important;color:#fff!important}
+nav:not(.nav){background:#c90024!important;color:#fff!important}
+nav:not(.nav) a,nav:not(.nav) button{color:#780018!important;background:#fff!important}
+nav:not(.nav) a:hover,nav:not(.nav) button:hover{background:#ffe5e9!important;color:#c90024!important}
+h1,h2,h3,.brand,.value,.stat b,.card-value{color:#c90024!important}
 .brand span,.eyebrow{color:#e32636!important}
-button,.btn,.primary,.save-btn,.login-btn{background:#155eef!important;color:#fff!important;border-color:#155eef!important}
-button.secondary,.btn.secondary,.btn.light,.gray{background:#fff!important;color:#123b8a!important;border:1px solid #dbe5f7!important}
+button,.btn,.primary,.save-btn,.login-btn{background:#c90024!important;color:#fff!important;border-color:#c90024!important}
+button.secondary,.btn.secondary,.btn.light,.gray{background:#fff!important;color:#780018!important;border:1px solid #e6b8c0!important}
 button.danger,.delete,.logoutBtn,.btn-danger{background:#e32636!important;color:#fff!important;border-color:#e32636!important}
-input,select,textarea{background:#fff!important;color:#10234b!important;border-color:#dbe5f7!important}
-th{background:#eaf1ff!important;color:#123b8a!important}
-.card,.panel,.stat,.intro,.filters,.form-box,.table-box{background:#fff!important;border-color:#dbe5f7!important}
+input,select,textarea{background:#fff!important;color:#201316!important;border-color:#e6b8c0!important}
+th{background:#ffe5e9!important;color:#780018!important}
+.card,.panel,.stat,.intro,.filters,.form-box,.table-box{background:#fff!important;border-color:#e6b8c0!important}
 .sidebar{background:#fff!important}
-.nav a.active,.nav a:hover{background:#eaf1ff!important;color:#155eef!important}
-footer,.footer-card,.notice{background:#eaf1ff!important;color:#123b8a!important}
-@media(max-width:640px){nav:not(.nav){background:#155eef!important}}
+.nav a.active,.nav a:hover{background:#ffe5e9!important;color:#c90024!important}
+footer,.footer-card,.notice{background:#ffe5e9!important;color:#780018!important}
+@media(max-width:640px){nav:not(.nav){background:#c90024!important}}
 
 
 /* RESPONSIVE FIT — phones, tablets, laptops and wide desktop screens.
@@ -174,4 +174,45 @@ button,a{touch-action:manipulation}
 @media(orientation:landscape) and (max-height:520px){
  .modalCard,.modal-card,.modal-content{max-height:calc(100vh - 12px);max-height:calc(100dvh - 12px)}
  .sidebar{max-height:calc(100vh - 64px);max-height:calc(100dvh - 64px)}
+}
+
+
+/* HIGH-CONTRAST MABROUK BRAND THEME — vivid red, white and black only. */
+:root{
+ color-scheme:light;
+ --mt-red:#c90024;--mt-red-dark:#780018;--mt-red-soft:#ffe5e9;
+ --mt-white:#fff;--mt-bg:#fff;--mt-surface:#fff;
+ --mt-line:#d7a0aa;--mt-muted:#4b3035;--mt-ink:#171014;
+ --mt-shadow:0 8px 24px rgba(70,0,15,.12);
+}
+html,body{background:#fff!important;color:#171014!important}
+.topbar,.top,header{background:#c90024!important;color:#fff!important;box-shadow:0 4px 18px rgba(100,0,20,.2)!important}
+.sidebar{background:#fff!important;border-right:2px solid #e6b8c0!important}
+.nav a{color:#171014!important;font-weight:650!important}
+.nav a:hover,.nav a.active{background:#c90024!important;color:#fff!important;font-weight:850!important}
+button,.btn,.primary,.save-btn,.login-btn,button[type=submit]{
+ background:#c90024!important;color:#fff!important;border:2px solid #c90024!important;
+ font-weight:800!important;box-shadow:0 4px 12px rgba(201,0,36,.22)!important
+}
+button:hover,.btn:hover{background:#780018!important;border-color:#780018!important;color:#fff!important}
+.btn.secondary,.btn.light,.secondary,.gray,button.secondary{
+ background:#fff!important;color:#780018!important;border:2px solid #c90024!important
+}
+h1,h2,h3,.value,.stat b,.card-value{color:#171014!important;font-weight:850!important}
+.brand span,.eyebrow{color:#fff!important}
+.card,.panel,.mini,.stat,.summary-card,.form-box,.table-box,.filters,.customers,.title,.customer{
+ background:#fff!important;border:1px solid #d7a0aa!important;box-shadow:0 5px 18px rgba(70,0,15,.09)!important
+}
+input:focus,select:focus,textarea:focus{border-color:#c90024!important;box-shadow:0 0 0 3px rgba(201,0,36,.2)!important}
+th{background:#ffe5e9!important;color:#780018!important;font-weight:800!important}
+tr:hover td{background:#fff4f5!important}
+.footer-card,.notice{background:#ffe5e9!important;color:#780018!important;border:1px solid #c90024!important}
+.badge-success,.status-success,.in-stock{background:#171014!important;color:#fff!important}
+.badge-danger,.status-danger,.out-of-stock{background:#c90024!important;color:#fff!important}
+.danger,.delete,.logout,.logout-btn,.btn-danger{color:#c90024!important}
+button.danger,button.delete,button.btn-danger{background:#c90024!important;color:#fff!important}
+input,select,textarea{border:1.5px solid #b9858e!important;color:#171014!important}
+@media(max-width:640px){
+ .nav a:hover,.nav a.active{background:#c90024!important;color:#fff!important}
+ .login-card{box-shadow:0 14px 36px rgba(100,0,20,.2)!important}
 }

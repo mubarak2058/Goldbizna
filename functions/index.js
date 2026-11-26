@@ -1,6 +1,8 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
+import { getAuth } from "firebase-admin/auth";
+import { randomBytes } from "node:crypto";
 
 initializeApp();
 const db = getFirestore();
@@ -238,8 +240,10 @@ export const updateCompanyMembership = onCall(async (request) => {
   const targetRef = db.collection("companyMemberships").doc(membershipId);
   await db.runTransaction(async (tx) => {
     const [actorSnap, targetSnap] = await Promise.all([tx.get(actorRef), tx.get(targetRef)]);
-    if (!actorSnap.exists || actorSnap.data().status !== "active" || actorSnap.data().role !== "company_admin") {
-      throw new HttpsError("permission-denied", "Only an active company administrator can manage memberships for this company.");
+    const isPlatformOwner = actorUid === PLATFORM_OWNER_UID;
+    const isCompanyAdmin = actorSnap.exists && actorSnap.data().status === "active" && actorSnap.data().role === "company_admin";
+    if (!isPlatformOwner && !isCompanyAdmin) {
+      throw new HttpsError("permission-denied", "Only the platform owner or an active company administrator can manage memberships for this company.");
     }
     if (!targetSnap.exists || targetSnap.data().companyId !== companyId) {
       throw new HttpsError("not-found", "Membership not found in this company.");
@@ -405,8 +409,57 @@ export const createCompanyInvitation = onCall(async (request) => {
   if (!found.empty && ["active", "invitation_pending"].includes(found.docs[0].data().status)) {
     throw new HttpsError("already-exists", "This email already has an active membership or pending invitation.");
   }
+
+  // Provision the Firebase Authentication identity on the trusted server.
+  // The random temporary password is never returned or stored in Firestore.
+  const adminAuth = getAuth();
+  let authUser;
+  let accountCreated = false;
+  try {
+    authUser = await adminAuth.getUserByEmail(email);
+  } catch (error) {
+    if (error.code !== "auth/user-not-found") throw error;
+    authUser = await adminAuth.createUser({
+      email,
+      password: randomBytes(36).toString("base64url"),
+      emailVerified: false,
+      disabled: false
+    });
+    accountCreated = true;
+  }
+
+  const continueUrl = "https://mubarak2058.github.io/Goldbizna/login.html";
+  const actionSettings = { url: continueUrl, handleCodeInApp: false };
+  let passwordSetupLink = null;
+  let emailVerificationLink = null;
+  try {
+    passwordSetupLink = await adminAuth.generatePasswordResetLink(email, actionSettings);
+    if (!authUser.emailVerified) {
+      emailVerificationLink = await adminAuth.generateEmailVerificationLink(authUser.uid, actionSettings);
+    }
+  } catch (error) {
+    if (accountCreated) {
+      try { await adminAuth.deleteUser(authUser.uid); } catch (_) {}
+    }
+    throw new HttpsError("internal", "The account was created but Firebase could not generate setup links. Check Firebase Authentication email templates and authorized domains.");
+  }
+
   const ref = db.collection("companyMemberships").doc(email + "_" + companyId);
-  await ref.set({ companyId, companyName: cleanText(company.data().name, 80), email, role, status: "invitation_pending", createdAt: FieldValue.serverTimestamp(), invitedBy: request.auth.uid, updatedAt: FieldValue.serverTimestamp() });
-  await db.collection("platformAuditLogs").add({ action: "membership.invited", companyId, email, role, actorUid: request.auth.uid, createdAt: FieldValue.serverTimestamp() });
-  return { companyId, email, role, status: "invitation_pending" };
+  await ref.set({
+    companyId, companyName: cleanText(company.data().name, 80), email,
+    uid: authUser.uid, role, status: "invitation_pending",
+    createdAt: FieldValue.serverTimestamp(), invitedBy: request.auth.uid,
+    updatedAt: FieldValue.serverTimestamp()
+  });
+  await db.collection("platformAuditLogs").add({
+    action: "membership.invited", companyId, email, role,
+    authUid: authUser.uid, accountCreated, actorUid: request.auth.uid,
+    createdAt: FieldValue.serverTimestamp()
+  });
+  return {
+    companyId, email, role, status: "invitation_pending",
+    authUid: authUser.uid, accountCreated,
+    passwordSetupLink, emailVerificationLink,
+    delivery: "manual_link_sharing"
+  };
 });

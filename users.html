@@ -48,7 +48,8 @@ input,select{width:100%;padding:12px;border:1px solid #dfc4c9;border-radius:8px;
   </div>
   <div class="actions"><button class="primary" id="inviteBtn" type="submit">Create staff invitation</button><button type="reset">Clear</button><button type="button" id="refreshBtn">Refresh directory</button></div>
  </form>
- <p class="hint">This creates a secure pending company invitation. It does not set a password, create a Firebase Authentication account, or send an email automatically. The staff member must register/sign in using the invited email and accept the invitation. Never share an owner's password.</p>
+ <p class="hint">Creates a Firebase Authentication account when needed and a pending company invitation. Firebase setup links are shown below for you to share privately with the invited staff member. Email delivery is not configured automatically yet. Never share an owner's password.</p>
+ <div id="setupLinks" class="notice hidden" style="overflow-wrap:anywhere"><strong>Private staff setup links</strong><div id="setupLinkItems"></div><p class="hint">Send both links only to the invited email owner. The staff member should set a password, verify their email, then sign in and accept the company invitation. Treat these links like temporary credentials.</p></div>
 </section>
 <section class="panel">
  <h2>Staff directory</h2>
@@ -75,6 +76,23 @@ function fillCompanies(){
  companies.filter(c=>c.status==="active").forEach(c=>{const o=document.createElement("option");o.value=c.id;o.textContent=c.name||c.id;select.append(o);});
  if(companies.some(c=>c.id===current&&c.status==="active"))select.value=current;
  $("companyCount").textContent=companies.filter(c=>c.status==="active").length;
+}
+function showSetupLinks(data){
+ const panel=$("setupLinks"),items=$("setupLinkItems");
+ items.replaceChildren();
+ const links=[
+  ["Set or reset password",data.passwordSetupLink],
+  ["Verify email address",data.emailVerificationLink]
+ ].filter(item=>item[1]);
+ if(!links.length){panel.classList.add("hidden");return;}
+ links.forEach(([label,url])=>{
+  const wrap=document.createElement("div");wrap.style.marginTop="10px";
+  const title=document.createElement("strong");title.textContent=label;
+  const link=document.createElement("a");link.href=url;link.target="_blank";link.rel="noopener noreferrer";link.textContent="Open secure link";link.style.display="block";link.style.margin="6px 0";link.style.color="#c90024";link.style.overflowWrap="anywhere";
+  const copy=document.createElement("button");copy.type="button";copy.textContent="Copy link";copy.onclick=async()=>{try{await navigator.clipboard.writeText(url);say(label+" copied. Share it privately with the invited staff member.","good");}catch(_){say("Copy is unavailable in this browser. Open the link and copy it from the address bar.","bad");}};
+  wrap.append(title,link,copy);items.append(wrap);
+ });
+ panel.classList.remove("hidden");
 }
 function render(){
  const term=$("search").value.trim().toLowerCase(),status=$("filter").value;
@@ -122,7 +140,8 @@ $("inviteForm").addEventListener("submit",async e=>{
  busy=true;$("inviteBtn").disabled=true;$("inviteBtn").textContent="Creating invitation…";
  try{
   const result=await timeout(call("createCompanyInvitation")(payload));
-  say("Invitation record created for "+(result.data?.email||payload.email)+". The staff member must now register/sign in with that email and accept the invitation. No email was sent automatically.","good");
+  showSetupLinks(result.data||{});
+  say("Firebase account and pending invitation prepared for "+(result.data?.email||payload.email)+". Share the private setup links shown below with that staff member.","good");
   $("inviteForm").reset();fillCompanies();await loadAll();
  }catch(e){say("Invitation failed: "+(e.message||e.code||"Check Firebase Functions deployment and company status."),"bad");}
  finally{busy=false;$("inviteBtn").disabled=!ownerReady;$("inviteBtn").textContent="Create staff invitation";}

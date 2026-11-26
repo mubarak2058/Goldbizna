@@ -417,7 +417,11 @@ export const createCompanyInvitation = onCall(async (request) => {
   let accountCreated = false;
   try {
     authUser = await adminAuth.getUserByEmail(email);
+    if (authUser.disabled) {
+      throw new HttpsError("failed-precondition", "This Firebase account is disabled. Review its status before inviting it.");
+    }
   } catch (error) {
+    if (error instanceof HttpsError) throw error;
     if (error.code !== "auth/user-not-found") throw error;
     authUser = await adminAuth.createUser({
       email,
@@ -435,7 +439,7 @@ export const createCompanyInvitation = onCall(async (request) => {
   try {
     passwordSetupLink = await adminAuth.generatePasswordResetLink(email, actionSettings);
     if (!authUser.emailVerified) {
-      emailVerificationLink = await adminAuth.generateEmailVerificationLink(authUser.uid, actionSettings);
+      emailVerificationLink = await adminAuth.generateEmailVerificationLink(email, actionSettings);
     }
   } catch (error) {
     if (accountCreated) {

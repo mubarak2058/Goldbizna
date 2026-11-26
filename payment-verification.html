@@ -33,4 +33,5 @@ try{const local=JSON.parse(localStorage.getItem(SALES)||'[]');sales=Array.isArra
 onSnapshot(collection(db,'paymentVerifications'),snap=>{records=snap.docs.map(d=>({id:d.id,...d.data()}));cloudReady=true;status('Firebase connected • Cloud records are syncing across devices',true);render(records)},err=>{console.error(err);cloudReady=false;status('Firebase connection error: '+(err.message||err.code));$('importMsg').textContent='Check Firestore Rules and internet connection.'});
 onSnapshot(collection(db,'sales'),snap=>{const cloud=snap.docs.map(d=>d.data());const byId=new Map(sales.map(s=>[s.id,s]));cloud.forEach(s=>byId.set(s.id,s));sales=[...byId.values()];if(records.length)render(records)},err=>console.warn('Cloud sales lookup unavailable:',err));
 window.addEventListener('storage',e=>{if(e.key===SALES){try{sales=JSON.parse(localStorage.getItem(SALES)||'[]')}catch(x){sales=[]}if(records.length)render(records)}});
-</script></body></html>
+</script><script src="app-nav.js" defer></script>
+</body></html>

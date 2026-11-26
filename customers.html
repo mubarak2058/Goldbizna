@@ -63,4 +63,5 @@ $('search').oninput=render;$('refresh').onclick=render;$('close').onclick=()=>$(
 $('saveCustomer').onclick=()=>{let n=$('newName').value.trim(),p=$('newPhone').value.trim();if(!n)return alert('Enter customer name');build();if(customers.some(c=>key(c)===key({name:n,phone:p})))return alert('Customer already exists');customers.push({id:'CUS-'+Date.now(),name:n,phone:p,notes:$('newNotes').value.trim()});saveCustomers();$('newName').value='';$('newPhone').value='';$('newNotes').value='';$('newModal').style.display='none';render()};
 render();
 </script><script type="module" src="auth.js"></script>
+<script src="app-nav.js" defer></script>
 </body></html>

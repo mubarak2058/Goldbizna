@@ -38,4 +38,5 @@ let prod={};a.forEach(s=>(s.items||[]).forEach(i=>{let k=i.name||'Unknown';prod[
 let days={};a.forEach(s=>{let k=new Date(s.date).toISOString().slice(0,10);if(!days[k])days[k]={n:0,r:0,p:0};days[k].n++;days[k].r+=Number(s.total||0);days[k].p+=Number(s.grossProfit||0)});$('daily').innerHTML=Object.entries(days).sort((x,y)=>y[0].localeCompare(x[0])).map(([d,v])=>`<tr><td>${d}</td><td>${v.n}</td><td>KSh ${money(v.r)}</td><td>KSh ${money(v.p)}</td></tr>`).join('')||'<tr><td colspan="4" class="empty">No sales.</td></tr>'}
 $('refresh').onclick=render;$('period').onchange=render;$('from').onchange=render;$('to').onchange=render;$('print').onclick=()=>window.print();render();
 </script><script type="module" src="auth.js"></script>
+<script src="app-nav.js" defer></script>
 </body></html>

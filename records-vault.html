@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MABROUK TRADER'S — 10-Year Records Vault</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f6f5;color:#21191b;font:15px system-ui,Arial}header{background:#a90025;color:white;padding:22px clamp(16px,4vw,44px)}header b{font-size:20px}header p{margin:7px 0 0;color:#ffe1e6}.wrap{max-width:1100px;margin:auto;padding:22px 16px}.hero,.panel,.item{background:white;border:1px solid #eadde0;border-radius:15px;padding:18px;margin:14px 0;box-shadow:0 3px 14px #35000b0b}.hero h1{margin:0 0 8px;font-size:clamp(25px,4vw,36px)}.muted{color:#70666a;line-height:1.6}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.item{margin:0;box-shadow:none}.item b{display:block;margin-bottom:5px}.status{padding:12px;border-radius:9px;background:#f7f0e8;color:#684600;margin:12px 0;white-space:pre-wrap;line-height:1.5}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:10px 16px;border:0;border-radius:9px;background:#b00028;color:white;font-weight:800;text-decoration:none;cursor:pointer}.btn:disabled{opacity:.5;cursor:wait}.secondary{background:#fff;color:#30262a;border:1px solid #d8c9cd}.row{display:flex;gap:10px;flex-wrap:wrap}.steps{display:grid;gap:10px}.step{padding:12px;border-left:4px solid #b00028;background:#fff7f8;border-radius:7px}.warn{border-color:#d5a74b;background:#fffaf0}.small{font-size:12px}@media(max-width:650px){.grid{grid-template-columns:1fr}.wrap{padding:14px}}
+</style>
+</head>
+<body>
+<header><b>MABROUK TRADER'S • RECORDS VAULT</b><p>Long-term records protection and archive exports</p></header>
+<main class="wrap">
+<section class="hero">
+<h1>10-Year Records Protection</h1>
+<p class="muted">The goal is to preserve business records continuously for at least 10 years, including sales, stock, customers, savings and payment-verification history. This vault creates dated archive files from records your signed-in account is allowed to read. It does not delete, move or edit live records.</p>
+<div class="row"><button class="btn" id="exportBtn">Create records archive</button><a class="btn secondary" href="emergency-recovery.html">Emergency Recovery</a></div>
+<div id="status" class="status" role="status">Checking sign-in…</div>
+</section>
+<section class="panel">
+<h2>Archive coverage</h2>
+<div class="grid">
+<div class="item"><b>Sales history</b><span class="muted small">sales</span></div>
+<div class="item"><b>Inventory and stock</b><span class="muted small">inventory</span></div>
+<div class="item"><b>Customer records</b><span class="muted small">customers</span></div>
+<div class="item"><b>Savings history</b><span class="muted small">savings</span></div>
+<div class="item"><b>Payment verification</b><span class="muted small">paymentVerifications</span></div>
+<div class="item"><b>Debt records</b><span class="muted small">debts (if used and access is granted)</span></div>
+<div class="item"><b>Activity history</b><span class="muted small">activityLog (if used and access is granted)</span></div>
+</div>
+<p class="muted small">Collections that your current Firestore security rules do not allow this account to read will be listed as skipped in the archive manifest. No security rules are changed by this page.</p>
+</section>
+<section class="panel">
+<h2>How to make the 10-year promise real</h2>
+<div class="steps">
+<div class="step"><b>1. Keep live records in Firestore.</b><br><span class="muted">Do not delete old sales, receipts, savings entries or customer history just to keep the POS fast. Use date filters and pagination for older records.</span></div>
+<div class="step"><b>2. Create regular archives.</b><br><span class="muted">Export on a regular schedule and store copies in at least two separate places, such as a business computer and a secure cloud-drive account. Keep the original downloaded file unchanged.</span></div>
+<div class="step"><b>3. Enable automated Google Cloud backups.</b><br><span class="muted">A project administrator must configure scheduled Firestore exports to a Cloud Storage bucket, then apply a 10-year object-retention policy or retention lock. This needs Google Cloud billing and administrator setup; a webpage alone cannot configure or guarantee it.</span></div>
+<div class="step"><b>4. Test restoration.</b><br><span class="muted">At least quarterly, verify an archive can be opened and restored into a separate test project before relying on it.</span></div>
+</div>
+</section>
+<section class="panel warn">
+<h2>Important protection notice</h2>
+<p class="muted">This is the first archive-control layer, not yet a verified automatic 10-year backup service. The repository's current Firestore rules permit reads only where explicitly granted; some collections may be blocked. We have deliberately not loosened those rules or changed your existing data. Automated scheduled exports and a locked 10-year Cloud Storage retention policy still need to be configured in Google Cloud.</p>
+</section>
+</main>
+<script type="module">
+import { auth, db } from "./firebase.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+const statusEl=document.getElementById("status"),button=document.getElementById("exportBtn");
+const collections=["sales","inventory","customers","savings","paymentVerifications","debts","activityLog"];
+let signedIn=false;
+onAuthStateChanged(auth,user=>{signedIn=!!user;statusEl.textContent=user?"Signed in. Ready to export records that your account is permitted to read.":"Please sign in through the MABROUK login page before creating an archive.";button.disabled=!user;});
+function normalize(value){
+ if(value && typeof value.toDate==="function") return {_type:"FirestoreTimestamp",iso:value.toDate().toISOString(),seconds:value.seconds,nanoseconds:value.nanoseconds};
+ if(Array.isArray(value)) return value.map(normalize);
+ if(value && typeof value==="object"){const out={};for(const [k,v] of Object.entries(value))out[k]=normalize(v);return out;}
+ return value;
+}
+button.addEventListener("click",async()=>{
+ if(!signedIn){statusEl.textContent="Sign in first.";return;}
+ button.disabled=true;statusEl.textContent="Preparing archive. Keep this page open…";
+ const exportedAt=new Date().toISOString(),data={},manifest=[];
+ for(const name of collections){
+  try{
+   const snap=await getDocs(collection(db,name));
+   data[name]=snap.docs.map(d=>({id:d.id,...normalize(d.data())}));
+   manifest.push({collection:name,status:"exported",documents:snap.size});
+  }catch(error){
+   manifest.push({collection:name,status:"skipped",reason:error?.code||"read-denied"});
+  }
+ }
+ const archive={format:"MABROUK-TRADERS-RECORDS-ARCHIVE",version:1,projectId:"goldbizna",exportedAt,manifest,data};
+ const blob=new Blob([JSON.stringify(archive,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
+ const stamp=exportedAt.replace(/[:.]/g,"-");
+ a.href=url;a.download="MABROUK-TRADERS-10YR-ARCHIVE-"+stamp+".json";document.body.append(a);a.click();a.remove();URL.revokeObjectURL(url);
+ const ok=manifest.filter(x=>x.status==="exported"),bad=manifest.filter(x=>x.status==="skipped");
+ statusEl.textContent="Archive file created. Exported: "+ok.map(x=>x.collection+" ("+x.documents+")").join(", ")+". Skipped by permissions/errors: "+(bad.map(x=>x.collection+" ("+x.reason+")").join(", ")||"none")+". Store this file in two secure locations. This export is not a substitute for automated server-side backups.";
+ button.disabled=false;
+});
+</script>
+<script src="./controllers/health-watchdog.js" defer></script>
+</body></html>

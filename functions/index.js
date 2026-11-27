@@ -2,7 +2,8 @@ import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import { getAuth } from "firebase-admin/auth";
-import { randomBytes } from "node:crypto";
+import { randomBytes, createHash } from "node:crypto";
+import { Timestamp } from "firebase-admin/firestore";
 
 initializeApp();
 const db = getFirestore();
@@ -466,4 +467,140 @@ export const createCompanyInvitation = onCall(async (request) => {
     passwordSetupLink, emailVerificationLink,
     delivery: "manual_link_sharing"
   };
+});
+
+
+// Live staff presence. The browser sends a heartbeat every 30 seconds;
+// sessions older than 90 seconds are treated as offline.
+export const updateStaffPresence = onCall(async (request) => {
+  requireSignedIn(request);
+  const sessionId = cleanText(request.data?.sessionId, 100);
+  const page = cleanText(request.data?.page || "POS", 60);
+  const device = cleanText(request.data?.device || "Browser", 80);
+  if (!/^[a-zA-Z0-9_-]{8,100}$/.test(sessionId)) {
+    throw new HttpsError("invalid-argument", "A valid session ID is required.");
+  }
+  const uid = request.auth.uid;
+  const ref = db.collection("staffPresence").doc(uid + "_" + sessionId);
+  const snap = await ref.get();
+  await ref.set({
+    uid,
+    email: cleanText(request.auth.token.email, 160),
+    displayName: cleanText(request.auth.token.name || request.data?.displayName || request.auth.token.email || "Staff", 100),
+    sessionId, page, device, status: "online",
+    startedAt: snap.exists ? (snap.data().startedAt || FieldValue.serverTimestamp()) : FieldValue.serverTimestamp(),
+    updatedAt: FieldValue.serverTimestamp()
+  }, { merge: true });
+  return { status: "online" };
+});
+
+export const endStaffPresence = onCall(async (request) => {
+  requireSignedIn(request);
+  const sessionId = cleanText(request.data?.sessionId, 100);
+  if (!/^[a-zA-Z0-9_-]{8,100}$/.test(sessionId)) {
+    throw new HttpsError("invalid-argument", "A valid session ID is required.");
+  }
+  const ref = db.collection("staffPresence").doc(request.auth.uid + "_" + sessionId);
+  const snap = await ref.get();
+  if (snap.exists) await ref.set({ status: "offline", updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+  return { status: "offline" };
+});
+
+export const listLiveStaffPresence = onCall(async (request) => {
+  requirePlatformOwner(request);
+  const snap = await db.collection("staffPresence").limit(500).get();
+  const cutoff = Date.now() - 90000;
+  const sessions = snap.docs.map(d => {
+    const data = d.data();
+    const lastSeen = data.updatedAt?.toDate?.()?.toISOString?.() || null;
+    const startedAt = data.startedAt?.toDate?.()?.toISOString?.() || null;
+    const fresh = data.status === "online" && lastSeen && Date.parse(lastSeen) >= cutoff;
+    return {
+      id: d.id, uid: cleanText(data.uid, 128), email: cleanText(data.email, 160),
+      displayName: cleanText(data.displayName, 100), page: cleanText(data.page, 60),
+      device: cleanText(data.device, 80), status: fresh ? "online" : "offline",
+      startedAt, lastSeen, durationSeconds: startedAt ? Math.max(0, Math.floor((Date.now() - Date.parse(startedAt)) / 1000)) : 0
+    };
+  });
+  sessions.sort((a,b) => (a.status === "online" ? 0 : 1) - (b.status === "online" ? 0 : 1) || Date.parse(b.lastSeen || 0) - Date.parse(a.lastSeen || 0));
+  return { sessions };
+});
+
+// A single M-Pesa transaction code can be claimed by only one sale globally.
+// Firestore transaction makes simultaneous attempts from different tills safe.
+export const registerMpesaCode = onCall(async (request) => {
+  requireSignedIn(request);
+  const code = cleanText(request.data?.code, 40).toUpperCase().replace(/\\s+/g, "");
+  const saleId = cleanText(request.data?.saleId, 100);
+  const phone = cleanText(request.data?.phone, 30);
+  const amount = Number(request.data?.amount || 0);
+  if (!/^[A-Z0-9]{6,20}$/.test(code) || !saleId || !Number.isFinite(amount) || amount <= 0) {
+    throw new HttpsError("invalid-argument", "Enter a valid M-Pesa code and sale details.");
+  }
+  const hash = createHash("sha256").update(code).digest("hex");
+  const ref = db.collection("mpesaCodeRegistry").doc(hash);
+  const alertRef = db.collection("mpesaAlerts").doc();
+  const result = await db.runTransaction(async (tx) => {
+    const existing = await tx.get(ref);
+    if (existing.exists) {
+      const old = existing.data();
+      if (old.saleId === saleId) return { duplicate: false, alreadyRegistered: true };
+      tx.create(alertRef, {
+        code, saleId, existingSaleId: cleanText(old.saleId, 100),
+        existingUid: cleanText(old.uid, 128), existingEmail: cleanText(old.email, 160),
+        attemptedUid: request.auth.uid, attemptedEmail: cleanText(request.auth.token.email, 160),
+        phone, amount, existingPhone: cleanText(old.phone, 30),
+        existingAmount: Number(old.amount || 0), status: "open",
+        createdAt: FieldValue.serverTimestamp()
+      });
+      return { duplicate: true, alertId: alertRef.id, existingSaleId: cleanText(old.saleId, 100) };
+    }
+    tx.create(ref, {
+      code, saleId, uid: request.auth.uid,
+      email: cleanText(request.auth.token.email, 160),
+      phone, amount, createdAt: FieldValue.serverTimestamp()
+    });
+    return { duplicate: false, registered: true };
+  });
+  return result;
+});
+
+export const releaseMpesaCode = onCall(async (request) => {
+  requireSignedIn(request);
+  const code = cleanText(request.data?.code, 40).toUpperCase().replace(/\\s+/g, "");
+  const saleId = cleanText(request.data?.saleId, 100);
+  const hash = createHash("sha256").update(code).digest("hex");
+  const ref = db.collection("mpesaCodeRegistry").doc(hash);
+  await db.runTransaction(async (tx) => {
+    const snap = await tx.get(ref);
+    if (snap.exists && snap.data().uid === request.auth.uid && snap.data().saleId === saleId) tx.delete(ref);
+  });
+  return { released: true };
+});
+
+export const listMpesaDuplicateAlerts = onCall(async (request) => {
+  requirePlatformOwner(request);
+  const snap = await db.collection("mpesaAlerts").orderBy("createdAt", "desc").limit(100).get();
+  return { alerts: snap.docs.map(d => {
+    const x = d.data();
+    return {
+      id: d.id, code: cleanText(x.code, 40), saleId: cleanText(x.saleId, 100),
+      existingSaleId: cleanText(x.existingSaleId, 100),
+      existingEmail: cleanText(x.existingEmail, 160), attemptedEmail: cleanText(x.attemptedEmail, 160),
+      phone: cleanText(x.phone, 30), existingPhone: cleanText(x.existingPhone, 30),
+      amount: Number(x.amount || 0), existingAmount: Number(x.existingAmount || 0),
+      status: cleanText(x.status, 20), createdAt: x.createdAt?.toDate?.()?.toISOString?.() || null
+    };
+  }) };
+});
+
+export const resolveMpesaDuplicateAlert = onCall(async (request) => {
+  requirePlatformOwner(request);
+  const alertId = cleanText(request.data?.alertId, 128);
+  if (!alertId) throw new HttpsError("invalid-argument", "Alert ID is required.");
+  const ref = db.collection("mpesaAlerts").doc(alertId);
+  const snap = await ref.get();
+  if (!snap.exists) throw new HttpsError("not-found", "Alert not found.");
+  await ref.update({ status: "reviewed", reviewedBy: request.auth.uid, reviewedAt: FieldValue.serverTimestamp() });
+  return { status: "reviewed" };
 });

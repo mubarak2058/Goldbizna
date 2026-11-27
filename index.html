@@ -75,4 +75,6 @@ document.getElementById('productCount').textContent=inv.length;document.getEleme
 document.getElementById('salesTotal').textContent='KSh '+sales.filter(s=>s.date===new Date().toISOString().slice(0,10)).reduce((a,s)=>a+Number(s.total||0),0).toLocaleString();
 document.getElementById('lowStock').textContent=inv.filter(p=>Number(p.stock||0)<=Number(p.low||5)).length;
 </script></section></main><script type="module" src="auth.js"></script>
+
+<script src="./controllers/health-watchdog.js" defer></script>
 </body></html>

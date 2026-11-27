@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#a90020">
 <title>MABROUK TRADER'S | Command Centre</title>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://www.googleapis.com" crossorigin>
+<link rel="dns-prefetch" href="https://firestore.googleapis.com">
 <link rel="stylesheet" href="premium.css?v=2026-11-27-settings">
 <style>
 :root{--red:#bd0028;--red2:#8f001e;--ink:#191216;--muted:#76666b;--line:#ead2d8;--paper:#fff;--wash:#fff6f7;--gold:#bd9144}
@@ -143,8 +146,8 @@ async function loadAll(){
   ["pos",async x=>{fill("currency",x.currency||"KES");fill("till",x.till||"TILL 1");fill("receiptTitle",x.receiptTitle||"MABROUK TRADER'S");fill("footerText",x.footerText||"Thank you");$("showLogo").checked=x.showLogo!==false;$("showCustomer").checked=x.showCustomer!==false}],
   ["system",async x=>{fill("theme",x.theme||"red");fill("language",x.language||"English")}]
  ];
- const failures=[];
- for(const [type,apply] of tasks){try{await apply(await readSettings(type))}catch(e){console.error("Settings read failed:",type,e);failures.push(type+ ": "+(e.code||e.message||"read denied"))}}
+ const results=await Promise.allSettled(tasks.map(async([type,apply])=>{const data=await readSettings(type);await apply(data);return type}));
+ const failures=results.flatMap((result,index)=>result.status==="rejected"?[tasks[index][0]+": "+(result.reason?.code||result.reason?.message||"read denied")]:[]);
  if(failures.length){setStatus("Firebase connected · access restricted","bad");notify("Settings could not read some saved preferences. Firebase reported: "+failures.join(" | ")+". Your existing records have not been changed. Check Firestore access rules before trying again.","bad")}
  else{setStatus("Firebase connected · preferences loaded","ok")}
 }

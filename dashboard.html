@@ -207,6 +207,63 @@ $('period').addEventListener('change',()=>{try{loadDashboardData();renderChart()
 $('fromDate').addEventListener('change',()=>{try{loadDashboardData();renderReport()}catch(e){console.error(e)}});
 $('toDate').addEventListener('change',()=>{try{loadDashboardData();renderReport()}catch(e){console.error(e)}});
 </script>
+<!-- MT_DASHBOARD_CLOUD_BRIDGE: live Firebase data bridge; keeps local fallback intact. -->
+<script type="module">
+import { app, db } from "./firebase.js";
+import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+const status = document.createElement("section");
+status.id = "cloudDataStatus";
+status.setAttribute("role","status");
+status.style.cssText = "margin:0 0 14px;padding:13px 15px;border:1px solid #d7a0aa;border-radius:10px;background:#fff4f5;color:#780018;font-size:12px;line-height:1.5";
+status.innerHTML = "<b>Cloud data connection:</b> Connecting to Firebase…";
+const main = document.querySelector("main.main");
+if (main) main.insertBefore(status, main.firstChild);
+
+let inventoryReady = false;
+let salesReady = false;
+let inventoryUnsub = null;
+let salesUnsub = null;
+function updateStatus(extra = "") {
+  const parts = [];
+  parts.push(inventoryReady ? "Inventory: live from Firebase" : "Inventory: connecting");
+  parts.push(salesReady ? "Sales: live from Firebase" : "Sales: cloud access not confirmed");
+  status.innerHTML = "<b>Cloud data connection:</b> " + parts.join(" · ") +
+    (extra ? "<div style='margin-top:5px'>" + extra + "</div>" : "");
+}
+function writeCache(key, rows) {
+  try { localStorage.setItem(key, JSON.stringify(rows)); }
+  catch (e) { console.warn("Dashboard cache update skipped", e); }
+}
+try {
+  inventoryUnsub = onSnapshot(collection(db, "inventory"), snap => {
+    writeCache("goldbizna_inventory", snap.docs.map(d => ({id:d.id,...d.data()})));
+    inventoryReady = true;
+    updateStatus();
+    if (typeof window.renderAll === "function") window.renderAll();
+  }, err => {
+    console.error("Dashboard inventory cloud read failed:", err);
+    updateStatus("Inventory could not be read from Firebase (" + (err.code || "error") + "). Existing local figures are retained.");
+  });
+
+  salesUnsub = onSnapshot(collection(db, "sales"), snap => {
+    writeCache("goldbizna_sales", snap.docs.map(d => ({id:d.id,...d.data()})));
+    salesReady = true;
+    updateStatus();
+    if (typeof window.renderAll === "function") window.renderAll();
+  }, err => {
+    console.error("Dashboard sales cloud read failed:", err);
+    updateStatus("Sales records are protected by the current Firestore rules. The dashboard is retaining this device's existing sales figures; cross-device sales totals are not yet available. We will configure a secure read rule before enabling them.");
+  });
+} catch (err) {
+  console.error("Dashboard cloud bridge failed:", err);
+  updateStatus("Firebase connection could not be started. Local dashboard data remains available.");
+}
+window.addEventListener("beforeunload", () => {
+  if (inventoryUnsub) inventoryUnsub();
+  if (salesUnsub) salesUnsub();
+});
+</script>
 <script type="module" src="auth.js"></script>
 
 <script src="./controllers/health-watchdog.js" defer></script>

@@ -34,7 +34,7 @@
     if (!liteStyle) {
       liteStyle = document.createElement("style");
       liteStyle.id = "mabrouk-lite-mode-style";
-      liteStyle.textContent = 'html.mabrouk-lite-mode *,html.mabrouk-lite-mode *::before,html.mabrouk-lite-mode *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important;backdrop-filter:none!important;filter:none!important;box-shadow:none!important}html.mabrouk-lite-mode{content-visibility:auto}';
+      liteStyle.textContent = 'html.mabrouk-lite-mode *,html.mabrouk-lite-mode *::before,html.mabrouk-lite-mode *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important;backdrop-filter:none!important;box-shadow:none!important}';
       document.head.append(liteStyle);
     }
     if (panel) {

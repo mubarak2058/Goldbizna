@@ -518,6 +518,7 @@ $("refreshPresence").onclick=loadLivePresence;$("refreshMpesaAlerts").onclick=lo
 $("refresh").onclick=async()=>{network();if(ownerReady){try{await loadCompanies();await loadUsers();await loadAuditLogs();await loadRooms();await loadLivePresence();await loadMpesaAlerts();message("Company, user, room, presence and payment-security data refreshed.","good");}catch(e){message("Refresh failed: "+(e.message||e.code),"bad");}}else if(auth.currentUser){await verify(auth.currentUser);}};
 $("reload").onclick=()=>location.reload();$("softRefresh").onclick=()=>location.reload();$("hardReload").onclick=()=>location.reload();$("checkNetwork").onclick=()=>{network();$("diagnostic").textContent=navigator.onLine?"Network available. Firebase and backend status are verified separately.":"Device is offline; reconnect and retry.";};$("backHome").onclick=()=>location.href="index.html";window.addEventListener("online",network);window.addEventListener("offline",network);
 onAuthStateChanged(auth,user=>{verify(user);});
+setInterval(()=>{if(ownerReady){loadLivePresence();loadMpesaAlerts();}},30000);
 window.addEventListener("error",event=>{
   console.error("Master Control page error:",event.error||event.message);
   const detail=event.message||"Unexpected page error";

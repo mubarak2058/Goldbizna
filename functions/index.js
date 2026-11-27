@@ -530,7 +530,7 @@ export const listLiveStaffPresence = onCall(async (request) => {
 // Firestore transaction makes simultaneous attempts from different tills safe.
 export const registerMpesaCode = onCall(async (request) => {
   requireSignedIn(request);
-  const code = cleanText(request.data?.code, 40).toUpperCase().replace(/\\s+/g, "");
+  const code = cleanText(request.data?.code, 40).toUpperCase().replace(/\s+/g, "");
   const saleId = cleanText(request.data?.saleId, 100);
   const phone = cleanText(request.data?.phone, 30);
   const amount = Number(request.data?.amount || 0);
@@ -567,7 +567,7 @@ export const registerMpesaCode = onCall(async (request) => {
 
 export const releaseMpesaCode = onCall(async (request) => {
   requireSignedIn(request);
-  const code = cleanText(request.data?.code, 40).toUpperCase().replace(/\\s+/g, "");
+  const code = cleanText(request.data?.code, 40).toUpperCase().replace(/\s+/g, "");
   const saleId = cleanText(request.data?.saleId, 100);
   const hash = createHash("sha256").update(code).digest("hex");
   const ref = db.collection("mpesaCodeRegistry").doc(hash);

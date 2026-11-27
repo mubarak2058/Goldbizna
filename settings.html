@@ -42,7 +42,7 @@ header{background:linear-gradient(115deg,#210710,#a90025 70%,#d21b3c)!important;
 <body>
 <header>
  <div class="brand"><small>BUSINESS COMMAND CENTRE</small><strong>MABROUK <em>TRADER'S</em></strong></div>
- <div class="head-actions"><a href="index.html">⌂ Dashboard</a><a class="gold" href="control-room.html">✦ Master Control Room</a></div>
+ <div class="head-actions"><button type="button" id="reloadSettings">↻ Refresh settings</button><a href="index.html">⌂ Dashboard</a><a class="gold" href="control-room.html">✦ Master Control Room</a></div>
 </header>
 <div class="shell">
  <div class="hero">
@@ -121,55 +121,64 @@ header{background:linear-gradient(115deg,#210710,#a90025 70%,#d21b3c)!important;
  <div class="foot">MABROUK TRADER'S POS PRO · DIGITAL · FAST · ORGANIZED</div>
 </div>
 <script type="module">
-import {initializeApp,getApps} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import {getAuth,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-import {getFirestore,doc,getDoc,setDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-const firebaseConfig={apiKey:"AIzaSyA8XB6aY45-yHT0uZ6NUhptMoNkYqgwqOs",authDomain:"goldbizna.firebaseapp.com",projectId:"goldbizna",storageBucket:"goldbizna.firebasestorage.app",messagingSenderId:"559981054862",appId:"1:559981054862:web:0635c689607d3baa3272df",measurementId:"G-95XL3BNQJF"};
-const app=getApps().length?getApps()[0]:initializeApp(firebaseConfig);
-const auth=getAuth(app),db=getFirestore(app);
-const $=id=>document.getElementById(id);
-let sessionReady=false;
-function notify(message,type="info"){const n=$("notice");n.textContent=message;n.className="alert show "+type;}
-function setStatus(text,kind=""){ $("firebaseStatus").textContent=text;$("statusDot").style.background=kind==="ok"?"#159447":kind==="bad"?"#bd0028":"#c18a20"; }
-function openTab(id){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));document.querySelectorAll(".section").forEach(s=>s.classList.toggle("active",s.id===id));}
-document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>openTab(b.dataset.tab)));
-document.querySelectorAll("[data-jump]").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();openTab(a.dataset.jump)}));
-async function readSettings(type){
- const snap=await getDoc(doc(db,"settings",type));
- if(!snap.exists())return {};
- return snap.data();
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+import { initSettingsNavigation } from "./controllers/settings-navigation.js";
+import { createSettingsDataController } from "./controllers/settings-data-controller.js";
+import { initSettingsActions } from "./controllers/settings-actions-controller.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA8XB6aY45-yHT0uZ6NUhptMoNkYqgwqOs",
+  authDomain: "goldbizna.firebaseapp.com",
+  projectId: "goldbizna",
+  storageBucket: "goldbizna.firebasestorage.app",
+  messagingSenderId: "559981054862",
+  appId: "1:559981054862:web:0635c689607d3baa3272df",
+  measurementId: "G-95XL3BNQJF"
+};
+const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const $ = id => document.getElementById(id);
+let sessionReady = false;
+
+function notify(message, type = "info") {
+  const box = $("notice");
+  box.textContent = message;
+  box.className = "alert show " + type;
 }
-function fill(id,value){$(id).value=value??""}
-async function loadAll(){
- const tasks=[
-  ["business",async x=>{fill("bizName",x.name);fill("bizPhone",x.phone);fill("bizEmail",x.email);fill("bizLocation",x.location);fill("bizAddress",x.address)}],
-  ["pos",async x=>{fill("currency",x.currency||"KES");fill("till",x.till||"TILL 1");fill("receiptTitle",x.receiptTitle||"MABROUK TRADER'S");fill("footerText",x.footerText||"Thank you");$("showLogo").checked=x.showLogo!==false;$("showCustomer").checked=x.showCustomer!==false}],
-  ["system",async x=>{fill("theme",x.theme||"red");fill("language",x.language||"English")}]
- ];
- const results=await Promise.allSettled(tasks.map(async([type,apply])=>{const data=await readSettings(type);await apply(data);return type}));
- const failures=results.flatMap((result,index)=>result.status==="rejected"?[tasks[index][0]+": "+(result.reason?.code||result.reason?.message||"read denied")]:[]);
- if(failures.length){setStatus("Firebase connected · access restricted","bad");notify("Settings could not read some saved preferences. Firebase reported: "+failures.join(" | ")+". Your existing records have not been changed. Check Firestore access rules before trying again.","bad")}
- else{setStatus("Firebase connected · preferences loaded","ok")}
+function setStatus(message, kind = "") {
+  $("firebaseStatus").textContent = message;
+  $("statusDot").style.background = kind === "ok" ? "#159447" : kind === "bad" ? "#bd0028" : "#c18a20";
 }
-async function save(type,data,button){
- if(!sessionReady){notify("Please wait until your sign-in session is checked.","info");return}
- button.disabled=true;const old=button.textContent;button.textContent="Saving…";
- try{await setDoc(doc(db,"settings",type),{...data,updatedAt:serverTimestamp()},{merge:true});notify("Saved successfully. Your existing POS records were not changed.","good")}
- catch(e){console.error("Settings save failed:",type,e);const detail=e.code==="permission-denied"?"Firestore denied this save (permission-denied). The current Firestore rules block this settings write.":(e.message||"Unknown Firebase error");notify("Could not save "+type+" settings. "+detail+" No existing business data was deleted.","bad")}
- finally{button.disabled=false;button.textContent=old}
-}
-$("saveBusiness").addEventListener("click",()=>save("business",{name:$("bizName").value.trim(),phone:$("bizPhone").value.trim(),email:$("bizEmail").value.trim(),location:$("bizLocation").value.trim(),address:$("bizAddress").value.trim()},$("saveBusiness")));
-$("savePos").addEventListener("click",()=>save("pos",{currency:$("currency").value.trim().toUpperCase()||"KES",till:$("till").value.trim(),receiptTitle:$("receiptTitle").value.trim(),footerText:$("footerText").value.trim(),showLogo:$("showLogo").checked,showCustomer:$("showCustomer").checked},$("savePos")));
-$("saveSystem").addEventListener("click",()=>save("system",{theme:$("theme").value,language:$("language").value},$("saveSystem")));
-onAuthStateChanged(auth,async user=>{
- const localSession=["goldbizna_logged_in","loggedIn","gb_login"].some(k=>localStorage.getItem(k)==="true");
- if(!user&&!localSession){location.replace("login.html");return}
- sessionReady=true;
- if(user){setStatus("Signed in · checking Firebase","")}
- else{setStatus("Local session · Firebase access may be restricted","")}
- await loadAll();
+
+initSettingsNavigation();
+const settings = createSettingsDataController({
+  db, doc, getDoc, setDoc, serverTimestamp, notify, setStatus,
+  isSessionReady: () => sessionReady
 });
-window.addEventListener("error",e=>{console.error(e.error||e.message)});
+initSettingsActions({ settings, notify });
+
+onAuthStateChanged(auth, async user => {
+  const localSession = ["goldbizna_logged_in", "loggedIn", "gb_login"]
+    .some(key => localStorage.getItem(key) === "true");
+  if (!user && !localSession) {
+    location.replace("login.html");
+    return;
+  }
+  sessionReady = true;
+  setStatus(user ? "Signed in · loading preferences" : "Local session · checking Firebase access");
+  try { await settings.loadAll(); }
+  catch (error) {
+    console.error("Settings initial load failed:", error);
+    setStatus("Settings load failed", "bad");
+    notify("Settings could not finish loading: " + (error?.message || "Check your connection."), "bad");
+  }
+});
+
+window.addEventListener("error", event => console.error("Settings page error:", event.error || event.message));
+window.addEventListener("unhandledrejection", event => console.error("Settings background task failed:", event.reason));
 </script>
 
 </body>

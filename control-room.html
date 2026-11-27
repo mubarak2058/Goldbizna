@@ -144,6 +144,16 @@
  <div class="muted" style="margin-top:10px">Only an active company administrator can change memberships in their own company. You cannot change your own membership.</div>
 </section>
 <section class="panel" style="margin-top:13px">
+ <div class="panelhead"><div><h2>Live staff monitor</h2><div class="muted">Authenticated POS sessions · heartbeat every 30 seconds</div></div><div class="actions"><span class="tag" id="liveCount">0 ONLINE</span><button class="btn" id="refreshPresence">↻ Refresh</button></div></div>
+ <div class="audit-list" id="presenceList"><div class="muted">Sign in to monitor live sessions.</div></div>
+ <div class="muted" style="margin-top:10px">A session is shown offline if its heartbeat has not arrived for 90 seconds. Time online is measured from its first heartbeat.</div>
+</section>
+<section class="panel" style="margin-top:13px;border-color:#743a42">
+ <div class="panelhead"><div><h2>🚨 M-Pesa duplicate-code alarms</h2><div class="muted">One transaction code may be accepted for only one sale across the platform</div></div><div class="actions"><span class="tag" id="mpesaAlertCount">0 OPEN ALERTS</span><button class="btn" id="enableAlarm">Enable sound alarm</button><button class="btn" id="refreshMpesaAlerts">↻ Refresh</button></div></div>
+ <div class="audit-list" id="mpesaAlertList"><div class="muted">Sign in to load M-Pesa alerts.</div></div>
+ <div class="muted" style="margin-top:10px">Duplicate codes are blocked at the POS before the sale is finalized. Alerts are for manager review; a match alone does not prove misconduct.</div>
+</section>
+<section class="panel" style="margin-top:13px">
  <div class="panelhead"><div><h2>Platform activity log</h2><div class="muted">Latest company registrations, status changes and invitations</div></div><button class="btn" id="refreshAudit">↻ Refresh log</button></div>
  <div id="auditList" class="audit-list"><div class="muted">Sign in to load platform activity.</div></div>
 </section>
@@ -416,6 +426,61 @@ async function loadAuditLogs(){
   }
  }catch(e){target.textContent="Activity log unavailable. Deploy the updated Firebase Functions, then refresh.";}
 }
+
+let alarmSoundEnabled=false, knownMpesaAlerts=new Set();
+function durationLabel(seconds){
+ const s=Math.max(0,Number(seconds)||0),d=Math.floor(s/86400),hh=Math.floor((s%86400)/3600),mm=Math.floor((s%3600)/60);
+ return (d?d+"d ":"")+(hh?hh+"h ":"")+mm+"m";
+}
+async function loadLivePresence(){
+ if(!ownerReady)return;
+ const target=$("presenceList");target.textContent="Checking active sessions…";
+ try{
+  const result=await withTimeout(httpsCallable(functions,"listLiveStaffPresence")({}),12000,"Presence request timed out.");
+  const sessions=result.data?.sessions||[],online=sessions.filter(x=>x.status==="online");
+  $("liveCount").textContent=online.length+" ONLINE";
+  target.replaceChildren();
+  if(!sessions.length){target.textContent="No staff sessions have checked in yet.";return;}
+  for(const session of sessions){
+   const item=document.createElement("div");item.className="user-row";
+   const info=document.createElement("div"),name=document.createElement("b"),meta=document.createElement("small");
+   name.textContent=session.displayName||session.email||session.uid||"Staff account";
+   meta.textContent=[session.email,session.page||"POS",session.device||"Browser","Started "+(session.startedAt?new Date(session.startedAt).toLocaleString():"—"),"Online for "+durationLabel(session.durationSeconds),"Last seen "+(session.lastSeen?new Date(session.lastSeen).toLocaleTimeString():"—")].filter(Boolean).join(" · ");
+   const status=document.createElement("span");status.className="tag";status.textContent=session.status==="online"?"● ONLINE":"OFFLINE";if(session.status==="online")status.style.borderColor="#276b50";
+   info.append(name,meta);item.append(info,status);target.append(item);
+  }
+ }catch(e){target.textContent="Live monitor unavailable. Deploy the updated Firebase Functions, then refresh.";}
+}
+let alarmAudioContext=null;
+function beepAlarm(){
+ if(!alarmSoundEnabled)return;
+ try{
+  alarmAudioContext=alarmAudioContext||new (window.AudioContext||window.webkitAudioContext)();
+  if(alarmAudioContext.state==="suspended")alarmAudioContext.resume();
+  [0,1,2].forEach((n)=>{const osc=alarmAudioContext.createOscillator(),gain=alarmAudioContext.createGain();osc.type="square";osc.frequency.value=n===1?660:880;gain.gain.setValueAtTime(.0001,alarmAudioContext.currentTime+n*.22);gain.gain.exponentialRampToValueAtTime(.18,alarmAudioContext.currentTime+n*.22+.02);gain.gain.exponentialRampToValueAtTime(.0001,alarmAudioContext.currentTime+n*.22+.16);osc.connect(gain);gain.connect(alarmAudioContext.destination);osc.start(alarmAudioContext.currentTime+n*.22);osc.stop(alarmAudioContext.currentTime+n*.22+.18);});
+ }catch(e){console.warn("Alarm sound unavailable",e);}
+}
+async function loadMpesaAlerts(){
+ if(!ownerReady)return;
+ const target=$("mpesaAlertList");target.textContent="Checking M-Pesa alerts…";
+ try{
+  const result=await withTimeout(httpsCallable(functions,"listMpesaDuplicateAlerts")({}),12000,"M-Pesa alert request timed out.");
+  const alerts=result.data?.alerts||[],open=alerts.filter(a=>a.status!=="reviewed");
+  $("mpesaAlertCount").textContent=open.length+" OPEN ALERTS";
+  const newIds=alerts.filter(a=>!knownMpesaAlerts.has(a.id));if(knownMpesaAlerts.size&&newIds.length)beepAlarm();alerts.forEach(a=>knownMpesaAlerts.add(a.id));
+  target.replaceChildren();
+  if(!alerts.length){target.textContent="No duplicate M-Pesa codes have been detected.";return;}
+  for(const alert of alerts){
+   const item=document.createElement("div");item.className="audit-item";item.style.borderColor=alert.status==="reviewed"?"#34445a":"#8b343b";
+   const info=document.createElement("div"),title=document.createElement("b"),detail=document.createElement("small");
+   title.textContent=(alert.status==="reviewed"?"REVIEWED · ":"🚨 DUPLICATE CODE · ")+alert.code;
+   detail.textContent=["Attempted sale: "+alert.saleId,"Previously used sale: "+alert.existingSaleId,"Attempted by: "+(alert.attemptedEmail||"Unknown"),"Previously used by: "+(alert.existingEmail||"Unknown"),"Phone: "+(alert.phone||"—"),"Amounts: KSh "+Number(alert.amount||0).toFixed(2)+" / KSh "+Number(alert.existingAmount||0).toFixed(2),alert.createdAt?new Date(alert.createdAt).toLocaleString():""].join(" · ");
+   info.append(title,detail);item.append(info);
+   if(alert.status!=="reviewed"){const btn=document.createElement("button");btn.className="btn";btn.textContent="Mark reviewed";btn.onclick=async()=>{btn.disabled=true;try{await httpsCallable(functions,"resolveMpesaDuplicateAlert")({alertId:alert.id});await loadMpesaAlerts()}catch(e){btn.disabled=false;message("Could not update alert: "+(e.message||e.code),"bad")}};item.append(btn)}
+   target.append(item);
+  }
+ }catch(e){target.textContent="M-Pesa alert monitor unavailable. Deploy the updated Firebase Functions, then refresh.";}
+}
 async function changeStatus(companyId,status){if(!ownerReady||busy)return;if(!confirm("Change this company status to "+status+"?"))return;busy=true;try{await httpsCallable(functions,"setCompanyStatus")({companyId,status});message("Company status updated successfully.","good");await loadCompanies();await loadUsers();await loadAuditLogs();}catch(e){message("Could not update company: "+(e.message||e.code||"Unknown error"),"bad");}finally{busy=false;}}
 async function verify(user){
   const run=++verificationRun;
@@ -447,10 +512,10 @@ async function verify(user){
   }
   $("ownerEmail").textContent=user.email||user.uid;$("ownerName").textContent="Verifying…";message("Checking your signed-in account…");try{await withTimeout(Promise.resolve(user),10000,"Account verification timed out.");
 if(run!==verificationRun)return;
-ownerReady=true;$("ownerName").textContent="Signed-in user";$("platformStatus").textContent="Ready";$("platformNote").textContent="Signed-in access verified";message("Access ready. Loading company records…","good");await loadCompanies();await loadUsers();await loadAuditLogs();await loadRooms();if(run!==verificationRun)return;$("diagnostic").textContent="Signed-in access verified. Company registry is responding.";}catch(e){if(run!==verificationRun)return;ownerReady=false;$("ownerName").textContent="Check connection";$("platformStatus").textContent="Limited";$("platformNote").textContent="Verification or server response delayed";message("Master Control is still open, but verification did not finish: "+(e.message||e.code||"Unknown error"),"bad");$("diagnostic").textContent="Try Refresh data when your connection is stable.";}}
+ownerReady=true;$("ownerName").textContent="Signed-in user";$("platformStatus").textContent="Ready";$("platformNote").textContent="Signed-in access verified";message("Access ready. Loading company records…","good");await loadCompanies();await loadUsers();await loadAuditLogs();await loadRooms();await loadLivePresence();await loadMpesaAlerts();if(run!==verificationRun)return;$("diagnostic").textContent="Signed-in access verified. Company registry is responding.";}catch(e){if(run!==verificationRun)return;ownerReady=false;$("ownerName").textContent="Check connection";$("platformStatus").textContent="Limited";$("platformNote").textContent="Verification or server response delayed";message("Master Control is still open, but verification did not finish: "+(e.message||e.code||"Unknown error"),"bad");$("diagnostic").textContent="Try Refresh data when your connection is stable.";}}
 $("companyForm").addEventListener("submit",async e=>{e.preventDefault();if(!ownerReady||busy)return;const payload={name:$("companyName").value.trim(),legalName:$("legalName").value.trim(),adminEmail:$("adminEmail").value.trim(),phone:$("phone").value.trim(),companyUrl:$("companyUrl").value.trim(),country:$("country").value.trim()||"Kenya",currency:$("currency").value};if(!payload.name||!payload.adminEmail){message("Company name and admin email are required.","bad");return;}if(payload.companyUrl&&!/^https:\/\//i.test(payload.companyUrl)){message("Company link must start with https://","bad");return;}busy=true;$("createBtn").disabled=true;$("createBtn").textContent="Creating…";try{const result=await httpsCallable(functions,"createCompany")(payload);message("Company created in pending status. ID: "+result.data.companyId,"good");$("companyForm").reset();$("country").value="Kenya";await loadCompanies();await loadUsers();await loadAuditLogs();}catch(e){message("Company creation failed: "+(e.message||e.code||"Check that the updated Firebase Functions have been deployed."),"bad");}finally{busy=false;$("createBtn").disabled=false;$("createBtn").textContent="Create pending company";}});
-$("refreshUsers").onclick=loadUsers;$("userSearch").addEventListener("input",drawUsers);$("userFilter").addEventListener("change",drawUsers);$("refreshAudit").onclick=loadAuditLogs;$("companySearch").addEventListener("input",drawCompanyList);$("companyFilter").addEventListener("change",drawCompanyList);
-$("refresh").onclick=async()=>{network();if(ownerReady){try{await loadCompanies();await loadUsers();await loadAuditLogs();await loadRooms();message("Company, user, room and activity data refreshed.","good");}catch(e){message("Refresh failed: "+(e.message||e.code),"bad");}}else if(auth.currentUser){await verify(auth.currentUser);}};
+$("refreshPresence").onclick=loadLivePresence;$("refreshMpesaAlerts").onclick=loadMpesaAlerts;$("enableAlarm").onclick=()=>{alarmSoundEnabled=!alarmSoundEnabled;$("enableAlarm").textContent=alarmSoundEnabled?"Sound alarm enabled ✓":"Enable sound alarm";if(alarmSoundEnabled)beepAlarm()};$("refreshUsers").onclick=loadUsers;$("userSearch").addEventListener("input",drawUsers);$("userFilter").addEventListener("change",drawUsers);$("refreshAudit").onclick=loadAuditLogs;$("companySearch").addEventListener("input",drawCompanyList);$("companyFilter").addEventListener("change",drawCompanyList);
+$("refresh").onclick=async()=>{network();if(ownerReady){try{await loadCompanies();await loadUsers();await loadAuditLogs();await loadRooms();await loadLivePresence();await loadMpesaAlerts();message("Company, user, room, presence and payment-security data refreshed.","good");}catch(e){message("Refresh failed: "+(e.message||e.code),"bad");}}else if(auth.currentUser){await verify(auth.currentUser);}};
 $("reload").onclick=()=>location.reload();$("softRefresh").onclick=()=>location.reload();$("hardReload").onclick=()=>location.reload();$("checkNetwork").onclick=()=>{network();$("diagnostic").textContent=navigator.onLine?"Network available. Firebase and backend status are verified separately.":"Device is offline; reconnect and retry.";};$("backHome").onclick=()=>location.href="index.html";window.addEventListener("online",network);window.addEventListener("offline",network);
 onAuthStateChanged(auth,user=>{verify(user);});
 window.addEventListener("error",event=>{

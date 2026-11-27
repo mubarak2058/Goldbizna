@@ -1,14 +1,21 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // TEMPORARY DEVELOPMENT ACCESS FOR THE LEGACY MABROUK TRADER'S INVENTORY.
-    // Anyone who knows this Firebase project can read, create, edit, or delete
-    // inventory documents while these rules are deployed.
+    // LEGACY INVENTORY ACCESS: preserved exactly as currently deployed.
+    // This is still public development access and should be hardened separately.
     match /inventory/{productId} {
       allow read, create, update, delete: if true;
     }
 
-    // Keep every other collection closed during the inventory-only test.
+    // Settings are private to the verified platform owner account.
+    // This does not grant staff broad access to company or user records.
+    match /settings/{settingId} {
+      allow read, write: if request.auth != null
+        && request.auth.uid == "ZW5pqCx3FvSzxtXBiZMMC6fP5ro2";
+    }
+
+    // All other collections remain closed unless a specific secure rule
+    // is added for that collection.
     match /{document=**} {
       allow read, write: if false;
     }

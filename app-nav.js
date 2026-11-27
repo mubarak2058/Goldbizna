@@ -17,7 +17,8 @@
     ['reports.html','▤','Reports'],
     ['users.html','♙','Users'],
     ['settings.html','⚙','Settings'],
-    ['control-room.html','⌘','Master Control']
+    ['control-room.html','⌘','Master Control'],
+    ['emergency-recovery.html','🛟','Emergency Recovery']
   ];
 
   const aside = document.createElement('aside');

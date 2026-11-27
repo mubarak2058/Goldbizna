@@ -18,6 +18,9 @@
     document.head.append(style);
     document.body.append(panel);
     panel.querySelector(".mhw-head button").addEventListener("click", () => { panel.style.display = "none"; });
+    panel.querySelector("[data-mhw-lite]").addEventListener("click", () => setLiteMode(true));
+    panel.querySelector("[data-mhw-normal]").addEventListener("click", () => setLiteMode(false));
+    if (sessionStorage.getItem("mabrouk_lite_mode") === "on") setLiteMode(true);
     panel.querySelector("[data-mhw-reload]").addEventListener("click", () => {
       panel.querySelector("[data-mhw-reload]").disabled = true;
       panel.querySelector("p").textContent = "Reloading this page. Your cloud records are not being reset.";

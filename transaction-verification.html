@@ -33,4 +33,6 @@ onAuthStateChanged(auth,user=>{authUser=user;if(!user){$('connection').textConte
 onSnapshot(collection(db,'sales'),snap=>{sales=snap.docs.map(d=>({id:d.id,...d.data()}));updateStats();$('connection').textContent='Connected to Firebase · '+sales.length+' cloud sales available';if($('term').value.trim())search()},err=>{$('connection').textContent='Firebase sales access error: '+(err.message||err.code);console.error(err)});
 onSnapshot(collection(db,'paymentVerifications'),snap=>{verifications=snap.docs.map(d=>d.data());renderHistory();updateStats()},err=>{console.error(err);$('history').innerHTML='<tr><td colspan="6">Cannot load verification history: '+esc(err.message||err.code)+'</td></tr>'});
 </script><script type="module" src="auth.js"></script><script src="app-nav.js" defer></script>
+
+<script src="./controllers/health-watchdog.js" defer></script>
 </body></html>

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#a90020">
+<title>MABROUK TRADER'S | Emergency Recovery</title>
+<style>
+:root{--red:#bd0028;--ink:#21151a;--muted:#76666b;--line:#ead2d8;--paper:#fff;--wash:#fff5f6}
+*{box-sizing:border-box}body{margin:0;background:var(--wash);color:var(--ink);font:15px system-ui,Arial,sans-serif}
+header{background:linear-gradient(115deg,#210710,#a90025 72%,#d21b3c);color:#fff;padding:19px clamp(16px,4vw,40px)}
+header b{letter-spacing:.07em}header span{color:#f0ce8b}
+main{max-width:1000px;margin:auto;padding:24px 16px 50px}
+h1{font-size:clamp(28px,5vw,42px);margin:8px 0}.intro{color:var(--muted);line-height:1.6;max-width:720px}
+.warning{padding:15px;border:1px solid #e7c98b;background:#fff9e9;border-radius:13px;line-height:1.55;margin:18px 0}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:18px;box-shadow:0 8px 25px #5000190a}
+.card h2{font-size:17px;margin:0 0 7px}.card p{font-size:13px;line-height:1.55;color:var(--muted);min-height:40px}
+button,a.action{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:11px 15px;border:0;border-radius:10px;background:var(--red);color:#fff;text-decoration:none;font-weight:800;cursor:pointer}
+button.secondary,a.secondary{background:#fff0f2;color:var(--red);border:1px solid #efc5cd}
+button:disabled{opacity:.5;cursor:wait}
+#status{margin:16px 0;padding:14px;border-radius:12px;background:#fff;border:1px solid var(--line);line-height:1.5;overflow-wrap:anywhere}
+#status.good{background:#edfff4;border-color:#b4e4c5;color:#145d31}#status.bad{background:#fff0f1;border-color:#efb9c2;color:#8e001d}
+.actions{display:flex;gap:9px;flex-wrap:wrap}.small{font-size:12px;color:var(--muted);line-height:1.6;margin-top:20px}
+@media(max-width:600px){.grid{grid-template-columns:1fr}.card p{min-height:0}}
+</style>
+</head>
+<body>
+<header><b>MABROUK <span>TRADER'S</span> · EMERGENCY RECOVERY</b></header>
+<main>
+<div style="font-size:11px;font-weight:900;letter-spacing:.18em;color:#bd0028">INDEPENDENT SYSTEM RESCUE PAGE</div>
+<h1>Get your system back to normal.</h1>
+<p class="intro">Use this page when the POS, Settings or dashboard freezes, loads endlessly, or behaves strangely. This recovery page works separately from the main app and does not need Firebase to open.</p>
+<div class="warning"><b>Data protection:</b> Recovery actions below do not delete sales, inventory, customers, savings, staff accounts or Firestore records. The cache-clean action only clears cached website files and unregisters this site's service workers. It does not clear local storage or IndexedDB.</div>
+<div id="status" role="status" aria-live="polite">Recovery centre ready. Choose the safest action for the problem.</div>
+<section class="grid">
+ <article class="card"><h2>1. Return to normal</h2><p>Reload the current recovery page, then reopen your normal workspace.</p><div class="actions"><button id="normalReload">Reload page</button><a class="action secondary" href="index.html">Open dashboard</a></div></article>
+ <article class="card"><h2>2. Repair cached website files</h2><p>Use if the site keeps showing an old broken version after an update. Clears website cache only; your business records stay untouched.</p><button id="repairCache">Repair website cache</button></article>
+ <article class="card"><h2>3. Check connection</h2><p>Check whether this device is online and whether the browser can reach the website host.</p><button class="secondary" id="checkConnection">Run connection test</button></article>
+ <article class="card"><h2>4. Open a clean workspace</h2><p>Open the POS or Settings in a separate tab, without changing or resetting business data.</p><div class="actions"><a class="action" href="pos.html" target="_blank" rel="noopener">Open POS</a><a class="action secondary" href="settings.html" target="_blank" rel="noopener">Open Settings</a></div></article>
+ <article class="card"><h2>5. Full browser restart</h2><p>If the browser tab itself is frozen and buttons do not respond, close the frozen tab or browser app, reopen it, and return to this recovery page.</p><button class="secondary" id="showRestartSteps">Show restart steps</button></article>
+ <article class="card"><h2>6. Return to Master Control</h2><p>Go back to the protected platform management area after the workspace responds normally.</p><a class="action secondary" href="control-room.html">Open Master Control</a></article>
+</section>
+<p class="small">Important: A web page cannot forcibly repair a browser tab whose JavaScript engine is completely frozen. In that case, close the frozen tab/app and reopen it. Do not use browser options such as “Clear site data” or “Clear storage” as they may remove locally stored information.</p>
+</main>
+<script type="module" src="./controllers/emergency-recovery-controller.js"></script>
+</body></html>

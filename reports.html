@@ -39,4 +39,6 @@ let days={};a.forEach(s=>{let k=new Date(s.date).toISOString().slice(0,10);if(!d
 $('refresh').onclick=render;$('period').onchange=render;$('from').onchange=render;$('to').onchange=render;$('print').onclick=()=>window.print();render();
 </script><script type="module" src="auth.js"></script>
 <script src="app-nav.js" defer></script>
+
+<script src="./controllers/health-watchdog.js" defer></script>
 </body></html>

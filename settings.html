@@ -1,1404 +1,173 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MABROUK TRADER'S - Settings</title>
-
+<meta name="theme-color" content="#a90020">
+<title>MABROUK TRADER'S | Command Centre</title>
+<link rel="stylesheet" href="premium.css?v=2026-11-27-settings">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-font-family:Arial,sans-serif;
-background:#f3f6f3;
-color:#222
-}
-header{
-background:#087a0b;
-color:#fff;
-padding:15px;
-font-size:20px;
-font-weight:bold;
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:10px
-}
-.headerBtns{display:flex;gap:6px}
-.headerBtns button{
-border:0;
-padding:8px 11px;
-border-radius:6px;
-font-weight:bold;
-cursor:pointer
-}
-.homeBtn{background:#fff;color:#087a0b}
-.logoutBtn{background:#c62828;color:#fff}
-
-nav{
-background:#075d08;
-padding:8px;
-display:flex;
-gap:6px;
-overflow:auto
-}
-nav button{
-border:0;
-background:#fff;
-color:#075d08;
-padding:9px 13px;
-border-radius:6px;
-font-weight:bold;
-white-space:nowrap;
-cursor:pointer
-}
-
-main{
-max-width:1000px;
-margin:auto;
-padding:12px
-}
-
-.card{
-background:#fff;
-padding:15px;
-margin-bottom:12px;
-border-radius:10px;
-box-shadow:0 1px 5px #bbb
-}
-
-h2{
-margin:0 0 12px;
-color:#087a0b;
-font-size:18px
-}
-
-h3{
-margin:12px 0 8px
-}
-
-input,select,textarea{
-width:100%;
-padding:10px;
-margin:5px 0;
-border:1px solid #bbb;
-border-radius:6px;
-font-size:14px
-}
-
-textarea{
-min-height:80px;
-resize:vertical
-}
-
-button{cursor:pointer}
-
-.primary{
-background:#087a0b;
-color:white;
-border:0;
-padding:10px 15px;
-border-radius:6px;
-font-weight:bold
-}
-
-.danger{
-background:#c62828;
-color:white;
-border:0;
-padding:7px 10px;
-border-radius:5px
-}
-
-.gray{
-background:#777;
-color:#fff;
-border:0;
-padding:7px 10px;
-border-radius:5px
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:10px
-}
-
-.perms{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:6px
-}
-
-.perms label{
-background:#f1f4f1;
-padding:8px;
-border-radius:5px;
-font-size:13px
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-font-size:13px
-}
-
-th,td{
-padding:8px;
-border-bottom:1px solid #ddd;
-text-align:left
-}
-
-.status{
-font-weight:bold
-}
-
-.message{
-padding:10px;
-border-radius:6px;
-margin-bottom:10px;
-display:none
-}
-
-.success{
-background:#e8f5e9;
-color:#087a0b
-}
-
-.error{
-background:#ffebee;
-color:#c62828
-}
-
-.activityItem{
-padding:10px;
-border-bottom:1px solid #ddd
-}
-
-.small{
-font-size:12px;
-color:#777
-}
-
-@media(max-width:650px){
-.grid,.perms{
-grid-template-columns:1fr
-}
-table{
-font-size:11px
-}
-header{
-font-size:17px
-}
-}
+:root{--red:#bd0028;--red2:#8f001e;--ink:#191216;--muted:#76666b;--line:#ead2d8;--paper:#fff;--wash:#fff6f7;--gold:#bd9144}
+*{box-sizing:border-box}body{margin:0;background:var(--wash);color:var(--ink);font:14px Inter,system-ui,Arial,sans-serif}
+header{background:linear-gradient(115deg,#210710,#a90025 70%,#d21b3c)!important;color:white;padding:20px clamp(16px,4vw,42px);display:flex;align-items:center;justify-content:space-between;gap:16px;position:sticky;top:0;z-index:20}
+.brand small{display:block;color:#f6cbd4;font-size:10px;letter-spacing:.23em;font-weight:800;margin-bottom:5px}.brand strong{font-size:clamp(17px,2.6vw,25px);letter-spacing:.02em}.brand em{color:#f0ce8b;font-style:normal}
+.head-actions{display:flex;gap:8px;flex-wrap:wrap}.head-actions a,.head-actions button{border:1px solid #ffffff55;border-radius:10px;padding:10px 13px;color:white;text-decoration:none;background:#ffffff14;font-weight:750;cursor:pointer}.head-actions .gold{background:#e8c987;color:#281908;border:0}
+.shell{max-width:1500px;margin:auto;padding:24px clamp(12px,3vw,34px) 50px}
+.hero{display:flex;justify-content:space-between;align-items:end;gap:18px;flex-wrap:wrap;margin:6px 0 22px}.eyebrow{color:var(--red);font-size:10px;letter-spacing:.2em;font-weight:900}.hero h1{font-size:clamp(26px,4vw,40px);margin:7px 0 5px;letter-spacing:-.04em}.hero p{margin:0;color:var(--muted);max-width:690px;line-height:1.55}.live{display:flex;align-items:center;gap:8px;background:white;border:1px solid var(--line);border-radius:30px;padding:9px 13px;font-size:12px;font-weight:800}.dot{width:9px;height:9px;border-radius:50%;background:#c18a20;box-shadow:0 0 0 4px #f7edda}
+.alert{display:none;padding:13px 15px;border-radius:12px;margin:12px 0 18px;line-height:1.5}.alert.show{display:block}.alert.bad{background:#fff0f1;border:1px solid #efb9c2;color:#8e001d}.alert.good{background:#edfff4;border:1px solid #b4e4c5;color:#145d31}.alert.info{background:#fff9e9;border:1px solid #ead7a5;color:#62460b}
+.layout{display:grid;grid-template-columns:245px minmax(0,1fr);gap:18px;align-items:start}
+.side{background:#fff;border:1px solid var(--line);border-radius:17px;padding:12px;box-shadow:0 10px 28px #5000190a;position:sticky;top:102px}
+.side .caption{font-size:10px;color:#9b858b;font-weight:900;letter-spacing:.16em;padding:8px 10px 10px}
+.tab{display:flex;align-items:center;gap:11px;width:100%;text-align:left;padding:12px 11px;margin:2px 0;border:0;border-radius:10px;background:transparent;color:#46363b;font-weight:750;cursor:pointer}
+.tab span{width:23px;text-align:center;font-size:17px}.tab.active{background:#fff0f2;color:var(--red);box-shadow:inset 3px 0 var(--red)}.tab:hover{background:#fff5f6}
+.content{min-width:0}.section{display:none}.section.active{display:block}
+.section-head{display:flex;justify-content:space-between;align-items:start;gap:12px;margin:2px 0 16px}.section-head h2{font-size:23px;margin:0 0 5px;letter-spacing:-.03em}.section-head p{margin:0;color:var(--muted);line-height:1.5}
+.panel{background:white;border:1px solid var(--line);border-radius:17px;padding:clamp(15px,2.5vw,23px);box-shadow:0 10px 30px #5000190a;margin-bottom:14px}
+.panel h3{margin:0 0 5px;font-size:16px}.panel .hint{color:var(--muted);font-size:12px;line-height:1.5;margin:0 0 17px}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.field.full{grid-column:1/-1}.field label{display:block;font-size:11px;font-weight:850;color:#5d4a50;margin:0 0 6px}
+.field input,.field select,.field textarea{width:100%;padding:12px 13px;border:1px solid #e4cbd1;border-radius:10px;background:#fff;color:#21171a;font:inherit;min-height:43px}.field textarea{min-height:86px;resize:vertical}
+.checks{display:flex;gap:20px;flex-wrap:wrap;margin:15px 0}.checks label{display:flex;align-items:center;gap:8px;font-weight:700;color:#4c3a40}.checks input{accent-color:var(--red);width:17px;height:17px}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}.btn{border:0;border-radius:10px;padding:11px 16px;font-weight:850;cursor:pointer}.btn.primary{background:var(--red);color:white}.btn.secondary{background:#fff0f2;color:var(--red);border:1px solid #efc5cd}.btn.dark{background:#21151a;color:#fff}.btn:disabled{opacity:.55;cursor:wait}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.tile{border:1px solid var(--line);border-radius:14px;padding:16px;background:linear-gradient(145deg,#fff,#fff7f8)}.tile .symbol{font-size:23px;color:var(--red)}.tile h3{margin:8px 0 5px}.tile p{color:var(--muted);font-size:12px;line-height:1.5;margin:0 0 12px}.tile a{color:var(--red);font-weight:850;text-decoration:none}
+.callout{border-radius:13px;padding:15px;background:#241018;color:#fff;margin-bottom:14px}.callout strong{color:#f0ce8b}.callout p{color:#f2dce2;line-height:1.5;margin:6px 0 0;font-size:13px}
+.status{font-weight:800;color:#8b6a16}.status.ok{color:#16733a}.status.bad{color:#a80025}
+.foot{color:#9a858b;font-size:11px;text-align:center;padding:20px}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.side{position:static;display:flex;overflow-x:auto;gap:4px;padding:8px}.side .caption{display:none}.tab{width:auto;white-space:nowrap;flex:0 0 auto;padding:10px}.tab span{width:auto}.tiles{grid-template-columns:1fr}}
+@media(max-width:520px){header{align-items:flex-start}.head-actions a,.head-actions button{padding:9px;font-size:11px}.fields{grid-template-columns:1fr}.field.full{grid-column:auto}.hero{align-items:start}.live{font-size:11px}}
 </style>
-  <link rel="stylesheet" href="premium.css?v=2026-11-24-fit2">
 </head>
-
 <body>
-
 <header>
-<div>MABROUK TRADER'S — Settings</div>
-
-<div class="headerBtns">
-<button class="homeBtn" onclick="goHome()">Home</button>
-<button class="logoutBtn" onclick="logout()">Logout</button>
-</div>
+ <div class="brand"><small>BUSINESS COMMAND CENTRE</small><strong>MABROUK <em>TRADER'S</em></strong></div>
+ <div class="head-actions"><a href="index.html">⌂ Dashboard</a><a class="gold" href="control-room.html">✦ Master Control Room</a></div>
 </header>
-
-<nav>
-<button onclick="show('users')">Users</button>
-<button onclick="show('business')">Business</button>
-<button onclick="show('pos')">POS</button>
-<button onclick="show('system')">System</button>
-<button onclick="show('activity')">Activity</button>
-</nav>
-
-<main>
-
-<div id="message" class="message"></div>
-
-<!-- USERS -->
-
-<section id="users" class="card">
-
-<h2>User Management</h2>
-
-<div class="grid">
-
-<input id="fullName" placeholder="Full Name">
-
-<input id="username" placeholder="Username">
-
-<input id="email" type="email" placeholder="Email">
-
-<input id="phone" placeholder="Phone">
-
-<input id="password" type="password" placeholder="Password">
-
-<select id="role">
-<option>Owner/Admin</option>
-<option>Manager</option>
-<option>Cashier</option>
-<option>Inventory Staff</option>
-<option>Viewer</option>
-</select>
-
+<div class="shell">
+ <div class="hero">
+  <div><div class="eyebrow">OWNER'S WORKSPACE · SETTINGS / 01</div><h1>Command Centre</h1><p>One organised place to configure your business, receipt experience and system preferences — while keeping the POS and your existing business records intact.</p></div>
+  <div class="live"><i class="dot" id="statusDot"></i><span id="firebaseStatus">Checking Firebase…</span></div>
+ </div>
+ <div id="notice" class="alert" role="status" aria-live="polite"></div>
+ <div class="layout">
+  <aside class="side">
+   <div class="caption">MANAGEMENT MENU</div>
+   <button class="tab active" data-tab="overview"><span>✦</span> Overview</button>
+   <button class="tab" data-tab="business"><span>▣</span> Company identity</button>
+   <button class="tab" data-tab="pos"><span>▤</span> POS & receipts</button>
+   <button class="tab" data-tab="system"><span>⚙</span> System preferences</button>
+   <button class="tab" data-tab="people"><span>♙</span> Staff & access</button>
+   <button class="tab" data-tab="security"><span>◈</span> Security centre</button>
+  </aside>
+  <main class="content">
+   <section class="section active" id="overview">
+    <div class="section-head"><div><h2>Welcome to management</h2><p>Your main controls, arranged for quick access.</p></div></div>
+    <div class="callout"><strong>✦ Built for control. Designed for clarity.</strong><p>Use this page for everyday business and POS preferences. Use the Master Control Room for company registration, multi-room links, subscriptions and central staff invitations.</p></div>
+    <div class="tiles">
+     <div class="tile"><div class="symbol">▣</div><h3>Company identity</h3><p>Update the business name, contact details and location used by your workspace.</p><a href="#" data-jump="business">Open company settings →</a></div>
+     <div class="tile"><div class="symbol">▤</div><h3>POS & receipts</h3><p>Configure currency, counter label and the details printed on customer receipts.</p><a href="#" data-jump="pos">Configure POS →</a></div>
+     <div class="tile"><div class="symbol">♙</div><h3>Staff & access</h3><p>Manage company access through the protected central control room.</p><a href="control-room.html">Open staff management →</a></div>
+     <div class="tile"><div class="symbol">◈</div><h3>Multi-Control Room</h3><p>Manage company workspaces, room links, subscriptions and central activity.</p><a href="control-room.html">Enter Master Control Room →</a></div>
+    </div>
+   </section>
+   <section class="section" id="business">
+    <div class="section-head"><div><h2>Company identity</h2><p>Keep your business information consistent across the workspace.</p></div></div>
+    <div class="panel"><h3>Business profile</h3><p class="hint">These details are stored in the existing settings/business document. This does not rename or move your Firebase project.</p>
+     <div class="fields">
+      <div class="field"><label for="bizName">BUSINESS NAME</label><input id="bizName" placeholder="MABROUK TRADER'S"></div>
+      <div class="field"><label for="bizPhone">BUSINESS PHONE</label><input id="bizPhone" placeholder="+254…"></div>
+      <div class="field"><label for="bizEmail">BUSINESS EMAIL</label><input id="bizEmail" type="email" placeholder="business@example.com"></div>
+      <div class="field"><label for="bizLocation">LOCATION</label><input id="bizLocation" placeholder="Town / County"></div>
+      <div class="field full"><label for="bizAddress">BUSINESS ADDRESS</label><textarea id="bizAddress" placeholder="Enter your business address"></textarea></div>
+     </div>
+     <div class="actions"><button class="btn primary" id="saveBusiness">Save company details</button></div>
+    </div>
+   </section>
+   <section class="section" id="pos">
+    <div class="section-head"><div><h2>POS & receipts</h2><p>Set the checkout defaults and customer receipt presentation.</p></div></div>
+    <div class="panel"><h3>Checkout defaults</h3><p class="hint">These preferences are saved to the existing settings/pos document.</p>
+     <div class="fields">
+      <div class="field"><label for="currency">CURRENCY CODE</label><input id="currency" value="KES" maxlength="8"></div>
+      <div class="field"><label for="till">DEFAULT TILL / COUNTER</label><input id="till" value="TILL 1"></div>
+      <div class="field"><label for="receiptTitle">RECEIPT TITLE</label><input id="receiptTitle" value="MABROUK TRADER'S"></div>
+      <div class="field"><label for="footerText">RECEIPT FOOTER</label><input id="footerText" value="Thank you"></div>
+     </div>
+     <div class="checks"><label><input id="showLogo" type="checkbox" checked> Show logo on receipt</label><label><input id="showCustomer" type="checkbox" checked> Show customer details</label></div>
+     <div class="actions"><button class="btn primary" id="savePos">Save POS settings</button></div>
+    </div>
+   </section>
+   <section class="section" id="system">
+    <div class="section-head"><div><h2>System preferences</h2><p>Choose your interface preferences.</p></div></div>
+    <div class="panel"><h3>Display & language</h3><p class="hint">The selected options are saved as preferences. They do not alter stock, sales or customer records.</p>
+     <div class="fields">
+      <div class="field"><label for="theme">DISPLAY THEME</label><select id="theme"><option value="red">Red & white</option><option value="dark">Dark</option><option value="green">Legacy green</option></select></div>
+      <div class="field"><label for="language">LANGUAGE</label><select id="language"><option>English</option><option>Arabic</option><option>Swahili</option></select></div>
+     </div>
+     <div class="actions"><button class="btn primary" id="saveSystem">Save preferences</button></div>
+    </div>
+    <div class="panel"><h3>Backups & recovery</h3><p class="hint">Backup and restore should be handled through a verified export/recovery workflow. This page will not claim an automatic backup is running when no backup service is configured.</p><a class="btn secondary" href="reports.html">Open reports & exports →</a></div>
+   </section>
+   <section class="section" id="people">
+    <div class="section-head"><div><h2>Staff & access</h2><p>Centralised access management for your company workspaces.</p></div></div>
+    <div class="panel"><h3>Managed through Master Control Room</h3><p class="hint">Staff invitations, company memberships, roles and access status are handled by protected server-side controls. The old browser-only user creator has been removed from this page to avoid creating half-finished accounts or exposing staff records.</p><div class="actions"><a class="btn primary" href="control-room.html">Open staff & company access →</a></div></div>
+   </section>
+   <section class="section" id="security">
+    <div class="section-head"><div><h2>Security centre</h2><p>Important access controls and account safety.</p></div></div>
+    <div class="panel"><h3>Protected management</h3><p class="hint">Company and platform administration uses authenticated Cloud Functions. Do not make Firestore collections publicly readable or writable to make a settings screen work.</p><div class="actions"><a class="btn primary" href="control-room.html">Open protected control room →</a><a class="btn secondary" href="login.html">Return to sign-in →</a></div></div>
+   </section>
+  </main>
+ </div>
+ <div class="foot">MABROUK TRADER'S POS PRO · DIGITAL · FAST · ORGANIZED</div>
 </div>
-
-<h3>Permissions</h3>
-
-<div id="permissions" class="perms"></div>
-
-<br>
-
-<button class="primary" onclick="saveUser()">➕ Add User</button>
-<button class="gray" onclick="clearUser()">Clear</button>
-
-<hr style="margin:15px 0">
-
-<h3>Users</h3>
-
-<div id="usersTable">Loading...</div>
-
-</section>
-
-
-<!-- BUSINESS -->
-
-<section id="business" class="card" style="display:none">
-
-<h2>Business Settings</h2>
-
-<div class="grid">
-
-<input id="bizName" placeholder="Business Name">
-
-<input id="bizPhone" placeholder="Phone">
-
-<input id="bizEmail" placeholder="Email">
-
-<input id="bizLocation" placeholder="Location">
-
-</div>
-
-<textarea id="bizAddress" placeholder="Business Address"></textarea>
-
-<button class="primary" onclick="saveSettings('business')">
-Save Business
-</button>
-
-</section>
-
-
-<!-- POS -->
-
-<section id="pos" class="card" style="display:none">
-
-<h2>POS & Receipt Settings</h2>
-
-<div class="grid">
-
-<input id="currency" placeholder="Currency e.g. KES">
-
-<input id="till" placeholder="Default Till / Counter">
-
-<input id="receiptTitle" placeholder="Receipt Title">
-
-<input id="footerText" placeholder="Receipt Footer">
-
-</div>
-
-<label>
-<input id="showLogo" type="checkbox">
-Show logo on receipt
-</label>
-
-<br><br>
-
-<label>
-<input id="showCustomer" type="checkbox">
-Show customer details
-</label>
-
-<br><br>
-
-<button class="primary" onclick="saveSettings('pos')">
-Save POS Settings
-</button>
-
-</section>
-
-
-<!-- SYSTEM -->
-
-<section id="system" class="card" style="display:none">
-
-<h2>System Settings</h2>
-
-<div class="grid">
-
-<select id="theme">
-<option value="green">Green</option>
-<option value="dark">Dark</option>
-</select>
-
-<select id="language">
-<option>English</option>
-<option>Arabic</option>
-</select>
-
-</div>
-
-<label>
-<input id="autoBackup" type="checkbox">
-Enable automatic backup
-</label>
-
-<br><br>
-
-<button class="primary" onclick="saveSettings('system')">
-Save System
-</button>
-
-</section>
-
-
-<!-- ACTIVITY -->
-
-<section id="activity" class="card" style="display:none">
-
-<h2>Activity Log</h2>
-
-<div id="activityLog">
-Loading...
-</div>
-
-</section>
-
-
-<!-- FIREBASE -->
-
-<section class="card">
-
-<h2>Firebase Status</h2>
-
-<div class="status" id="firebaseStatus">
-Connecting...
-</div>
-
-</section>
-
-</main>
-
-
 <script type="module">
-
-import{
-initializeApp,
-getApps
+import {initializeApp,getApps} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import {getAuth,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import {getFirestore,doc,getDoc,setDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyA8XB6aY45-yHT0uZ6NUhptMoNkYqgwqOs",authDomain:"goldbizna.firebaseapp.com",projectId:"goldbizna",storageBucket:"goldbizna.firebasestorage.app",messagingSenderId:"559981054862",appId:"1:559981054862:web:0635c689607d3baa3272df",measurementId:"G-95XL3BNQJF"};
+const app=getApps().length?getApps()[0]:initializeApp(firebaseConfig);
+const auth=getAuth(app),db=getFirestore(app);
+const $=id=>document.getElementById(id);
+let sessionReady=false;
+function notify(message,type="info"){const n=$("notice");n.textContent=message;n.className="alert show "+type;}
+function setStatus(text,kind=""){ $("firebaseStatus").textContent=text;$("statusDot").style.background=kind==="ok"?"#159447":kind==="bad"?"#bd0028":"#c18a20"; }
+function openTab(id){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));document.querySelectorAll(".section").forEach(s=>s.classList.toggle("active",s.id===id));}
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>openTab(b.dataset.tab)));
+document.querySelectorAll("[data-jump]").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();openTab(a.dataset.jump)}));
+async function readSettings(type){
+ const snap=await getDoc(doc(db,"settings",type));
+ if(!snap.exists())return {};
+ return snap.data();
 }
-from
-"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-
-import{
-getAuth,
-onAuthStateChanged,
-createUserWithEmailAndPassword,
-updateProfile,
-signOut
+function fill(id,value){$(id).value=value??""}
+async function loadAll(){
+ const tasks=[
+  ["business",async x=>{fill("bizName",x.name);fill("bizPhone",x.phone);fill("bizEmail",x.email);fill("bizLocation",x.location);fill("bizAddress",x.address)}],
+  ["pos",async x=>{fill("currency",x.currency||"KES");fill("till",x.till||"TILL 1");fill("receiptTitle",x.receiptTitle||"MABROUK TRADER'S");fill("footerText",x.footerText||"Thank you");$("showLogo").checked=x.showLogo!==false;$("showCustomer").checked=x.showCustomer!==false}],
+  ["system",async x=>{fill("theme",x.theme||"red");fill("language",x.language||"English")}]
+ ];
+ const failures=[];
+ for(const [type,apply] of tasks){try{await apply(await readSettings(type))}catch(e){console.error("Settings read failed:",type,e);failures.push(type+ ": "+(e.code||e.message||"read denied"))}}
+ if(failures.length){setStatus("Firebase connected · access restricted","bad");notify("Settings could not read some saved preferences. Firebase reported: "+failures.join(" | ")+". Your existing records have not been changed. Check Firestore access rules before trying again.","bad")}
+ else{setStatus("Firebase connected · preferences loaded","ok")}
 }
-from
-"https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-
-import{
-getFirestore,
-doc,
-getDoc,
-setDoc,
-updateDoc,
-collection,
-getDocs,
-addDoc,
-serverTimestamp
+async function save(type,data,button){
+ if(!sessionReady){notify("Please wait until your sign-in session is checked.","info");return}
+ button.disabled=true;const old=button.textContent;button.textContent="Saving…";
+ try{await setDoc(doc(db,"settings",type),{...data,updatedAt:serverTimestamp()},{merge:true});notify("Saved successfully. Your existing POS records were not changed.","good")}
+ catch(e){console.error("Settings save failed:",type,e);const detail=e.code==="permission-denied"?"Firestore denied this save (permission-denied). The current Firestore rules block this settings write.":(e.message||"Unknown Firebase error");notify("Could not save "+type+" settings. "+detail+" No existing business data was deleted.","bad")}
+ finally{button.disabled=false;button.textContent=old}
 }
-from
-"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-
-
-/* =========================
-   FIREBASE
-========================= */
-
-const firebaseConfig={
-apiKey:"AIzaSyA8XB6aY45-yHT0uZ6NUhptMoNkYqgwqOs",
-authDomain:"goldbizna.firebaseapp.com",
-projectId:"goldbizna",
-storageBucket:"goldbizna.firebasestorage.app",
-messagingSenderId:"559981054862",
-appId:"1:559981054862:web:0635c689607d3baa3272df",
-measurementId:"G-95XL3BNQJF"
-};
-
-const app=getApps().length
-?getApps()[0]
-:initializeApp(firebaseConfig);
-
-const auth=getAuth(app);
-
-const db=getFirestore(app);
-
-
-/*
-This second Firebase app is ONLY used when
-an administrator creates another user.
-
-It does NOT ask the current user for another
-password and does NOT replace the main login.
-*/
-
-const creatorApp=initializeApp(
-firebaseConfig,
-"UserCreator"
-);
-
-const creatorAuth=getAuth(creatorApp);
-
-
-/* =========================
-   VARIABLES
-========================= */
-
-const permissionNames=[
-"Dashboard",
-"POS",
-"Inventory",
-"Customers",
-"Sales History",
-"Reports",
-"Savings",
-"Payments",
-"Discounts",
-"Refunds / Voids",
-"Stock Adjustments",
-"User Management",
-"Settings",
-"Backup & Restore"
-];
-
-let currentUser=null;
-let editId=null;
-
-
-/* =========================
-   PERMISSIONS
-========================= */
-
-const pbox=document.getElementById("permissions");
-
-permissionNames.forEach(p=>{
-
-const id="p_"+p.replace(
-/[^a-z0-9]/gi,
-""
-);
-
-pbox.innerHTML+=`
-<label>
-<input type="checkbox" id="${id}" checked>
-${p}
-</label>
-`;
-
+$("saveBusiness").addEventListener("click",()=>save("business",{name:$("bizName").value.trim(),phone:$("bizPhone").value.trim(),email:$("bizEmail").value.trim(),location:$("bizLocation").value.trim(),address:$("bizAddress").value.trim()},$("saveBusiness")));
+$("savePos").addEventListener("click",()=>save("pos",{currency:$("currency").value.trim().toUpperCase()||"KES",till:$("till").value.trim(),receiptTitle:$("receiptTitle").value.trim(),footerText:$("footerText").value.trim(),showLogo:$("showLogo").checked,showCustomer:$("showCustomer").checked},$("savePos")));
+$("saveSystem").addEventListener("click",()=>save("system",{theme:$("theme").value,language:$("language").value},$("saveSystem")));
+onAuthStateChanged(auth,async user=>{
+ const localSession=["goldbizna_logged_in","loggedIn","gb_login"].some(k=>localStorage.getItem(k)==="true");
+ if(!user&&!localSession){location.replace("login.html");return}
+ sessionReady=true;
+ if(user){setStatus("Signed in · checking Firebase","")}
+ else{setStatus("Local session · Firebase access may be restricted","")}
+ await loadAll();
 });
-
-
-function getPermissions(){
-
-let x={};
-
-permissionNames.forEach(p=>{
-
-const id="p_"+p.replace(
-/[^a-z0-9]/gi,
-""
-);
-
-x[p]=document.getElementById(id).checked;
-
-});
-
-return x;
-}
-
-
-function setPermissions(x={}){
-
-permissionNames.forEach(p=>{
-
-const id="p_"+p.replace(
-/[^a-z0-9]/gi,
-""
-);
-
-document.getElementById(id).checked=
-x[p]!==false;
-
-});
-
-}
-
-
-/* =========================
-   MESSAGE
-========================= */
-
-function message(text,type="success"){
-
-const box=document.getElementById("message");
-
-box.className="message "+type;
-box.textContent=text;
-box.style.display="block";
-
-setTimeout(()=>{
-box.style.display="none";
-},3500);
-
-}
-
-
-/* =========================
-   NAVIGATION
-========================= */
-
-window.show=function(id){
-
-[
-"users",
-"business",
-"pos",
-"system",
-"activity"
-].forEach(x=>{
-
-document.getElementById(x).style.display=
-x===id?"block":"none";
-
-});
-
-if(id==="activity"){
-loadActivity();
-}
-
-};
-
-
-/* =========================
-   HOME
-========================= */
-
-window.goHome=function(){
-
-location.href="index.html";
-
-};
-
-
-/* =========================
-   LOGOUT
-========================= */
-
-window.logout=async function(){
-
-try{
-await signOut(auth);
-}catch(e){}
-
-localStorage.removeItem("goldbizna_logged_in");
-localStorage.removeItem("loggedIn");
-localStorage.removeItem("gb_login");
-localStorage.removeItem("goldbizna_username");
-
-location.href="login.html";
-
-};
-
-
-/* =========================
-   CLEAR USER
-========================= */
-
-window.clearUser=function(){
-
-editId=null;
-
-[
-"fullName",
-"username",
-"email",
-"phone",
-"password"
-].forEach(x=>{
-document.getElementById(x).value="";
-});
-
-document.getElementById("role").value="Cashier";
-
-setPermissions({});
-
-};
-
-
-/* =========================
-   USER HELPERS
-========================= */
-
-function usernameInput(){
-return document.getElementById("username").value.trim();
-}
-
-function emailInput(){
-return document.getElementById("email").value.trim();
-}
-
-function phoneInput(){
-return document.getElementById("phone").value.trim();
-}
-
-function roleInput(){
-return document.getElementById("role").value;
-}
-
-
-/* =========================
-   SAVE USER
-========================= */
-
-window.saveUser=async function(){
-
-const name=
-document.getElementById("fullName").value.trim();
-
-const username=usernameInput();
-
-const email=emailInput();
-
-const phone=phoneInput();
-
-const pass=
-document.getElementById("password").value;
-
-const role=roleInput();
-
-
-if(
-!name||
-!username||
-!email||
-(!editId&&!pass)
-){
-
-message(
-editId
-?"Name, username and email are required."
-:"Name, username, email and password are required.",
-"error"
-);
-
-return;
-
-}
-
-
-try{
-
-/* EDIT EXISTING USER */
-
-if(editId){
-
-await updateDoc(
-doc(db,"users",editId),
-{
-fullName:name,
-username,
-email,
-phone,
-role,
-permissions:getPermissions(),
-updatedAt:serverTimestamp()
-}
-);
-
-await addLog(
-"Updated user: "+username
-);
-
-message("User updated successfully.");
-
-}
-
-
-/* CREATE NEW USER */
-
-else{
-
-const snap=
-await getDocs(
-collection(db,"users")
-);
-
-const duplicate=[
-...snap.docs
-].some(d=>
-(d.data().username||"")
-.toLowerCase()===
-username.toLowerCase()
-);
-
-if(duplicate){
-
-message(
-"Username already exists.",
-"error"
-);
-
-return;
-
-}
-
-
-const cred=
-await createUserWithEmailAndPassword(
-creatorAuth,
-email,
-pass
-);
-
-
-await updateProfile(
-cred.user,
-{
-displayName:name
-}
-);
-
-
-await setDoc(
-doc(db,"users",cred.user.uid),
-{
-uid:cred.user.uid,
-fullName:name,
-username,
-email,
-phone,
-role,
-permissions:getPermissions(),
-active:true,
-createdAt:serverTimestamp()
-}
-);
-
-
-await setDoc(
-doc(
-db,
-"usernames",
-username.toLowerCase()
-),
-{
-uid:cred.user.uid,
-email
-}
-);
-
-
-await addLog(
-"Created user: "+username
-);
-
-
-/*
-Important:
-The creator account is signed out immediately.
-The current Settings session remains untouched.
-*/
-
-await signOut(creatorAuth);
-
-message(
-"User created successfully."
-);
-
-}
-
-clearUser();
-
-await loadUsers();
-
-}catch(e){
-
-console.error(e);
-
-try{
-await signOut(creatorAuth);
-}catch(_){}
-
-message(
-"Error: "+(e.message||"Unable to save user."),
-"error"
-);
-
-}
-
-};
-
-
-/* =========================
-   EDIT USER
-========================= */
-
-window.editUser=async function(id){
-
-try{
-
-const s=
-await getDoc(
-doc(db,"users",id)
-);
-
-if(!s.exists())return;
-
-const u=s.data();
-
-editId=id;
-
-document.getElementById("fullName").value=
-u.fullName||"";
-
-document.getElementById("username").value=
-u.username||"";
-
-document.getElementById("email").value=
-u.email||"";
-
-document.getElementById("phone").value=
-u.phone||"";
-
-document.getElementById("role").value=
-u.role||"Cashier";
-
-document.getElementById("password").value="";
-
-setPermissions(u.permissions||{});
-
-show("users");
-
-scrollTo(0,0);
-
-}catch(e){
-
-message(
-"Unable to load user.",
-"error"
-);
-
-}
-
-};
-
-
-/* =========================
-   ENABLE / DISABLE USER
-========================= */
-
-window.toggleUser=async function(id,active){
-
-try{
-
-await updateDoc(
-doc(db,"users",id),
-{active}
-);
-
-await addLog(
-(active?"Enabled ":"Disabled ")+id
-);
-
-await loadUsers();
-
-}catch(e){
-
-message(
-"Unable to change user status.",
-"error"
-);
-
-}
-
-};
-
-
-/* =========================
-   LOAD USERS
-========================= */
-
-async function loadUsers(){
-
-try{
-
-const snap=
-await getDocs(
-collection(db,"users")
-);
-
-let html=`
-<table>
-<tr>
-<th>Name</th>
-<th>Username</th>
-<th>Role</th>
-<th>Status</th>
-<th>Action</th>
-</tr>
-`;
-
-
-snap.forEach(d=>{
-
-const u=d.data();
-
-html+=`
-<tr>
-
-<td>${safe(u.fullName)}</td>
-
-<td>${safe(u.username)}</td>
-
-<td>${safe(u.role)}</td>
-
-<td>
-${u.active===false?"Disabled":"Active"}
-</td>
-
-<td>
-
-<button
-class="gray"
-onclick="editUser('${d.id}')">
-Edit
-</button>
-
-<button
-class="${u.active===false?"primary":"danger"}"
-onclick="toggleUser('${d.id}',${u.active===false})">
-
-${u.active===false?"Enable":"Disable"}
-
-</button>
-
-</td>
-
-</tr>
-`;
-
-});
-
-html+="</table>";
-
-document.getElementById("usersTable").innerHTML=html;
-
-}catch(e){
-
-document.getElementById("usersTable").innerHTML=
-"Unable to load users.";
-
-console.error(e);
-
-}
-
-}
-
-
-/* =========================
-   SAVE SETTINGS
-========================= */
-
-window.saveSettings=async function(type){
-
-try{
-
-let data={
-updatedAt:serverTimestamp()
-};
-
-
-if(type==="business"){
-
-data={
-name:document.getElementById("bizName").value,
-phone:document.getElementById("bizPhone").value,
-email:document.getElementById("bizEmail").value,
-location:document.getElementById("bizLocation").value,
-address:document.getElementById("bizAddress").value,
-updatedAt:serverTimestamp()
-};
-
-}
-
-
-if(type==="pos"){
-
-data={
-currency:document.getElementById("currency").value,
-till:document.getElementById("till").value,
-receiptTitle:document.getElementById("receiptTitle").value,
-footerText:document.getElementById("footerText").value,
-showLogo:document.getElementById("showLogo").checked,
-showCustomer:document.getElementById("showCustomer").checked,
-updatedAt:serverTimestamp()
-};
-
-}
-
-
-if(type==="system"){
-
-data={
-theme:document.getElementById("theme").value,
-language:document.getElementById("language").value,
-autoBackup:document.getElementById("autoBackup").checked,
-updatedAt:serverTimestamp()
-};
-
-}
-
-
-await setDoc(
-doc(db,"settings",type),
-data,
-{merge:true}
-);
-
-await addLog(
-"Updated "+type+" settings"
-);
-
-message(
-type.charAt(0).toUpperCase()+
-type.slice(1)+
-" settings saved."
-);
-
-}catch(e){
-
-console.error(e);
-
-message(
-"Could not save settings: "+
-(e.message||"Unknown error"),
-"error"
-);
-
-}
-
-};
-
-
-/* =========================
-   LOAD SETTINGS
-========================= */
-
-async function loadSettings(){
-
-for(
-const type of
-["business","pos","system"]
-){
-
-try{
-
-const s=
-await getDoc(
-doc(db,"settings",type)
-);
-
-if(!s.exists())continue;
-
-const x=s.data();
-
-
-if(type==="business"){
-
-document.getElementById("bizName").value=
-x.name||"";
-
-document.getElementById("bizPhone").value=
-x.phone||"";
-
-document.getElementById("bizEmail").value=
-x.email||"";
-
-document.getElementById("bizLocation").value=
-x.location||"";
-
-document.getElementById("bizAddress").value=
-x.address||"";
-
-}
-
-
-if(type==="pos"){
-
-document.getElementById("currency").value=
-x.currency||"KES";
-
-document.getElementById("till").value=
-x.till||"TILL 1";
-
-document.getElementById("receiptTitle").value=
-x.receiptTitle||"MABROUK TRADER'S";
-
-document.getElementById("footerText").value=
-x.footerText||"Thank you";
-
-document.getElementById("showLogo").checked=
-x.showLogo!==false;
-
-document.getElementById("showCustomer").checked=
-x.showCustomer!==false;
-
-}
-
-
-if(type==="system"){
-
-document.getElementById("theme").value=
-x.theme||"green";
-
-document.getElementById("language").value=
-x.language||"English";
-
-document.getElementById("autoBackup").checked=
-!!x.autoBackup;
-
-}
-
-}catch(e){
-
-console.error(
-"Settings load error:",
-type,
-e
-);
-
-}
-
-}
-
-}
-
-
-/* =========================
-   ACTIVITY LOG
-========================= */
-
-async function addLog(action){
-
-try{
-
-let userName="System";
-
-if(currentUser){
-
-userName=
-currentUser.email||
-localStorage.getItem(
-"goldbizna_username"
-)||
-"User";
-
-}else{
-
-userName=
-localStorage.getItem(
-"goldbizna_username"
-)||
-"User";
-
-}
-
-
-await addDoc(
-collection(db,"activityLog"),
-{
-action,
-user:userName,
-createdAt:serverTimestamp()
-}
-);
-
-}catch(e){
-
-console.warn(
-"Activity log failed:",
-e
-);
-
-}
-
-}
-
-
-/* =========================
-   LOAD ACTIVITY
-========================= */
-
-async function loadActivity(){
-
-try{
-
-const snap=
-await getDocs(
-collection(db,"activityLog")
-);
-
-let rows=[];
-
-snap.forEach(d=>{
-rows.push(d.data());
-});
-
-
-rows.sort(
-(a,b)=>
-(b.createdAt?.seconds||0)-
-(a.createdAt?.seconds||0)
-);
-
-
-rows=rows.slice(0,50);
-
-
-document.getElementById("activityLog").innerHTML=
-
-rows.map(x=>`
-
-<div class="activityItem">
-
-<b>${safe(x.action||"Activity")}</b>
-
-<br>
-
-<span class="small">
-${safe(x.user||"User")}
-</span>
-
-</div>
-
-`).join("")
-
-||
-
-"No activity yet.";
-
-}catch(e){
-
-document.getElementById("activityLog").innerHTML=
-"Unable to load activity.";
-
-}
-
-}
-
-
-/* =========================
-   SAFE TEXT
-========================= */
-
-function safe(value){
-
-return String(value??"")
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
-
-}
-
-
-/* =========================
-   LOGIN / SESSION
-========================= */
-
-/*
-IMPORTANT:
-
-We do NOT force a second password.
-
-If Firebase already has the user,
-we use that session.
-
-If your main MABROUK TRADER'S login
-uses the existing localStorage session,
-we also allow Settings to open without
-asking for another password.
-*/
-
-onAuthStateChanged(auth,async u=>{
-
-currentUser=u||null;
-
-const localSession=
-localStorage.getItem("goldbizna_logged_in")==="true"||
-localStorage.getItem("loggedIn")==="true"||
-localStorage.getItem("gb_login")==="true";
-
-
-if(!u&&!localSession){
-
-location.href="login.html";
-return;
-
-}
-
-
-document.getElementById(
-"firebaseStatus"
-).textContent=
-"● Firebase Connected";
-
-document.getElementById(
-"firebaseStatus"
-).style.color="green";
-
-
-try{
-
-await loadUsers();
-
-await loadSettings();
-
-}catch(e){
-
-console.error(e);
-
-document.getElementById(
-"firebaseStatus"
-).textContent=
-"● Firebase Connected — Some data could not load";
-
-document.getElementById(
-"firebaseStatus"
-).style.color="#c47b00";
-
-}
-
-});
-
-
+window.addEventListener("error",e=>{console.error(e.error||e.message)});
 </script>
-
 <script src="app-nav.js" defer></script>
 </body>
-  </html>
+</html>

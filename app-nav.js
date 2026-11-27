@@ -18,7 +18,8 @@
     ['users.html','♙','Users'],
     ['settings.html','⚙','Settings'],
     ['control-room.html','⌘','Master Control'],
-    ['emergency-recovery.html','🛟','Emergency Recovery']
+    ['emergency-recovery.html','🛟','Emergency Recovery'],
+    ['records-vault.html','🗄','10-Year Records Vault']
   ];
 
   const aside = document.createElement('aside');

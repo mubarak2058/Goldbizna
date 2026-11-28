@@ -604,3 +604,156 @@ export const resolveMpesaDuplicateAlert = onCall(async (request) => {
   await ref.update({ status: "reviewed", reviewedBy: request.auth.uid, reviewedAt: FieldValue.serverTimestamp() });
   return { status: "reviewed" };
 });
+
+
+// -----------------------------------------------------------------------------
+// TENANT FOUNDATION (Phase 1)
+// New company-scoped records live below companies/{companyId}/....
+// Legacy root-level POS collections are intentionally untouched during migration.
+// -----------------------------------------------------------------------------
+
+async function requireActiveCompany(companyId) {
+  const ref = db.collection("companies").doc(companyId);
+  const snap = await ref.get();
+  if (!snap.exists) throw new HttpsError("not-found", "Company not found.");
+  if (snap.data().status !== "active") throw new HttpsError("failed-precondition", "This company workspace is not active.");
+  return { ref, data: snap.data() };
+}
+
+async function requireCompanyManager(request, companyId) {
+  requireSignedIn(request);
+  const { data } = await requireActiveCompany(companyId);
+  if (request.auth.uid === PLATFORM_OWNER_UID) return { role: "platform_owner", company: data };
+  const member = await db.collection("companyMemberships").doc(request.auth.uid + "_" + companyId).get();
+  if (!member.exists || member.data().status !== "active" ||
+      !["company_admin", "manager"].includes(member.data().role)) {
+    throw new HttpsError("permission-denied", "An active company administrator or manager is required.");
+  }
+  return { role: member.data().role, company: data };
+}
+
+async function requireCompanyMember(request, companyId) {
+  requireSignedIn(request);
+  await requireActiveCompany(companyId);
+  if (request.auth.uid === PLATFORM_OWNER_UID) return { role: "platform_owner" };
+  const member = await db.collection("companyMemberships").doc(request.auth.uid + "_" + companyId).get();
+  if (!member.exists || member.data().status !== "active") {
+    throw new HttpsError("permission-denied", "You are not an active member of this company.");
+  }
+  return { role: member.data().role };
+}
+
+// Create a branch/outlet inside a company. This does not move legacy POS data.
+export const createCompanyBranch = onCall(async (request) => {
+  const companyId = cleanText(request.data?.companyId, 128);
+  const name = cleanText(request.data?.name, 80);
+  const code = cleanText(request.data?.code, 24).toUpperCase();
+  const address = cleanText(request.data?.address, 200);
+  const managerUid = cleanText(request.data?.managerUid, 128);
+  if (!companyId || name.length < 2) throw new HttpsError("invalid-argument", "Company and branch name are required.");
+  await requireCompanyManager(request, companyId);
+  if (managerUid) {
+    const manager = await db.collection("companyMemberships").doc(managerUid + "_" + companyId).get();
+    if (!manager.exists || manager.data().status !== "active" ||
+        !["company_admin", "manager"].includes(manager.data().role)) {
+      throw new HttpsError("failed-precondition", "Branch manager must be an active manager in this company.");
+    }
+  }
+  const ref = db.collection("companies").doc(companyId).collection("branches").doc();
+  await ref.create({
+    companyId, name, code, address, managerUid: managerUid || null,
+    status: "active", createdAt: FieldValue.serverTimestamp(),
+    createdBy: request.auth.uid, updatedAt: FieldValue.serverTimestamp()
+  });
+  await db.collection("platformAuditLogs").add({
+    action: "branch.created", companyId, branchId: ref.id, branchName: name,
+    actorUid: request.auth.uid, createdAt: FieldValue.serverTimestamp()
+  });
+  return { branchId: ref.id, status: "active" };
+});
+
+export const listCompanyBranches = onCall(async (request) => {
+  const companyId = cleanText(request.data?.companyId, 128);
+  if (!companyId) throw new HttpsError("invalid-argument", "Company ID is required.");
+  await requireCompanyMember(request, companyId);
+  const snap = await db.collection("companies").doc(companyId)
+    .collection("branches").orderBy("createdAt", "desc").limit(200).get();
+  return { branches: snap.docs.map(d => ({ id: d.id, ...d.data(),
+    createdAt: d.data().createdAt?.toDate?.()?.toISOString?.() || null
+  })) };
+});
+
+export const updateCompanyBranch = onCall(async (request) => {
+  const companyId = cleanText(request.data?.companyId, 128);
+  const branchId = cleanText(request.data?.branchId, 128);
+  const name = cleanText(request.data?.name, 80);
+  const code = cleanText(request.data?.code, 24).toUpperCase();
+  const address = cleanText(request.data?.address, 200);
+  const managerUid = cleanText(request.data?.managerUid, 128);
+  const status = cleanText(request.data?.status, 20);
+  if (!companyId || !branchId || name.length < 2 || !["active", "suspended"].includes(status)) {
+    throw new HttpsError("invalid-argument", "Valid company, branch, name and status are required.");
+  }
+  await requireCompanyManager(request, companyId);
+  if (managerUid) {
+    const manager = await db.collection("companyMemberships").doc(managerUid + "_" + companyId).get();
+    if (!manager.exists || manager.data().status !== "active" ||
+        !["company_admin", "manager"].includes(manager.data().role)) {
+      throw new HttpsError("failed-precondition", "Branch manager must be an active manager in this company.");
+    }
+  }
+  const ref = db.collection("companies").doc(companyId).collection("branches").doc(branchId);
+  const snap = await ref.get();
+  if (!snap.exists) throw new HttpsError("not-found", "Branch not found in this company.");
+  await ref.update({ name, code, address, managerUid: managerUid || null, status,
+    updatedAt: FieldValue.serverTimestamp(), updatedBy: request.auth.uid });
+  await db.collection("platformAuditLogs").add({
+    action: "branch.updated", companyId, branchId, branchName: name, status,
+    actorUid: request.auth.uid, createdAt: FieldValue.serverTimestamp()
+  });
+  return { branchId, status };
+});
+
+// Seller payment controls: only the configured methods are returned to that seller.
+// POS frontends must call getSellerPaymentOptions and render only its returned list.
+const SELLER_PAYMENT_METHODS = ["cash", "mpesa", "card", "bank", "credit"];
+export const setSellerPaymentOptions = onCall(async (request) => {
+  const companyId = cleanText(request.data?.companyId, 128);
+  const sellerUid = cleanText(request.data?.sellerUid, 128);
+  const enabledMethods = request.data?.enabledMethods;
+  if (!companyId || !sellerUid || !Array.isArray(enabledMethods) ||
+      enabledMethods.some(x => !SELLER_PAYMENT_METHODS.includes(x)) ||
+      new Set(enabledMethods).size !== enabledMethods.length) {
+    throw new HttpsError("invalid-argument", "Choose a seller and valid, non-duplicate payment methods.");
+  }
+  await requireCompanyManager(request, companyId);
+  const seller = await db.collection("companyMemberships").doc(sellerUid + "_" + companyId).get();
+  if (!seller.exists || seller.data().status !== "active") {
+    throw new HttpsError("not-found", "Active seller membership not found in this company.");
+  }
+  const ref = db.collection("companies").doc(companyId)
+    .collection("sellerPaymentSettings").doc(sellerUid);
+  await ref.set({
+    companyId, sellerUid, enabledMethods,
+    updatedAt: FieldValue.serverTimestamp(), updatedBy: request.auth.uid
+  });
+  await db.collection("platformAuditLogs").add({
+    action: "seller.payment_methods_updated", companyId, sellerUid,
+    enabledMethods, actorUid: request.auth.uid, createdAt: FieldValue.serverTimestamp()
+  });
+  return { sellerUid, enabledMethods };
+});
+
+export const getSellerPaymentOptions = onCall(async (request) => {
+  const companyId = cleanText(request.data?.companyId, 128);
+  if (!companyId) throw new HttpsError("invalid-argument", "Company ID is required.");
+  await requireCompanyMember(request, companyId);
+  const sellerUid = request.auth.uid;
+  const ref = db.collection("companies").doc(companyId)
+    .collection("sellerPaymentSettings").doc(sellerUid);
+  const snap = await ref.get();
+  const enabledMethods = snap.exists && Array.isArray(snap.data().enabledMethods)
+    ? snap.data().enabledMethods.filter(x => SELLER_PAYMENT_METHODS.includes(x))
+    : [...SELLER_PAYMENT_METHODS];
+  return { companyId, sellerUid, enabledMethods };
+});

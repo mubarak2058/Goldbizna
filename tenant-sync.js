@@ -42,6 +42,18 @@ async function queueTransaction(mode, work) {
   } finally { db.close(); }
 }
 
+
+export function getOrCreateTerminalId(companyId, branchId = "") {
+  if (!companyId) throw new Error("Company ID is required to identify this terminal.");
+  const key = "mabrouk_terminal_id:" + companyId + ":" + (branchId || "main");
+  let id = localStorage.getItem(key);
+  if (!id) {
+    id = makeId();
+    localStorage.setItem(key, id);
+  }
+  return id;
+}
+
 export function createTenantSync({ companyId, branchId = "", terminalId, label = "POS terminal", device = navigator.userAgent, onStatus = () => {} }) {
   if (!companyId || !terminalId) throw new Error("Company ID and terminal ID are required.");
   const functions = getFunctions(undefined, FUNCTIONS_REGION);

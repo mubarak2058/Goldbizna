@@ -862,7 +862,7 @@ export const submitOfflineSyncBatch = onCall(async (request) => {
   const terminalRef = companyRef.collection("syncTerminals").doc(terminalId);
   await terminalRef.set({
     companyId, terminalId, branchId, uid: request.auth.uid,
-    status: "online", pendingCount: FieldValue.increment(-result.accepted),
+    status: "online", pendingCount: 0,
     lastUploadAt: FieldValue.serverTimestamp(), lastSeenAt: FieldValue.serverTimestamp(),
     updatedAt: FieldValue.serverTimestamp()
   }, { merge: true });

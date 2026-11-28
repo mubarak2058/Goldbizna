@@ -45,3 +45,18 @@ A manual/automatic Functions-only deployment workflow is available at `.github/w
 
 ## Not yet live
 The callable backend is source code only until deployed to Firebase. Tenant security rules, App Check enforcement configuration, owner custom claim, company invitation flow, migration tooling, backup/restore, subscription billing and monitoring still require setup and testing. Do not advertise multi-tenant isolation as active until the two-company isolation tests pass.
+
+## Offline sync foundation (new)
+- `tenant-sync.js` provides an IndexedDB queue for company-scoped POS pages. It keeps operations on the device while offline and uploads batches when connectivity returns.
+- `registerSyncTerminal` records authenticated terminal heartbeats in `companies/{companyId}/syncTerminals`.
+- `submitOfflineSyncBatch` accepts up to 50 operations per batch into `companies/{companyId}/syncQueue`. Repeated operation IDs with changed payloads create a conflict record containing both versions in `syncConflicts`.
+- `sync-center.html` is the platform-owner monitoring screen, linked from the Master Control Room.
+- The legacy root-level MABROUK POS pages are intentionally not connected to this helper. Existing legacy sales and inventory remain untouched.
+- **Important limitation:** this foundation stores and monitors incoming offline operations; it does not yet apply queued sales or stock changes to live business records. Do not use it as a live offline checkout workflow until the validated apply stage, role checks, idempotency, and end-to-end tests are completed.
+
+### Deploy and test
+1. GitHub Pages publishes the new static files from `Main`.
+2. The Functions deployment workflow requires the GitHub Actions secret `FIREBASE_SERVICE_ACCOUNT_GOLDBIZNA`. The latest deployment attempt failed at Google authentication because that secret was not injected (missing or empty); no Functions were deployed by that run.
+3. Add a dedicated Google service-account JSON with the required Firebase deployment permissions as that repository secret, then rerun **Deploy Firebase Cloud Functions** from the Actions tab.
+4. Confirm the Functions workflow completes successfully before testing the sync centre. Do not deploy Firestore rules as part of this step; the current rules intentionally preserve legacy access and the new sync documents are written/read through trusted callable Functions.
+5. A company POS page must import `createTenantSync` from `tenant-sync.js`, provide its active `companyId`, optional `branchId`, and a stable terminal ID, then call `enqueue()` for offline operations. Only active company members can register terminals or submit batches.

@@ -757,3 +757,175 @@ export const getSellerPaymentOptions = onCall(async (request) => {
     : [...SELLER_PAYMENT_METHODS];
   return { companyId, sellerUid, enabledMethods };
 });
+
+// -----------------------------------------------------------------------------
+// OFFLINE SYNC FOUNDATION — company workspaces only.
+// This records terminal heartbeats and immutable incoming operations. It does
+// NOT apply queued business changes to inventory/sales until a later validated
+// sync-apply workflow is implemented and tested.
+// -----------------------------------------------------------------------------
+function validSyncId(value, label) {
+  const id = cleanText(value, 120);
+  if (!/^[A-Za-z0-9_-]{6,120}$/.test(id)) {
+    throw new HttpsError("invalid-argument", "A valid " + label + " is required.");
+  }
+  return id;
+}
+
+function isoOrNull(value) {
+  return value?.toDate?.()?.toISOString?.() || null;
+}
+
+export const registerSyncTerminal = onCall(async (request) => {
+  const companyId = cleanText(request.data?.companyId, 128);
+  const terminalId = validSyncId(request.data?.terminalId, "terminal ID");
+  const branchId = cleanText(request.data?.branchId, 128);
+  const label = cleanText(request.data?.label || "POS terminal", 80);
+  const device = cleanText(request.data?.device || "Unknown device", 120);
+  const page = cleanText(request.data?.page || "POS", 40);
+  const pendingCount = Number(request.data?.pendingCount || 0);
+  if (!companyId || !Number.isInteger(pendingCount) || pendingCount < 0 || pendingCount > 10000) {
+    throw new HttpsError("invalid-argument", "Company and a valid pending transaction count are required.");
+  }
+  const { data: company } = await requireActiveCompany(companyId);
+  const member = await requireCompanyMember(request, companyId);
+  const ref = db.collection("companies").doc(companyId).collection("syncTerminals").doc(terminalId);
+  await ref.set({
+    companyId, companyName: cleanText(company.name, 80), branchId,
+    terminalId, label, device, page, uid: request.auth.uid,
+    role: member.role, status: "online", pendingCount,
+    lastSeenAt: FieldValue.serverTimestamp(),
+    updatedAt: FieldValue.serverTimestamp()
+  }, { merge: true });
+  return { status: "online", terminalId };
+});
+
+export const submitOfflineSyncBatch = onCall(async (request) => {
+  const companyId = cleanText(request.data?.companyId, 128);
+  const terminalId = validSyncId(request.data?.terminalId, "terminal ID");
+  const branchId = cleanText(request.data?.branchId, 128);
+  const operations = request.data?.operations;
+  if (!companyId || !Array.isArray(operations) || operations.length < 1 || operations.length > 50) {
+    throw new HttpsError("invalid-argument", "Submit between 1 and 50 offline operations.");
+  }
+  await requireCompanyMember(request, companyId);
+  const allowedTypes = ["sale", "inventory", "customer", "stockMovement"];
+  const result = { accepted: 0, duplicates: 0, conflicts: 0 };
+  const companyRef = db.collection("companies").doc(companyId);
+  for (const raw of operations) {
+    const operationId = validSyncId(raw?.operationId, "operation ID");
+    const entityType = cleanText(raw?.entityType, 30);
+    const entityId = cleanText(raw?.entityId, 128);
+    const payload = raw?.payload;
+    if (!allowedTypes.includes(entityType) || !entityId || !payload || typeof payload !== "object" || Array.isArray(payload)) {
+      throw new HttpsError("invalid-argument", "Each operation needs a supported entity type, entity ID and object payload.");
+    }
+    const serialized = JSON.stringify(payload);
+    if (serialized.length > 180000) throw new HttpsError("invalid-argument", "An offline operation is too large.");
+    const payloadHash = createHash("sha256").update(serialized).digest("hex");
+    const queueRef = companyRef.collection("syncQueue").doc(operationId);
+    const conflictRef = companyRef.collection("syncConflicts").doc();
+    const outcome = await db.runTransaction(async (tx) => {
+      const existing = await tx.get(queueRef);
+      if (!existing.exists) {
+        tx.create(queueRef, {
+          companyId, branchId, terminalId, operationId, entityType, entityId,
+          baseVersion: cleanText(raw?.baseVersion, 100),
+          payload, payloadHash, status: "pending",
+          submittedBy: request.auth.uid,
+          createdAt: FieldValue.serverTimestamp(),
+          updatedAt: FieldValue.serverTimestamp()
+        });
+        return "accepted";
+      }
+      const old = existing.data();
+      if (old.payloadHash === payloadHash) return "duplicate";
+      tx.create(conflictRef, {
+        companyId, branchId, terminalId, operationId, entityType, entityId,
+        status: "open",
+        original: {
+          payload: old.payload || null,
+          payloadHash: old.payloadHash || "",
+          submittedBy: old.submittedBy || "",
+          createdAt: old.createdAt || null
+        },
+        incoming: {
+          payload, payloadHash, submittedBy: request.auth.uid,
+          receivedAt: FieldValue.serverTimestamp()
+        },
+        createdAt: FieldValue.serverTimestamp()
+      });
+      return "conflict";
+    });
+    result[outcome === "accepted" ? "accepted" : outcome === "duplicate" ? "duplicates" : "conflicts"]++;
+  }
+  const terminalRef = companyRef.collection("syncTerminals").doc(terminalId);
+  await terminalRef.set({
+    companyId, terminalId, branchId, uid: request.auth.uid,
+    status: "online", pendingCount: FieldValue.increment(-result.accepted),
+    lastUploadAt: FieldValue.serverTimestamp(), lastSeenAt: FieldValue.serverTimestamp(),
+    updatedAt: FieldValue.serverTimestamp()
+  }, { merge: true });
+  return result;
+});
+
+export const listPlatformSyncOverview = onCall(async (request) => {
+  requirePlatformOwner(request);
+  const [terminalsSnap, queueSnap, conflictsSnap] = await Promise.all([
+    db.collectionGroup("syncTerminals").limit(500).get(),
+    db.collectionGroup("syncQueue").limit(500).get(),
+    db.collectionGroup("syncConflicts").limit(500).get()
+  ]);
+  const cutoff = Date.now() - 90000;
+  const terminals = terminalsSnap.docs.map(docSnap => {
+    const x = docSnap.data();
+    const lastSeenAt = isoOrNull(x.lastSeenAt);
+    return {
+      id: docSnap.id, companyId: cleanText(x.companyId, 128),
+      companyName: cleanText(x.companyName, 80), branchId: cleanText(x.branchId, 128),
+      label: cleanText(x.label || "POS terminal", 80), device: cleanText(x.device, 120),
+      page: cleanText(x.page, 40), status: lastSeenAt && Date.parse(lastSeenAt) >= cutoff ? "online" : "offline",
+      pendingCount: Number(x.pendingCount || 0), lastSeenAt,
+      lastUploadAt: isoOrNull(x.lastUploadAt)
+    };
+  });
+  const queue = queueSnap.docs.map(docSnap => {
+    const x = docSnap.data();
+    return {
+      id: docSnap.id, companyId: cleanText(x.companyId, 128),
+      branchId: cleanText(x.branchId, 128), terminalId: cleanText(x.terminalId, 120),
+      entityType: cleanText(x.entityType, 30), entityId: cleanText(x.entityId, 128),
+      status: cleanText(x.status, 30), createdAt: isoOrNull(x.createdAt)
+    };
+  });
+  const conflicts = conflictsSnap.docs.map(docSnap => {
+    const x = docSnap.data();
+    return {
+      id: docSnap.id, companyId: cleanText(x.companyId, 128),
+      branchId: cleanText(x.branchId, 128), terminalId: cleanText(x.terminalId, 120),
+      operationId: cleanText(x.operationId, 120), entityType: cleanText(x.entityType, 30),
+      entityId: cleanText(x.entityId, 128), status: cleanText(x.status, 20),
+      createdAt: isoOrNull(x.createdAt)
+    };
+  });
+  return { terminals, queue, conflicts, sampledAt: new Date().toISOString() };
+});
+
+export const markSyncConflictReviewed = onCall(async (request) => {
+  requirePlatformOwner(request);
+  const companyId = cleanText(request.data?.companyId, 128);
+  const conflictId = cleanText(request.data?.conflictId, 128);
+  if (!companyId || !conflictId) throw new HttpsError("invalid-argument", "Company and conflict IDs are required.");
+  const ref = db.collection("companies").doc(companyId).collection("syncConflicts").doc(conflictId);
+  const snap = await ref.get();
+  if (!snap.exists) throw new HttpsError("not-found", "Sync conflict not found.");
+  await ref.update({
+    status: "reviewed", reviewedBy: request.auth.uid,
+    reviewedAt: FieldValue.serverTimestamp()
+  });
+  await db.collection("platformAuditLogs").add({
+    action: "sync.conflict_reviewed", companyId, conflictId,
+    actorUid: request.auth.uid, createdAt: FieldValue.serverTimestamp()
+  });
+  return { status: "reviewed" };
+});

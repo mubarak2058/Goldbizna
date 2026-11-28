@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MABROUK | Offline Sync Centre</title>
+<style>
+:root{color-scheme:light;--red:#c8202b;--red-dark:#991923;--ink:#20242b;--muted:#68717d;--line:#e3e6ea;--bg:#f5f6f8;--white:#fff;--green:#168653;--amber:#a76508}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px system-ui,Arial,sans-serif}
+header{background:#fff;border-bottom:1px solid var(--line);padding:16px clamp(16px,3vw,36px);display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:2}
+.brand{font-weight:950;letter-spacing:.05em}.brand span{color:var(--red)}.sub{color:var(--muted);font-size:13px;margin-top:3px}
+main{max-width:1500px;margin:auto;padding:26px clamp(14px,3vw,34px)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}.eyebrow{color:var(--red);font-size:11px;font-weight:900;letter-spacing:.16em}
+h1{font-size:clamp(28px,4vw,42px);margin:6px 0}.desc{color:var(--muted);margin:0}
+button,.link{border:1px solid var(--line);background:#fff;color:var(--ink);padding:11px 15px;border-radius:10px;font-weight:800;text-decoration:none;cursor:pointer}
+button.primary{background:var(--red);border-color:var(--red);color:#fff}button:disabled{opacity:.5;cursor:wait}
+.notice{padding:14px 16px;border:1px solid #f0c4c7;background:#fff1f2;color:#8e1d27;border-radius:12px;margin:18px 0;line-height:1.5}
+.notice.good{background:#eefaf3;border-color:#b9e4cd;color:#176b45}.notice.warn{background:#fff8e9;border-color:#f0d7a5;color:#80520d}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:18px 0}
+.metric,.panel{background:#fff;border:1px solid var(--line);border-radius:15px;padding:18px;min-width:0}
+.metric small{color:var(--muted);font-weight:700}.metric strong{display:block;font-size:31px;margin-top:7px}
+.panel{margin:15px 0}.panelhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:13px;flex-wrap:wrap}
+h2{font-size:19px;margin:0}.hint{color:var(--muted);font-size:13px;margin-top:4px}
+.tablewrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:680px}th,td{text-align:left;padding:12px 10px;border-top:1px solid var(--line);font-size:13px;vertical-align:top}th{color:var(--muted);font-size:11px;letter-spacing:.07em;text-transform:uppercase;background:#fafbfc}
+.pill{display:inline-block;border-radius:30px;padding:5px 9px;font-size:11px;font-weight:900;background:#f0f1f3;color:#555}.pill.online{background:#e8f7ef;color:#147548}.pill.offline{background:#fff0f0;color:#a51f2b}.pill.pending{background:#fff6e6;color:#895709}.pill.open{background:#fff0f0;color:#a51f2b}.pill.reviewed{background:#edf0f4;color:#5c6571}
+.empty{padding:18px;color:var(--muted);text-align:center}.smallbtn{padding:7px 10px;font-size:12px}.foot{color:var(--muted);font-size:12px;text-align:center;padding:25px 10px}
+@media(max-width:850px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:480px){.metrics{grid-template-columns:1fr 1fr}.metric{padding:14px}.metric strong{font-size:25px}}
+</style>
+</head>
+<body>
+<header><div><div class="brand">MABROUK <span>SYNC CENTRE</span></div><div class="sub">Company workspace terminal and offline queue monitoring</div></div><a class="link" href="control-room.html">← Master Control</a></header>
+<main>
+<section class="top"><div><div class="eyebrow">OWNER-ONLY OPERATIONS</div><h1>Offline Sync & Conflicts</h1><p class="desc">Monitor company terminals, uploaded offline operations and duplicate-operation conflicts.</p></div><button class="primary" id="refresh">↻ Refresh now</button></section>
+<div class="notice" id="notice">Checking your secure owner session…</div>
+<section class="metrics">
+<div class="metric"><small>Terminals online</small><strong id="onlineCount">—</strong></div>
+<div class="metric"><small>Terminals offline</small><strong id="offlineCount">—</strong></div>
+<div class="metric"><small>Operations awaiting processing</small><strong id="queueCount">—</strong></div>
+<div class="metric"><small>Open conflicts</small><strong id="conflictCount">—</strong></div>
+</section>
+<section class="panel"><div class="panelhead"><div><h2>Terminal health</h2><div class="hint">A terminal is online when its last heartbeat was received within 90 seconds.</div></div><span class="pill" id="sampleTime">Not loaded</span></div><div class="tablewrap"><table><thead><tr><th>Company / Branch</th><th>Terminal</th><th>Device</th><th>Status</th><th>Local pending</th><th>Last seen</th></tr></thead><tbody id="terminals"><tr><td colspan="6" class="empty">Waiting for secure connection…</td></tr></tbody></table></div></section>
+<section class="panel"><div class="panelhead"><div><h2>Uploaded operation queue</h2><div class="hint">Operations are safely stored in the company workspace and await a future validated apply/sync stage.</div></div><span class="pill pending" id="queueTag">0 pending</span></div><div class="tablewrap"><table><thead><tr><th>Company ID</th><th>Type</th><th>Record ID</th><th>Terminal</th><th>Received</th><th>Status</th></tr></thead><tbody id="queue"><tr><td colspan="6" class="empty">No queued operations.</td></tr></tbody></table></div></section>
+<section class="panel"><div class="panelhead"><div><h2>Conflict review</h2><div class="hint">Both original and incoming payloads are retained. Marking reviewed does not overwrite or apply either version.</div></div><span class="pill open" id="conflictTag">0 open</span></div><div class="tablewrap"><table><thead><tr><th>Company ID</th><th>Record</th><th>Operation ID</th><th>Terminal</th><th>Detected</th><th>Status / action</th></tr></thead><tbody id="conflicts"><tr><td colspan="6" class="empty">No conflicts recorded.</td></tr></tbody></table></div></section>
+<div class="notice warn"><b>Important:</b> This first stage monitors terminals and safely receives offline operations. It does not yet write queued sales or stock changes into live business records. Both versions of a conflict are preserved until a separate, audited resolution workflow is completed.</div>
+<div class="foot">MABROUK TRADER’S • Offline Sync Foundation</div>
+</main>
+<script type="module">
+import {auth} from "./firebase.js";
+import {onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import {getFunctions,httpsCallable} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-functions.js";
+const OWNER="ZW5pqCx3FvSzxtXBiZMMC6fP5ro2";
+const functions=getFunctions(undefined,"us-central1");
+const $=id=>document.getElementById(id);
+let ownerReady=false,loading=false;
+function notice(text,type=""){ $("notice").textContent=text;$("notice").className="notice"+(type?" "+type:"");}
+function safe(v){return String(v??"");}
+function date(v){return v?new Date(v).toLocaleString():"—";}
+function cell(row,value){const td=document.createElement("td");td.textContent=safe(value);row.append(td);return td;}
+function pill(status){const span=document.createElement("span");span.className="pill "+status;span.textContent=status.toUpperCase();return span;}
+function empty(target,cols,msg){const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=cols;td.className="empty";td.textContent=msg;tr.append(td);target.replaceChildren(tr);}
+async function load(){
+ if(!ownerReady||loading)return;loading=true;$("refresh").disabled=true;notice("Loading sync information…");
+ try{
+  const result=await httpsCallable(functions,"listPlatformSyncOverview")({});
+  const data=result.data||{},terminals=data.terminals||[],queue=data.queue||[],conflicts=data.conflicts||[];
+  const online=terminals.filter(x=>x.status==="online").length;
+  const open=conflicts.filter(x=>x.status!=="reviewed");
+  $("onlineCount").textContent=online;$("offlineCount").textContent=terminals.length-online;
+  $("queueCount").textContent=queue.filter(x=>x.status==="pending").length;$("conflictCount").textContent=open.length;
+  $("sampleTime").textContent="Updated "+date(data.sampledAt);
+  const tb=$("terminals");tb.replaceChildren();
+  if(!terminals.length)empty(tb,6,"No company terminals have registered a heartbeat yet.");
+  terminals.sort((a,b)=>(a.status==="online"?0:1)-(b.status==="online"?0:1));
+  for(const x of terminals){const tr=document.createElement("tr");cell(tr,(x.companyName||x.companyId)+(x.branchId?" / "+x.branchId:""));cell(tr,x.label);cell(tr,x.device);const st=document.createElement("td");st.append(pill(x.status));tr.append(st);cell(tr,x.pendingCount);cell(tr,date(x.lastSeenAt));tb.append(tr);}
+  const qb=$("queue");qb.replaceChildren();$("queueTag").textContent=queue.length+" stored";
+  if(!queue.length)empty(qb,6,"No uploaded offline operations are waiting.");
+  for(const x of queue){const tr=document.createElement("tr");cell(tr,x.companyId);cell(tr,x.entityType);cell(tr,x.entityId);cell(tr,x.terminalId);cell(tr,date(x.createdAt));const st=document.createElement("td");st.append(pill(x.status||"pending"));tr.append(st);qb.append(tr);}
+  const cb=$("conflicts");cb.replaceChildren();$("conflictTag").textContent=open.length+" open";
+  if(!conflicts.length)empty(cb,6,"No operation conflicts have been detected.");
+  for(const x of conflicts){const tr=document.createElement("tr");cell(tr,x.companyId);cell(tr,x.entityType+" / "+x.entityId);cell(tr,x.operationId);cell(tr,x.terminalId);cell(tr,date(x.createdAt));const action=document.createElement("td");
+   if(x.status==="reviewed")action.append(pill("reviewed"));
+   else{action.append(pill("open"));const btn=document.createElement("button");btn.className="smallbtn";btn.textContent="Mark reviewed";btn.style.marginLeft="7px";btn.onclick=async()=>{btn.disabled=true;try{await httpsCallable(functions,"markSyncConflictReviewed")({companyId:x.companyId,conflictId:x.id});await load();}catch(e){btn.disabled=false;notice("Could not mark conflict reviewed: "+(e.message||e.code),"");}};action.append(btn);}
+   tr.append(action);cb.append(tr);
+  }
+  notice("Sync centre updated successfully. "+terminals.length+" terminal records, "+queue.length+" queued operations and "+conflicts.length+" conflicts found.","good");
+ }catch(e){notice("Could not load sync information: "+(e.message||e.code||"Unknown error")+". Confirm the latest Firebase Functions have been deployed.","");}
+ finally{loading=false;$("refresh").disabled=false;}
+}
+$("refresh").onclick=load;
+onAuthStateChanged(auth,user=>{
+ ownerReady=!!user&&user.uid===OWNER;
+ if(!user)notice("Access locked. Sign in to Firebase as the platform owner first.");
+ else if(!ownerReady)notice("Access denied. This page is reserved for the platform owner.");
+ else{notice("Owner access verified. Loading sync centre…","good");load();}
+});
+setInterval(()=>{if(ownerReady)load();},30000);
+</script>
+</body></html>
